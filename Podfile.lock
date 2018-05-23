@@ -1,0 +1,66 @@
+PODS:
+  - Alamofire (4.7.2)
+  - AlamofireImage (3.3.1):
+    - Alamofire (~> 4.5)
+  - BNRCoreDataStack (2.3.1)
+  - Crashlytics (3.10.1):
+    - Fabric (~> 1.7.5)
+  - Disk (0.3.3)
+  - Fabric (1.7.6)
+  - KeychainSwift (11.0.0)
+  - Moya (11.0.2):
+    - Moya/Core (= 11.0.2)
+  - Moya/Core (11.0.2):
+    - Alamofire (~> 4.1)
+    - Result (~> 3.0)
+  - NVActivityIndicatorView (4.2.1):
+    - NVActivityIndicatorView/Presenter (= 4.2.1)
+  - NVActivityIndicatorView/Presenter (4.2.1)
+  - PromiseKit/CorePromise (6.2.7)
+  - Result (3.2.4)
+  - SwiftLint (0.25.1)
+
+DEPENDENCIES:
+  - AlamofireImage
+  - BNRCoreDataStack
+  - Crashlytics
+  - Disk
+  - Fabric
+  - KeychainSwift
+  - Moya
+  - NVActivityIndicatorView
+  - PromiseKit/CorePromise
+  - SwiftLint
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - AlamofireImage
+    - BNRCoreDataStack
+    - Crashlytics
+    - Disk
+    - Fabric
+    - KeychainSwift
+    - Moya
+    - NVActivityIndicatorView
+    - PromiseKit
+    - Result
+    - SwiftLint
+
+SPEC CHECKSUMS:
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  AlamofireImage: 3b35b586853abaf94ca1250f4e94cff3c21a4c0d
+  BNRCoreDataStack: d9d7d0ed1afd27dca5a903dde1250aa4c6dbc3f5
+  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
+  Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
+  Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
+  KeychainSwift: bea6bd9f98af7b8d7ca4aa79fe105c00fab532db
+  Moya: a725035953bc1c0eb1be505ab903984501d82440
+  NVActivityIndicatorView: 8068ba3ad39cb44cbaab25d89ff2546b3f092681
+  PromiseKit: 12b9d87748b170714247d8b2677146ca57e488f2
+  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
+  SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
+
+PODFILE CHECKSUM: e6b0defd47762f4f7dcf816ebbed47976b3ad2e0
+
+COCOAPODS: 1.5.2

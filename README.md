@@ -1,6 +1,10 @@
 # [WireGuard](https://www.wireguard.com/) for iOS
 
-Nothing to see here yet. Come back later.
+To get started...
+
+- Clone this repo.
+- Run `pod install`
+- Open `Wireguard.xcworkspace`
 
 ## License
 
