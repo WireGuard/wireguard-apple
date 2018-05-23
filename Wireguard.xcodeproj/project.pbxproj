@@ -21,6 +21,10 @@
 		4A4BAD1720B5F8DE00F12B28 /* Wireguard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1520B5F8DE00F12B28 /* Wireguard.xcdatamodeld */; };
 		4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */; };
 		4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */; };
+		4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */; };
+		4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */; };
+		4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */; };
+		4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */; };
 		DA734B3636730B94E9C22F47 /* Pods_Wireguard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +57,10 @@
 		4A4BAD1620B5F8DE00F12B28 /* Wireguard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Wireguard.xcdatamodel; sourceTree = "<group>"; };
 		4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Peer+CoreDataProperties.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Peer+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Peer+CoreDataClass.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Peer+CoreDataClass.swift"; sourceTree = "<absolute>"; };
+		4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Interface+CoreDataProperties.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Interface+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Interface+CoreDataClass.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Interface+CoreDataClass.swift"; sourceTree = "<absolute>"; };
 		82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.debug.xcconfig"; sourceTree = "<group>"; };
 		8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wireguard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.release.xcconfig"; sourceTree = "<group>"; };
@@ -152,6 +160,10 @@
 		4A4BAD1420B5F8C000F12B28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */,
+				4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */,
+				4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */,
+				4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */,
 				4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */,
 				4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */,
 				4A4BAD1520B5F8DE00F12B28 /* Wireguard.xcdatamodeld */,
@@ -366,12 +378,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
+				4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* Wireguard.xcdatamodeld in Sources */,
 				4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */,
 				4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
+				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
+				4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */,
+				4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */,
 				4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */,
 				4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */,
 			);
