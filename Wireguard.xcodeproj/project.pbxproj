@@ -1,0 +1,660 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */; };
+		4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */; };
+		4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACE920B5F1BF00F12B28 /* Main.storyboard */; };
+		4A4BACED20B5F1C100F12B28 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */; };
+		4A4BACF020B5F1C100F12B28 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */; };
+		4A4BACFB20B5F1C100F12B28 /* WireguardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACFA20B5F1C100F12B28 /* WireguardTests.swift */; };
+		4A4BAD0620B5F4B500F12B28 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0520B5F4B500F12B28 /* Settings.bundle */; };
+		4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */; };
+		4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0D20B5F6C300F12B28 /* Coordinator.swift */; };
+		4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */; };
+		4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1220B5F82400F12B28 /* Identifyable.swift */; };
+		4A4BAD1720B5F8DE00F12B28 /* Wireguard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1520B5F8DE00F12B28 /* Wireguard.xcdatamodeld */; };
+		4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */; };
+		4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */; };
+		DA734B3636730B94E9C22F47 /* Pods_Wireguard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		4A4BACF720B5F1C100F12B28 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A4BACDA20B5F1BF00F12B28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A4BACE120B5F1BF00F12B28;
+			remoteInfo = Wireguard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4A4BACE220B5F1BF00F12B28 /* Wireguard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wireguard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsTableViewController.swift; sourceTree = "<group>"; };
+		4A4BACEA20B5F1BF00F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4A4BACEF20B5F1C100F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4A4BACF120B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WireguardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4BACFA20B5F1C100F12B28 /* WireguardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardTests.swift; sourceTree = "<group>"; };
+		4A4BACFC20B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4A4BAD0520B5F4B500F12B28 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		4A4BAD0D20B5F6C300F12B28 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
+		4A4BAD1220B5F82400F12B28 /* Identifyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifyable.swift; sourceTree = "<group>"; };
+		4A4BAD1620B5F8DE00F12B28 /* Wireguard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Wireguard.xcdatamodel; sourceTree = "<group>"; };
+		4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.debug.xcconfig"; sourceTree = "<group>"; };
+		8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wireguard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4A4BACDF20B5F1BF00F12B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA734B3636730B94E9C22F47 /* Pods_Wireguard.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4BACF320B5F1C100F12B28 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4A4BACD920B5F1BF00F12B28 = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD0720B5F4BC00F12B28 /* Resources */,
+				4A4BACE420B5F1BF00F12B28 /* Wireguard */,
+				4A4BACF920B5F1C100F12B28 /* WireguardTests */,
+				4A4BACE320B5F1BF00F12B28 /* Products */,
+				87B9E27C2D1820573644527C /* Pods */,
+				A447093459F091F4358E843F /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4A4BACE320B5F1BF00F12B28 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BACE220B5F1BF00F12B28 /* Wireguard.app */,
+				4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4A4BACE420B5F1BF00F12B28 /* Wireguard */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD1420B5F8C000F12B28 /* Models */,
+				4A4BAD1120B5F7A000F12B28 /* ViewControllers */,
+				4A4BAD0A20B5F65800F12B28 /* Coordinators */,
+				4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */,
+				4A4BACE920B5F1BF00F12B28 /* Main.storyboard */,
+				4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */,
+				4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */,
+				4A4BACF120B5F1C100F12B28 /* Info.plist */,
+			);
+			path = Wireguard;
+			sourceTree = "<group>";
+		};
+		4A4BACF920B5F1C100F12B28 /* WireguardTests */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BACFA20B5F1C100F12B28 /* WireguardTests.swift */,
+				4A4BACFC20B5F1C100F12B28 /* Info.plist */,
+			);
+			path = WireguardTests;
+			sourceTree = "<group>";
+		};
+		4A4BAD0720B5F4BC00F12B28 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD0520B5F4B500F12B28 /* Settings.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4A4BAD0A20B5F65800F12B28 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD0D20B5F6C300F12B28 /* Coordinator.swift */,
+				4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */,
+				4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		4A4BAD1120B5F7A000F12B28 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD1220B5F82400F12B28 /* Identifyable.swift */,
+				4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		4A4BAD1420B5F8C000F12B28 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */,
+				4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */,
+				4A4BAD1520B5F8DE00F12B28 /* Wireguard.xcdatamodeld */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		87B9E27C2D1820573644527C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */,
+				FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A447093459F091F4358E843F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4A4BACE120B5F1BF00F12B28 /* Wireguard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "Wireguard" */;
+			buildPhases = (
+				C9A2E84E53AF419288C5C4BE /* [CP] Check Pods Manifest.lock */,
+				4A4BAD0820B5F53900F12B28 /* Swiftlint */,
+				4A4BACDE20B5F1BF00F12B28 /* Sources */,
+				4A4BACDF20B5F1BF00F12B28 /* Frameworks */,
+				4A4BACE020B5F1BF00F12B28 /* Resources */,
+				4A4BAD0920B5F56200F12B28 /* Set build number */,
+				6F743EFD0F63EA8C605CE349 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Wireguard;
+			productName = Wireguard;
+			productReference = 4A4BACE220B5F1BF00F12B28 /* Wireguard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		4A4BACF520B5F1C100F12B28 /* WireguardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireguardTests" */;
+			buildPhases = (
+				4A4BACF220B5F1C100F12B28 /* Sources */,
+				4A4BACF320B5F1C100F12B28 /* Frameworks */,
+				4A4BACF420B5F1C100F12B28 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4A4BACF820B5F1C100F12B28 /* PBXTargetDependency */,
+			);
+			name = WireguardTests;
+			productName = WireguardTests;
+			productReference = 4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4A4BACDA20B5F1BF00F12B28 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = Wireguard;
+				TargetAttributes = {
+					4A4BACE120B5F1BF00F12B28 = {
+						CreatedOnToolsVersion = 9.3.1;
+					};
+					4A4BACF520B5F1C100F12B28 = {
+						CreatedOnToolsVersion = 9.3.1;
+						TestTargetID = 4A4BACE120B5F1BF00F12B28;
+					};
+				};
+			};
+			buildConfigurationList = 4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "Wireguard" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4A4BACD920B5F1BF00F12B28;
+			productRefGroup = 4A4BACE320B5F1BF00F12B28 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A4BACE120B5F1BF00F12B28 /* Wireguard */,
+				4A4BACF520B5F1C100F12B28 /* WireguardTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4A4BACE020B5F1BF00F12B28 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4BAD0620B5F4B500F12B28 /* Settings.bundle in Resources */,
+				4A4BACF020B5F1C100F12B28 /* LaunchScreen.storyboard in Resources */,
+				4A4BACED20B5F1C100F12B28 /* Assets.xcassets in Resources */,
+				4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4BACF420B5F1C100F12B28 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4A4BAD0820B5F53900F12B28 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SwiftLint/swiftlint autocorrect\n${PODS_ROOT}/SwiftLint/swiftlint";
+		};
+		4A4BAD0920B5F56200F12B28 /* Set build number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set build number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = $SRCROOT/Scripts/set_build_number.sh;
+		};
+		6F743EFD0F63EA8C605CE349 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
+				"${BUILT_PRODUCTS_DIR}/BNRCoreDataStack/BNRCoreDataStack.framework",
+				"${BUILT_PRODUCTS_DIR}/Disk/Disk.framework",
+				"${BUILT_PRODUCTS_DIR}/KeychainSwift/KeychainSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
+				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Result/Result.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AlamofireImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BNRCoreDataStack.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Disk.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Result.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C9A2E84E53AF419288C5C4BE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Wireguard-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A4BACDE20B5F1BF00F12B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
+				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
+				4A4BAD1720B5F8DE00F12B28 /* Wireguard.xcdatamodeld in Sources */,
+				4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */,
+				4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */,
+				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
+				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
+				4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */,
+				4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4A4BACF220B5F1C100F12B28 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A4BACFB20B5F1C100F12B28 /* WireguardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4A4BACF820B5F1C100F12B28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4A4BACE120B5F1BF00F12B28 /* Wireguard */;
+			targetProxy = 4A4BACF720B5F1C100F12B28 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		4A4BACE920B5F1BF00F12B28 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4BACEA20B5F1BF00F12B28 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A4BACEF20B5F1C100F12B28 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4A4BACFD20B5F1C100F12B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		4A4BACFE20B5F1C100F12B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4A4BAD0020B5F1C100F12B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Wireguard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.Wireguard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4A4BAD0120B5F1C100F12B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Wireguard/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.Wireguard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		4A4BAD0320B5F1C100F12B28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = WireguardTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireguardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard.app/Wireguard";
+			};
+			name = Debug;
+		};
+		4A4BAD0420B5F1C100F12B28 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = WireguardTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireguardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard.app/Wireguard";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "Wireguard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4BACFD20B5F1C100F12B28 /* Debug */,
+				4A4BACFE20B5F1C100F12B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "Wireguard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4BAD0020B5F1C100F12B28 /* Debug */,
+				4A4BAD0120B5F1C100F12B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireguardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4A4BAD0320B5F1C100F12B28 /* Debug */,
+				4A4BAD0420B5F1C100F12B28 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4A4BAD1520B5F8DE00F12B28 /* Wireguard.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4A4BAD1620B5F8DE00F12B28 /* Wireguard.xcdatamodel */,
+			);
+			currentVersion = 4A4BAD1620B5F8DE00F12B28 /* Wireguard.xcdatamodel */;
+			path = Wireguard.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 4A4BACDA20B5F1BF00F12B28 /* Project object */;
+}

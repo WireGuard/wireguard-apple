@@ -1,0 +1,12 @@
+disabled_rules:
+ - line_length
+ - trailing_comma
+excluded:
+ - Pods
+file_length:
+  warning: 500
+type_name:
+  min_length: 2 # only warning
+  max_length: # warning and error
+    warning: 50
+    error: 60
