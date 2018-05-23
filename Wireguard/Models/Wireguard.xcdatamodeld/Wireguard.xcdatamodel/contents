@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E202" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Profile" representedClassName="Profile" syncable="YES"/>
+    <entity name="Interface" representedClassName="Interface" syncable="YES">
+        <attribute name="fwMark" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="listenPort" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="privateKey" attributeType="String" syncable="YES"/>
+        <relationship name="profile" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="interface" inverseEntity="Profile" syncable="YES"/>
+    </entity>
+    <entity name="Peer" representedClassName="Peer" syncable="YES">
+        <attribute name="allowedIPs" attributeType="String" syncable="YES"/>
+        <attribute name="endpoint" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="persistentKeepalive" attributeType="Integer 16" minValueString="0" maxValueString="65535" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="presharedKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="publicKey" attributeType="String" syncable="YES"/>
+        <relationship name="profile" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="peers" inverseEntity="Profile" syncable="YES"/>
+    </entity>
+    <entity name="Profile" representedClassName="Profile" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="interface" maxCount="1" deletionRule="Cascade" destinationEntity="Interface" inverseName="profile" inverseEntity="Interface" syncable="YES"/>
+        <relationship name="peers" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Peer" inverseName="profile" inverseEntity="Peer" syncable="YES"/>
+    </entity>
     <elements>
-        <element name="Profile" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="Profile" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="Interface" positionX="-54" positionY="-9" width="128" height="105"/>
+        <element name="Peer" positionX="-36" positionY="9" width="128" height="135"/>
     </elements>
 </model>
