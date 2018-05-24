@@ -4,7 +4,7 @@ use_frameworks!
 
 swift_version = "4.0"
 
-target 'Wireguard' do
+target 'WireGuard' do
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'SwiftLint'
@@ -18,7 +18,7 @@ target 'Wireguard' do
 
   post_install do | installer |
     require 'fileutils'
-    FileUtils.cp_r('Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard-Acknowledgements.plist', 'Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+    FileUtils.cp_r('Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard-Acknowledgements.plist', 'Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
 
   end
 end

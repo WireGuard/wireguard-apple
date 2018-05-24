@@ -4,7 +4,7 @@ To get started...
 
 - Clone this repo.
 - Run `pod install`
-- Open `Wireguard.xcworkspace`
+- Open `WireGuard.xcworkspace`
 
 ## License
 

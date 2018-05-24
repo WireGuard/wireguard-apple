@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
 		4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */; };
 		4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */; };
 		4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACE920B5F1BF00F12B28 /* Main.storyboard */; };
@@ -27,7 +28,6 @@
 		4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */; };
 		4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */; };
 		4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */; };
-		DA734B3636730B94E9C22F47 /* Pods_Wireguard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,14 +41,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4A4BACE220B5F1BF00F12B28 /* Wireguard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wireguard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.release.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.release.xcconfig"; sourceTree = "<group>"; };
+		25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.debug.xcconfig"; sourceTree = "<group>"; };
+		4A4BACE220B5F1BF00F12B28 /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsTableViewController.swift; sourceTree = "<group>"; };
 		4A4BACEA20B5F1BF00F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A4BACEF20B5F1C100F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A4BACF120B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WireguardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4BACF620B5F1C100F12B28 /* WireGuardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WireGuardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4BACFA20B5F1C100F12B28 /* WireguardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardTests.swift; sourceTree = "<group>"; };
 		4A4BACFC20B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A4BAD0520B5F4B500F12B28 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 		4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.debug.xcconfig"; sourceTree = "<group>"; };
+		861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WireGuard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wireguard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Wireguard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -75,7 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA734B3636730B94E9C22F47 /* Pods_Wireguard.framework in Frameworks */,
+				48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,8 +107,8 @@
 		4A4BACE320B5F1BF00F12B28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4A4BACE220B5F1BF00F12B28 /* Wireguard.app */,
-				4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */,
+				4A4BACE220B5F1BF00F12B28 /* WireGuard.app */,
+				4A4BACF620B5F1C100F12B28 /* WireGuardTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -182,6 +185,8 @@
 			children = (
 				82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */,
 				FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */,
+				25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */,
+				0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				8BF50C7EC60CD91BBA05E51F /* Pods_Wireguard.framework */,
+				861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -197,9 +203,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4A4BACE120B5F1BF00F12B28 /* Wireguard */ = {
+		4A4BACE120B5F1BF00F12B28 /* WireGuard */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "Wireguard" */;
+			buildConfigurationList = 4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireGuard" */;
 			buildPhases = (
 				C9A2E84E53AF419288C5C4BE /* [CP] Check Pods Manifest.lock */,
 				4A4BAD0820B5F53900F12B28 /* Swiftlint */,
@@ -213,14 +219,14 @@
 			);
 			dependencies = (
 			);
-			name = Wireguard;
+			name = WireGuard;
 			productName = Wireguard;
-			productReference = 4A4BACE220B5F1BF00F12B28 /* Wireguard.app */;
+			productReference = 4A4BACE220B5F1BF00F12B28 /* WireGuard.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4A4BACF520B5F1C100F12B28 /* WireguardTests */ = {
+		4A4BACF520B5F1C100F12B28 /* WireGuardTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireguardTests" */;
+			buildConfigurationList = 4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireGuardTests" */;
 			buildPhases = (
 				4A4BACF220B5F1C100F12B28 /* Sources */,
 				4A4BACF320B5F1C100F12B28 /* Frameworks */,
@@ -231,9 +237,9 @@
 			dependencies = (
 				4A4BACF820B5F1C100F12B28 /* PBXTargetDependency */,
 			);
-			name = WireguardTests;
+			name = WireGuardTests;
 			productName = WireguardTests;
-			productReference = 4A4BACF620B5F1C100F12B28 /* WireguardTests.xctest */;
+			productReference = 4A4BACF620B5F1C100F12B28 /* WireGuardTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -255,7 +261,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "Wireguard" */;
+			buildConfigurationList = 4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "WireGuard" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -268,8 +274,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4A4BACE120B5F1BF00F12B28 /* Wireguard */,
-				4A4BACF520B5F1C100F12B28 /* WireguardTests */,
+				4A4BACE120B5F1BF00F12B28 /* WireGuard */,
+				4A4BACF520B5F1C100F12B28 /* WireGuardTests */,
 			);
 		};
 /* End PBXProject section */
@@ -330,7 +336,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AlamofireImage/AlamofireImage.framework",
 				"${BUILT_PRODUCTS_DIR}/BNRCoreDataStack/BNRCoreDataStack.framework",
@@ -355,7 +361,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Wireguard/Pods-Wireguard-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C9A2E84E53AF419288C5C4BE /* [CP] Check Pods Manifest.lock */ = {
@@ -369,7 +375,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Wireguard-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-WireGuard-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -414,7 +420,7 @@
 /* Begin PBXTargetDependency section */
 		4A4BACF820B5F1C100F12B28 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4A4BACE120B5F1BF00F12B28 /* Wireguard */;
+			target = 4A4BACE120B5F1BF00F12B28 /* WireGuard */;
 			targetProxy = 4A4BACF720B5F1C100F12B28 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -555,18 +561,18 @@
 		};
 		4A4BAD0020B5F1C100F12B28 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 82069F3AE97A82448F990CFB /* Pods-Wireguard.debug.xcconfig */;
+			baseConfigurationReference = 25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Wireguard/Info.plist;
+				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.Wireguard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -576,18 +582,18 @@
 		};
 		4A4BAD0120B5F1C100F12B28 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FB0ABC1036F5A16B24286D3C /* Pods-Wireguard.release.xcconfig */;
+			baseConfigurationReference = 0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = Wireguard/Info.plist;
+				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.Wireguard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -601,17 +607,17 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = WireguardTests/Info.plist;
+				INFOPLIST_FILE = WireGuardTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireguardTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard.app/Wireguard";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WireGuard.app/WireGuard";
 			};
 			name = Debug;
 		};
@@ -621,24 +627,24 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = WireguardTests/Info.plist;
+				INFOPLIST_FILE = WireGuardTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireguardTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard.app/Wireguard";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WireGuard.app/WireGuard";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "Wireguard" */ = {
+		4A4BACDD20B5F1BF00F12B28 /* Build configuration list for PBXProject "WireGuard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4A4BACFD20B5F1C100F12B28 /* Debug */,
@@ -647,7 +653,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "Wireguard" */ = {
+		4A4BACFF20B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireGuard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4A4BAD0020B5F1C100F12B28 /* Debug */,
@@ -656,7 +662,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireguardTests" */ = {
+		4A4BAD0220B5F1C100F12B28 /* Build configuration list for PBXNativeTarget "WireGuardTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4A4BAD0320B5F1C100F12B28 /* Debug */,

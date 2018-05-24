@@ -12,7 +12,7 @@ for plist in "$target_plist" "$dsym_plist"; do
   fi
 done
 
-settings_root_plist="$TARGET_BUILD_DIR/Wireguard.app/Settings.bundle/Root.plist"
+settings_root_plist="$TARGET_BUILD_DIR/WireGuard.app/Settings.bundle/Root.plist"
 
 if [ -f "$settings_root_plist" ]; then
   settingsVersion="`agvtool what-marketing-version -terse1`(${number_of_commits})"
