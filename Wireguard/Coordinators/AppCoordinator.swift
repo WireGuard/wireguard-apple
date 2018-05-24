@@ -86,17 +86,21 @@ class AppCoordinator: RootViewCoordinator {
 extension AppCoordinator: ConnectionsTableViewControllerDelegate {
     func addProvider(connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
+        print("Add provider")
     }
 
-    func settings(connectionsTableViewController: ConnectionsTableViewController) {
+    func connect(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
+        print("connect profile \(profile)")
     }
 
-    func connect(profile: Profile) {
+    func configure(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
+        print("configure profile \(profile)")
     }
 
-    func delete(profile: Profile) {
+    func delete(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
+        print("delete profile \(profile)")
     }
 }
