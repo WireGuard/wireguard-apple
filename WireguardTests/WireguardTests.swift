@@ -1,15 +1,15 @@
 //
-//  WireguardTests.swift
-//  WireguardTests
+//  WireGuardTests.swift
+//  WireGuardTests
 //
 //  Created by Jeroen Leenarts on 23-05-18.
-//  Copyright © 2018 Wireguard. All rights reserved.
+//  Copyright © 2018 WireGuard. All rights reserved.
 //
 
 import XCTest
-@testable import Wireguard
+@testable import WireGuard
 
-class WireguardTests: XCTestCase {
+class WireGuardTests: XCTestCase {
 
     override func setUp() {
         super.setUp()

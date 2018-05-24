@@ -1,9 +1,9 @@
 //
 //  AppCoordinator.swift
-//  Wireguard
+//  WireGuard
 //
 //  Created by Jeroen Leenarts on 23-05-18.
-//  Copyright © 2018 Wireguard. All rights reserved.
+//  Copyright © 2018 WireGuard. All rights reserved.
 //
 
 import Foundation
@@ -13,7 +13,7 @@ import BNRCoreDataStack
 
 class AppCoordinator: RootViewCoordinator {
 
-    let persistentContainer = NSPersistentContainer(name: "Wireguard")
+    let persistentContainer = NSPersistentContainer(name: "WireGuard")
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     // MARK: - Properties
