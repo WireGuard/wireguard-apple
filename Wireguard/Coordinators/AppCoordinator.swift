@@ -85,8 +85,8 @@ class AppCoordinator: RootViewCoordinator {
 
 extension AppCoordinator: ConnectionsTableViewControllerDelegate {
     func addProvider(connectionsTableViewController: ConnectionsTableViewController) {
-        // TODO implement
-        print("Add provider")
+        let addContext = persistentContainer.newBackgroundContext()
+        showProfileConfigurationViewController(profile: nil, context: addContext)
     }
 
     func connect(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
@@ -97,10 +97,31 @@ extension AppCoordinator: ConnectionsTableViewControllerDelegate {
     func configure(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
         print("configure profile \(profile)")
+        let editContext = persistentContainer.newBackgroundContext()
+        var backgroundProfile: Profile?
+        editContext.performAndWait {
+
+            backgroundProfile = editContext.object(with: profile.objectID) as? Profile
+        }
+
+        showProfileConfigurationViewController(profile: backgroundProfile, context: editContext)
+    }
+
+    func showProfileConfigurationViewController(profile: Profile?, context: NSManagedObjectContext) {
+        let profileConfigurationViewController = storyboard.instantiateViewController(type: ProfileConfigurationTableViewController.self)
+
+        profileConfigurationViewController.viewContext = context
+        profileConfigurationViewController.delegate = self
+
+        self.navigationController.pushViewController(profileConfigurationViewController, animated: true)
     }
 
     func delete(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
         // TODO implement
         print("delete profile \(profile)")
     }
+}
+
+extension AppCoordinator: ProfileConfigurationTableViewControllerDelegate {
+
 }

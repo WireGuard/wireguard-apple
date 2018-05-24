@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
+		4A4BA6D820B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */; };
 		4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */; };
 		4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */; };
 		4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACE920B5F1BF00F12B28 /* Main.storyboard */; };
@@ -44,6 +45,7 @@
 /* Begin PBXFileReference section */
 		0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.release.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.release.xcconfig"; sourceTree = "<group>"; };
 		25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.debug.xcconfig"; sourceTree = "<group>"; };
+		4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		4A4BACE220B5F1BF00F12B28 /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsTableViewController.swift; sourceTree = "<group>"; };
@@ -161,8 +163,9 @@
 			isa = PBXGroup;
 			children = (
 				4A4BAD1220B5F82400F12B28 /* Identifyable.swift */,
-				4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */,
 				4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */,
+				4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */,
+				4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
+				4A4BA6D820B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
 				4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */,
 				4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */,
