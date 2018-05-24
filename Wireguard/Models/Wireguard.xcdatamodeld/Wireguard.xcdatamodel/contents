@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E202" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Address" representedClassName="Address" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="interface" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Interface" inverseName="adresses" inverseEntity="Interface" syncable="YES"/>
+    </entity>
     <entity name="Interface" representedClassName="Interface" syncable="YES">
+        <attribute name="dns" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fwMark" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="listenPort" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="mtu" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="privateKey" attributeType="String" syncable="YES"/>
+        <attribute name="table" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="adresses" toMany="YES" deletionRule="Cascade" destinationEntity="Address" inverseName="interface" inverseEntity="Address" syncable="YES"/>
         <relationship name="profile" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="interface" inverseEntity="Profile" syncable="YES"/>
     </entity>
     <entity name="Peer" representedClassName="Peer" syncable="YES">
@@ -20,8 +28,9 @@
         <relationship name="peers" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Peer" inverseName="profile" inverseEntity="Peer" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Profile" positionX="-63" positionY="-18" width="128" height="90"/>
-        <element name="Interface" positionX="-54" positionY="-9" width="128" height="105"/>
+        <element name="Interface" positionX="-54" positionY="-9" width="128" height="165"/>
         <element name="Peer" positionX="-36" positionY="9" width="128" height="135"/>
+        <element name="Profile" positionX="-63" positionY="-18" width="128" height="90"/>
+        <element name="Address" positionX="-54" positionY="45" width="128" height="75"/>
     </elements>
 </model>
