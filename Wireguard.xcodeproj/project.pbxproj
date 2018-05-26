@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				4A4BAD0720B5F4BC00F12B28 /* Resources */,
-				4A4BACE420B5F1BF00F12B28 /* Wireguard */,
+				4A4BACE420B5F1BF00F12B28 /* WireGuard */,
 				4A4BACF920B5F1C100F12B28 /* WireguardTests */,
 				4A4BACE320B5F1BF00F12B28 /* Products */,
 				87B9E27C2D1820573644527C /* Pods */,
@@ -117,7 +117,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4A4BACE420B5F1BF00F12B28 /* Wireguard */ = {
+		4A4BACE420B5F1BF00F12B28 /* WireGuard */ = {
 			isa = PBXGroup;
 			children = (
 				4A4BAD1420B5F8C000F12B28 /* Models */,
@@ -129,7 +129,7 @@
 				4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */,
 				4A4BACF120B5F1C100F12B28 /* Info.plist */,
 			);
-			path = Wireguard;
+			path = WireGuard;
 			sourceTree = "<group>";
 		};
 		4A4BACF920B5F1C100F12B28 /* WireguardTests */ = {
