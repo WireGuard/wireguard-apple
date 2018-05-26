@@ -11,6 +11,8 @@ import Foundation
 import CoreData
 import BNRCoreDataStack
 
+extension UINavigationController: Identifyable {}
+
 class AppCoordinator: RootViewCoordinator {
 
     let persistentContainer = NSPersistentContainer(name: "WireGuard")
@@ -21,16 +23,16 @@ class AppCoordinator: RootViewCoordinator {
     var childCoordinators: [Coordinator] = []
 
     var rootViewController: UIViewController {
-        return self.connectionsTableViewController
+        return self.tunnelsTableViewController
     }
 
-    var connectionsTableViewController: ConnectionsTableViewController!
+    var tunnelsTableViewController: TunnelsTableViewController!
 
     /// Window to manage
     let window: UIWindow
 
     let navigationController: UINavigationController = {
-        let navController = UINavigationController()
+        let navController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(type: UINavigationController.self)
         return navController
     }()
 
@@ -54,14 +56,14 @@ class AppCoordinator: RootViewCoordinator {
             } else {
                 DispatchQueue.main.async {
                     //start
-                    if let connectionsTableViewController = self?.storyboard.instantiateViewController(type: ConnectionsTableViewController.self) {
-                        self?.connectionsTableViewController = connectionsTableViewController
-                        self?.connectionsTableViewController.viewContext = self?.persistentContainer.viewContext
-                        self?.connectionsTableViewController.delegate = self
-                        self?.navigationController.viewControllers = [connectionsTableViewController]
+                    if let tunnelsTableViewController = self?.storyboard.instantiateViewController(type: TunnelsTableViewController.self) {
+                        self?.tunnelsTableViewController = tunnelsTableViewController
+                        self?.tunnelsTableViewController.viewContext = self?.persistentContainer.viewContext
+                        self?.tunnelsTableViewController.delegate = self
+                        self?.navigationController.viewControllers = [tunnelsTableViewController]
                         do {
-                            if let context = self?.persistentContainer.viewContext, try Profile.countInContext(context) == 0 {
-                                print("No profiles ... yet")
+                            if let context = self?.persistentContainer.viewContext, try Tunnel.countInContext(context) == 0 {
+                                print("No tunnels ... yet")
                             }
                         } catch {
                             self?.showError(error)
@@ -83,45 +85,45 @@ class AppCoordinator: RootViewCoordinator {
     }
 }
 
-extension AppCoordinator: ConnectionsTableViewControllerDelegate {
-    func addProvider(connectionsTableViewController: ConnectionsTableViewController) {
+extension AppCoordinator: TunnelsTableViewControllerDelegate {
+    func addProvider(tunnelsTableViewController: TunnelsTableViewController) {
         let addContext = persistentContainer.newBackgroundContext()
-        showProfileConfigurationViewController(profile: nil, context: addContext)
+        showTunnelConfigurationViewController(tunnel: nil, context: addContext)
     }
 
-    func connect(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
+    func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
         // TODO implement
-        print("connect profile \(profile)")
+        print("connect tunnel \(tunnel)")
     }
 
-    func configure(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
+    func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
         // TODO implement
-        print("configure profile \(profile)")
+        print("configure tunnel \(tunnel)")
         let editContext = persistentContainer.newBackgroundContext()
-        var backgroundProfile: Profile?
+        var backgroundTunnel: Tunnel?
         editContext.performAndWait {
 
-            backgroundProfile = editContext.object(with: profile.objectID) as? Profile
+            backgroundTunnel = editContext.object(with: tunnel.objectID) as? Tunnel
         }
 
-        showProfileConfigurationViewController(profile: backgroundProfile, context: editContext)
+        showTunnelConfigurationViewController(tunnel: backgroundTunnel, context: editContext)
     }
 
-    func showProfileConfigurationViewController(profile: Profile?, context: NSManagedObjectContext) {
-        let profileConfigurationViewController = storyboard.instantiateViewController(type: ProfileConfigurationTableViewController.self)
+    func showTunnelConfigurationViewController(tunnel: Tunnel?, context: NSManagedObjectContext) {
+        let tunnelConfigurationViewController = storyboard.instantiateViewController(type: TunnelConfigurationTableViewController.self)
 
-        profileConfigurationViewController.viewContext = context
-        profileConfigurationViewController.delegate = self
+        tunnelConfigurationViewController.viewContext = context
+        tunnelConfigurationViewController.delegate = self
 
-        self.navigationController.pushViewController(profileConfigurationViewController, animated: true)
+        self.navigationController.pushViewController(tunnelConfigurationViewController, animated: true)
     }
 
-    func delete(profile: Profile, connectionsTableViewController: ConnectionsTableViewController) {
+    func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
         // TODO implement
-        print("delete profile \(profile)")
+        print("delete tunnel \(tunnel)")
     }
 }
 
-extension AppCoordinator: ProfileConfigurationTableViewControllerDelegate {
+extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
 
 }

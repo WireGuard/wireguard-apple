@@ -1,5 +1,5 @@
 //
-//  Profile+CoreDataProperties.swift
+//  Tunnel+CoreDataProperties.swift
 //  WireGuard
 //
 //  Created by Jeroen Leenarts on 23-05-18.
@@ -10,10 +10,10 @@
 import Foundation
 import CoreData
 
-extension Profile {
+extension Tunnel {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Profile> {
-        return NSFetchRequest<Profile>(entityName: "Profile")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Tunnel> {
+        return NSFetchRequest<Tunnel>(entityName: "Tunnel")
     }
 
     @NSManaged public var title: String?
@@ -23,7 +23,7 @@ extension Profile {
 }
 
 // MARK: Generated accessors for peers
-extension Profile {
+extension Tunnel {
 
     @objc(addPeersObject:)
     @NSManaged public func addToPeers(_ value: Peer)
