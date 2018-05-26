@@ -81,10 +81,11 @@
         <scene sceneID="xV8-BW-4R7">
             <objects>
                 <tableViewController storyboardIdentifier="TunnelConfigurationTableViewController" id="0VM-73-EPX" customClass="TunnelConfigurationTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0Uy-k2-O3i">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0Uy-k2-O3i">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="InterfaceTableViewCell" rowHeight="368" id="06N-KU-LSv" customClass="InterfaceTableViewCell" customModule="WireGuard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="368"/>
@@ -269,9 +270,11 @@
                                         </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="fVu-Aa-9dn" secondAttribute="bottom" id="AyE-qC-Rye"/>
                                         <constraint firstAttribute="bottom" secondItem="fVu-Aa-9dn" secondAttribute="bottom" id="G8D-HX-t2n"/>
                                         <constraint firstItem="fVu-Aa-9dn" firstAttribute="leading" secondItem="gPY-qW-fbd" secondAttribute="leading" id="GQn-8W-GpX"/>
                                         <constraint firstAttribute="trailing" secondItem="fVu-Aa-9dn" secondAttribute="trailing" id="H9S-Km-FDv"/>
+                                        <constraint firstItem="fVu-Aa-9dn" firstAttribute="top" secondItem="gPY-qW-fbd" secondAttribute="top" id="Wv9-c4-I9v"/>
                                         <constraint firstItem="fVu-Aa-9dn" firstAttribute="top" secondItem="gPY-qW-fbd" secondAttribute="top" id="fcp-SS-lbr"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -290,17 +293,18 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="343" height="46"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Peer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="42P-f9-Rft">
-                                                            <rect key="frame" x="0.0" y="0.0" width="273" height="46"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="303" height="46"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SfN-pE-Y3t">
-                                                            <rect key="frame" x="273" y="0.0" width="70" height="46"/>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SfN-pE-Y3t">
+                                                            <rect key="frame" x="303" y="0.0" width="40" height="46"/>
+                                                            <accessibility key="accessibilityConfiguration" hint="Delete peer from tunnel configuration" label="Delete"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="70" id="Sj9-zg-bBf"/>
+                                                                <constraint firstAttribute="width" constant="40" id="Sj9-zg-bBf"/>
                                                             </constraints>
-                                                            <state key="normal" title="Delete"/>
+                                                            <state key="normal" image="trash"/>
                                                         </button>
                                                     </subviews>
                                                 </stackView>
@@ -424,5 +428,8 @@
             <point key="canvasLocation" x="1128.8" y="321.58920539730138"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="trash" width="14" height="18"/>
+    </resources>
     <color key="tintColor" red="0.53333333333333333" green="0.090196078431372548" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
 </document>
