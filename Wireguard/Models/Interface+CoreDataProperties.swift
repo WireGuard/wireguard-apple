@@ -22,7 +22,7 @@ extension Interface {
     @NSManaged public var mtu: Int32
     @NSManaged public var dns: String?
     @NSManaged public var table: String?
-    @NSManaged public var profile: Profile?
+    @NSManaged public var tunnel: Tunnel?
     @NSManaged public var adresses: NSSet?
 
 }

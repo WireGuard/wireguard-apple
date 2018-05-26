@@ -1,5 +1,5 @@
 //
-//  ProfileConfigurationTableViewController.swift
+//  TunnelConfigurationTableViewController.swift
 //  WireGuard
 //
 //  Created by Jeroen Leenarts on 24-05-18.
@@ -10,12 +10,12 @@ import UIKit
 import CoreData
 import BNRCoreDataStack
 
-protocol ProfileConfigurationTableViewControllerDelegate: class {
+protocol TunnelConfigurationTableViewControllerDelegate: class {
 }
 
-class ProfileConfigurationTableViewController: UITableViewController {
+class TunnelConfigurationTableViewController: UITableViewController {
     var viewContext: NSManagedObjectContext!
-    weak var delegate: ProfileConfigurationTableViewControllerDelegate?
+    weak var delegate: TunnelConfigurationTableViewControllerDelegate?
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
@@ -45,7 +45,7 @@ class AddPeerTableViewCell: UITableViewCell {
 
 }
 
-extension ProfileConfigurationTableViewController: Identifyable {}
+extension TunnelConfigurationTableViewController: Identifyable {}
 extension InterfaceTableViewCell: Identifyable {}
 extension PeerTableViewCell: Identifyable {}
 extension AddPeerTableViewCell: Identifyable {}

@@ -1,5 +1,5 @@
 //
-//  Profile+CoreDataClass.swift
+//  Tunnel+CoreDataClass.swift
 //  WireGuard
 //
 //  Created by Jeroen Leenarts on 23-05-18.
@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Profile)
-public class Profile: NSManagedObject {
+@objc(Tunnel)
+public class Tunnel: NSManagedObject {
 
 }

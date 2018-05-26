@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
-		4A4BA6D820B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */; };
+		4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */; };
 		4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */; };
-		4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */; };
+		4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */; };
 		4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACE920B5F1BF00F12B28 /* Main.storyboard */; };
 		4A4BACED20B5F1C100F12B28 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */; };
 		4A4BACF020B5F1C100F12B28 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */; };
@@ -21,8 +21,8 @@
 		4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */; };
 		4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1220B5F82400F12B28 /* Identifyable.swift */; };
 		4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1520B5F8DE00F12B28 /* WireGuard.xcdatamodeld */; };
-		4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */; };
-		4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */; };
+		4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1820B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift */; };
+		4A4BAD1B20B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */; };
 		4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */; };
 		4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */; };
 		4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */; };
@@ -45,10 +45,10 @@
 /* Begin PBXFileReference section */
 		0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.release.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.release.xcconfig"; sourceTree = "<group>"; };
 		25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.debug.xcconfig"; sourceTree = "<group>"; };
-		4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileConfigurationTableViewController.swift; sourceTree = "<group>"; };
+		4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		4A4BACE220B5F1BF00F12B28 /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsTableViewController.swift; sourceTree = "<group>"; };
+		4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsTableViewController.swift; sourceTree = "<group>"; };
 		4A4BACEA20B5F1BF00F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A4BACEF20B5F1C100F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -62,8 +62,8 @@
 		4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		4A4BAD1220B5F82400F12B28 /* Identifyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifyable.swift; sourceTree = "<group>"; };
 		4A4BAD1620B5F8DE00F12B28 /* WireGuard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WireGuard.xcdatamodel; sourceTree = "<group>"; };
-		4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataClass.swift"; sourceTree = "<group>"; };
-		4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Profile+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4A4BAD1820B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tunnel+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tunnel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Peer+CoreDataProperties.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Peer+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Peer+CoreDataClass.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Peer+CoreDataClass.swift"; sourceTree = "<absolute>"; };
 		4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Interface+CoreDataProperties.swift"; path = "/Users/jeroenleenarts/code/wireguard-ios/Wireguard/Models/Interface+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
@@ -164,8 +164,8 @@
 			children = (
 				4A4BAD1220B5F82400F12B28 /* Identifyable.swift */,
 				4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */,
-				4A4BACE720B5F1BF00F12B28 /* ConnectionsTableViewController.swift */,
-				4A4BA6D720B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift */,
+				4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */,
+				4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -179,8 +179,8 @@
 				4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */,
 				4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */,
 				4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */,
-				4A4BAD1820B5F8FF00F12B28 /* Profile+CoreDataClass.swift */,
-				4A4BAD1920B5F8FF00F12B28 /* Profile+CoreDataProperties.swift */,
+				4A4BAD1820B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift */,
+				4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */,
 				4A4BAD1520B5F8DE00F12B28 /* WireGuard.xcdatamodeld */,
 			);
 			path = Models;
@@ -400,17 +400,17 @@
 				4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */,
-				4A4BAD1A20B5F8FF00F12B28 /* Profile+CoreDataClass.swift in Sources */,
-				4A4BACE820B5F1BF00F12B28 /* ConnectionsTableViewController.swift in Sources */,
+				4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */,
+				4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
-				4A4BA6D820B73CBA00223AB8 /* ProfileConfigurationTableViewController.swift in Sources */,
+				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
 				4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */,
 				4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */,
 				4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */,
 				4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */,
-				4A4BAD1B20B5F8FF00F12B28 /* Profile+CoreDataProperties.swift in Sources */,
+				4A4BAD1B20B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift in Sources */,
 				4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

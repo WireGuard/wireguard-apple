@@ -1,5 +1,5 @@
 //
-//  ConnectionsTableViewController.swift
+//  TunnelsTableViewController.swift
 //  WireGuard
 //
 //  Created by Jeroen Leenarts on 23-05-18.
@@ -11,30 +11,30 @@ import UIKit
 import CoreData
 import BNRCoreDataStack
 
-protocol ConnectionsTableViewControllerDelegate: class {
-    func addProvider(connectionsTableViewController: ConnectionsTableViewController)
-    func connect(profile: Profile, connectionsTableViewController: ConnectionsTableViewController)
-    func configure(profile: Profile, connectionsTableViewController: ConnectionsTableViewController)
-    func delete(profile: Profile, connectionsTableViewController: ConnectionsTableViewController)
+protocol TunnelsTableViewControllerDelegate: class {
+    func addProvider(tunnelsTableViewController: TunnelsTableViewController)
+    func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
 }
 
-class ConnectionsTableViewController: UITableViewController {
-    weak var delegate: ConnectionsTableViewControllerDelegate?
+class TunnelsTableViewController: UITableViewController {
+    weak var delegate: TunnelsTableViewControllerDelegate?
 
     var viewContext: NSManagedObjectContext!
 
-    private lazy var fetchedResultsController: FetchedResultsController<Profile> = {
-        let fetchRequest = NSFetchRequest<Profile>()
-        fetchRequest.entity = Profile.entity()
+    private lazy var fetchedResultsController: FetchedResultsController<Tunnel> = {
+        let fetchRequest = NSFetchRequest<Tunnel>()
+        fetchRequest.entity = Tunnel.entity()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        let frc = FetchedResultsController<Profile>(fetchRequest: fetchRequest,
+        let frc = FetchedResultsController<Tunnel>(fetchRequest: fetchRequest,
                                                     managedObjectContext: viewContext)
         frc.setDelegate(self.frcDelegate)
         return frc
     }()
 
-    private lazy var frcDelegate: ProfileFetchedResultsControllerDelegate = { // swiftlint:disable:this weak_delegate
-        return ProfileFetchedResultsControllerDelegate(tableView: self.tableView)
+    private lazy var frcDelegate: TunnelFetchedResultsControllerDelegate = { // swiftlint:disable:this weak_delegate
+        return TunnelFetchedResultsControllerDelegate(tableView: self.tableView)
     }()
 
     override func viewDidLoad() {
@@ -47,7 +47,7 @@ class ConnectionsTableViewController: UITableViewController {
     }
 
     @IBAction func addProvider(_ sender: Any) {
-        delegate?.addProvider(connectionsTableViewController: self)
+        delegate?.addProvider(tunnelsTableViewController: self)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -59,16 +59,16 @@ class ConnectionsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(type: ProfileTableViewCell.self, for: indexPath)
+        let cell = tableView.dequeueReusableCell(type: TunnelTableViewCell.self, for: indexPath)
 
         guard let sections = fetchedResultsController.sections else {
             fatalError("FetchedResultsController \(fetchedResultsController) should have sections, but found nil")
         }
 
         let section = sections[indexPath.section]
-        let profile = section.objects[indexPath.row]
+        let tunnel = section.objects[indexPath.row]
 
-        cell.textLabel?.text = profile.title
+        cell.textLabel?.text = tunnel.title
 
         return cell
     }
@@ -79,9 +79,9 @@ class ConnectionsTableViewController: UITableViewController {
         }
 
         let section = sections[indexPath.section]
-        let profile = section.objects[indexPath.row]
+        let tunnel = section.objects[indexPath.row]
 
-        delegate?.connect(profile: profile, connectionsTableViewController: self)
+        delegate?.connect(tunnel: tunnel, tunnelsTableViewController: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -92,9 +92,9 @@ class ConnectionsTableViewController: UITableViewController {
         }
 
         let section = sections[indexPath.section]
-        let profile = section.objects[indexPath.row]
+        let tunnel = section.objects[indexPath.row]
 
-        delegate?.configure(profile: profile, connectionsTableViewController: self)
+        delegate?.configure(tunnel: tunnel, tunnelsTableViewController: self)
 
     }
 
@@ -110,16 +110,16 @@ class ConnectionsTableViewController: UITableViewController {
             }
 
             let section = sections[indexPath.section]
-            let profile = section.objects[indexPath.row]
+            let tunnel = section.objects[indexPath.row]
 
-            delegate?.delete(profile: profile, connectionsTableViewController: self)
+            delegate?.delete(tunnel: tunnel, tunnelsTableViewController: self)
         }
     }
 }
 
-extension ConnectionsTableViewController: Identifyable {}
+extension TunnelsTableViewController: Identifyable {}
 
-class ProfileFetchedResultsControllerDelegate: NSObject, FetchedResultsControllerDelegate {
+class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsControllerDelegate {
 
     private weak var tableView: UITableView?
 
@@ -128,19 +128,19 @@ class ProfileFetchedResultsControllerDelegate: NSObject, FetchedResultsControlle
         self.tableView = tableView
     }
 
-    func fetchedResultsControllerDidPerformFetch(_ controller: FetchedResultsController<Profile>) {
+    func fetchedResultsControllerDidPerformFetch(_ controller: FetchedResultsController<Tunnel>) {
         tableView?.reloadData()
     }
 
-    func fetchedResultsControllerWillChangeContent(_ controller: FetchedResultsController<Profile>) {
+    func fetchedResultsControllerWillChangeContent(_ controller: FetchedResultsController<Tunnel>) {
         tableView?.beginUpdates()
     }
 
-    func fetchedResultsControllerDidChangeContent(_ controller: FetchedResultsController<Profile>) {
+    func fetchedResultsControllerDidChangeContent(_ controller: FetchedResultsController<Tunnel>) {
         tableView?.endUpdates()
     }
 
-    func fetchedResultsController(_ controller: FetchedResultsController<Profile>, didChangeObject change: FetchedResultsObjectChange<Profile>) {
+    func fetchedResultsController(_ controller: FetchedResultsController<Tunnel>, didChangeObject change: FetchedResultsObjectChange<Tunnel>) {
         guard let tableView = tableView else { return }
         switch change {
         case let .insert(_, indexPath):
@@ -157,7 +157,7 @@ class ProfileFetchedResultsControllerDelegate: NSObject, FetchedResultsControlle
         }
     }
 
-    func fetchedResultsController(_ controller: FetchedResultsController<Profile>, didChangeSection change: FetchedResultsSectionChange<Profile>) {
+    func fetchedResultsController(_ controller: FetchedResultsController<Tunnel>, didChangeSection change: FetchedResultsSectionChange<Tunnel>) {
         guard let tableView = tableView else { return }
         switch change {
         case let .insert(_, index):
@@ -169,8 +169,8 @@ class ProfileFetchedResultsControllerDelegate: NSObject, FetchedResultsControlle
     }
 }
 
-class ProfileTableViewCell: UITableViewCell {
+class TunnelTableViewCell: UITableViewCell {
 
 }
 
-extension ProfileTableViewCell: Identifyable {}
+extension TunnelTableViewCell: Identifyable {}
