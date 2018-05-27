@@ -32,7 +32,7 @@
             </objects>
             <point key="canvasLocation" x="-1403" y="201"/>
         </scene>
-        <!--Tunnels-->
+        <!--WireGuard Tunnels-->
         <scene sceneID="Tud-vM-cYZ">
             <objects>
                 <tableViewController storyboardIdentifier="TunnelsTableViewController" id="kTU-BV-32R" customClass="TunnelsTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
@@ -64,7 +64,7 @@
                             <outlet property="delegate" destination="kTU-BV-32R" id="b6T-ZR-cmO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Tunnels" id="j0L-5U-jDs">
+                    <navigationItem key="navigationItem" title="WireGuard Tunnels" id="j0L-5U-jDs">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="h2H-H8-3Tn">
                             <connections>
                                 <action selector="addProvider:" destination="kTU-BV-32R" id="xSg-ap-3Fx"/>
