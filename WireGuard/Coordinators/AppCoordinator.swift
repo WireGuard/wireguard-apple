@@ -112,8 +112,7 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     func showTunnelConfigurationViewController(tunnel: Tunnel?, context: NSManagedObjectContext) {
         let tunnelConfigurationViewController = storyboard.instantiateViewController(type: TunnelConfigurationTableViewController.self)
 
-        tunnelConfigurationViewController.viewContext = context
-        tunnelConfigurationViewController.delegate = self
+        tunnelConfigurationViewController.configure(context: context, delegate: self, tunnel: tunnel)
 
         self.navigationController.pushViewController(tunnelConfigurationViewController, animated: true)
     }
@@ -125,5 +124,8 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
 }
 
 extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
+    func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
+        navigationController.popToRootViewController(animated: true)
+    }
 
 }
