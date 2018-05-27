@@ -25,12 +25,12 @@
     <entity name="Tunnel" representedClassName="Tunnel" syncable="YES">
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="interface" maxCount="1" deletionRule="Cascade" destinationEntity="Interface" inverseName="tunnel" inverseEntity="Interface" syncable="YES"/>
-        <relationship name="peers" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Peer" inverseName="tunnel" inverseEntity="Peer" syncable="YES"/>
+        <relationship name="peers" toMany="YES" deletionRule="Cascade" destinationEntity="Peer" inverseName="tunnel" inverseEntity="Peer" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Address" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Interface" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Peer" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Tunnel" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Address" positionX="-54" positionY="45" width="128" height="75"/>
+        <element name="Interface" positionX="-54" positionY="-9" width="128" height="165"/>
+        <element name="Peer" positionX="-36" positionY="9" width="128" height="135"/>
+        <element name="Tunnel" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>
