@@ -23,6 +23,7 @@ extension Interface {
     @NSManaged public var dns: String?
     @NSManaged public var table: String?
     @NSManaged public var tunnel: Tunnel?
+    @NSManaged public var publicKey: String?
     @NSManaged public var adresses: NSSet?
 
 }

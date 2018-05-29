@@ -97,12 +97,10 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     }
 
     func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        // TODO implement
         print("configure tunnel \(tunnel)")
         let editContext = persistentContainer.newBackgroundContext()
         var backgroundTunnel: Tunnel?
         editContext.performAndWait {
-
             backgroundTunnel = editContext.object(with: tunnel.objectID) as? Tunnel
         }
 
@@ -118,8 +116,14 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     }
 
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        // TODO implement
         print("delete tunnel \(tunnel)")
+
+        if let moc = tunnel.managedObjectContext {
+            moc.perform {
+                moc.delete(tunnel)
+                moc.saveContextToStore()
+            }
+        }
     }
 }
 
