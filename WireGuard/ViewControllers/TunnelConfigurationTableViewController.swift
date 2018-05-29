@@ -45,6 +45,17 @@ class TunnelConfigurationTableViewController: UITableViewController {
         return tunnel
     }
 
+    @IBAction func addPeer(_ sender: Any) {
+        if let moc = tunnel.managedObjectContext {
+            tableView.beginUpdates()
+            let insertedAt = IndexPath(row: tunnel.peers?.count ?? 0, section: 1)
+            tableView.insertRows(at: [insertedAt], with: .automatic)
+            tunnel.addToPeers(Peer(context: moc))
+            tableView.endUpdates()
+            tableView.scrollToRow(at: insertedAt, at: .middle, animated: true)
+        }
+    }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
@@ -73,9 +84,12 @@ class TunnelConfigurationTableViewController: UITableViewController {
                 tunnel.addToPeers(peer)
                 cell.peer = peer
             }
-            return cell 
+            cell.delegate = self
+            return cell
         default:
-            return tableView.dequeueReusableCell(type: AddPeerTableViewCell.self, for: indexPath)
+            let cell = tableView.dequeueReusableCell(type: AddPeerTableViewCell.self, for: indexPath)
+            cell.tunnel = tunnel
+            return cell
         }
     }
 
@@ -100,6 +114,19 @@ class TunnelConfigurationTableViewController: UITableViewController {
     }
 }
 
+extension TunnelConfigurationTableViewController: PeerTableViewCellDelegate {
+    func delete(peer: Peer) {
+        if let moc = tunnel.managedObjectContext {
+            tableView.beginUpdates()
+            let deletedAt = IndexPath(row: tunnel.peers?.index(of: peer) ?? 0, section: 1)
+            tableView.deleteRows(at: [deletedAt], with: .automatic)
+            tunnel.removeFromPeers(peer)
+            moc.delete(peer)
+            tableView.endUpdates()
+        }
+    }
+}
+
 class InterfaceTableViewCell: UITableViewCell {
     var model: Interface!
 
@@ -117,7 +144,6 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
     @IBAction
     func textfieldDidChange(_ sender: UITextField) {
         let string = sender.text
-        print(string)
 
         if sender == nameField {
             model.tunnel?.title = string
@@ -142,16 +168,15 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
             }
         }
     }
+}
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print("\(string)")
-
-        return true
-    }
+protocol PeerTableViewCellDelegate: class {
+    func delete(peer: Peer)
 }
 
 class PeerTableViewCell: UITableViewCell {
     var peer: Peer!
+    weak var delegate: PeerTableViewCellDelegate?
 
     @IBOutlet weak var publicKeyField: UITextField!
     @IBOutlet weak var preSharedKeyField: UITextField!
@@ -159,13 +184,15 @@ class PeerTableViewCell: UITableViewCell {
     @IBOutlet weak var endpointField: UITextField!
     @IBOutlet weak var persistentKeepaliveField: UITextField!
 
+    @IBAction func deletePeer(_ sender: Any) {
+        delegate?.delete(peer: peer)
+    }
 }
 
 extension PeerTableViewCell: UITextFieldDelegate {
     @IBAction
     func textfieldDidChange(_ sender: UITextField) {
         let string = sender.text
-        print(string)
 
         if sender == publicKeyField {
             peer.publicKey = string
@@ -181,22 +208,16 @@ extension PeerTableViewCell: UITextFieldDelegate {
             }
         }
     }
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        print("\(string)")
-
-        return true
-    }
 }
 
 class AddPeerTableViewCell: UITableViewCell {
-    var model: Interface?
+    var tunnel: Tunnel!
 
     @IBAction func addPeer(_ sender: Any) {
-        //TODO implement
-        print("Implement add peer")
+        if let moc = tunnel.managedObjectContext {
+            tunnel.addToPeers(Peer(context: moc))
+        }
     }
-
 }
 
 extension TunnelConfigurationTableViewController: Identifyable {}
