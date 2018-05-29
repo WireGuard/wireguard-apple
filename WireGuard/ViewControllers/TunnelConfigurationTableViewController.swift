@@ -61,9 +61,19 @@ class TunnelConfigurationTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            return tableView.dequeueReusableCell(type: InterfaceTableViewCell.self, for: indexPath)
+            let cell = tableView.dequeueReusableCell(type: InterfaceTableViewCell.self, for: indexPath)
+            cell.model = tunnel.interface
+            return cell
         case 1:
-            return tableView.dequeueReusableCell(type: PeerTableViewCell.self, for: indexPath)
+            let cell =  tableView.dequeueReusableCell(type: PeerTableViewCell.self, for: indexPath)
+            if let peer = tunnel.peers?.object(at: indexPath.row) as? Peer {
+                cell.peer = peer
+            } else {
+                let peer = Peer(context: tunnel.managedObjectContext!)
+                tunnel.addToPeers(peer)
+                cell.peer = peer
+            }
+            return cell 
         default:
             return tableView.dequeueReusableCell(type: AddPeerTableViewCell.self, for: indexPath)
         }
@@ -104,12 +114,38 @@ class InterfaceTableViewCell: UITableViewCell {
 }
 
 extension InterfaceTableViewCell: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("\(textField) \(textField.text)")
+    @IBAction
+    func textfieldDidChange(_ sender: UITextField) {
+        let string = sender.text
+        print(string)
+
+        if sender == nameField {
+            model.tunnel?.title = string
+        } else if sender == privateKeyField {
+            model.privateKey = string
+        } else if sender == publicKeyField {
+            model.publicKey = string
+        } else if sender == addressesField {
+            let address = Address(context: model.managedObjectContext!)
+            address.address = string
+            model.adresses = NSSet(array: [address])
+        } else if sender == listenPortField {
+            if let string = string, let port = Int16(string) {
+                model.listenPort = port
+            }
+
+        } else if sender == dnsField {
+            model.dns = string
+        } else if sender == mtuField {
+            if let string = string, let mtu = Int32(string) {
+                model.mtu = mtu
+            }
+        }
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         print("\(string)")
+
         return true
     }
 }
@@ -126,12 +162,29 @@ class PeerTableViewCell: UITableViewCell {
 }
 
 extension PeerTableViewCell: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("\(textField) \(textField.text)")
+    @IBAction
+    func textfieldDidChange(_ sender: UITextField) {
+        let string = sender.text
+        print(string)
+
+        if sender == publicKeyField {
+            peer.publicKey = string
+        } else if sender == preSharedKeyField {
+            peer.presharedKey = string
+        } else if sender == allowedIpsField {
+            peer.allowedIPs = string
+        } else if sender == endpointField {
+            peer.endpoint = string
+        } else if sender == persistentKeepaliveField {
+            if let string = string, let persistentKeepalive = Int16(string) {
+                peer.persistentKeepalive = persistentKeepalive
+            }
+        }
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         print("\(string)")
+
         return true
     }
 }

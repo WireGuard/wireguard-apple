@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -118,6 +118,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
+                                                                <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="Ike-ou-qa9"/>
                                                                 <outlet property="delegate" destination="06N-KU-LSv" id="TuA-ac-TIy"/>
                                                             </connections>
                                                         </textField>
@@ -141,6 +142,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="CQd-My-M7G"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="7YF-mU-HZT"/>
                                                                     </connections>
                                                                 </textField>
@@ -167,6 +169,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
+                                                                <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="d2c-NL-e1I"/>
                                                                 <outlet property="delegate" destination="06N-KU-LSv" id="apT-gO-mcr"/>
                                                             </connections>
                                                         </textField>
@@ -190,6 +193,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="Vtr-4A-l3g"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="CUZ-nd-ETQ"/>
                                                                     </connections>
                                                                 </textField>
@@ -210,6 +214,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="z45-u7-zCB"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="YZ0-LC-PjW"/>
                                                                     </connections>
                                                                 </textField>
@@ -235,6 +240,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="8gN-mk-GtN"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="YjV-8W-z5Q"/>
                                                                     </connections>
                                                                 </textField>
@@ -255,6 +261,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="fgZ-LJ-ksN"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="F1E-lK-AsD"/>
                                                                     </connections>
                                                                 </textField>
@@ -277,6 +284,15 @@
                                         <constraint firstItem="DIe-hK-tf6" firstAttribute="leading" secondItem="CSX-Am-ix0" secondAttribute="leadingMargin" id="sab-5q-2rU"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addressesField" destination="Oh8-qT-kJL" id="8aV-2T-PxV"/>
+                                    <outlet property="dnsField" destination="ByK-wW-6Q4" id="gZ4-7d-AHM"/>
+                                    <outlet property="listenPortField" destination="CSv-At-WVr" id="xnx-xz-pqS"/>
+                                    <outlet property="mtuField" destination="myM-B2-sjT" id="ppo-pV-tMl"/>
+                                    <outlet property="nameField" destination="6y9-eJ-8fF" id="PKk-lj-jK9"/>
+                                    <outlet property="privateKeyField" destination="hYd-0L-nnY" id="JLS-5M-E3T"/>
+                                    <outlet property="publicKeyField" destination="aXZ-aL-pFu" id="Vdo-km-hgS"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddPeerTableViewCell" rowHeight="60" id="RyR-s5-lBV" customClass="AddPeerTableViewCell" customModule="WireGuard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="396" width="375" height="60"/>
@@ -347,6 +363,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
+                                                                <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="taX-Ji-pVu"/>
                                                                 <outlet property="delegate" destination="gzz-88-0IG" id="bkQ-Nc-VH4"/>
                                                             </connections>
                                                         </textField>
@@ -367,6 +384,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
+                                                                <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="XeB-bW-Zog"/>
                                                                 <outlet property="delegate" destination="gzz-88-0IG" id="oAu-VZ-2dn"/>
                                                             </connections>
                                                         </textField>
@@ -387,6 +405,7 @@
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
+                                                                <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="k1U-vW-Jom"/>
                                                                 <outlet property="delegate" destination="gzz-88-0IG" id="DXo-0s-9sc"/>
                                                             </connections>
                                                         </textField>
@@ -410,6 +429,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="bjR-TZ-Sx8"/>
                                                                         <outlet property="delegate" destination="gzz-88-0IG" id="PLB-sa-SBV"/>
                                                                     </connections>
                                                                 </textField>
@@ -430,6 +450,7 @@
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                     <textInputTraits key="textInputTraits"/>
                                                                     <connections>
+                                                                        <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="fQC-Pf-jUQ"/>
                                                                         <outlet property="delegate" destination="gzz-88-0IG" id="sbH-Sb-rcW"/>
                                                                     </connections>
                                                                 </textField>
@@ -450,6 +471,13 @@
                                         <constraint firstAttribute="bottomMargin" secondItem="NIK-2J-pTR" secondAttribute="bottom" id="rRD-SV-Wft"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="allowedIpsField" destination="iiY-Tl-UcH" id="QQK-x0-C3T"/>
+                                    <outlet property="endpointField" destination="W88-H0-dFZ" id="l0A-57-I5p"/>
+                                    <outlet property="persistentKeepaliveField" destination="Q8w-jh-0ox" id="thE-f2-vzz"/>
+                                    <outlet property="preSharedKeyField" destination="wkY-3s-yTK" id="0Tn-cP-uXS"/>
+                                    <outlet property="publicKeyField" destination="RLw-0o-akQ" id="teS-po-0h2"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
