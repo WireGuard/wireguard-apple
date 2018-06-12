@@ -14,19 +14,19 @@ export CGO_ENABLED := 1
 
 default: example
 
-libwg-go.so: $(FILES) src/git.zx2c4.com/wireguard-go/api-ios.go src/git.zx2c4.com/wireguard-go/tun/tun_ios.go
+libwg-go.a: $(FILES) src/git.zx2c4.com/wireguard-go/api-ios.go src/git.zx2c4.com/wireguard-go/tun/tun_ios.go
 	find . -name '*.go' -type l -delete
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sf $(abspath $(FILE)) $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(notdir $(FILE));)
 	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
-	GOPATH=$(PWD) go build -tags ios -v -o libwg-go.so -buildmode c-archive git.zx2c4.com/wireguard-go
+	GOPATH=$(PWD) go build -tags ios -v -o libwg-go.a -buildmode c-archive git.zx2c4.com/wireguard-go
 	@rm -f libwg-go.h
 
-example: example.c libwg-go.so
+example: example.c libwg-go.a
 	$(CC) -L. -lwg-go -o example example.c
 
 clean:
-	rm -f libwg-go.so test
+	rm -f libwg-go.a test
 
 .PHONY: clean default
