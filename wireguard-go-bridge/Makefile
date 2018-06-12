@@ -18,9 +18,9 @@ libwg-go.so: $(FILES) src/git.zx2c4.com/wireguard-go/api-ios.go src/git.zx2c4.co
 	find . -name '*.go' -type l -delete
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
-	$(foreach FILE,$(FILES),ln -sf $(abspath $(FILE)) $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(file $(FILE));)
+	$(foreach FILE,$(FILES),ln -sf $(abspath $(FILE)) $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(notdir $(FILE));)
 	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
-	GOPATH=$(PWD) go build -tags ios -v -o libwg-go.so -buildmode c-shared git.zx2c4.com/wireguard-go
+	GOPATH=$(PWD) go build -tags ios -v -o libwg-go.so -buildmode c-archive git.zx2c4.com/wireguard-go
 	@rm -f libwg-go.h
 
 example: example.c libwg-go.so
