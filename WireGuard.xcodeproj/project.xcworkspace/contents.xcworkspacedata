@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Wireguard.xcodeproj">
+      location = "self:WireGuard.xcodeproj">
    </FileRef>
 </Workspace>
