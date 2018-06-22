@@ -53,3 +53,4 @@ fastlane/screenshots
 fastlane/test_output
 Preview.html
 output
+wireguard-go-bridge
