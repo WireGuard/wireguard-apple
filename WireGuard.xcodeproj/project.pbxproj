@@ -713,7 +713,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appforce1.com.wireguard.ios.WireGuard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -736,7 +736,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appforce1.com.wireguard.ios.WireGuard;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -802,7 +802,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appforce1.com.wireguard.ios.WireGuard.WireGuardNetworkExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard.WireGuardNetworkExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
@@ -830,7 +830,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = appforce1.com.wireguard.ios.WireGuard.WireGuardNetworkExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard.WireGuardNetworkExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
