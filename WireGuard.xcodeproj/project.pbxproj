@@ -35,6 +35,8 @@
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AD095C820DC4190000E9CF5 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD0900120DC4171000E9CF5 /* libwg-go.a */; };
 		4AD095CC20DC42CD000E9CF5 /* WireGuardGoWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */; };
+		4AEAC32920F14B3B007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32820F14B3B007B67AB /* Log.swift */; };
+		4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32A20F14BA9007B67AB /* Log.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +110,8 @@
 		4AD095C920DC42CD000E9CF5 /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		4AD095CA20DC42CD000E9CF5 /* WireGuardGoWrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WireGuardGoWrapper.h; sourceTree = "<group>"; };
 		4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WireGuardGoWrapper.m; sourceTree = "<group>"; };
+		4AEAC32820F14B3B007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		4AEAC32A20F14BA9007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WireGuard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -175,6 +179,7 @@
 				4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */,
 				4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */,
 				4A4BACF120B5F1C100F12B28 /* Info.plist */,
+				4AEAC32A20F14BA9007B67AB /* Log.swift */,
 			);
 			path = WireGuard;
 			sourceTree = "<group>";
@@ -242,6 +247,7 @@
 				4AD095CA20DC42CD000E9CF5 /* WireGuardGoWrapper.h */,
 				4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */,
 				4AD095C920DC42CD000E9CF5 /* WireGuardNetworkExtension-Bridging-Header.h */,
+				4AEAC32820F14B3B007B67AB /* Log.swift */,
 			);
 			path = WireGuardNetworkExtension;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 			files = (
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
 				4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */,
+				4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */,
 				4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */,
@@ -546,6 +553,7 @@
 			files = (
 				4AD095CC20DC42CD000E9CF5 /* WireGuardGoWrapper.m in Sources */,
 				4A61D82920D98CE2006C7A76 /* PacketTunnelProvider.swift in Sources */,
+				4AEAC32920F14B3B007B67AB /* Log.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +799,7 @@
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 67JZJ7TWU3;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -819,6 +828,7 @@
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 67JZJ7TWU3;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
