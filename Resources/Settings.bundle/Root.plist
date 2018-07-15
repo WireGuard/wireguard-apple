@@ -21,6 +21,8 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>FooterText</key>
+			<string>Apple Acknowledgement</string>
 		</dict>
 		<dict>
 			<key>Type</key>

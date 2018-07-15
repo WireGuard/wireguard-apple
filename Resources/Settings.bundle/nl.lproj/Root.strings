@@ -1,5 +1,6 @@
-﻿/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
+/* A single strings file, whose title is specified in your preferences schema. The strings files provide the localized content to display to the user for each of your preferences. */
 
 "Version Info" = "Versie informatie";
 "Acknowledgements" = "Licenties";
+"Apple Acknowledgement" = "Deze app bevat code afgeleid van Apple voorbeeld code: https://developer.apple.com/library/archive/samplecode/SimpleTunnel/Introduction/Intro.html";
 
