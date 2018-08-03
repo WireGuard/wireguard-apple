@@ -3,3 +3,4 @@
 //
 
 #import "WireGuardGoWrapper.h"
+#include "wireguard.h"

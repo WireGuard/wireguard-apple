@@ -7,10 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <NetworkExtension/NetworkExtension.h>
 
 @interface WireGuardGoWrapper : NSObject
 
-- (void) turnOnWithInterfaceName: (NSString *)interfaceName settingsString: (NSString *)settingsString;
+@property (nonatomic, weak) NEPacketTunnelFlow *packetFlow;
+
+- (BOOL) turnOnWithInterfaceName: (NSString *)interfaceName settingsString: (NSString *)settingsString;
 - (void) turnOff;
 
 @end
