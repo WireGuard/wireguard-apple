@@ -9,54 +9,57 @@
 import NetworkExtension
 import os.log
 
+enum PacketTunnelProviderError: Error {
+    case tunnelSetupFailed
+}
+
+/// A packet tunnel provider object.
 class PacketTunnelProvider: NEPacketTunnelProvider {
+
+    // MARK: Properties
+
+    /// A reference to the WireGuard wrapper object.
     let wireGuardWrapper = WireGuardGoWrapper()
 
-    private let tunnelQueue = DispatchQueue(label: PacketTunnelProvider.description())
+    /// The completion handler to call when the tunnel is fully established.
+    var pendingStartCompletion: ((Error?) -> Void)?
 
-    //TODO create a way to transfer config into extension
+    /// The completion handler to call when the tunnel is fully disconnected.
+    var pendingStopCompletion: (() -> Void)?
 
+    // MARK: NEPacketTunnelProvider
+
+    /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         os_log("Starting tunnel", log: Log.general, type: .info)
-        // Add code here to start the process of connecting the tunnel.
 
-        //TODO get a settings string in here.
-        tunnelQueue.sync {
-            wireGuardWrapper.turnOn(withInterfaceName: "TODO", settingsString: "TODO")
+        //TODO tunnel settings
+        if wireGuardWrapper.turnOn(withInterfaceName: "test", settingsString: "") {
+            // Success
+            completionHandler(nil)
+        } else {
+            completionHandler(PacketTunnelProviderError.tunnelSetupFailed)
         }
     }
 
+    /// Begin the process of stopping the tunnel.
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         os_log("Stopping tunnel", log: Log.general, type: .info)
-        // Add code here to start the process of stopping the tunnel.
-        tunnelQueue.sync {
-            wireGuardWrapper.turnOff()
-        }
+
+        wireGuardWrapper.turnOff()
         completionHandler()
     }
 
+    /// Handle IPC messages from the app.
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
-        // Add code here to handle the message.
-        if let handler = completionHandler {
-            handler(messageData)
+        guard let messageString = NSString(data: messageData, encoding: String.Encoding.utf8.rawValue) else {
+            completionHandler?(nil)
+            return
         }
-    }
 
-    private func loopReadPackets(_ handler: @escaping ([Data]?, Error?) -> Void) {
-        packetFlow.readPackets { [weak self] (_, _) in
-            // TODO write packets into the tunnel
-            self?.loopReadPackets(handler)
-        }
-    }
+        os_log("Got a message from the app: %s", log: Log.general, type: .info, messageString)
 
-    func writePacket(_ packet: Data, completionHandler: ((Error?) -> Void)?) {
-        packetFlow.writePackets([packet], withProtocols: [AF_INET] as [NSNumber])
-        completionHandler?(nil)
-    }
-
-    func writePackets(_ packets: [Data], completionHandler: ((Error?) -> Void)?) {
-        let protocols = [Int32](repeating: AF_INET, count: packets.count) as [NSNumber]
-        packetFlow.writePackets(packets, withProtocols: protocols)
-        completionHandler?(nil)
+        let responseData = "Hello app".data(using: String.Encoding.utf8)
+        completionHandler?(responseData)
     }
 }
