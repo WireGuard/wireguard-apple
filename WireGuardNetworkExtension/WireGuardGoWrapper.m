@@ -111,5 +111,5 @@ static ssize_t do_write(const void *ctx, const unsigned char *buf, size_t len)
 static void do_log(int level, const char *tag, const char *msg)
 {
     // TODO Get some details on the log level and distribute to matching log levels.
-    os_log([WireGuardGoWrapper log], "Log level %d for %s: %s", level, tag, msg);
+    os_log([WireGuardGoWrapper log], "Log level %d for %{public}s: %{public}s", level, tag, msg);
 }
