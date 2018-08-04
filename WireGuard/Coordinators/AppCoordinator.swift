@@ -245,6 +245,7 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
             protocolConfiguration.providerBundleIdentifier = VPNBUNDLE
             //TODO obtain endpoint hostname
 //            protocolConfiguration.serverAddress = endpoint.hostname
+            protocolConfiguration.serverAddress = "168.192.0.1"
             //TODO obtain endpoint username
 //            protocolConfiguration.username = endpoint.username
             //TODO: how to obtain this?
