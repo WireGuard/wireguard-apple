@@ -13,7 +13,7 @@ import BNRCoreDataStack
 
 protocol TunnelsTableViewControllerDelegate: class {
     func addProvider(tunnelsTableViewController: TunnelsTableViewController)
-    func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func connect(tunnel: Tunnel?, tunnelsTableViewController: TunnelsTableViewController)
     func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
 }

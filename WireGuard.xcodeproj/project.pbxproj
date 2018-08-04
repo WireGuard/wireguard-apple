@@ -33,6 +33,7 @@
 		4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */; };
 		4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
+		4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */; };
 		4AD095C820DC4190000E9CF5 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD0900120DC4171000E9CF5 /* libwg-go.a */; };
 		4AD095CC20DC42CD000E9CF5 /* WireGuardGoWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */; };
 		4AEAC32920F14B3B007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32820F14B3B007B67AB /* Log.swift */; };
@@ -105,6 +106,7 @@
 		4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
+		4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tunnel+Extension.swift"; sourceTree = "<group>"; };
 		4AD0900120DC4171000E9CF5 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = "<group>"; };
 		4AD0900720DC4171000E9CF5 /* wireguard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wireguard.h; sourceTree = "<group>"; };
 		4AD095C920DC42CD000E9CF5 /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */,
 				4A4BAD1820B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift */,
 				4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */,
+				4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */,
 				4A4BAD1520B5F8DE00F12B28 /* WireGuard.xcdatamodeld */,
 			);
 			path = Models;
@@ -527,6 +530,7 @@
 				4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */,
 				4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
+				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
