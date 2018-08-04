@@ -35,15 +35,13 @@ class AppCoordinator: RootViewCoordinator {
 
     var status = NEVPNStatus.invalid {
         didSet {
+            //TODO: signal status
             switch status {
             case .connected:
-            //TODO: signal connected
                 os_log("Connected VPN", log: Log.general, type: .info)
             case .connecting, .disconnecting, .reasserting:
-            //TODO: signal connecting
                 os_log("Connecting VPN", log: Log.general, type: .info)
             case .disconnected, .invalid:
-            //TODO: disconnect / invalid
                 os_log("Disconnecting VPN", log: Log.general, type: .info)
             }
         }
