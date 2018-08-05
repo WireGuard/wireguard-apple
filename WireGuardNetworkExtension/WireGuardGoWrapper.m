@@ -85,12 +85,13 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
 
     if (wrapper.packets.count == 0) {
 
-        [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
-            [wrapper.packets addObjectsFromArray:packets];
-            [wrapper.protocols addObjectsFromArray:protocols];
-            // TODO make sure that the completion handler and the do_read are not performed on the same thread.
-            [wrapper.condition signal];
-        }];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
+                [wrapper.packets addObjectsFromArray:packets];
+                [wrapper.protocols addObjectsFromArray:protocols];
+                [wrapper.condition signal];
+            }];
+        });
         [wrapper.condition wait];
     }
 
