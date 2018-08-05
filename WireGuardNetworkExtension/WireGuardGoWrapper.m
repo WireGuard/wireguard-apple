@@ -44,6 +44,7 @@ static void do_log(int level, const char *tag, const char *msg);
 
 - (BOOL) turnOnWithInterfaceName: (NSString *)interfaceName settingsString: (NSString *)settingsString
 {
+    os_log([WireGuardGoWrapper log], "WireGuard Go Version %{public}s", wgVersion());
 
     wgSetLogger(do_log);
 
@@ -59,6 +60,10 @@ static void do_log(int level, const char *tag, const char *msg);
 {
     self.isClosed = YES;
     wgTurnOff(self.handle);
+}
+
++ (NSString *)versionWireGuardGo {
+    return [NSString stringWithUTF8String:wgVersion()];
 }
 
 + (os_log_t)log {
