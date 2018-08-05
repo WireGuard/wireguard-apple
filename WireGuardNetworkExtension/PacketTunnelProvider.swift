@@ -36,7 +36,26 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         //TODO tunnel settings
         if wireGuardWrapper.turnOn(withInterfaceName: "test", settingsString: "") {
             // Success
-            completionHandler(nil)
+//            completionHandler(nil)
+
+            //TODO obtain network config from WireGuard config or remote.
+            // route all traffic to VPN
+            let defaultRoute = NEIPv4Route.default()
+//            defaultRoute.gatewayAddress = gateway
+
+            let ipv4Settings = NEIPv4Settings(addresses: ["149.248.160.60"], subnetMasks: ["255.255.255.255"])
+            ipv4Settings.includedRoutes = [defaultRoute]
+            ipv4Settings.excludedRoutes = []
+
+//            let dnsSettings = NEDNSSettings(servers: dnsServers)
+
+            let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
+            newSettings.ipv4Settings = ipv4Settings
+//            newSettings.dnsSettings = dnsSettings
+//            newSettings.mtu = cfg.mtu
+
+            setTunnelNetworkSettings(newSettings, completionHandler: completionHandler)
+
         } else {
             completionHandler(PacketTunnelProviderError.tunnelSetupFailed)
         }
