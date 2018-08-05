@@ -3,8 +3,13 @@
 To get started...
 
 - Clone this repo.
-- Run `pod install`
-- Open `WireGuard.xcworkspace`
+  - `git clone https://git.zx2c4.com/wireguard-ios`
+  - Init and update submodule: `git submodule init && git submodule update`
+- Prepare WireGuard Go bindings
+  - `cd wireguard-go-bridge && make`
+- Prepare Xcode project
+  - Run `pod install`
+  - Open `WireGuard.xcworkspace`
 
 ## License
 
