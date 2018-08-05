@@ -81,6 +81,8 @@ static void do_log(int level, const char *tag, const char *msg);
 static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
 {
     WireGuardGoWrapper *wrapper = (__bridge WireGuardGoWrapper *)ctx;
+    if (wrapper.isClosed) return -1;
+
     if (wrapper.packets.count == 0) {
 
         [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
@@ -97,11 +99,14 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
     [wrapper.packets removeObjectAtIndex:0];
     [wrapper.protocols removeObjectAtIndex:0];
 
-    len = [packet length];
-    buf = (Byte*)malloc(len);
-    memcpy(buf, [packet bytes], len);
+    NSUInteger packetLength = [packet length];
+    if (packetLength > len) {
+        // The packet will be dropped when we end up here.
+        return 0;
+    }
+    memcpy(buf, [packet bytes], packetLength);
 
-    return wrapper.isClosed ? -1 : 0;
+    return packetLength;
 }
 
 static ssize_t do_write(const void *ctx, const unsigned char *buf, size_t len)
