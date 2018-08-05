@@ -53,7 +53,7 @@ static void do_log(int level, const char *tag, const char *msg);
 
     self.handle = wgTurnOn((gostring_t){ .p = ifName, .n = interfaceName.length }, (gostring_t){ .p = settings, .n = settingsString.length }, do_read, do_write, (__bridge void *)(self));
 
-    return self.handle > 0;
+    return self.handle >= 0;
 }
 
 - (void) turnOff
