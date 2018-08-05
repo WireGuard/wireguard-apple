@@ -16,4 +16,6 @@
 - (BOOL) turnOnWithInterfaceName: (NSString *)interfaceName settingsString: (NSString *)settingsString;
 - (void) turnOff;
 
++ (NSString *)versionWireGuardGo;
+
 @end
