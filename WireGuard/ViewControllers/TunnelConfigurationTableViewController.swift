@@ -35,7 +35,9 @@ class TunnelConfigurationTableViewController: UITableViewController {
 
         viewContext.performAndWait {
             tunnel = Tunnel(context: viewContext)
-            tunnel.addToPeers(Peer(context: viewContext))
+            let peer = Peer(context: viewContext)
+            peer.allowedIPs = "0.0.0.0/0, ::/0"
+            tunnel.addToPeers(peer)
 
             let interface = Interface(context: viewContext)
             interface.addToAdresses(Address(context: viewContext))
@@ -50,7 +52,11 @@ class TunnelConfigurationTableViewController: UITableViewController {
             tableView.beginUpdates()
             let insertedAt = IndexPath(row: tunnel.peers?.count ?? 0, section: 1)
             tableView.insertRows(at: [insertedAt], with: .automatic)
-            tunnel.addToPeers(Peer(context: moc))
+
+            let peer = Peer(context: moc)
+            peer.allowedIPs = "0.0.0.0/0, ::/0"
+            tunnel.addToPeers(peer)
+
             tableView.endUpdates()
             tableView.scrollToRow(at: insertedAt, at: .middle, animated: true)
         }
@@ -128,7 +134,17 @@ extension TunnelConfigurationTableViewController: PeerTableViewCellDelegate {
 }
 
 class InterfaceTableViewCell: UITableViewCell {
-    var model: Interface!
+    var model: Interface! {
+        didSet {
+            nameField.text = model.tunnel?.title
+            privateKeyField.text = model.privateKey
+            publicKeyField.text = model.publicKey
+//TODO            addressesField.text = model.adresses.map{ $0.}
+            listenPortField.text = String(model.listenPort)
+            dnsField.text = model.dns
+            mtuField.text = String(model.mtu)
+        }
+    }
 
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
@@ -137,7 +153,6 @@ class InterfaceTableViewCell: UITableViewCell {
     @IBOutlet weak var listenPortField: UITextField!
     @IBOutlet weak var dnsField: UITextField!
     @IBOutlet weak var mtuField: UITextField!
-
 }
 
 extension InterfaceTableViewCell: UITextFieldDelegate {
@@ -175,7 +190,15 @@ protocol PeerTableViewCellDelegate: class {
 }
 
 class PeerTableViewCell: UITableViewCell {
-    var peer: Peer!
+    var peer: Peer! {
+        didSet {
+            publicKeyField.text = peer.publicKey
+            preSharedKeyField.text = peer.presharedKey
+            allowedIpsField.text = peer.allowedIPs
+            endpointField.text = peer.endpoint
+            persistentKeepaliveField.text = String(peer.persistentKeepalive)
+        }
+    }
     weak var delegate: PeerTableViewCellDelegate?
 
     @IBOutlet weak var publicKeyField: UITextField!
