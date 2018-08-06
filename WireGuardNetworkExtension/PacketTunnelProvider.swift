@@ -21,12 +21,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// A reference to the WireGuard wrapper object.
     let wireGuardWrapper = WireGuardGoWrapper()
 
-    /// The completion handler to call when the tunnel is fully established.
-    var pendingStartCompletion: ((Error?) -> Void)?
-
-    /// The completion handler to call when the tunnel is fully disconnected.
-    var pendingStopCompletion: (() -> Void)?
-
     // MARK: NEPacketTunnelProvider
 
     /// Begin the process of establishing the tunnel.
