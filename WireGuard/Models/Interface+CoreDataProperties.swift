@@ -26,17 +26,4 @@ extension Interface {
 
 // MARK: Generated accessors for adresses
 extension Interface {
-
-    @objc(addAdressesObject:)
-    @NSManaged public func addToAdresses(_ value: Address)
-
-    @objc(removeAdressesObject:)
-    @NSManaged public func removeFromAdresses(_ value: Address)
-
-    @objc(addAdresses:)
-    @NSManaged public func addToAdresses(_ values: NSSet)
-
-    @objc(removeAdresses:)
-    @NSManaged public func removeFromAdresses(_ values: NSSet)
-
 }
