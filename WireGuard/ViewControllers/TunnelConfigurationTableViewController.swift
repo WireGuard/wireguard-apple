@@ -138,8 +138,6 @@ class InterfaceTableViewCell: UITableViewCell {
         didSet {
             nameField.text = model.tunnel?.title
             privateKeyField.text = model.privateKey
-            publicKeyField.text = model.publicKey
-//TODO            addressesField.text = model.adresses.map{ $0.}
             listenPortField.text = String(model.listenPort)
             dnsField.text = model.dns
             mtuField.text = String(model.mtu)
@@ -149,7 +147,6 @@ class InterfaceTableViewCell: UITableViewCell {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
     @IBOutlet weak var publicKeyField: UITextField!
-    @IBOutlet weak var addressesField: UITextField!
     @IBOutlet weak var listenPortField: UITextField!
     @IBOutlet weak var dnsField: UITextField!
     @IBOutlet weak var mtuField: UITextField!
@@ -164,17 +161,10 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
             model.tunnel?.title = string
         } else if sender == privateKeyField {
             model.privateKey = string
-        } else if sender == publicKeyField {
-            model.publicKey = string
-        } else if sender == addressesField {
-            let address = Address(context: model.managedObjectContext!)
-            address.address = string
-            model.adresses = NSSet(array: [address])
         } else if sender == listenPortField {
             if let string = string, let port = Int16(string) {
                 model.listenPort = port
             }
-
         } else if sender == dnsField {
             model.dns = string
         } else if sender == mtuField {
