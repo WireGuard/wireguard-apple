@@ -40,7 +40,6 @@ class TunnelConfigurationTableViewController: UITableViewController {
             tunnel.addToPeers(peer)
 
             let interface = Interface(context: viewContext)
-            interface.addToAdresses(Address(context: viewContext))
 
             tunnel.interface = interface
         }

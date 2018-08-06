@@ -30,8 +30,6 @@
 		4A61D82920D98CE2006C7A76 /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A61D82820D98CE2006C7A76 /* PacketTunnelProvider.swift */; };
 		4A61D82E20D98CE2006C7A76 /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4A61D82620D98CE1006C7A76 /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
-		4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */; };
-		4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */; };
 		4AC5462F211643DE00749D21 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
@@ -104,8 +102,6 @@
 		4A61D82B20D98CE2006C7A76 /* WireGuardNetworkExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardNetworkExtension.entitlements; sourceTree = "<group>"; };
 		4A61D83320D98D07006C7A76 /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		4A61D83420D98D25006C7A76 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
-		4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataClass.swift"; sourceTree = "<group>"; };
-		4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Address+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
 		4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tunnel+Extension.swift"; sourceTree = "<group>"; };
 		4AD0900120DC4171000E9CF5 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = "<group>"; };
@@ -229,8 +225,6 @@
 		4A4BAD1420B5F8C000F12B28 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				4A7F6EDB20B674CD00B260B7 /* Address+CoreDataClass.swift */,
-				4A7F6EDC20B674CD00B260B7 /* Address+CoreDataProperties.swift */,
 				4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */,
 				4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */,
 				4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */,
@@ -529,7 +523,6 @@
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
 				4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */,
 				4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */,
-				4A7F6EDE20B674CD00B260B7 /* Address+CoreDataProperties.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */,
 				4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */,
@@ -540,7 +533,6 @@
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
 				4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */,
-				4A7F6EDD20B674CD00B260B7 /* Address+CoreDataClass.swift in Sources */,
 				4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */,
 				4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */,
 				4A4BAD1B20B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift in Sources */,
