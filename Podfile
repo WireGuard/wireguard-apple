@@ -5,8 +5,6 @@ use_frameworks!
 swift_version = "4.0"
 
 target 'WireGuard' do
-  pod 'Fabric'
-  pod 'Crashlytics'
   pod 'SwiftLint'
   pod 'PromiseKit/CorePromise'
   pod 'KeychainSwift'
