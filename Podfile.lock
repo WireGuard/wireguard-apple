@@ -1,31 +1,26 @@
 PODS:
-  - Alamofire (4.7.2)
+  - Alamofire (4.7.3)
   - AlamofireImage (3.3.1):
     - Alamofire (~> 4.5)
   - BNRCoreDataStack (2.3.1)
-  - Crashlytics (3.10.1):
-    - Fabric (~> 1.7.5)
   - Disk (0.3.3)
-  - Fabric (1.7.6)
   - KeychainSwift (11.0.0)
   - Moya (11.0.2):
     - Moya/Core (= 11.0.2)
   - Moya/Core (11.0.2):
     - Alamofire (~> 4.1)
     - Result (~> 3.0)
-  - NVActivityIndicatorView (4.2.1):
-    - NVActivityIndicatorView/Presenter (= 4.2.1)
-  - NVActivityIndicatorView/Presenter (4.2.1)
-  - PromiseKit/CorePromise (6.2.7)
+  - NVActivityIndicatorView (4.3.0):
+    - NVActivityIndicatorView/Presenter (= 4.3.0)
+  - NVActivityIndicatorView/Presenter (4.3.0)
+  - PromiseKit/CorePromise (6.3.4)
   - Result (3.2.4)
-  - SwiftLint (0.25.1)
+  - SwiftLint (0.27.0)
 
 DEPENDENCIES:
   - AlamofireImage
   - BNRCoreDataStack
-  - Crashlytics
   - Disk
-  - Fabric
   - KeychainSwift
   - Moya
   - NVActivityIndicatorView
@@ -37,9 +32,7 @@ SPEC REPOS:
     - Alamofire
     - AlamofireImage
     - BNRCoreDataStack
-    - Crashlytics
     - Disk
-    - Fabric
     - KeychainSwift
     - Moya
     - NVActivityIndicatorView
@@ -48,19 +41,17 @@ SPEC REPOS:
     - SwiftLint
 
 SPEC CHECKSUMS:
-  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
   AlamofireImage: 3b35b586853abaf94ca1250f4e94cff3c21a4c0d
   BNRCoreDataStack: d9d7d0ed1afd27dca5a903dde1250aa4c6dbc3f5
-  Crashlytics: aee1a064cbbf99b32efa3f056a5f458d846bc8ff
   Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
-  Fabric: f8d42c893bb187326a7968b62abe55c36a987a46
   KeychainSwift: bea6bd9f98af7b8d7ca4aa79fe105c00fab532db
   Moya: a725035953bc1c0eb1be505ab903984501d82440
-  NVActivityIndicatorView: 8068ba3ad39cb44cbaab25d89ff2546b3f092681
-  PromiseKit: 12b9d87748b170714247d8b2677146ca57e488f2
+  NVActivityIndicatorView: 963f62bf9f993fcf23218e55958e5b1761b9504c
+  PromiseKit: e1425568123ec844a944c93f2bcb29d511d39cf5
   Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
-  SwiftLint: ce933681be10c3266e82576dad676fa815a602e9
+  SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
 
-PODFILE CHECKSUM: 0d0e9b16451896d624a83e7c8701984fa3e606e0
+PODFILE CHECKSUM: 105db7dade633dc0392641e30930e18d04c95d3d
 
 COCOAPODS: 1.5.3
