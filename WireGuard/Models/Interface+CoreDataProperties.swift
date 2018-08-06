@@ -16,15 +16,11 @@ extension Interface {
         return NSFetchRequest<Interface>(entityName: "Interface")
     }
 
-    @NSManaged public var fwMark: Int32
     @NSManaged public var listenPort: Int16
     @NSManaged public var privateKey: String?
     @NSManaged public var mtu: Int32
     @NSManaged public var dns: String?
-    @NSManaged public var table: String?
     @NSManaged public var tunnel: Tunnel?
-    @NSManaged public var publicKey: String?
-    @NSManaged public var adresses: NSSet?
 
 }
 

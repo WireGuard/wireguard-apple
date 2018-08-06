@@ -87,15 +87,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="InterfaceTableViewCell" rowHeight="368" id="06N-KU-LSv" customClass="InterfaceTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="368"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="InterfaceTableViewCell" rowHeight="308" id="06N-KU-LSv" customClass="InterfaceTableViewCell" customModule="WireGuard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="308"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="06N-KU-LSv" id="CSX-Am-ix0">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="367.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="307.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="DIe-hK-tf6">
-                                            <rect key="frame" x="16" y="11" width="343" height="346"/>
+                                            <rect key="frame" x="16" y="11" width="343" height="286"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interface" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uku-6H-QWf">
                                                     <rect key="frame" x="0.0" y="0.0" width="343" height="46"/>
@@ -154,76 +154,29 @@
                                                         </stackView>
                                                     </subviews>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="LqQ-yU-ag2">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="nv7-4q-QjM">
                                                     <rect key="frame" x="0.0" y="180" width="343" height="46"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DqG-xF-fZX">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Listen port" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h1p-Ea-ler">
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="16"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                             <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="(generated)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aXZ-aL-pFu">
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="(random)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CSv-At-WVr">
                                                             <rect key="frame" x="0.0" y="16" width="343" height="30"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                             <connections>
-                                                                <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="d2c-NL-e1I"/>
-                                                                <outlet property="delegate" destination="06N-KU-LSv" id="apT-gO-mcr"/>
+                                                                <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="z45-u7-zCB"/>
+                                                                <outlet property="delegate" destination="06N-KU-LSv" id="YZ0-LC-PjW"/>
                                                             </connections>
                                                         </textField>
                                                     </subviews>
                                                 </stackView>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dqj-8V-yB6">
-                                                    <rect key="frame" x="0.0" y="240" width="343" height="46"/>
-                                                    <subviews>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="1am-cp-4Wr">
-                                                            <rect key="frame" x="0.0" y="0.0" width="232" height="46"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Addresses" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mdx-gd-wO2">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="232" height="16"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Oh8-qT-kJL">
-                                                                    <rect key="frame" x="0.0" y="16" width="232" height="30"/>
-                                                                    <nil key="textColor"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
-                                                                    <connections>
-                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="Vtr-4A-l3g"/>
-                                                                        <outlet property="delegate" destination="06N-KU-LSv" id="CUZ-nd-ETQ"/>
-                                                                    </connections>
-                                                                </textField>
-                                                            </subviews>
-                                                        </stackView>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="nv7-4q-QjM">
-                                                            <rect key="frame" x="240" y="0.0" width="103" height="46"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Listen port" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h1p-Ea-ler">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="103" height="16"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="(random)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CSv-At-WVr">
-                                                                    <rect key="frame" x="0.0" y="16" width="103" height="30"/>
-                                                                    <nil key="textColor"/>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
-                                                                    <connections>
-                                                                        <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="z45-u7-zCB"/>
-                                                                        <outlet property="delegate" destination="06N-KU-LSv" id="YZ0-LC-PjW"/>
-                                                                    </connections>
-                                                                </textField>
-                                                            </subviews>
-                                                        </stackView>
-                                                    </subviews>
-                                                </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="7fC-XV-6KP">
-                                                    <rect key="frame" x="0.0" y="300" width="343" height="46"/>
+                                                    <rect key="frame" x="0.0" y="240" width="343" height="46"/>
                                                     <subviews>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="NR3-Me-yLc">
                                                             <rect key="frame" x="0.0" y="0.0" width="232" height="46"/>
@@ -271,7 +224,6 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="nv7-4q-QjM" firstAttribute="width" secondItem="DIe-hK-tf6" secondAttribute="width" multiplier="0.3" id="1kU-bA-fIi"/>
                                                 <constraint firstItem="C1M-bh-5mf" firstAttribute="width" secondItem="DIe-hK-tf6" secondAttribute="width" multiplier="0.3" id="CGs-Ix-e2L"/>
                                                 <constraint firstItem="UId-O4-q3t" firstAttribute="width" secondItem="DIe-hK-tf6" secondAttribute="width" multiplier="0.3" id="Tly-iG-ApC"/>
                                             </constraints>
@@ -285,17 +237,15 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="addressesField" destination="Oh8-qT-kJL" id="8aV-2T-PxV"/>
                                     <outlet property="dnsField" destination="ByK-wW-6Q4" id="gZ4-7d-AHM"/>
                                     <outlet property="listenPortField" destination="CSv-At-WVr" id="xnx-xz-pqS"/>
                                     <outlet property="mtuField" destination="myM-B2-sjT" id="ppo-pV-tMl"/>
                                     <outlet property="nameField" destination="6y9-eJ-8fF" id="PKk-lj-jK9"/>
                                     <outlet property="privateKeyField" destination="hYd-0L-nnY" id="JLS-5M-E3T"/>
-                                    <outlet property="publicKeyField" destination="aXZ-aL-pFu" id="Vdo-km-hgS"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AddPeerTableViewCell" rowHeight="60" id="RyR-s5-lBV" customClass="AddPeerTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="396" width="375" height="60"/>
+                                <rect key="frame" x="0.0" y="336" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RyR-s5-lBV" id="gPY-qW-fbd">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="59.5"/>
@@ -320,7 +270,7 @@
                                 </tableViewCellContentView>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PeerTableViewCell" rowHeight="308" id="gzz-88-0IG" customClass="PeerTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="456" width="375" height="308"/>
+                                <rect key="frame" x="0.0" y="396" width="375" height="308"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gzz-88-0IG" id="XA6-EM-5V9">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="307.5"/>
