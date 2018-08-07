@@ -64,8 +64,10 @@ extension Tunnel {
         if peer.persistentKeepalive > 0 {
             settingsString += "persistent_keepalive_interval=\(peer.persistentKeepalive)"
         }
-        if let allowedIPs = peer.allowedIPs {
-            settingsString += "allowed_ip=\(allowedIPs)" // TODO: split on ,
+        if let allowedIPs = peer.allowedIPs?.split(separator: ",") {
+            allowedIPs.forEach {
+                settingsString += "allowed_ip=\($0.trimmingCharacters(in: .whitespaces))"
+            }
         }
 
         return settingsString
