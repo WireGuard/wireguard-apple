@@ -16,6 +16,7 @@ extension Tunnel {
         return NSFetchRequest<Tunnel>(entityName: "Tunnel")
     }
 
+    @NSManaged public var tunnelIdentifier: String?
     @NSManaged public var title: String?
     @NSManaged public var interface: Interface?
     @NSManaged public var peers: NSOrderedSet?

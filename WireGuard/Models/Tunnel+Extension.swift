@@ -13,6 +13,7 @@ extension Tunnel {
         var providerConfiguration = [String: Any]()
 
         providerConfiguration["title"] = self.title
+        providerConfiguration["tunnelIdentifier"] = self.tunnelIdentifier
         var settingsString = "replace_peers=true\n"
         if let interface = interface {
             settingsString += generateInterfaceProviderConfiguration(interface)
