@@ -35,6 +35,7 @@ class TunnelConfigurationTableViewController: UITableViewController {
 
         viewContext.performAndWait {
             tunnel = Tunnel(context: viewContext)
+            tunnel.tunnelIdentifier = UUID().uuidString
             let peer = Peer(context: viewContext)
             peer.allowedIPs = "0.0.0.0/0, ::/0"
             tunnel.addToPeers(peer)
