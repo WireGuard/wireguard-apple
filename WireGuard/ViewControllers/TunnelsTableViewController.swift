@@ -13,7 +13,7 @@ import BNRCoreDataStack
 
 protocol TunnelsTableViewControllerDelegate: class {
     func addProvider(tunnelsTableViewController: TunnelsTableViewController)
-    func connect(tunnel: Tunnel?, tunnelsTableViewController: TunnelsTableViewController)
+    func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
 }
@@ -44,6 +44,9 @@ class TunnelsTableViewController: UITableViewController {
         } catch {
             print("Failed to fetch objects: \(error)")
         }
+
+        // Get rid of seperator lines in table.
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     @IBAction func addProvider(_ sender: Any) {

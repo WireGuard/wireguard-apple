@@ -23,7 +23,7 @@ class AppCoordinator: RootViewCoordinator {
 
     let persistentContainer = NSPersistentContainer(name: "WireGuard")
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-    var currentManager: NETunnelProviderManager?
+    var providerManagers: [NETunnelProviderManager]?
 
     // MARK: - Properties
 
@@ -33,19 +33,6 @@ class AppCoordinator: RootViewCoordinator {
         return self.tunnelsTableViewController
     }
 
-    var status = NEVPNStatus.invalid {
-        didSet {
-            //TODO: signal status
-            switch status {
-            case .connected:
-                os_log("Connected VPN", log: Log.general, type: .info)
-            case .connecting, .disconnecting, .reasserting:
-                os_log("Connecting VPN", log: Log.general, type: .info)
-            case .disconnected, .invalid:
-                os_log("Disconnecting VPN", log: Log.general, type: .info)
-            }
-        }
-    }
 
     var tunnelsTableViewController: TunnelsTableViewController!
 
@@ -68,13 +55,19 @@ class AppCoordinator: RootViewCoordinator {
                                                selector: #selector(VPNStatusDidChange(notification:)),
                                                name: .NEVPNStatusDidChange,
                                                object: nil)
-        reloadCurrentManager(nil)
     }
 
     // MARK: - Functions
 
     /// Starts the coordinator
     public func start() {
+        NETunnelProviderManager.loadAllFromPreferences { [weak self] (managers, error) in
+            if let error = error {
+                os_log("Unable to load provider managers: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+            }
+            self?.providerManagers = managers
+        }
+
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.loadPersistentStores { [weak self] (_, error) in
             if let error = error {
@@ -103,67 +96,7 @@ class AppCoordinator: RootViewCoordinator {
 
     // MARK: - NEVPNManager handling
 
-    func configureVPN(_ configure: @escaping (NETunnelProviderManager) -> NETunnelProviderProtocol?, completionHandler: @escaping (Error?) -> Void) {
-        reloadCurrentManager { (error) in
-            if let error = error {
-                os_log("error reloading preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-                completionHandler(error)
-                return
-            }
-
-            let manager = self.currentManager!
-            if let protocolConfiguration = configure(manager) {
-                manager.protocolConfiguration = protocolConfiguration
-            }
-            manager.isEnabled = true
-
-            manager.saveToPreferences { (error) in
-                if let error = error {
-                    os_log("error saving preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-                    completionHandler(error)
-                    return
-                }
-                os_log("saved preferences", log: Log.general, type: .info)
-                self.reloadCurrentManager(completionHandler)
-            }
-        }
-    }
-
-    func reloadCurrentManager(_ completionHandler: ((Error?) -> Void)?) {
-        NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
-            if let error = error {
-                completionHandler?(error)
-                return
-            }
-
-            var manager: NETunnelProviderManager?
-
-            for man in managers! {
-                if let prot = man.protocolConfiguration as? NETunnelProviderProtocol {
-                    if prot.providerBundleIdentifier == VPNBUNDLE {
-                        manager = man
-                        break
-                    }
-                }
-            }
-
-            if manager == nil {
-                manager = NETunnelProviderManager()
-            }
-
-            self.currentManager = manager
-            self.status = manager!.connection.status
-            completionHandler?(nil)
-        }
-    }
-
     @objc private func VPNStatusDidChange(notification: NSNotification) {
-        guard let status = currentManager?.connection.status else {
-            os_log("VPNStatusDidChange", log: Log.general, type: .debug)
-            return
-        }
-        os_log("VPNStatusDidChange: %{public}@", log: Log.general, type: .debug, description(for: status))
-        self.status = status
     }
 
     public func showError(_ error: Error) {
@@ -200,81 +133,45 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
         showTunnelConfigurationViewController(tunnel: nil, context: addContext)
     }
 
-    func connect(tunnel: Tunnel?, tunnelsTableViewController: TunnelsTableViewController) {
+    func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
+        let manager = self.providerManager(for: tunnel)!
         let block = {
-            switch self.status {
+            switch manager.connection.status {
             case .invalid, .disconnected:
                 self.connect(tunnel: tunnel)
 
             case .connected, .connecting:
-                // TODO: this needs to check if the passed tunnel is the actual connected tunnel config
-                self.disconnect()
-
+                self.disconnect(tunnel: tunnel)
             default:
                 break
             }
         }
 
-        if status == .invalid {
-            reloadCurrentManager({ (_) in
+        if manager.connection.status == .invalid {
+            manager.loadFromPreferences { (_) in
                 block()
-            })
+            }
         } else {
             block()
         }
     }
 
-    private func connect(tunnel: Tunnel?) {
-        // TODO implement NETunnelProviderManager VC showing current connection status, pushing this config into VPN stack
-        os_log("connect tunnel: %{public}@", log: Log.general, type: .info, tunnel?.description ?? "-none-")
+    private func connect(tunnel: Tunnel) {
+        os_log("connect tunnel: %{public}@", log: Log.general, type: .info, tunnel.description)
+        // Should the manager be enabled?
 
-        guard let tunnel = tunnel else {
-            return
+        let manager = providerManager(for: tunnel)
+        let session = manager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
+        do {
+            try session.startTunnel()
+        } catch let error {
+            os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
         }
-
-        configureVPN({ (_) in
-            //TODO: decide what to do with on demand
-            //            self.currentManager?.isOnDemandEnabled = true
-            self.currentManager?.onDemandRules = [NEOnDemandRuleConnect()]
-
-            let protocolConfiguration = NETunnelProviderProtocol()
-            let keychain = KeychainSwift()
-            keychain.accessGroup = APPGROUP
-            //TODO: Set secrets to keychain?
-
-            protocolConfiguration.providerBundleIdentifier = VPNBUNDLE
-            //TODO obtain endpoint hostname
-//            protocolConfiguration.serverAddress = endpoint.hostname
-            protocolConfiguration.serverAddress = "168.192.0.1"
-            //TODO obtain endpoint username
-//            protocolConfiguration.username = endpoint.username
-            //TODO: how to obtain this?
-//            protocolConfiguration.passwordReference = try? keychain.passwordReference(for: endpoint.username)
-            protocolConfiguration.providerConfiguration = tunnel.generateProviderConfiguration()
-
-            return protocolConfiguration
-        }, completionHandler: { (error) in
-            if let error = error {
-                os_log("configure error: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-                return
-            }
-            let session = self.currentManager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
-            do {
-                try session.startTunnel()
-            } catch let error {
-                os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-            }
-        })
     }
 
-    func disconnect() {
-        configureVPN({ (_) in
-            //TODO: decide what to do with on demand
-            //            self.currentManager?.isOnDemandEnabled = false
-            return nil
-        }, completionHandler: { (_) in
-            self.currentManager?.connection.stopVPNTunnel()
-        })
+    func disconnect(tunnel: Tunnel) {
+        let manager = providerManager(for: tunnel)
+        manager?.connection.stopVPNTunnel()
     }
 
     func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
@@ -304,12 +201,55 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
                 moc.delete(tunnel)
                 moc.saveContextToStore()
             }
+            let manager = providerManager(for: tunnel)
+            manager?.removeFromPreferences { (error) in
+                if let error = error {
+                    os_log("error removing preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                    return
+                }
+                os_log("removed preferences", log: Log.general, type: .info)
+            }
+        }
+    }
+
+    private func providerManager(for tunnel: Tunnel) -> NETunnelProviderManager? {
+        return self.providerManagers?.first {
+            guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
+                return false
+            }
+            guard let tunnelIdentifier = prot.providerConfiguration?["tunnelIdentifier"] as? String else {
+                return false
+            }
+            return tunnelIdentifier == tunnel.tunnelIdentifier
         }
     }
 }
 
 extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
     func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
+        let manager = providerManager(for: tunnel) ?? NETunnelProviderManager()
+        manager.localizedDescription = tunnel.title
+
+        let protocolConfiguration = NETunnelProviderProtocol()
+        protocolConfiguration.providerBundleIdentifier = VPNBUNDLE
+        protocolConfiguration.serverAddress = (tunnel.peers?.array as? [Peer])?.compactMap { $0.endpoint}.joined(separator: ", ")
+        //TODO obtain endpoint username
+        //            protocolConfiguration.username = endpoint.username
+        //TODO: how to obtain this?
+        //            protocolConfiguration.passwordReference = try? keychain.passwordReference(for: endpoint.username)
+        protocolConfiguration.providerConfiguration = tunnel.generateProviderConfiguration()
+
+        manager.protocolConfiguration = protocolConfiguration
+        manager.onDemandRules = [NEOnDemandRuleConnect()]
+
+        manager.saveToPreferences { (error) in
+            if let error = error {
+                os_log("error saving preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                return
+            }
+            os_log("saved preferences", log: Log.general, type: .info)
+        }
+
         navigationController.popToRootViewController(animated: true)
     }
 
