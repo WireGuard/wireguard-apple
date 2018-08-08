@@ -27,11 +27,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         os_log("Starting tunnel", log: Log.general, type: .info)
 
-        //TODO tunnel settings
-        if wireGuardWrapper.turnOn(withInterfaceName: "test", settingsString: "") {
-            // Success
-//            completionHandler(nil)
+        let config = self.protocolConfiguration as! NETunnelProviderProtocol // swiftlint:disable:this force_cast
+        let interfaceName = config.providerConfiguration!["title"]! as! String // swiftlint:disable:this force_cast
+        let settings = config.providerConfiguration!["settings"]! as! String // swiftlint:disable:this force_cast
 
+        if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
+            // Success
             //TODO obtain network config from WireGuard config or remote.
             // route all traffic to VPN
             let defaultRoute = NEIPv4Route.default()
