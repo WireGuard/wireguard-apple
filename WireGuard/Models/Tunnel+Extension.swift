@@ -32,7 +32,7 @@ extension Tunnel {
     }
 
     private func  generateInterfaceProviderConfiguration(_ interface: Interface) -> String {
-        var settingsString = "replace_peers=true\n"
+        var settingsString = ""
 
         if let hexPrivateKey = base64KeyToHex(interface.privateKey) {
             settingsString += "private_key=\(hexPrivateKey)\n"
@@ -54,20 +54,20 @@ extension Tunnel {
         var settingsString = ""
 
         if let hexPublicKey = base64KeyToHex(peer.publicKey) {
-            settingsString += "public_key=\(hexPublicKey)"
+            settingsString += "public_key=\(hexPublicKey)\n"
         }
         if let presharedKey = peer.presharedKey {
-            settingsString += "preshared_key=\(presharedKey)"
+            settingsString += "preshared_key=\(presharedKey)\n"
         }
         if let endpoint = peer.endpoint {
-            settingsString += "endpoint=\(endpoint)"
+            settingsString += "endpoint=\(endpoint)\n"
         }
         if peer.persistentKeepalive > 0 {
-            settingsString += "persistent_keepalive_interval=\(peer.persistentKeepalive)"
+            settingsString += "persistent_keepalive_interval=\(peer.persistentKeepalive)\n"
         }
         if let allowedIPs = peer.allowedIPs?.split(separator: ",") {
             allowedIPs.forEach {
-                settingsString += "allowed_ip=\($0.trimmingCharacters(in: .whitespaces))"
+                settingsString += "allowed_ip=\($0.trimmingCharacters(in: .whitespaces))\n"
             }
         }
 
