@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Interface" representedClassName="Interface" syncable="YES">
+        <attribute name="addresses" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dns" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="listenPort" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="mtu" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -22,7 +23,7 @@
         <relationship name="peers" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Peer" inverseName="tunnel" inverseEntity="Peer" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Interface" positionX="-54" positionY="-9" width="128" height="120"/>
+        <element name="Interface" positionX="-54" positionY="-9" width="128" height="135"/>
         <element name="Peer" positionX="-36" positionY="9" width="128" height="135"/>
         <element name="Tunnel" positionX="160" positionY="192" width="128" height="105"/>
     </elements>

@@ -28,8 +28,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         os_log("Starting tunnel", log: Log.general, type: .info)
 
         let config = self.protocolConfiguration as! NETunnelProviderProtocol // swiftlint:disable:this force_cast
-        let interfaceName = config.providerConfiguration!["title"]! as! String // swiftlint:disable:this force_cast
-        let settings = config.providerConfiguration!["settings"]! as! String // swiftlint:disable:this force_cast
+        let interfaceName = config.providerConfiguration![PCKeys.title.rawValue]! as! String // swiftlint:disable:this force_cast
+        let mtu = config.providerConfiguration![PCKeys.mtu.rawValue] as? NSNumber
+        let settings = config.providerConfiguration![PCKeys.settings.rawValue]! as! String // swiftlint:disable:this force_cast
+        let endpoints = config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? ""
+        let addresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").split(separator: ",")
+
+        settings.split(separator: "\n").forEach {os_log("Tunnel config: %{public}s", log: Log.general, type: .info, String($0))}
 
         if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
             // Success

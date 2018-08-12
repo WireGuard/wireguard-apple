@@ -12,8 +12,15 @@ extension Tunnel {
     public func generateProviderConfiguration() -> [String: Any] {
         var providerConfiguration = [String: Any]()
 
-        providerConfiguration["title"] = self.title
-        providerConfiguration["tunnelIdentifier"] = self.tunnelIdentifier
+        providerConfiguration[PCKeys.title.rawValue] = self.title
+        providerConfiguration[PCKeys.tunnelIdentifier.rawValue] = self.tunnelIdentifier
+        providerConfiguration[PCKeys.endpoints.rawValue] = peers?.array.compactMap {($0 as? Peer)?.endpoint}.joined(separator: ", ")
+        providerConfiguration[PCKeys.dns.rawValue] = interface?.dns
+        providerConfiguration[PCKeys.addresses.rawValue] = interface?.addresses
+        if let mtu = interface?.mtu {
+            providerConfiguration[PCKeys.mtu.rawValue] = NSNumber(value: mtu)
+        }
+
         var settingsString = "replace_peers=true\n"
         if let interface = interface {
             settingsString += generateInterfaceProviderConfiguration(interface)
@@ -39,9 +46,6 @@ extension Tunnel {
         }
         if interface.listenPort > 0 {
             settingsString += "listen_port=\(interface.listenPort)\n"
-        }
-        if let dns = interface.dns {
-            settingsString += "dns=\(dns)\n"
         }
         if interface.mtu > 0 {
             settingsString += "mtu=\(interface.mtu)\n"
