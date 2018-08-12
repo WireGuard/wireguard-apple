@@ -12,6 +12,7 @@
 @interface WireGuardGoWrapper : NSObject
 
 @property (nonatomic, weak) NEPacketTunnelFlow *packetFlow;
+@property (nonatomic, assign) BOOL configured;
 
 - (BOOL) turnOnWithInterfaceName: (NSString *)interfaceName settingsString: (NSString *)settingsString;
 - (void) turnOff;
