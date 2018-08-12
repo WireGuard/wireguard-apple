@@ -37,6 +37,8 @@ static void do_log(int level, const char *tag, const char *msg);
 {
     self = [super init];
     if (self) {
+        self.handle = -1;
+        self.configured = false;
         self.condition = [NSCondition new];
     }
     return self;
@@ -59,7 +61,9 @@ static void do_log(int level, const char *tag, const char *msg);
 - (void) turnOff
 {
     self.isClosed = YES;
+    self.configured = NO;
     wgTurnOff(self.handle);
+    self.handle = -1;
 }
 
 + (NSString *)versionWireGuardGo {
@@ -82,6 +86,12 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
 {
     WireGuardGoWrapper *wrapper = (__bridge WireGuardGoWrapper *)ctx;
     if (wrapper.isClosed) return -1;
+
+    if (wrapper.handle < 0 || !wrapper.configured ) {
+//        os_log_debug([WireGuardGoWrapper log], "do_read - early - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+
+        return 0;
+    }
 
     if (wrapper.packets.count == 0) {
 
