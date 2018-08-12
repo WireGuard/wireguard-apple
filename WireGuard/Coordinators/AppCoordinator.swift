@@ -97,6 +97,12 @@ class AppCoordinator: RootViewCoordinator {
     // MARK: - NEVPNManager handling
 
     @objc private func VPNStatusDidChange(notification: NSNotification) {
+        //TODO implement
+        guard let session = notification.object as? NETunnelProviderSession else {
+            return
+        }
+
+        os_log("VPNStatusDidChange: %{public}@", log: Log.general, type: .debug, description(for: session.status))
     }
 
     public func showError(_ error: Error) {
