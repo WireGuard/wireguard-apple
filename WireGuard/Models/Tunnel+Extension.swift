@@ -17,7 +17,7 @@ extension Tunnel {
         providerConfiguration[PCKeys.endpoints.rawValue] = peers?.array.compactMap {($0 as? Peer)?.endpoint}.joined(separator: ", ")
         providerConfiguration[PCKeys.dns.rawValue] = interface?.dns
         providerConfiguration[PCKeys.addresses.rawValue] = interface?.addresses
-        if let mtu = interface?.mtu {
+        if let mtu = interface?.mtu, mtu > 0 {
             providerConfiguration[PCKeys.mtu.rawValue] = NSNumber(value: mtu)
         }
 
