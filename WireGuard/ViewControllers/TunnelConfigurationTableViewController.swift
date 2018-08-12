@@ -137,6 +137,7 @@ class InterfaceTableViewCell: UITableViewCell {
     var model: Interface! {
         didSet {
             nameField.text = model.tunnel?.title
+            addressesField.text = model.addresses
             privateKeyField.text = model.privateKey
             listenPortField.text = String(model.listenPort)
             dnsField.text = model.dns
@@ -145,6 +146,7 @@ class InterfaceTableViewCell: UITableViewCell {
     }
 
     @IBOutlet weak var nameField: UITextField!
+    @IBOutlet weak var addressesField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
     @IBOutlet weak var publicKeyField: UITextField!
     @IBOutlet weak var listenPortField: UITextField!
@@ -161,6 +163,8 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
             model.tunnel?.title = string
         } else if sender == privateKeyField {
             model.privateKey = string
+        } else if sender == addressesField {
+            model.addresses = string
         } else if sender == listenPortField {
             if let string = string, let port = Int16(string) {
                 model.listenPort = port

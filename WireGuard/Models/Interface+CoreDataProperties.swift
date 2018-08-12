@@ -16,6 +16,7 @@ extension Interface {
         return NSFetchRequest<Interface>(entityName: "Interface")
     }
 
+    @NSManaged public var addresses: String?
     @NSManaged public var listenPort: Int16
     @NSManaged public var privateKey: String?
     @NSManaged public var mtu: Int32
