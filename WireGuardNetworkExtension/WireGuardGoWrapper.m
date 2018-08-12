@@ -84,6 +84,7 @@ static void do_log(int level, const char *tag, const char *msg);
 
 static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
 {
+//    os_log_debug([WireGuardGoWrapper log], "do_read - start - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
     WireGuardGoWrapper *wrapper = (__bridge WireGuardGoWrapper *)ctx;
     if (wrapper.isClosed) return -1;
 
@@ -99,9 +100,11 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
             [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
                 [wrapper.packets addObjectsFromArray:packets];
                 [wrapper.protocols addObjectsFromArray:protocols];
+                os_log_debug([WireGuardGoWrapper log], "do_read - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
                 [wrapper.condition signal];
             }];
         });
+        os_log_debug([WireGuardGoWrapper log], "do_read - wait - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
         [wrapper.condition wait];
     }
 
@@ -113,15 +116,18 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
     NSUInteger packetLength = [packet length];
     if (packetLength > len) {
         // The packet will be dropped when we end up here.
+        os_log_debug([WireGuardGoWrapper log], "do_read - drop  - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
         return 0;
     }
     memcpy(buf, [packet bytes], packetLength);
-
+    os_log_debug([WireGuardGoWrapper log], "do_read - packet  - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
     return packetLength;
 }
 
 static ssize_t do_write(const void *ctx, const unsigned char *buf, size_t len)
 {
+    os_log_debug([WireGuardGoWrapper log], "do_write - start");
+
     WireGuardGoWrapper *wrapper = (__bridge WireGuardGoWrapper *)ctx;
     //TODO: determine IPv4 or IPv6 status.
     NSData *packet = [[NSData alloc] initWithBytes:buf length:len];
