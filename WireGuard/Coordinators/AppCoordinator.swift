@@ -233,10 +233,6 @@ extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
         let protocolConfiguration = NETunnelProviderProtocol()
         protocolConfiguration.providerBundleIdentifier = VPNBUNDLE
         protocolConfiguration.serverAddress = (tunnel.peers?.array as? [Peer])?.compactMap { $0.endpoint}.joined(separator: ", ")
-        //TODO obtain endpoint username
-        //            protocolConfiguration.username = endpoint.username
-        //TODO: how to obtain this?
-        //            protocolConfiguration.passwordReference = try? keychain.passwordReference(for: endpoint.username)
         protocolConfiguration.providerConfiguration = tunnel.generateProviderConfiguration()
 
         manager.protocolConfiguration = protocolConfiguration

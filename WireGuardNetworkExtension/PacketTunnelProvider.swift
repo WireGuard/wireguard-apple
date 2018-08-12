@@ -38,26 +38,33 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
             // Success
-            //TODO obtain network config from WireGuard config or remote.
-            // route all traffic to VPN
-            let defaultRoute = NEIPv4Route.default()
-//            defaultRoute.gatewayAddress = gateway
+            //TODO: Hardcoded values for addresses
+            let ipv4Settings = NEIPv4Settings(addresses: ["10.50.10.171"], subnetMasks: ["255.255.224.0"])
+            //TODO: Hardcoded values for allowed ips
+            ipv4Settings.includedRoutes = [NEIPv4Route(destinationAddress: "0.0.0.0", subnetMask: "0.0.0.0")]
+            ipv4Settings.excludedRoutes = endpoints.split(separator: ",").compactMap { $0.split(separator: ":").first}.map {NEIPv4Route(destinationAddress: String($0), subnetMask: "255.255.255.255")}
 
-            let ipv4Settings = NEIPv4Settings(addresses: ["149.248.160.60"], subnetMasks: ["255.255.255.255"])
-            ipv4Settings.includedRoutes = [defaultRoute]
-            ipv4Settings.excludedRoutes = []
-
-//            let dnsSettings = NEDNSSettings(servers: dnsServers)
-
+            //TODO IPv6 settings
             let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
             newSettings.ipv4Settings = ipv4Settings
-//            newSettings.dnsSettings = dnsSettings
-//            newSettings.mtu = cfg.mtu
+            newSettings.tunnelOverheadBytes = 80
+            if let dns = config.providerConfiguration?["dns"] as? String {
+                var splitDnsEntries = dns.split(separator: ",").map {String($0)}
+                let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
+                newSettings.dnsSettings = dnsSettings
+            }
+            if let mtu = mtu {
+                newSettings.mtu = mtu
+            }
 
-            setTunnelNetworkSettings(newSettings, completionHandler: completionHandler)
+            setTunnelNetworkSettings(newSettings) { [weak self](error) in
+                completionHandler(error)
+                self?.wireGuardWrapper.configured = true
+            }
 
         } else {
             completionHandler(PacketTunnelProviderError.tunnelSetupFailed)
+            wireGuardWrapper.configured = false
         }
     }
 
