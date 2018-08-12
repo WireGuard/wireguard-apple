@@ -2,3 +2,6 @@
 
 // You Apple developer account's Team ID
 DEVELOPMENT_TEAM = <team_id>
+
+// The bundle identifier of this app
+PRODUCT_BUNDLE_IDENTIFIER = <app_id>
