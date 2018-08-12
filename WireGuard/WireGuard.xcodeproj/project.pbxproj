@@ -11,6 +11,7 @@
 		6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC1E211EC472002C96EB /* Assets.xcassets */; };
 		6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */; };
 		6FF4AC2F211F1F57002C96EB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF4AC2E211F1F57002C96EB /* MainViewController.swift */; };
+		6FF4AC472120B9E0002C96EB /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,8 @@
 		6FF4AC23211EC472002C96EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FF4AC2B211EC776002C96EB /* Developer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Developer.xcconfig; path = Config/Developer.xcconfig; sourceTree = "<group>"; };
 		6FF4AC2E211F1F57002C96EB /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FF4AC472120B9E0002C96EB /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +43,7 @@
 			children = (
 				6FF4AC16211EC46F002C96EB /* WireGuard */,
 				6FF4AC15211EC46F002C96EB /* Products */,
+				6FF4AC452120B9E0002C96EB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -53,6 +58,7 @@
 		6FF4AC16211EC46F002C96EB /* WireGuard */ = {
 			isa = PBXGroup;
 			children = (
+				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
 				6FF4AC17211EC46F002C96EB /* AppDelegate.swift */,
 				6FF4AC2E211F1F57002C96EB /* MainViewController.swift */,
 				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
@@ -61,6 +67,14 @@
 				6FF4AC2B211EC776002C96EB /* Developer.xcconfig */,
 			);
 			path = WireGuard;
+			sourceTree = "<group>";
+		};
+		6FF4AC452120B9E0002C96EB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,6 +109,11 @@
 				TargetAttributes = {
 					6FF4AC13211EC46F002C96EB = {
 						CreatedOnToolsVersion = 9.4.1;
+						SystemCapabilities = {
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -272,6 +291,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -288,6 +308,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
