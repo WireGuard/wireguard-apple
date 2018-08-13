@@ -48,7 +48,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
             newSettings.ipv4Settings = ipv4Settings
             newSettings.tunnelOverheadBytes = 80
-            if let dns = config.providerConfiguration?["dns"] as? String {
+            if let dns = config.providerConfiguration?[PCKeys.dns.rawValue] as? String {
                 var splitDnsEntries = dns.split(separator: ",").map {String($0)}
                 let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
                 newSettings.dnsSettings = dnsSettings
