@@ -26,6 +26,7 @@ static void do_log(int level, const char *tag, const char *msg);
 @property (nonatomic, assign) BOOL isClosed;
 @property (nonatomic, strong) NSMutableArray<NSData *> *packets;
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *protocols;
+@property (nonatomic, strong) dispatch_queue_t dispatchQueue;
 
 @property (nonatomic, strong) NSCondition *condition;
 
@@ -37,9 +38,11 @@ static void do_log(int level, const char *tag, const char *msg);
 {
     self = [super init];
     if (self) {
+        self.packets = [[NSMutableArray alloc]initWithCapacity:100];
         self.handle = -1;
         self.configured = false;
         self.condition = [NSCondition new];
+        self.dispatchQueue = dispatch_queue_create("manager", NULL);
     }
     return self;
 }
@@ -64,6 +67,31 @@ static void do_log(int level, const char *tag, const char *msg);
     self.configured = NO;
     wgTurnOff(self.handle);
     self.handle = -1;
+}
+
+- (void) startReadingPackets {
+    [self readPackets];
+}
+
+- (void) readPackets {
+    dispatch_async(self.dispatchQueue, ^{
+        if (self.isClosed || self.handle < 0 || !self.configured ) {
+            [self readPackets];
+            return;
+        }
+
+        os_log_debug([WireGuardGoWrapper log], "readPackets - read call - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+
+        [self.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
+            @synchronized(self.packets) {
+                [self.packets addObjectsFromArray:packets];
+                [self.protocols addObjectsFromArray:protocols];
+            }
+            os_log_debug([WireGuardGoWrapper log], "readPackets - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+            [self.condition signal];
+            [self readPackets];
+        }];
+    });
 }
 
 + (NSString *)versionWireGuardGo {
@@ -94,23 +122,29 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
         return 0;
     }
 
-    if (!wrapper.packets.count) {
-        [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
-            [wrapper.condition signal];
-            [wrapper.packets addObjectsFromArray:packets];
-            [wrapper.protocols addObjectsFromArray:protocols];
-            os_log_debug([WireGuardGoWrapper log], "do_read - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
-            [wrapper.condition signal];
-        }];
-        os_log_debug([WireGuardGoWrapper log], "do_read - wait - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
-        while (!wrapper.packets.count)
-            [wrapper.condition wait];
-    }
 
-    NSData *packet = [wrapper.packets objectAtIndex:0];
-//    NSNumber *protocol = [wrapper.protocols objectAtIndex:0];
-    [wrapper.packets removeObjectAtIndex:0];
-    [wrapper.protocols removeObjectAtIndex:0];
+    NSData * __block packet = nil;
+//    NSNumber *protocol = nil;
+    dispatch_sync(wrapper.dispatchQueue, ^{
+        @synchronized(wrapper.packets) {
+            if (wrapper.packets.count == 0) {
+                os_log_debug([WireGuardGoWrapper log], "do_read - no packet - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+
+                return;
+            }
+
+            packet = [wrapper.packets objectAtIndex:0];
+            //    protocol = [wrapper.protocols objectAtIndex:0];
+            [wrapper.packets removeObjectAtIndex:0];
+            [wrapper.protocols removeObjectAtIndex:0];
+        }
+    });
+
+    if (packet == nil) {
+        os_log_debug([WireGuardGoWrapper log], "do_read - wait - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+        [wrapper.condition wait];
+        return 0;
+    }
 
     NSUInteger packetLength = [packet length];
     if (packetLength > len) {
