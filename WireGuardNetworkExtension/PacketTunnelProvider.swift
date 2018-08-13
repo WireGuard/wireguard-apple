@@ -60,6 +60,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             setTunnelNetworkSettings(newSettings) { [weak self](error) in
                 completionHandler(error)
                 self?.wireGuardWrapper.configured = true
+                self?.wireGuardWrapper.startReadingPackets()
             }
 
         } else {
