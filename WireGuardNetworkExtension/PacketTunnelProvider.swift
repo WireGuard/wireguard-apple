@@ -53,7 +53,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
                 newSettings.dnsSettings = dnsSettings
             }
-            if let mtu = mtu {
+            if let mtu = mtu, mtu.intValue > 0 {
                 newSettings.mtu = mtu
             }
 
