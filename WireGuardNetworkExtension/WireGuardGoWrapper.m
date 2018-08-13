@@ -94,18 +94,17 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
         return 0;
     }
 
-    if (wrapper.packets.count == 0) {
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
-                [wrapper.packets addObjectsFromArray:packets];
-                [wrapper.protocols addObjectsFromArray:protocols];
-                os_log_debug([WireGuardGoWrapper log], "do_read - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
-                [wrapper.condition signal];
-            }];
-        });
+    if (!wrapper.packets.count) {
+        [wrapper.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
+            [wrapper.condition signal];
+            [wrapper.packets addObjectsFromArray:packets];
+            [wrapper.protocols addObjectsFromArray:protocols];
+            os_log_debug([WireGuardGoWrapper log], "do_read - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
+            [wrapper.condition signal];
+        }];
         os_log_debug([WireGuardGoWrapper log], "do_read - wait - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
-        [wrapper.condition wait];
+        while (!wrapper.packets.count)
+            [wrapper.condition wait];
     }
 
     NSData *packet = [wrapper.packets objectAtIndex:0];
