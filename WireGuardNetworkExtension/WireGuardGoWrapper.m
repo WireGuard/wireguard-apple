@@ -83,12 +83,14 @@ static void do_log(int level, const char *tag, const char *msg);
         os_log_debug([WireGuardGoWrapper log], "readPackets - read call - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
 
         [self.packetFlow readPacketsWithCompletionHandler:^(NSArray<NSData *> * _Nonnull packets, NSArray<NSNumber *> * _Nonnull protocols) {
+            [self.condition lock];
             @synchronized(self.packets) {
                 [self.packets addObjectsFromArray:packets];
                 [self.protocols addObjectsFromArray:protocols];
             }
             os_log_debug([WireGuardGoWrapper log], "readPackets - signal - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
             [self.condition signal];
+            [self.condition unlock];
             [self readPackets];
         }];
     });
@@ -126,6 +128,7 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
     NSData * __block packet = nil;
 //    NSNumber *protocol = nil;
     dispatch_sync(wrapper.dispatchQueue, ^{
+        [wrapper.condition lock];
         @synchronized(wrapper.packets) {
             if (wrapper.packets.count == 0) {
                 os_log_debug([WireGuardGoWrapper log], "do_read - no packet - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
@@ -143,7 +146,10 @@ static ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
     if (packet == nil) {
         os_log_debug([WireGuardGoWrapper log], "do_read - wait - on thread \"%{public}@\" - %d", NSThread.currentThread.name, (int)NSThread.currentThread);
         [wrapper.condition wait];
+        [wrapper.condition unlock];
         return 0;
+    } else {
+        [wrapper.condition unlock];
     }
 
     NSUInteger packetLength = [packet length];

@@ -41,7 +41,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             //TODO: Hardcoded values for addresses
             let ipv4Settings = NEIPv4Settings(addresses: ["10.50.10.171"], subnetMasks: ["255.255.224.0"])
             //TODO: Hardcoded values for allowed ips
-            ipv4Settings.includedRoutes = [NEIPv4Route(destinationAddress: "0.0.0.0", subnetMask: "0.0.0.0")]
+            ipv4Settings.includedRoutes = [NEIPv4Route.default()]
             ipv4Settings.excludedRoutes = endpoints.split(separator: ",").compactMap { $0.split(separator: ":").first}.map {NEIPv4Route(destinationAddress: String($0), subnetMask: "255.255.255.255")}
 
             //TODO IPv6 settings
@@ -58,12 +58,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
 
             setTunnelNetworkSettings(newSettings) { [weak self](error) in
-                completionHandler(error)
+                self?.wireGuardWrapper.packetFlow = self?.packetFlow
                 self?.wireGuardWrapper.configured = true
                 self?.wireGuardWrapper.startReadingPackets()
+                completionHandler(error)
             }
 
         } else {
+            self.wireGuardWrapper.packetFlow = self.packetFlow
             completionHandler(PacketTunnelProviderError.tunnelSetupFailed)
             wireGuardWrapper.configured = false
         }
