@@ -19,7 +19,7 @@ extension Peer {
     @NSManaged public var presharedKey: String?
     @NSManaged public var allowedIPs: String?
     @NSManaged public var endpoint: String?
-    @NSManaged public var persistentKeepalive: Int16
+    @NSManaged public var persistentKeepalive: Int32
     @NSManaged public var tunnel: Tunnel?
 
 }

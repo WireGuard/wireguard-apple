@@ -41,6 +41,10 @@
 		4AD095CC20DC42CD000E9CF5 /* WireGuardGoWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */; };
 		4AEAC32920F14B3B007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32820F14B3B007B67AB /* Log.swift */; };
 		4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32A20F14BA9007B67AB /* Log.swift */; };
+		5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D4CA21249F7D00DBA2E6 /* Peer+Extension.swift */; };
+		5FA1D4CD2124A05C00DBA2E6 /* Interface+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */; };
+		5FA1D5102124D80C00DBA2E6 /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
+		5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D5112124DA6400DBA2E6 /* String+Base64.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +121,10 @@
 		4AD095CB20DC42CD000E9CF5 /* WireGuardGoWrapper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WireGuardGoWrapper.m; sourceTree = "<group>"; };
 		4AEAC32820F14B3B007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		4AEAC32A20F14BA9007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		5FA1D4CA21249F7D00DBA2E6 /* Peer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Peer+Extension.swift"; sourceTree = "<group>"; };
+		5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interface+Extension.swift"; sourceTree = "<group>"; };
+		5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Arrays.swift"; sourceTree = "<group>"; };
+		5FA1D5112124DA6400DBA2E6 /* String+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
 		861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WireGuard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -181,6 +189,7 @@
 				4A4BAD1420B5F8C000F12B28 /* Models */,
 				4A4BAD1120B5F7A000F12B28 /* ViewControllers */,
 				4A4BAD0A20B5F65800F12B28 /* Coordinators */,
+				5FA1D50E2124D7F200DBA2E6 /* Extensions */,
 				4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */,
 				4A4BACE920B5F1BF00F12B28 /* Main.storyboard */,
 				4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */,
@@ -234,8 +243,10 @@
 			children = (
 				4A4BAD1D20B6026900F12B28 /* Peer+CoreDataClass.swift */,
 				4A4BAD1C20B6026900F12B28 /* Peer+CoreDataProperties.swift */,
+				5FA1D4CA21249F7D00DBA2E6 /* Peer+Extension.swift */,
 				4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */,
 				4A4BAD1E20B6026900F12B28 /* Interface+CoreDataProperties.swift */,
+				5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */,
 				4A4BAD1820B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift */,
 				4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */,
 				4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */,
@@ -274,6 +285,15 @@
 				4AD0900720DC4171000E9CF5 /* wireguard.h */,
 			);
 			path = "wireguard-go-bridge";
+			sourceTree = "<group>";
+		};
+		5FA1D50E2124D7F200DBA2E6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */,
+				5FA1D5112124DA6400DBA2E6 /* String+Base64.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		87B9E27C2D1820573644527C /* Pods */ = {
@@ -533,13 +553,17 @@
 				4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
 				4A4351592124956200261999 /* Validators.swift in Sources */,
+				5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */,
+				5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */,
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
+				5FA1D4CD2124A05C00DBA2E6 /* Interface+Extension.swift in Sources */,
 				4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */,
 				4AC086832120B9F900CEE5ED /* ProviderConfigurationKeys.swift in Sources */,
 				4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */,
+				5FA1D5102124D80C00DBA2E6 /* String+Arrays.swift in Sources */,
 				4A4BAD2120B6026900F12B28 /* Peer+CoreDataClass.swift in Sources */,
 				4A4BAD1B20B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift in Sources */,
 				4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */,

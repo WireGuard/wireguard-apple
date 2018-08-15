@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.12.1" systemVersion="17G2208" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Interface" representedClassName="Interface" syncable="YES">
         <attribute name="addresses" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dns" optional="YES" attributeType="String" syncable="YES"/>
@@ -11,7 +11,7 @@
     <entity name="Peer" representedClassName="Peer" syncable="YES">
         <attribute name="allowedIPs" attributeType="String" syncable="YES"/>
         <attribute name="endpoint" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="persistentKeepalive" attributeType="Integer 16" minValueString="0" maxValueString="65535" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="persistentKeepalive" attributeType="Integer 32" minValueString="0" maxValueString="65535" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="presharedKey" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="publicKey" attributeType="String" syncable="YES"/>
         <relationship name="tunnel" maxCount="1" deletionRule="Nullify" destinationEntity="Tunnel" inverseName="peers" inverseEntity="Tunnel" syncable="YES"/>

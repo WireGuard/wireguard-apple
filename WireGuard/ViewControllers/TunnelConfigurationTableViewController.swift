@@ -101,6 +101,13 @@ class TunnelConfigurationTableViewController: UITableViewController {
 
     @IBAction func saveTunnelConfiguration(_ sender: Any) {
         Promise<Void>(resolver: { (seal) in
+            do {
+                try tunnel.validate()
+            } catch {
+                seal.reject(error)
+                return
+            }
+
             viewContext.perform({
                 self.viewContext.saveContext({ (result) in
                     switch result {
@@ -115,7 +122,9 @@ class TunnelConfigurationTableViewController: UITableViewController {
             self.delegate?.didSave(tunnel: self.tunnel, tunnelConfigurationTableViewController: self)
             return Promise.value(())
         }.catch { error in
-            print("Error saving: \(error)")
+            let alert = UIAlertController(title: "Error", message: "\(error)", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
 }
@@ -220,7 +229,7 @@ extension PeerTableViewCell: UITextFieldDelegate {
         } else if sender == endpointField {
             peer.endpoint = string
         } else if sender == persistentKeepaliveField {
-            if let string = string, let persistentKeepalive = Int16(string) {
+            if let string = string, let persistentKeepalive = Int32(string) {
                 peer.persistentKeepalive = persistentKeepalive
             }
         }
