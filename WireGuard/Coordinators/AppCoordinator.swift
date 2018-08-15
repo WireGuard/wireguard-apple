@@ -8,7 +8,6 @@
 
 import Foundation
 import NetworkExtension
-import KeychainSwift
 import os.log
 
 import CoreData
