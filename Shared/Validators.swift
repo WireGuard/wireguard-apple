@@ -34,15 +34,18 @@ struct Endpoint {
     var addressType: AddressType
 
     init?(endpointString: String) throws {
-        let parts = endpointString.split(separator: ":")
-        guard parts.count == 2 else {
+        guard let range = endpointString.range(of: ":", options: .backwards, range: nil, locale: nil) else {
             throw EndpointValidationError.noIpAndPort(endpointString)
         }
-        guard let port = Int32(parts[1]), port > 0 else {
-            throw EndpointValidationError.invalidPort(String(parts[1]))
+
+        let ipString = endpointString[..<range.lowerBound].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+        let portString = endpointString[range.upperBound...]
+
+        guard let port = Int32(portString), port > 0 else {
+            throw EndpointValidationError.invalidPort(String(portString/*parts[1]*/))
         }
 
-        ipAddress = String(parts[0])
+        ipAddress = String(ipString)
         let addressType = validateIpAddress(ipToValidate: ipAddress)
         guard addressType == .IPv4 || addressType == .IPv6 else {
             throw EndpointValidationError.invalidIP(ipAddress)

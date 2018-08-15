@@ -17,7 +17,6 @@
 		4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACE920B5F1BF00F12B28 /* Main.storyboard */; };
 		4A4BACED20B5F1C100F12B28 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */; };
 		4A4BACF020B5F1C100F12B28 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */; };
-		4A4BACFB20B5F1C100F12B28 /* WireGuardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACFA20B5F1C100F12B28 /* WireGuardTests.swift */; };
 		4A4BAD0620B5F4B500F12B28 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0520B5F4B500F12B28 /* Settings.bundle */; };
 		4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */; };
 		4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD0D20B5F6C300F12B28 /* Coordinator.swift */; };
@@ -89,7 +88,6 @@
 		4A4BACEF20B5F1C100F12B28 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A4BACF120B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A4BACF620B5F1C100F12B28 /* WireGuardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WireGuardTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4A4BACFA20B5F1C100F12B28 /* WireGuardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardTests.swift; sourceTree = "<group>"; };
 		4A4BACFC20B5F1C100F12B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A4BAD0520B5F4B500F12B28 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -196,7 +194,6 @@
 		4A4BACF920B5F1C100F12B28 /* WireGuardTests */ = {
 			isa = PBXGroup;
 			children = (
-				4A4BACFA20B5F1C100F12B28 /* WireGuardTests.swift */,
 				4A4BACFC20B5F1C100F12B28 /* Info.plist */,
 				4A43515B21249E5700261999 /* ValidatorsTests.swift */,
 			);
@@ -554,7 +551,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A43515C21249E5700261999 /* ValidatorsTests.swift in Sources */,
-				4A4BACFB20B5F1C100F12B28 /* WireGuardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
