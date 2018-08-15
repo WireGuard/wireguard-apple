@@ -7,12 +7,8 @@ swift_version = "4.0"
 target 'WireGuard' do
   pod 'SwiftLint'
   pod 'PromiseKit/CorePromise'
-  pod 'KeychainSwift'
-  pod 'Moya'
   pod 'Disk'
-  pod 'AlamofireImage'
   pod 'BNRCoreDataStack'
-  pod 'NVActivityIndicatorView'
 
   post_install do | installer |
     require 'fileutils'

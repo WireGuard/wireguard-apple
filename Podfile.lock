@@ -1,57 +1,28 @@
 PODS:
-  - Alamofire (4.7.3)
-  - AlamofireImage (3.3.1):
-    - Alamofire (~> 4.5)
   - BNRCoreDataStack (2.3.1)
   - Disk (0.3.3)
-  - KeychainSwift (11.0.0)
-  - Moya (11.0.2):
-    - Moya/Core (= 11.0.2)
-  - Moya/Core (11.0.2):
-    - Alamofire (~> 4.1)
-    - Result (~> 3.0)
-  - NVActivityIndicatorView (4.3.0):
-    - NVActivityIndicatorView/Presenter (= 4.3.0)
-  - NVActivityIndicatorView/Presenter (4.3.0)
   - PromiseKit/CorePromise (6.3.4)
-  - Result (3.2.4)
   - SwiftLint (0.27.0)
 
 DEPENDENCIES:
-  - AlamofireImage
   - BNRCoreDataStack
   - Disk
-  - KeychainSwift
-  - Moya
-  - NVActivityIndicatorView
   - PromiseKit/CorePromise
   - SwiftLint
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Alamofire
-    - AlamofireImage
     - BNRCoreDataStack
     - Disk
-    - KeychainSwift
-    - Moya
-    - NVActivityIndicatorView
     - PromiseKit
-    - Result
     - SwiftLint
 
 SPEC CHECKSUMS:
-  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
-  AlamofireImage: 3b35b586853abaf94ca1250f4e94cff3c21a4c0d
   BNRCoreDataStack: d9d7d0ed1afd27dca5a903dde1250aa4c6dbc3f5
   Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
-  KeychainSwift: bea6bd9f98af7b8d7ca4aa79fe105c00fab532db
-  Moya: a725035953bc1c0eb1be505ab903984501d82440
-  NVActivityIndicatorView: 963f62bf9f993fcf23218e55958e5b1761b9504c
   PromiseKit: e1425568123ec844a944c93f2bcb29d511d39cf5
-  Result: d2d07204ce72856f1fd9130bbe42c35a7b0fea10
   SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
 
-PODFILE CHECKSUM: 105db7dade633dc0392641e30930e18d04c95d3d
+PODFILE CHECKSUM: 82a0eed9b58c48f9be6c02c4e9d17a979a496c18
 
 COCOAPODS: 1.5.3
