@@ -366,7 +366,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0930;
-				ORGANIZATIONNAME = WireGuard;
+				ORGANIZATIONNAME = "Jason A. Donenfeld <Jason@zx2c4.com>";
 				TargetAttributes = {
 					4A4BACE120B5F1BF00F12B28 = {
 						CreatedOnToolsVersion = 9.3.1;
