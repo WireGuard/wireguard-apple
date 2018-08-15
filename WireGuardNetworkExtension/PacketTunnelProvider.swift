@@ -37,19 +37,31 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         settings.split(separator: "\n").forEach {os_log("Tunnel config: %{public}s", log: Log.general, type: .info, String($0))}
 
         if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
-            // Success
             //TODO: Hardcoded values for addresses
+            // IPv4 settings
             let ipv4Settings = NEIPv4Settings(addresses: ["10.50.10.171"], subnetMasks: ["255.255.224.0"])
-            //TODO: Hardcoded values for allowed ips
             ipv4Settings.includedRoutes = [NEIPv4Route.default()]
-            ipv4Settings.excludedRoutes = endpoints.split(separator: ",").compactMap { $0.split(separator: ":").first}.map {NEIPv4Route(destinationAddress: String($0), subnetMask: "255.255.255.255")}
+            let validatedEndpoints = endpoints.split(separator: ",").compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
+            ipv4Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv4}.map {
+                NEIPv4Route(destinationAddress: $0.ipAddress, subnetMask: "255.255.255.255")}
 
-            //TODO IPv6 settings
+            // IPv6 settings
+            //TODO: Hardcoded values for address
+            let ipv6Settings = NEIPv6Settings(addresses: ["2607:f938:3001:4000::aac"], networkPrefixLengths: [64])
+            ipv6Settings.includedRoutes = [NEIPv6Route.default()]
+            ipv6Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv6}.map { NEIPv6Route(destinationAddress: $0.ipAddress, networkPrefixLength: 0)}
+
+            //TODO: Hardcoded values for tunnelRemoteAddress
             let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
+
             newSettings.ipv4Settings = ipv4Settings
+            //TODO apply IPv6
+//            newSettings.ipv6Settings = ipv6Settings
             newSettings.tunnelOverheadBytes = 80
             if let dns = config.providerConfiguration?[PCKeys.dns.rawValue] as? String {
                 var splitDnsEntries = dns.split(separator: ",").map {String($0)}
+                //TODO apple IPv6 DNS
+//                splitDnsEntries.append("2606:ed00:2:babe::2")
                 let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
                 newSettings.dnsSettings = dnsSettings
             }
