@@ -28,6 +28,7 @@ public enum EndpointValidationError: Error {
         }
     }
 }
+
 struct Endpoint {
     var ipAddress: String
     var port: Int32
@@ -71,4 +72,49 @@ func validateIpAddress(ipToValidate: String) -> AddressType {
     }
 
     return .other
+}
+
+public enum CIDRAddressValidationError: Error {
+    case noIpAndSubnet(String)
+    case invalidIP(String)
+    case invalidSubnet(String)
+
+    var localizedDescription: String {
+        switch self {
+        case .noIpAndSubnet:
+            return NSLocalizedString("CIDRAddressValidationError", comment: "Error message for malformed CIDR address.")
+        case .invalidIP:
+            return NSLocalizedString("CIDRAddressValidationError", comment: "Error message for invalid address ip.")
+        case .invalidSubnet:
+            return NSLocalizedString("CIDRAddressValidationError", comment: "Error message invalid address subnet.")
+        }
+    }
+}
+
+struct CIDRAddress {
+    var ipAddress: String
+    var subnet: Int32
+    var addressType: AddressType
+
+    init?(stringRepresentation: String) throws {
+        guard let range = stringRepresentation.range(of: "/", options: .backwards, range: nil, locale: nil) else {
+            throw CIDRAddressValidationError.noIpAndSubnet(stringRepresentation)
+        }
+
+        let ipString = stringRepresentation[..<range.lowerBound].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+        let subnetString = stringRepresentation[range.upperBound...]
+
+        guard let subnet = Int32(subnetString) else {
+            throw CIDRAddressValidationError.invalidSubnet(String(subnetString))
+        }
+
+        ipAddress = String(ipString)
+        let addressType = validateIpAddress(ipToValidate: ipAddress)
+        guard addressType == .IPv4 || addressType == .IPv6 else {
+            throw CIDRAddressValidationError.invalidIP(ipAddress)
+        }
+        self.addressType = addressType
+
+        self.subnet = subnet
+    }
 }

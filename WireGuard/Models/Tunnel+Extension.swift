@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 extension Tunnel {
     public func generateProviderConfiguration() -> [String: Any] {
@@ -38,7 +39,7 @@ extension Tunnel {
         return providerConfiguration
     }
 
-    private func  generateInterfaceProviderConfiguration(_ interface: Interface) -> String {
+    private func generateInterfaceProviderConfiguration(_ interface: Interface) -> String {
         var settingsString = ""
 
         if let hexPrivateKey = base64KeyToHex(interface.privateKey) {
@@ -54,7 +55,7 @@ extension Tunnel {
         return settingsString
     }
 
-    private func  generatePeerProviderConfiguration(_ peer: Peer) -> String {
+    private func generatePeerProviderConfiguration(_ peer: Peer) -> String {
         var settingsString = ""
 
         if let hexPublicKey = base64KeyToHex(peer.publicKey) {
@@ -77,6 +78,39 @@ extension Tunnel {
 
         return settingsString
     }
+
+    func validate() throws {
+        let nameRegex = "[a-zA-Z0-9_=+.-]{1,15}"
+        let nameTest = NSPredicate(format: "SELF MATCHES %@", nameRegex)
+        guard let title = title, nameTest.evaluate(with: title) else {
+            throw TunnelValidationError.invalidTitle
+        }
+
+        let fetchRequest: NSFetchRequest<Tunnel> = Tunnel.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "title == %@", title)
+        guard (try? managedObjectContext?.count(for: fetchRequest)) == 1 else {
+            throw TunnelValidationError.titleExists
+        }
+
+        guard let interface = interface else {
+            throw TunnelValidationError.nilInterface
+        }
+
+        try interface.validate()
+
+        guard let peers = peers else {
+            throw TunnelValidationError.nilPeers
+        }
+
+        try peers.forEach {
+            guard let peer = $0 as? Peer else {
+                throw TunnelValidationError.invalidPeer
+            }
+
+            try peer.validate()
+        }
+    }
+
 }
 
 private func base64KeyToHex(_ base64: String?) -> String? {
@@ -103,4 +137,12 @@ private func base64KeyToHex(_ base64: String?) -> String? {
     let hexKey = keyData.reduce("") {$0 + String(format: "%02x", $1)}
 
     return hexKey
+}
+
+enum TunnelValidationError: Error {
+    case invalidTitle
+    case titleExists
+    case nilInterface
+    case nilPeers
+    case invalidPeer
 }
