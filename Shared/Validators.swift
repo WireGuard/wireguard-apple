@@ -117,4 +117,18 @@ struct CIDRAddress {
 
         self.subnet = subnet
     }
+
+    var subnetString: String {
+        // We could calculate these.
+
+        var bitMask: UInt32 = 0b11111111111111111111111111111111
+        bitMask = bitMask << (32 - subnet)
+
+        let first = UInt8(truncatingIfNeeded: bitMask >> 24)
+        let second = UInt8(truncatingIfNeeded: bitMask >> 16 )
+        let third = UInt8(truncatingIfNeeded: bitMask >> 8)
+        let fourth = UInt8(truncatingIfNeeded: bitMask)
+
+        return "\(first).\(second).\(third).\(fourth)"
+    }
 }

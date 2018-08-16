@@ -34,34 +34,37 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let endpoints = config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? ""
         let addresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").split(separator: ",")
 
-        settings.split(separator: "\n").forEach {os_log("Tunnel config: %{public}s", log: Log.general, type: .info, String($0))}
+        let validatedEndpoints = endpoints.split(separator: ",").compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
+        let validatedAddresses = addresses.compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
 
         if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
-            //TODO: Hardcoded values for addresses
-            // IPv4 settings
-            let ipv4Settings = NEIPv4Settings(addresses: ["10.50.10.171"], subnetMasks: ["255.255.224.0"])
-            ipv4Settings.includedRoutes = [NEIPv4Route.default()]
-            let validatedEndpoints = endpoints.split(separator: ",").compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
-            ipv4Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv4}.map {
-                NEIPv4Route(destinationAddress: $0.ipAddress, subnetMask: "255.255.255.255")}
-
-            // IPv6 settings
-            //TODO: Hardcoded values for address
-            let ipv6Settings = NEIPv6Settings(addresses: ["2607:f938:3001:4000::aac"], networkPrefixLengths: [64])
-            ipv6Settings.includedRoutes = [NEIPv6Route.default()]
-            ipv6Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv6}.map { NEIPv6Route(destinationAddress: $0.ipAddress, networkPrefixLength: 0)}
-
             //TODO: Hardcoded values for tunnelRemoteAddress
             let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
-
-            newSettings.ipv4Settings = ipv4Settings
-            //TODO apply IPv6
-//            newSettings.ipv6Settings = ipv6Settings
             newSettings.tunnelOverheadBytes = 80
+
+            // IPv4 settings
+            let validatedIPv4Addresses = validatedAddresses.filter { $0.addressType == .IPv4}
+            if validatedIPv4Addresses.count > 0 {
+                let ipv4Settings = NEIPv4Settings(addresses: validatedIPv4Addresses.map { $0.ipAddress }, subnetMasks: validatedIPv4Addresses.map { $0.subnetString })
+                ipv4Settings.includedRoutes = [NEIPv4Route.default()]
+                ipv4Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv4}.map {
+                    NEIPv4Route(destinationAddress: $0.ipAddress, subnetMask: "255.255.255.255")}
+
+                newSettings.ipv4Settings = ipv4Settings
+            }
+
+            // IPv6 settings
+            let validatedIPv6Addresses = validatedAddresses.filter { $0.addressType == .IPv6}
+            if validatedIPv6Addresses.count > 0 {
+                let ipv6Settings = NEIPv6Settings(addresses: validatedIPv6Addresses.map { $0.ipAddress }, networkPrefixLengths: validatedIPv6Addresses.map { NSNumber(value: $0.subnet) })
+                ipv6Settings.includedRoutes = [NEIPv6Route.default()]
+                ipv6Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv6}.map { NEIPv6Route(destinationAddress: $0.ipAddress, networkPrefixLength: 0)}
+
+                newSettings.ipv6Settings = ipv6Settings
+            }
+
             if let dns = config.providerConfiguration?[PCKeys.dns.rawValue] as? String {
-                var splitDnsEntries = dns.split(separator: ",").map {String($0)}
-                //TODO apple IPv6 DNS
-//                splitDnsEntries.append("2606:ed00:2:babe::2")
+                let splitDnsEntries = dns.split(separator: ",").map {String($0)}
                 let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
                 newSettings.dnsSettings = dnsSettings
             }
