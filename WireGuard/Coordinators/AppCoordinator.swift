@@ -166,11 +166,20 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
         // Should the manager be enabled?
 
         let manager = providerManager(for: tunnel)
-        let session = manager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
-        do {
-            try session.startTunnel()
-        } catch let error {
-            os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+        manager?.isEnabled = true
+        manager?.saveToPreferences { (error) in
+            if let error = error {
+                os_log("error saving preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                return
+            }
+            os_log("saved preferences", log: Log.general, type: .info)
+
+            let session = manager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
+            do {
+                try session.startTunnel()
+            } catch let error {
+                os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+            }
         }
     }
 
