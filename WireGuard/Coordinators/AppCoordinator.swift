@@ -241,7 +241,10 @@ extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
         protocolConfiguration.providerConfiguration = tunnel.generateProviderConfiguration()
 
         manager.protocolConfiguration = protocolConfiguration
-        manager.onDemandRules = [NEOnDemandRuleConnect()]
+        let connectRule = NEOnDemandRuleConnect()
+        connectRule.interfaceTypeMatch = .any
+        manager.onDemandRules = [connectRule]
+//        manager.isOnDemandEnabled = true
 
         manager.saveToPreferences { (error) in
             if let error = error {
