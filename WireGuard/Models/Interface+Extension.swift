@@ -29,7 +29,7 @@ extension Interface {
 
         try dns?.commaSeparatedToArray().forEach { address in
             do {
-                try _ = Endpoint(endpointString: address)
+                try _ = Endpoint(endpointString: address, needsPort: false)
             } catch {
                 throw InterfaceValidationError.invalidDNSServer(cause: error)
             }

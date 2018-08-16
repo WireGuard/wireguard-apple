@@ -31,20 +31,28 @@ public enum EndpointValidationError: Error {
 
 struct Endpoint {
     var ipAddress: String
-    var port: Int32
+    var port: Int32?
     var addressType: AddressType
 
-    init?(endpointString: String) throws {
-        guard let range = endpointString.range(of: ":", options: .backwards, range: nil, locale: nil) else {
-            throw EndpointValidationError.noIpAndPort(endpointString)
+    init?(endpointString: String, needsPort: Bool = true) throws {
+        var ipString: String
+        if needsPort {
+            guard let range = endpointString.range(of: ":", options: .backwards, range: nil, locale: nil) else {
+                throw EndpointValidationError.noIpAndPort(endpointString)
+            }
+            ipString = String(endpointString[..<range.lowerBound])
+
+            let portString = endpointString[range.upperBound...]
+
+            guard let port = Int32(portString), port > 0 else {
+                throw EndpointValidationError.invalidPort(String(portString/*parts[1]*/))
+            }
+            self.port = port
+        } else {
+            ipString = endpointString
         }
 
-        let ipString = endpointString[..<range.lowerBound].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-        let portString = endpointString[range.upperBound...]
-
-        guard let port = Int32(portString), port > 0 else {
-            throw EndpointValidationError.invalidPort(String(portString/*parts[1]*/))
-        }
+        ipString = ipString.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
 
         ipAddress = String(ipString)
         let addressType = validateIpAddress(ipToValidate: ipAddress)
@@ -52,8 +60,6 @@ struct Endpoint {
             throw EndpointValidationError.invalidIP(ipAddress)
         }
         self.addressType = addressType
-
-        self.port = port
     }
 }
 
