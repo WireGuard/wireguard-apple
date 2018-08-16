@@ -19,7 +19,7 @@ extension Interface {
             throw InterfaceValidationError.invalidPrivateKey
         }
 
-        try? addresses?.commaSeparatedToArray().forEach { address in
+        try addresses?.commaSeparatedToArray().forEach { address in
             do {
                 try _ = CIDRAddress(stringRepresentation: address)
             } catch {
@@ -27,7 +27,7 @@ extension Interface {
             }
         }
 
-        try? dns?.commaSeparatedToArray().forEach { address in
+        try dns?.commaSeparatedToArray().forEach { address in
             do {
                 try _ = Endpoint(endpointString: address)
             } catch {
