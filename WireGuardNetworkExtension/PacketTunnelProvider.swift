@@ -32,9 +32,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let mtu = config.providerConfiguration![PCKeys.mtu.rawValue] as? NSNumber
         let settings = config.providerConfiguration![PCKeys.settings.rawValue]! as! String // swiftlint:disable:this force_cast
         let endpoints = config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? ""
-        let addresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").split(separator: ",")
+        let addresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").commaSeparatedToArray()
 
-        let validatedEndpoints = endpoints.split(separator: ",").compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
+        let validatedEndpoints = endpoints.commaSeparatedToArray().compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
         let validatedAddresses = addresses.compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
 
         if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
@@ -64,9 +64,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
 
             if let dns = config.providerConfiguration?[PCKeys.dns.rawValue] as? String {
-                let splitDnsEntries = dns.split(separator: ",").map {String($0)}
-                let dnsSettings = NEDNSSettings(servers: splitDnsEntries)
-                newSettings.dnsSettings = dnsSettings
+                newSettings.dnsSettings = NEDNSSettings(servers: dns.commaSeparatedToArray())
             }
             if let mtu = mtu, mtu.intValue > 0 {
                 newSettings.mtu = mtu

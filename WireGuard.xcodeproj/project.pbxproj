@@ -32,6 +32,7 @@
 		4A61D82E20D98CE2006C7A76 /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4A61D82620D98CE1006C7A76 /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
+		4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
 		4AC086832120B9F900CEE5ED /* ProviderConfigurationKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */; };
 		4AC086852120BCB500CEE5ED /* ProviderConfigurationKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */; };
 		4AC086862120BD5800CEE5ED /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A61D82820D98CE2006C7A76 /* PacketTunnelProvider.swift */; };
@@ -586,6 +587,7 @@
 				4AC086852120BCB500CEE5ED /* ProviderConfigurationKeys.swift in Sources */,
 				4AC086862120BD5800CEE5ED /* PacketTunnelProvider.swift in Sources */,
 				4A43515A2124956200261999 /* Validators.swift in Sources */,
+				4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */,
 				4AEAC32920F14B3B007B67AB /* Log.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

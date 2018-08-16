@@ -70,7 +70,7 @@ extension Tunnel {
         if peer.persistentKeepalive > 0 {
             settingsString += "persistent_keepalive_interval=\(peer.persistentKeepalive)\n"
         }
-        if let allowedIPs = peer.allowedIPs?.split(separator: ",") {
+        if let allowedIPs = peer.allowedIPs?.commaSeparatedToArray() {
             allowedIPs.forEach {
                 settingsString += "allowed_ip=\($0.trimmingCharacters(in: .whitespaces))\n"
             }
