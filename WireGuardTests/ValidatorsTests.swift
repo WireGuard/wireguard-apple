@@ -120,6 +120,7 @@ class ValidatorsTests: XCTestCase {
         executeTest(stringRepresentation: "12345")
     }
 
+    // swiftlint:disable next function_body_length
     func testIPv4CIDRAddressSubnetConversion() throws {
         // swiftlint:disable force_try
         let cidrAddress1 = try! CIDRAddress(stringRepresentation: "128.0.0.0/1")!
