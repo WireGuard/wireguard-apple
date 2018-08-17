@@ -37,9 +37,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let validatedEndpoints = endpoints.commaSeparatedToArray().compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
         let validatedAddresses = addresses.compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
 
-        if wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
-            //TODO: Hardcoded values for tunnelRemoteAddress
-            let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "149.248.160.60")
+        if let firstEndpoint = validatedEndpoints.first, wireGuardWrapper.turnOn(withInterfaceName: interfaceName, settingsString: settings) {
+            // We use the first endpoint for the ipAddress
+            let newSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: firstEndpoint.ipAddress)
             newSettings.tunnelOverheadBytes = 80
 
             // IPv4 settings
@@ -78,7 +78,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
 
         } else {
-            self.wireGuardWrapper.packetFlow = self.packetFlow
             completionHandler(PacketTunnelProviderError.tunnelSetupFailed)
             wireGuardWrapper.configured = false
         }
