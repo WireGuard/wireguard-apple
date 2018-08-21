@@ -46,6 +46,8 @@
 		5FA1D4CD2124A05C00DBA2E6 /* Interface+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */; };
 		5FA1D5102124D80C00DBA2E6 /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
 		5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D5112124DA6400DBA2E6 /* String+Base64.swift */; };
+		5FCC4343212B3092009A9C58 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC4342212B3092009A9C58 /* QRScanViewController.swift */; };
+		5FCC4347212B3E2C009A9C58 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCC4346212B3E2C009A9C58 /* Attribute.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +128,8 @@
 		5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interface+Extension.swift"; sourceTree = "<group>"; };
 		5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Arrays.swift"; sourceTree = "<group>"; };
 		5FA1D5112124DA6400DBA2E6 /* String+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
+		5FCC4342212B3092009A9C58 /* QRScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
+		5FCC4346212B3E2C009A9C58 /* Attribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WireGuard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -235,6 +239,7 @@
 				4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */,
 				4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */,
 				4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */,
+				5FCC4342212B3092009A9C58 /* QRScanViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -252,6 +257,7 @@
 				4A4BAD1920B5F8FF00F12B28 /* Tunnel+CoreDataProperties.swift */,
 				4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */,
 				4A4BAD1520B5F8DE00F12B28 /* WireGuard.xcdatamodeld */,
+				5FCC4346212B3E2C009A9C58 /* Attribute.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -550,6 +556,7 @@
 				4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */,
+				5FCC4347212B3E2C009A9C58 /* Attribute.swift in Sources */,
 				4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */,
 				4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
@@ -557,6 +564,7 @@
 				5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */,
 				5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */,
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
+				5FCC4343212B3092009A9C58 /* QRScanViewController.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,

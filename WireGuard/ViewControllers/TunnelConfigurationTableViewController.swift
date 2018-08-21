@@ -27,7 +27,6 @@ class TunnelConfigurationTableViewController: UITableViewController {
         viewContext = context
         self.delegate = delegate
         self.tunnel = tunnel ?? generateNewTunnelConfig()
-
     }
 
     private func generateNewTunnelConfig() -> Tunnel {

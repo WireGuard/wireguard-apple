@@ -32,7 +32,6 @@ class AppCoordinator: RootViewCoordinator {
         return self.tunnelsTableViewController
     }
 
-
     var tunnelsTableViewController: TunnelsTableViewController!
 
     /// Window to manage
@@ -134,8 +133,31 @@ class AppCoordinator: RootViewCoordinator {
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
     func addProvider(tunnelsTableViewController: TunnelsTableViewController) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Add Manually", style: .default) { [unowned self] _ in
+            self.addProviderManually()
+        })
+        actionSheet.addAction(UIAlertAction(title: "Scan QR Code", style: .default) { [unowned self] _ in
+            self.addProviderWithQRScan()
+        })
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        tunnelsTableViewController.present(actionSheet, animated: true, completion: nil)
+    }
+
+    func addProviderManually() {
         let addContext = persistentContainer.newBackgroundContext()
         showTunnelConfigurationViewController(tunnel: nil, context: addContext)
+    }
+
+    func addProviderWithQRScan() {
+        let addContext = persistentContainer.newBackgroundContext()
+
+        let qrScanViewController = storyboard.instantiateViewController(type: QRScanViewController.self)
+
+        qrScanViewController.configure(context: addContext, delegate: self)
+
+        self.navigationController.pushViewController(qrScanViewController, animated: true)
     }
 
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
@@ -237,10 +259,8 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
             return tunnelIdentifier == tunnel.tunnelIdentifier
         }
     }
-}
 
-extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
-    func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
+    private func saveTunnel(_ tunnel: Tunnel) {
         let manager = providerManager(for: tunnel) ?? NETunnelProviderManager()
         manager.localizedDescription = tunnel.title
 
@@ -264,6 +284,19 @@ extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
         }
 
         navigationController.popToRootViewController(animated: true)
+    }
+}
+
+extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
+    func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
+        saveTunnel(tunnel)
+    }
+
+}
+
+extension AppCoordinator: QRScanViewControllerDelegate {
+    func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController) {
+        showTunnelConfigurationViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
     }
 
 }

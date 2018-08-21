@@ -36,6 +36,27 @@ extension Interface {
         }
     }
 
+    func parse(attribute: Attribute) throws {
+        switch attribute.key {
+        case .address:
+            addresses = attribute.stringValue
+        case .dns:
+            dns = attribute.stringValue
+        case .listenPort:
+            if let port = Int16(attribute.stringValue) {
+                listenPort = port
+            }
+        case .mtu:
+            if let mtu = Int32(attribute.stringValue) {
+                self.mtu = mtu
+            }
+        case .privateKey:
+            privateKey = attribute.stringValue
+        default:
+            throw TunnelParseError.invalidLine(attribute.line)
+        }
+    }
+
 }
 
 enum InterfaceValidationError: Error {

@@ -44,6 +44,25 @@ extension Peer {
         }
     }
 
+    func parse(attribute: Attribute) throws {
+        switch attribute.key {
+        case .allowedIPs:
+            allowedIPs = attribute.stringValue
+        case .endpoint:
+            endpoint = attribute.stringValue
+        case .persistentKeepalive:
+            if let keepAlive = Int32(attribute.stringValue) {
+                persistentKeepalive = keepAlive
+            }
+        case .presharedKey:
+            presharedKey = attribute.stringValue
+        case .publicKey:
+            publicKey = attribute.stringValue
+        default:
+            throw TunnelParseError.invalidLine(attribute.line)
+        }
+    }
+
 }
 
 enum PeerValidationError: Error {
