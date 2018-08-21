@@ -95,12 +95,31 @@ class AppCoordinator: RootViewCoordinator {
     // MARK: - NEVPNManager handling
 
     @objc private func VPNStatusDidChange(notification: NSNotification) {
-        //TODO implement
         guard let session = notification.object as? NETunnelProviderSession else {
             return
         }
 
-        os_log("VPNStatusDidChange: %{public}@", log: Log.general, type: .debug, description(for: session.status))
+        guard let prot = session.manager.protocolConfiguration as? NETunnelProviderProtocol else {
+            return
+        }
+
+        guard let changedTunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
+            return
+        }
+
+        providerManagers?.first(where: { (manager) -> Bool in
+            guard let prot = manager.protocolConfiguration as? NETunnelProviderProtocol else {
+                return false
+            }
+            guard let candidateTunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
+                return false
+            }
+
+            return changedTunnelIdentifier == candidateTunnelIdentifier
+
+        })?.loadFromPreferences(completionHandler: { [weak self] (_) in
+            self?.tunnelsTableViewController.updateStatus(for: changedTunnelIdentifier)
+        })
     }
 
     public func showError(_ error: Error) {
@@ -132,6 +151,12 @@ class AppCoordinator: RootViewCoordinator {
 }
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
+
+    func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus {
+        let session = self.providerManager(for: tunnel)?.connection as? NETunnelProviderSession
+        return session?.status ?? .invalid
+    }
+
     func addProvider(tunnelsTableViewController: TunnelsTableViewController) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Add Manually", style: .default) { [unowned self] _ in
@@ -166,7 +191,24 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
             switch manager.connection.status {
             case .invalid, .disconnected:
                 self.connect(tunnel: tunnel)
+            default:
+                break
+            }
+        }
 
+        if manager.connection.status == .invalid {
+            manager.loadFromPreferences { (_) in
+                block()
+            }
+        } else {
+            block()
+        }
+    }
+
+    func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
+        let manager = self.providerManager(for: tunnel)!
+        let block = {
+            switch manager.connection.status {
             case .connected, .connecting:
                 self.disconnect(tunnel: tunnel)
             default:
@@ -253,7 +295,7 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
             guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
                 return false
             }
-            guard let tunnelIdentifier = prot.providerConfiguration?["tunnelIdentifier"] as? String else {
+            guard let tunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
                 return false
             }
             return tunnelIdentifier == tunnel.tunnelIdentifier
