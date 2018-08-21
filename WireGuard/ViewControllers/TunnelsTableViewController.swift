@@ -10,12 +10,15 @@ import UIKit
 
 import CoreData
 import BNRCoreDataStack
+import NetworkExtension
 
 protocol TunnelsTableViewControllerDelegate: class {
     func addProvider(tunnelsTableViewController: TunnelsTableViewController)
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus
 }
 
 class TunnelsTableViewController: UITableViewController {
@@ -32,6 +35,17 @@ class TunnelsTableViewController: UITableViewController {
         frc.setDelegate(self.frcDelegate)
         return frc
     }()
+
+    public func updateStatus(for tunnelIdentifier: String) {
+        viewContext.perform {
+            let tunnel = try? Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
+            if let tunnel = tunnel {
+                if let indexPath = self.fetchedResultsController.indexPathForObject(tunnel!) {
+                    self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+                }
+            }
+        }
+    }
 
     private lazy var frcDelegate: TunnelFetchedResultsControllerDelegate = { // swiftlint:disable:this weak_delegate
         return TunnelFetchedResultsControllerDelegate(tableView: self.tableView)
@@ -63,6 +77,7 @@ class TunnelsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(type: TunnelTableViewCell.self, for: indexPath)
+        cell.delegate = self
 
         guard let sections = fetchedResultsController.sections else {
             fatalError("FetchedResultsController \(fetchedResultsController) should have sections, but found nil")
@@ -71,7 +86,7 @@ class TunnelsTableViewController: UITableViewController {
         let section = sections[indexPath.section]
         let tunnel = section.objects[indexPath.row]
 
-        cell.textLabel?.text = tunnel.title
+        cell.configure(tunnel: tunnel, status: delegate?.status(for: tunnel, tunnelsTableViewController: self) ?? .invalid)
 
         return cell
     }
@@ -118,6 +133,23 @@ class TunnelsTableViewController: UITableViewController {
             delegate?.delete(tunnel: tunnel, tunnelsTableViewController: self)
         }
     }
+}
+
+extension TunnelsTableViewController: TunnelTableViewCellDelegate {
+    func connect(tunnelIdentifier: String) {
+        let tunnel = try? Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
+        if let tunnel = tunnel {
+            self.delegate?.connect(tunnel: tunnel!, tunnelsTableViewController: self)
+        }
+    }
+
+    func disconnect(tunnelIdentifier: String) {
+        let tunnel = try? Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
+        if let tunnel = tunnel {
+            self.delegate?.disconnect(tunnel: tunnel!, tunnelsTableViewController: self)
+        }
+    }
+
 }
 
 extension TunnelsTableViewController: Identifyable {}
@@ -172,8 +204,83 @@ class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsController
     }
 }
 
+protocol TunnelTableViewCellDelegate: class {
+    func connect(tunnelIdentifier: String)
+    func disconnect(tunnelIdentifier: String)
+}
+
 class TunnelTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var tunnelTitleLabel: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+
+    weak var delegate: TunnelTableViewCellDelegate?
+    private var tunnelIdentifier: String?
+
+    let tunnelSwitch = UISwitch(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        tunnelSwitch.addTarget(self, action: #selector(tunnelSwitchChanged(_:)), for: .valueChanged)
+        self.accessoryView = tunnelSwitch
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        tunnelSwitch.addTarget(self, action: #selector(tunnelSwitchChanged(_:)), for: .valueChanged)
+        accessoryView = tunnelSwitch
+    }
+
+    @IBAction func tunnelSwitchChanged(_ sender: Any) {
+        tunnelSwitch.isUserInteractionEnabled = false
+        guard let tunnelIdentifier = tunnelIdentifier else {
+            return
+        }
+
+        if tunnelSwitch.isOn {
+            delegate?.connect(tunnelIdentifier: tunnelIdentifier)
+        } else {
+            delegate?.disconnect(tunnelIdentifier: tunnelIdentifier)
+        }
+    }
+
+    func configure(tunnel: Tunnel, status: NEVPNStatus) {
+        self.tunnelTitleLabel?.text = tunnel.title
+        tunnelIdentifier = tunnel.tunnelIdentifier
+        switch status {
+        case .connected:
+            activityIndicator.stopAnimating()
+            tunnelSwitch.isOn = true
+            tunnelSwitch.isEnabled = true
+            tunnelSwitch.onTintColor = UIColor.green
+        case .connecting:
+            activityIndicator.startAnimating()
+            tunnelSwitch.isOn = true
+            tunnelSwitch.isEnabled = false
+            tunnelSwitch.onTintColor = UIColor.yellow
+        case .disconnected:
+            activityIndicator.stopAnimating()
+            tunnelSwitch.isOn = false
+            tunnelSwitch.isEnabled = true
+            tunnelSwitch.onTintColor = UIColor.green
+        case .disconnecting:
+            activityIndicator.startAnimating()
+            tunnelSwitch.isOn = false
+            tunnelSwitch.isEnabled = true
+            tunnelSwitch.onTintColor = UIColor.green
+        case .invalid:
+            activityIndicator.stopAnimating()
+            tunnelSwitch.isEnabled = false
+            tunnelSwitch.isUserInteractionEnabled = false
+            tunnelSwitch.onTintColor = UIColor.gray
+        case .reasserting:
+            activityIndicator.startAnimating()
+            tunnelSwitch.isEnabled = true
+            tunnelSwitch.isUserInteractionEnabled = false
+            tunnelSwitch.onTintColor = UIColor.yellow
+        }
+        tunnelSwitch.isUserInteractionEnabled = true
+    }
 }
 
 extension TunnelTableViewCell: Identifyable {}

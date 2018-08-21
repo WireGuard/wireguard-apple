@@ -40,22 +40,47 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="TunnelTableViewCell" textLabel="hzX-lc-GyT" style="IBUITableViewCellStyleDefault" id="fM3-cC-KPN" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TunnelTableViewCell" rowHeight="44" id="fM3-cC-KPN" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fM3-cC-KPN" id="Rv6-XK-aK2" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="307" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="hzX-lc-GyT">
-                                            <rect key="frame" x="16" y="0.0" width="291" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ySw-bB-dRd">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5FX-35-lr8">
+                                                    <rect key="frame" x="0.0" y="11.5" width="42" height="20.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uiR-NX-H3A">
+                                                    <rect key="frame" x="355" y="0.0" width="20" height="43.5"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="uiR-NX-H3A" secondAttribute="trailing" id="HOh-vb-l0J"/>
+                                                <constraint firstAttribute="bottom" secondItem="uiR-NX-H3A" secondAttribute="bottom" id="I0r-JW-x5J"/>
+                                                <constraint firstItem="5FX-35-lr8" firstAttribute="centerY" secondItem="ySw-bB-dRd" secondAttribute="centerY" id="I2J-iL-Kjg"/>
+                                                <constraint firstItem="uiR-NX-H3A" firstAttribute="top" secondItem="ySw-bB-dRd" secondAttribute="top" id="Rcy-gh-u8g"/>
+                                                <constraint firstItem="5FX-35-lr8" firstAttribute="leading" secondItem="ySw-bB-dRd" secondAttribute="leading" id="vna-fz-04u"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="ySw-bB-dRd" secondAttribute="trailing" id="9ZF-jL-Nsl"/>
+                                        <constraint firstAttribute="bottom" secondItem="ySw-bB-dRd" secondAttribute="bottom" id="JbD-Bb-8TH"/>
+                                        <constraint firstItem="ySw-bB-dRd" firstAttribute="top" secondItem="Rv6-XK-aK2" secondAttribute="top" id="sgF-rN-vRx"/>
+                                        <constraint firstItem="ySw-bB-dRd" firstAttribute="leading" secondItem="Rv6-XK-aK2" secondAttribute="leading" id="vnM-b2-F6M"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="uiR-NX-H3A" id="Etf-NG-yCj"/>
+                                    <outlet property="tunnelTitleLabel" destination="5FX-35-lr8" id="Vav-5C-01N"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
