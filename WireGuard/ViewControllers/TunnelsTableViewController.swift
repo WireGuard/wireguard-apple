@@ -84,7 +84,7 @@ class TunnelsTableViewController: UITableViewController {
         let section = sections[indexPath.section]
         let tunnel = section.objects[indexPath.row]
 
-        delegate?.connect(tunnel: tunnel, tunnelsTableViewController: self)
+        delegate?.configure(tunnel: tunnel, tunnelsTableViewController: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
