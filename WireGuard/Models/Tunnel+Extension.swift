@@ -111,6 +111,54 @@ extension Tunnel {
         }
     }
 
+    static func fromConfig(_ text: String, context: NSManagedObjectContext) throws -> Tunnel {
+        let lines = text.split(separator: "\n")
+
+        var currentPeer: Peer?
+        var isInInterfaceSection = false
+
+        var tunnel: Tunnel!
+        context.performAndWait {
+            tunnel = Tunnel(context: context)
+            tunnel.interface = Interface(context: context)
+        }
+        tunnel.tunnelIdentifier = UUID().uuidString
+
+        for line in lines {
+            var trimmedLine: String
+            if let commentRange = line.range(of: "#") {
+                trimmedLine = String(line[..<commentRange.lowerBound])
+            } else {
+                trimmedLine = String(line)
+            }
+
+            trimmedLine = trimmedLine.trimmingCharacters(in: .whitespaces)
+
+            guard trimmedLine.count > 0 else { continue }
+
+            if "[interface]" == line.lowercased() {
+                currentPeer = nil
+                isInInterfaceSection = true
+            } else if "[peer]" == line.lowercased() {
+                context.performAndWait { currentPeer = Peer(context: context) }
+                tunnel.insertIntoPeers(currentPeer!, at: tunnel.peers?.count ?? 0)
+                isInInterfaceSection = false
+            } else if isInInterfaceSection, let attribute = Attribute.match(line: String(line)) {
+                try tunnel.interface!.parse(attribute: attribute)
+            } else if let currentPeer = currentPeer, let attribute = Attribute.match(line: String(line)) {
+                try currentPeer.parse(attribute: attribute)
+            } else {
+                throw TunnelParseError.invalidLine(String(line))
+            }
+        }
+
+        if !isInInterfaceSection && currentPeer == nil {
+            throw TunnelParseError.noConfigInfo
+        }
+
+        return tunnel
+    }
+
 }
 
 private func base64KeyToHex(_ base64: String?) -> String? {
@@ -145,4 +193,9 @@ enum TunnelValidationError: Error {
     case nilInterface
     case nilPeers
     case invalidPeer
+}
+
+enum TunnelParseError: Error {
+    case invalidLine(_ line: String)
+    case noConfigInfo
 }

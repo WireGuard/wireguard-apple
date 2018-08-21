@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -73,12 +74,12 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4uZ-Vv-Fry" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="34" y="154"/>
+            <point key="canvasLocation" x="-670" y="200"/>
         </scene>
         <!--Tunnel settings-->
         <scene sceneID="xV8-BW-4R7">
             <objects>
-                <tableViewController storyboardIdentifier="TunnelConfigurationTableViewController" id="0VM-73-EPX" customClass="TunnelConfigurationTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="TunnelConfigurationTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0VM-73-EPX" customClass="TunnelConfigurationTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0Uy-k2-O3i">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -472,7 +473,37 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j96-PK-ghN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1128.8" y="321.58920539730138"/>
+            <point key="canvasLocation" x="122" y="-239"/>
+        </scene>
+        <!--Scan Code-->
+        <scene sceneID="gKN-k2-HoW">
+            <objects>
+                <viewController storyboardIdentifier="QRScanViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Efe-yN-iDH" customClass="QRScanViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NXo-On-ea8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tip: generate with `qrencode -t ansiutf8 &lt; tunnel.conf`" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XYc-tx-YNF">
+                                <rect key="frame" x="16" y="628.5" width="343" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Soo-c9-MsX" firstAttribute="bottom" secondItem="XYc-tx-YNF" secondAttribute="bottom" constant="24" id="QhS-p5-jbw"/>
+                            <constraint firstItem="XYc-tx-YNF" firstAttribute="leading" secondItem="NXo-On-ea8" secondAttribute="leading" constant="16" id="Y3P-Py-ueV"/>
+                            <constraint firstAttribute="trailing" secondItem="XYc-tx-YNF" secondAttribute="trailing" constant="16" id="sB1-h9-ueh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Soo-c9-MsX"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Scan Code" largeTitleDisplayMode="never" id="WGY-tY-ySz"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TQ2-zp-o40" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="121" y="461"/>
         </scene>
     </scenes>
     <resources>
