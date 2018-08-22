@@ -35,51 +35,49 @@
         <scene sceneID="Tud-vM-cYZ">
             <objects>
                 <tableViewController storyboardIdentifier="TunnelsTableViewController" id="kTU-BV-32R" customClass="TunnelsTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AJg-r0-KJH">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="AJg-r0-KJH">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TunnelTableViewCell" rowHeight="44" id="fM3-cC-KPN" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TunnelTableViewCell" rowHeight="60" id="a0u-k7-l2a" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fM3-cC-KPN" id="Rv6-XK-aK2" customClass="TunnelTableViewCell" customModule="WireGuard" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="a0u-k7-l2a" id="5vz-m1-nzL">
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="59.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ySw-bB-dRd">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5FX-35-lr8">
-                                                    <rect key="frame" x="0.0" y="11.5" width="42" height="20.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="uiR-NX-H3A">
-                                                    <rect key="frame" x="355" y="0.0" width="20" height="43.5"/>
-                                                </activityIndicatorView>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="uiR-NX-H3A" secondAttribute="trailing" id="HOh-vb-l0J"/>
-                                                <constraint firstAttribute="bottom" secondItem="uiR-NX-H3A" secondAttribute="bottom" id="I0r-JW-x5J"/>
-                                                <constraint firstItem="5FX-35-lr8" firstAttribute="centerY" secondItem="ySw-bB-dRd" secondAttribute="centerY" id="I2J-iL-Kjg"/>
-                                                <constraint firstItem="uiR-NX-H3A" firstAttribute="top" secondItem="ySw-bB-dRd" secondAttribute="top" id="Rcy-gh-u8g"/>
-                                                <constraint firstItem="5FX-35-lr8" firstAttribute="leading" secondItem="ySw-bB-dRd" secondAttribute="leading" id="vna-fz-04u"/>
-                                            </constraints>
-                                        </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LTX-Ir-wae">
+                                            <rect key="frame" x="16" y="11" width="42" height="38"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Lfv-Kt-u7M">
+                                            <rect key="frame" x="298" y="20" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3kG-Lh-YJw">
+                                            <rect key="frame" x="292" y="14.5" width="51" height="31"/>
+                                            <connections>
+                                                <action selector="tunnelSwitchChanged:" destination="a0u-k7-l2a" eventType="valueChanged" id="9bz-IV-8hb"/>
+                                            </connections>
+                                        </switch>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="ySw-bB-dRd" secondAttribute="trailing" id="9ZF-jL-Nsl"/>
-                                        <constraint firstAttribute="bottom" secondItem="ySw-bB-dRd" secondAttribute="bottom" id="JbD-Bb-8TH"/>
-                                        <constraint firstItem="ySw-bB-dRd" firstAttribute="top" secondItem="Rv6-XK-aK2" secondAttribute="top" id="sgF-rN-vRx"/>
-                                        <constraint firstItem="ySw-bB-dRd" firstAttribute="leading" secondItem="Rv6-XK-aK2" secondAttribute="leading" id="vnM-b2-F6M"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="LTX-Ir-wae" secondAttribute="bottom" id="S3B-b1-6Qv"/>
+                                        <constraint firstAttribute="trailing" secondItem="3kG-Lh-YJw" secondAttribute="trailing" id="hT2-xN-OxL"/>
+                                        <constraint firstItem="LTX-Ir-wae" firstAttribute="leading" secondItem="5vz-m1-nzL" secondAttribute="leadingMargin" id="n1M-My-hfr"/>
+                                        <constraint firstItem="LTX-Ir-wae" firstAttribute="top" secondItem="5vz-m1-nzL" secondAttribute="topMargin" id="xcD-dj-Mkb"/>
+                                        <constraint firstItem="Lfv-Kt-u7M" firstAttribute="centerY" secondItem="5vz-m1-nzL" secondAttribute="centerY" id="xcc-16-Z3J"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Lfv-Kt-u7M" secondAttribute="trailing" constant="15" id="yIh-CA-dGh"/>
+                                        <constraint firstItem="3kG-Lh-YJw" firstAttribute="centerY" secondItem="5vz-m1-nzL" secondAttribute="centerY" id="yYd-ax-nhH"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="uiR-NX-H3A" id="Etf-NG-yCj"/>
-                                    <outlet property="tunnelTitleLabel" destination="5FX-35-lr8" id="Vav-5C-01N"/>
+                                    <outlet property="activityIndicator" destination="Lfv-Kt-u7M" id="eg5-uH-cH9"/>
+                                    <outlet property="tunnelSwitch" destination="3kG-Lh-YJw" id="pCW-UC-DBx"/>
+                                    <outlet property="tunnelTitleLabel" destination="LTX-Ir-wae" id="NiF-vE-EGL"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

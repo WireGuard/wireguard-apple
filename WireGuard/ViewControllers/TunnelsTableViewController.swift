@@ -213,26 +213,13 @@ class TunnelTableViewCell: UITableViewCell {
 
     @IBOutlet weak var tunnelTitleLabel: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var tunnelSwitch: UISwitch!
 
     weak var delegate: TunnelTableViewCellDelegate?
     private var tunnelIdentifier: String?
 
-    let tunnelSwitch = UISwitch(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
-
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        tunnelSwitch.addTarget(self, action: #selector(tunnelSwitchChanged(_:)), for: .valueChanged)
-        self.accessoryView = tunnelSwitch
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        tunnelSwitch.addTarget(self, action: #selector(tunnelSwitchChanged(_:)), for: .valueChanged)
-        accessoryView = tunnelSwitch
-    }
-
     @IBAction func tunnelSwitchChanged(_ sender: Any) {
-        tunnelSwitch.isUserInteractionEnabled = false
+        tunnelSwitch.isEnabled = false
         guard let tunnelIdentifier = tunnelIdentifier else {
             return
         }
@@ -247,39 +234,18 @@ class TunnelTableViewCell: UITableViewCell {
     func configure(tunnel: Tunnel, status: NEVPNStatus) {
         self.tunnelTitleLabel?.text = tunnel.title
         tunnelIdentifier = tunnel.tunnelIdentifier
-        switch status {
-        case .connected:
-            activityIndicator.stopAnimating()
-            tunnelSwitch.isOn = true
-            tunnelSwitch.isEnabled = true
-            tunnelSwitch.onTintColor = UIColor.green
-        case .connecting:
+
+        if status == .connecting || status == .disconnecting || status == .reasserting {
             activityIndicator.startAnimating()
-            tunnelSwitch.isOn = true
-            tunnelSwitch.isEnabled = false
-            tunnelSwitch.onTintColor = UIColor.yellow
-        case .disconnected:
+            tunnelSwitch.isHidden = true
+        } else {
             activityIndicator.stopAnimating()
-            tunnelSwitch.isOn = false
-            tunnelSwitch.isEnabled = true
-            tunnelSwitch.onTintColor = UIColor.green
-        case .disconnecting:
-            activityIndicator.startAnimating()
-            tunnelSwitch.isOn = false
-            tunnelSwitch.isEnabled = true
-            tunnelSwitch.onTintColor = UIColor.green
-        case .invalid:
-            activityIndicator.stopAnimating()
-            tunnelSwitch.isEnabled = false
-            tunnelSwitch.isUserInteractionEnabled = false
-            tunnelSwitch.onTintColor = UIColor.gray
-        case .reasserting:
-            activityIndicator.startAnimating()
-            tunnelSwitch.isEnabled = true
-            tunnelSwitch.isUserInteractionEnabled = false
-            tunnelSwitch.onTintColor = UIColor.yellow
+            tunnelSwitch.isHidden = false
         }
-        tunnelSwitch.isUserInteractionEnabled = true
+
+        tunnelSwitch.isOn = status == .connected
+        tunnelSwitch.onTintColor = status == .invalid || status == .reasserting ? .gray : .green
+        tunnelSwitch.isEnabled = true
     }
 }
 
