@@ -33,6 +33,8 @@
 		4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
+		4ABFFEA0212D39A000107136 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 4ABFFE9F212D39A000107136 /* x25519.c */; };
+		4ABFFEA3212D3C8300107136 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ABFFEA2212D3C8300107136 /* Security.framework */; };
 		4AC086832120B9F900CEE5ED /* ProviderConfigurationKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */; };
 		4AC086852120BCB500CEE5ED /* ProviderConfigurationKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */; };
 		4AC086862120BD5800CEE5ED /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A61D82820D98CE2006C7A76 /* PacketTunnelProvider.swift */; };
@@ -115,6 +117,10 @@
 		4A61D83320D98D07006C7A76 /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		4A61D83420D98D25006C7A76 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
+		4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
+		4ABFFE9E212D39A000107136 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
+		4ABFFE9F212D39A000107136 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
+		4ABFFEA2212D3C8300107136 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderConfigurationKeys.swift; sourceTree = "<group>"; };
 		4AC5462D2116306F00749D21 /* Tunnel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tunnel+Extension.swift"; sourceTree = "<group>"; };
 		4AD0900120DC4171000E9CF5 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = "<group>"; };
@@ -138,6 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4ABFFEA3212D3C8300107136 /* Security.framework in Frameworks */,
 				48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */,
 				4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */,
 			);
@@ -190,6 +197,7 @@
 		4A4BACE420B5F1BF00F12B28 /* WireGuard */ = {
 			isa = PBXGroup;
 			children = (
+				4ABFFEA1212D39CA00107136 /* Crypto */,
 				4A61D83320D98D07006C7A76 /* WireGuard.entitlements */,
 				4A4BAD1420B5F8C000F12B28 /* Models */,
 				4A4BAD1120B5F7A000F12B28 /* ViewControllers */,
@@ -200,6 +208,7 @@
 				4A4BACEC20B5F1C100F12B28 /* Assets.xcassets */,
 				4A4BACEE20B5F1C100F12B28 /* LaunchScreen.storyboard */,
 				4A4BACF120B5F1C100F12B28 /* Info.plist */,
+				4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */,
 				4AEAC32A20F14BA9007B67AB /* Log.swift */,
 			);
 			path = WireGuard;
@@ -276,6 +285,15 @@
 			path = WireGuardNetworkExtension;
 			sourceTree = "<group>";
 		};
+		4ABFFEA1212D39CA00107136 /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				4ABFFE9F212D39A000107136 /* x25519.c */,
+				4ABFFE9E212D39A000107136 /* x25519.h */,
+			);
+			path = Crypto;
+			sourceTree = "<group>";
+		};
 		4AC086812120B9E600CEE5ED /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -315,6 +333,7 @@
 		A447093459F091F4358E843F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4ABFFEA2212D3C8300107136 /* Security.framework */,
 				4A61D83420D98D25006C7A76 /* NetworkExtension.framework */,
 				861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */,
 			);
@@ -566,6 +585,7 @@
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
 				5FCC4343212B3092009A9C58 /* QRScanViewController.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
+				4ABFFEA0212D39A000107136 /* x25519.c in Sources */,
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,
 				4A4BAD2020B6026900F12B28 /* Peer+CoreDataProperties.swift in Sources */,
 				5FA1D4CD2124A05C00DBA2E6 /* Interface+Extension.swift in Sources */,
@@ -755,6 +775,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = 67JZJ7TWU3;
@@ -767,6 +788,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -778,6 +801,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
@@ -790,6 +814,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
