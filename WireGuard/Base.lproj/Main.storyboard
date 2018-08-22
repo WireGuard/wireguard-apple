@@ -171,6 +171,9 @@
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C1M-bh-5mf">
                                                                     <rect key="frame" x="240" y="0.0" width="103" height="35.5"/>
                                                                     <state key="normal" title="Generate"/>
+                                                                    <connections>
+                                                                        <action selector="generateTapped:" destination="06N-KU-LSv" eventType="touchUpInside" id="efE-zK-eCe"/>
+                                                                    </connections>
                                                                 </button>
                                                             </subviews>
                                                         </stackView>

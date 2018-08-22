@@ -79,6 +79,7 @@ class TunnelConfigurationTableViewController: UITableViewController {
         case 0:
             let cell = tableView.dequeueReusableCell(type: InterfaceTableViewCell.self, for: indexPath)
             cell.model = tunnel.interface
+            cell.delegate = self
             return cell
         case 1:
             let cell =  tableView.dequeueReusableCell(type: PeerTableViewCell.self, for: indexPath)
@@ -141,6 +142,38 @@ extension TunnelConfigurationTableViewController: PeerTableViewCellDelegate {
     }
 }
 
+extension TunnelConfigurationTableViewController: InterfaceTableViewCellDelegate {
+    func generateKeys() {
+        if let moc = tunnel.managedObjectContext {
+            moc.perform {
+                var privateKey = Data(count: 32)
+                privateKey.withUnsafeMutableBytes { (mutableBytes) -> Void in
+                    curve25519_generate_private_key(mutableBytes)
+                }
+
+                self.tunnel.interface?.privateKey = privateKey.base64EncodedString()
+
+                if let peers = self.tunnel.peers?.array as? [Peer] {
+                    peers.forEach {
+                        var publicKey = Data(count: 32)
+                        privateKey.withUnsafeBytes({ (privateKeyBytes) -> Void in
+                            publicKey.withUnsafeMutableBytes({ (mutableBytes) -> Void in
+                                curve25519_derive_public_key(mutableBytes, privateKeyBytes)
+                            })
+                        })
+                        $0.publicKey = publicKey.base64EncodedString()
+                    }
+                }
+            }
+        }
+        self.tableView.reloadData()
+    }
+}
+
+protocol InterfaceTableViewCellDelegate: class {
+    func generateKeys()
+}
+
 class InterfaceTableViewCell: UITableViewCell {
     var model: Interface! {
         didSet {
@@ -153,16 +186,22 @@ class InterfaceTableViewCell: UITableViewCell {
         }
     }
 
+    weak var delegate: InterfaceTableViewCellDelegate?
+
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var addressesField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
-    @IBOutlet weak var publicKeyField: UITextField!
     @IBOutlet weak var listenPortField: UITextField!
     @IBOutlet weak var dnsField: UITextField!
     @IBOutlet weak var mtuField: UITextField!
+
+    @IBAction func generateTapped(_ sender: Any) {
+        delegate?.generateKeys()
+    }
 }
 
 extension InterfaceTableViewCell: UITextFieldDelegate {
+
     @IBAction
     func textfieldDidChange(_ sender: UITextField) {
         let string = sender.text
