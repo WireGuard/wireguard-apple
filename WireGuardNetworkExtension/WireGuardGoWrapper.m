@@ -171,9 +171,19 @@ static ssize_t do_write(const void *ctx, const unsigned char *buf, size_t len)
       os_log_debug([WireGuardGoWrapper log], "do_write - start");
 
         WireGuardGoWrapper *wrapper = (__bridge WireGuardGoWrapper *)ctx;
-        //TODO: determine IPv4 or IPv6 status.
+
+        //determine IPv4 or IPv6 status.
+        NSInteger ipVersionBits = (buf[0] & 0xf0) >> 4;
+        NSNumber *ipVersion = NSDecimalNumber.zero;
+        if (ipVersionBits == 4) {
+            ipVersion = @AF_INET;
+        } else if (ipVersionBits == 6) {
+            ipVersion = @AF_INET6;
+        } else {
+            return 0;
+        }
         NSData *packet = [[NSData alloc] initWithBytes:buf length:len];
-        [wrapper.packetFlow writePackets:@[packet] withProtocols:@[@AF_INET]];
+        [wrapper.packetFlow writePackets:@[packet] withProtocols:@[ipVersion]];
         return len;
     }
 }
