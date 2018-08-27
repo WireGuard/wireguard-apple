@@ -28,6 +28,7 @@ import (
 )
 
 var loggerFunc unsafe.Pointer
+var versionString *C.char
 
 type CLogger struct {
 	level         C.int
@@ -38,13 +39,18 @@ func (l *CLogger) Write(p []byte) (int, error) {
 	if uintptr(loggerFunc) == 0 {
 		return 0, errors.New("No logger initialized")
 	}
-	C.callLogger(loggerFunc, l.level, C.CString("WireGuard/GoBackend/"+l.interfaceName), C.CString(string(p)))
+	tag := C.CString("WireGuard/GoBackend/"+l.interfaceName)
+	message := C.CString(string(p))
+	C.callLogger(loggerFunc, l.level, tag, message)
+	C.free(unsafe.Pointer(tag))
+	C.free(unsafe.Pointer(message))
 	return len(p), nil
 }
 
 var tunnelHandles map[int32]*Device
 
 func init() {
+	versionString = C.CString(WireGuardGoVersion)
 	roamingDisabled = true
 	tunnelHandles = make(map[int32]*Device)
 	signals := make(chan os.Signal)
@@ -57,7 +63,9 @@ func init() {
 				n := runtime.Stack(buf, true)
 				buf[n] = 0
 				if uintptr(loggerFunc) != 0 {
-					C.callLogger(loggerFunc, 0, C.CString("WireGuard/GoBackend/Stacktrace"), (*_Ctype_char)(unsafe.Pointer(&buf[0])))
+					tag := C.CString("WireGuard/GoBackend/Stacktrace")
+					C.callLogger(loggerFunc, 0, tag, (*_Ctype_char)(unsafe.Pointer(&buf[0])))
+					C.free(unsafe.Pointer(tag))
 				}
 			}
 		}
@@ -122,7 +130,7 @@ func wgTurnOff(tunnelHandle int32) {
 
 //export wgVersion
 func wgVersion() *C.char {
-	return C.CString(WireGuardGoVersion)
+	return versionString
 }
 
 func main() {}
