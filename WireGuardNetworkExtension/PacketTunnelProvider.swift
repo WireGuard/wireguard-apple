@@ -87,7 +87,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         setTunnelNetworkSettings(newSettings) { (error) in
             if let error = error {
-                NSLog("Error setting network settings: \(error)")
+                os_log("Error setting network settings: %s", log: Log.general, type: .error, error.localizedDescription)
                 startTunnelCompletionHandler(PacketTunnelProviderError.tunnelSetupFailed)
             } else {
                 startTunnelCompletionHandler(nil /* No errors */)
