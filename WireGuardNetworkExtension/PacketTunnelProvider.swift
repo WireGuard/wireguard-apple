@@ -19,7 +19,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: Properties
 
     var wgHandle: Int32?
-    var wgContext: WireGuardContext?
+    lazy var wgContext: WireGuardContext? = {
+        return WireGuardContext(packetFlow: self.packetFlow)
+    }()
 
     // MARK: NEPacketTunnelProvider
 
@@ -49,7 +51,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             NSLog("wg log: \(level): \(tag): \(msg)")
         }
 
-        wgContext = WireGuardContext(packetFlow: self.packetFlow)
 
         let handle = withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
             return withUnsafeMutablePointer(to: &wgContext) { (wgCtxPtr) -> Int32 in
