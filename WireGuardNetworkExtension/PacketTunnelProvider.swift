@@ -31,13 +31,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         let config = self.protocolConfiguration as! NETunnelProviderProtocol // swiftlint:disable:this force_cast
         let interfaceName = config.providerConfiguration![PCKeys.title.rawValue]! as! String // swiftlint:disable:this force_cast
-        let mtu = config.providerConfiguration![PCKeys.mtu.rawValue] as? NSNumber
         let settings = config.providerConfiguration![PCKeys.settings.rawValue]! as! String // swiftlint:disable:this force_cast
-        let endpoints = config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? ""
-        let addresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").commaSeparatedToArray()
 
-        let validatedEndpoints = endpoints.commaSeparatedToArray().compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
-        let validatedAddresses = addresses.compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
+        let validatedEndpoints = (config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? "").commaSeparatedToArray().compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
+        let validatedAddresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").commaSeparatedToArray().compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
 
         guard let firstEndpoint = validatedEndpoints.first else {
             startTunnelCompletionHandler(PacketTunnelProviderError.tunnelSetupFailed)
@@ -83,7 +80,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if let dns = config.providerConfiguration?[PCKeys.dns.rawValue] as? String {
             newSettings.dnsSettings = NEDNSSettings(servers: dns.commaSeparatedToArray())
         }
-        if let mtu = mtu, mtu.intValue > 0 {
+
+        if let mtu = config.providerConfiguration![PCKeys.mtu.rawValue] as? NSNumber, mtu.intValue > 0 {
             newSettings.mtu = mtu
         }
 
