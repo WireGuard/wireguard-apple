@@ -42,15 +42,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         guard let firstEndpoint = validatedEndpoints.first else {
             startTunnelCompletionHandler(PacketTunnelProviderError.tunnelSetupFailed)
             return
-
         }
 
-        wgSetLogger { (level, tagCStr, msgCStr) in
-            let tag = (tagCStr != nil) ? String(cString: tagCStr!) : ""
-            let msg = (msgCStr != nil) ? String(cString: msgCStr!) : ""
-            NSLog("wg log: \(level): \(tag): \(msg)")
-        }
-
+        configureLogger()
 
         let handle = withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
             return withUnsafeMutablePointer(to: &wgContext) { (wgCtxPtr) -> Int32 in
@@ -167,6 +161,26 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let responseData = "Hello app".data(using: String.Encoding.utf8)
         completionHandler?(responseData)
     }
+
+    private func configureLogger() {
+        wgSetLogger { (level, tagCStr, msgCStr) in
+            let logType: OSLogType
+            switch level {
+            case 0:
+                logType = .debug
+            case 1:
+                logType = .info
+            case 2:
+                logType = .error
+            default:
+                logType = .default
+            }
+            let tag = (tagCStr != nil) ? String(cString: tagCStr!) : ""
+            let msg = (msgCStr != nil) ? String(cString: msgCStr!) : ""
+            os_log("wg log: %{public}s: %{public}s", log: Log.general, type: logType, tag, msg)
+        }
+    }
+
 }
 
 class WireGuardContext {
