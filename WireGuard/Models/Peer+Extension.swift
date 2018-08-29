@@ -63,6 +63,29 @@ extension Peer {
         }
     }
 
+    func export() -> String {
+        var exportString = "[Peer]\n"
+        if let publicKey = publicKey {
+            exportString.append("PublicKey=\(publicKey)\n")
+        }
+        if let presharedKey = presharedKey {
+            exportString.append("PresharedKey=\(presharedKey)\n")
+        }
+        if let allowedIPs = allowedIPs {
+            exportString.append("AllowedIPs=\(allowedIPs)\n")
+        }
+        if let endpoint = endpoint {
+            exportString.append("Endpoint=\(endpoint)\n")
+        }
+        if persistentKeepalive > 0 {
+            exportString.append("PersistentKeepalive=\(persistentKeepalive)\n")
+        }
+
+        exportString.append("\n")
+
+        return exportString
+    }
+
 }
 
 enum PeerValidationError: Error {
