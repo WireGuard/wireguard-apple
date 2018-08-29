@@ -159,6 +159,21 @@ extension Tunnel {
         return tunnel
     }
 
+    func export() -> String {
+        var exportString = ""
+        if let interfaceExport = self.interface?.export() {
+            exportString.append(interfaceExport)
+        }
+
+        if let peers = peers?.array as? [Peer] {
+            peers.forEach {
+                exportString.append($0.export())
+            }
+        }
+
+        return exportString
+    }
+
 }
 
 private func base64KeyToHex(_ base64: String?) -> String? {

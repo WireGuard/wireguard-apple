@@ -57,6 +57,20 @@ extension Interface {
         }
     }
 
+    func export() -> String {
+        var exportString = "[Interface]\n"
+        if let privateKey = privateKey {
+            exportString.append("PrivateKey=\(privateKey)")
+        }
+        if listenPort > 0 {
+            exportString.append("ListenPort=\(listenPort)")
+        }
+
+        exportString.append("\n")
+
+        return exportString
+    }
+
 }
 
 enum InterfaceValidationError: Error {
