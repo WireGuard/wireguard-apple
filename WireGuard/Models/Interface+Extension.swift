@@ -60,10 +60,19 @@ extension Interface {
     func export() -> String {
         var exportString = "[Interface]\n"
         if let privateKey = privateKey {
-            exportString.append("PrivateKey=\(privateKey)")
+            exportString.append("PrivateKey=\(privateKey)\n")
+        }
+        if let addresses = addresses {
+            exportString.append("Address=\(addresses)\n")
+        }
+        if let dns = dns {
+            exportString.append("DNS=\(dns)\n")
+        }
+        if mtu > 0 {
+            exportString.append("MTU=\(mtu)\n")
         }
         if listenPort > 0 {
-            exportString.append("ListenPort=\(listenPort)")
+            exportString.append("ListenPort=\(listenPort)\n")
         }
 
         exportString.append("\n")
