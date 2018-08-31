@@ -86,7 +86,7 @@
                             <outlet property="delegate" destination="kTU-BV-32R" id="b6T-ZR-cmO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="WireGuard Tunnels" id="j0L-5U-jDs">
+                    <navigationItem key="navigationItem" title="WireGuard Tunnels" largeTitleDisplayMode="always" id="j0L-5U-jDs">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="h2H-H8-3Tn">
                             <connections>
                                 <action selector="addProvider:" destination="kTU-BV-32R" id="xSg-ap-3Fx"/>
@@ -486,14 +486,22 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Tunnel settings" id="PPu-rX-T38">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="mft-1l-bWa">
-                            <connections>
-                                <action selector="saveTunnelConfiguration:" destination="0VM-73-EPX" id="Hni-0w-hFF"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="save" id="mft-1l-bWa">
+                                <connections>
+                                    <action selector="saveTunnelConfiguration:" destination="0VM-73-EPX" id="Hni-0w-hFF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="action" id="uim-Mz-omJ">
+                                <connections>
+                                    <action selector="exportTunnel:" destination="0VM-73-EPX" id="oVI-TL-4o9"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
+                        <outlet property="exportButton" destination="uim-Mz-omJ" id="1Tq-ie-xo7"/>
                         <outlet property="saveButton" destination="mft-1l-bWa" id="Uif-KZ-isx"/>
                     </connections>
                 </tableViewController>
@@ -524,7 +532,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Soo-c9-MsX"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Scan Code" largeTitleDisplayMode="never" id="WGY-tY-ySz"/>
+                    <navigationItem key="navigationItem" title="Scan Code" largeTitleDisplayMode="always" id="WGY-tY-ySz"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TQ2-zp-o40" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,6 +21,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.appCoordinator = AppCoordinator(window: self.window!)
         self.appCoordinator.start()
 
+        return true
+    }
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
+        defer {
+            do {
+                try FileManager.default.removeItem(at: url)
+            } catch {
+                os_log("Failed to remove item from Inbox: %{public}@", log: Log.general, type: .error, url.absoluteString)
+            }
+        }
+        guard url.pathExtension == "conf" else { return false }
+
+        do {
+            try appCoordinator.importConfig(config: url)
+        } catch {
+            os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
+            return false
+        }
         return true
     }
 }
