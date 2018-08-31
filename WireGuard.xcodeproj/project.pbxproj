@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
+		4A430E802139DC8F0078172C /* icon_20pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */; };
+		4A430E842139DCFB0078172C /* icon_60pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E832139DCFB0078172C /* icon_60pt@3x.png */; };
 		4A4351592124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515A2124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515C21249E5700261999 /* ValidatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A43515B21249E5700261999 /* ValidatorsTests.swift */; };
@@ -85,6 +87,9 @@
 /* Begin PBXFileReference section */
 		0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.release.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.release.xcconfig"; sourceTree = "<group>"; };
 		25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.debug.xcconfig"; sourceTree = "<group>"; };
+		4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_20pt@3x.png"; sourceTree = "<group>"; };
+		4A430E812139DCCB0078172C /* icon_20pt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_20pt.png; sourceTree = "<group>"; };
+		4A430E832139DCFB0078172C /* icon_60pt@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_60pt@3x.png"; path = "WireGuard/Assets.xcassets/AppIcon.appiconset/icon_60pt@3x.png"; sourceTree = SOURCE_ROOT; };
 		4A4351582124956200261999 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		4A43515B21249E5700261999 /* ValidatorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatorsTests.swift; sourceTree = "<group>"; };
 		4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfigurationTableViewController.swift; sourceTree = "<group>"; };
@@ -223,6 +228,9 @@
 		4A4BAD0720B5F4BC00F12B28 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */,
+				4A430E812139DCCB0078172C /* icon_20pt.png */,
+				4A430E832139DCFB0078172C /* icon_60pt@3x.png */,
 				4A4BAD0520B5F4B500F12B28 /* Settings.bundle */,
 			);
 			path = Resources;
@@ -468,6 +476,8 @@
 			files = (
 				4A4BAD0620B5F4B500F12B28 /* Settings.bundle in Resources */,
 				4A4BACF020B5F1C100F12B28 /* LaunchScreen.storyboard in Resources */,
+				4A430E842139DCFB0078172C /* icon_60pt@3x.png in Resources */,
+				4A430E802139DC8F0078172C /* icon_20pt@3x.png in Resources */,
 				4A4BACED20B5F1C100F12B28 /* Assets.xcassets in Resources */,
 				4A4BACEB20B5F1BF00F12B28 /* Main.storyboard in Resources */,
 			);

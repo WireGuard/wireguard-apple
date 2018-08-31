@@ -2,10 +2,35 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera is used to scan QR codes</string>
+    <key>CFBundleDisplayName</key>
+    <string>${PRODUCT_NAME}</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string></string>
+			</array>
+			<key>CFBundleTypeIconFiles</key>
+			<array>
+				<string>icon_20pt</string>
+				<string>icon_20pt@3x</string>
+				<string>icon_60pt@3x</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>WireGuard configuration</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.wireguard.config.quick</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,6 +47,12 @@
 	<string>auto-generated</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+    <key>UIFileSharingEnabled</key>
+    <true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used to scan QR codes</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -45,5 +76,51 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>conf</string>
+			</dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>WireGuard configuration</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>icon_20pt@3x</string>
+				<string>icon_60pt@3x</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>com.wireguard.config.quick</string>
+		</dict>
+	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>conf</string>
+			</dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>WireGuard configuration</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>icon_20pt@3x</string>
+				<string>icon_60pt@3x</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>com.wireguard.config.quick</string>
+		</dict>
+	</array>
 </dict>
 </plist>

@@ -13,6 +13,10 @@ import os.log
 import CoreData
 import BNRCoreDataStack
 
+enum AppCoordinatorError: Error {
+    case configImportError(msg: String)
+}
+
 extension UINavigationController: Identifyable {}
 
 let APPGROUP = "group.com.wireguard.ios.WireGuard"
@@ -92,6 +96,46 @@ class AppCoordinator: RootViewCoordinator {
         }
     }
 
+    func importConfig(config: URL) throws {
+        do {
+            let configString = try String(contentsOf: config)
+            let addContext = persistentContainer.newBackgroundContext()
+            let tunnel = try Tunnel.fromConfig(configString, context: addContext)
+            let title = config.deletingPathExtension().lastPathComponent
+            tunnel.title = title
+            addContext.saveContext()
+            self.saveTunnel(tunnel)
+        } catch {
+            throw AppCoordinatorError.configImportError(msg: "Failed")
+        }
+
+    }
+
+    func exportConfig(tunnel: Tunnel, barButtonItem: UIBarButtonItem) {
+        let exportString = tunnel.export()
+
+        guard let path = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return
+        }
+        let saveFileURL = path.appendingPathComponent("/\(tunnel.title ?? "wireguard").conf")
+        do {
+            try exportString.write(to: saveFileURL, atomically: true, encoding: .utf8)
+        } catch {
+            os_log("Failed to export tunnelto: %{public}@", log: Log.general, type: .error, saveFileURL.absoluteString)
+            return
+        }
+
+        let activityViewController = UIActivityViewController(
+            activityItems: [saveFileURL],
+            applicationActivities: nil)
+        if let popoverPresentationController = activityViewController.popoverPresentationController {
+            popoverPresentationController.barButtonItem = barButtonItem
+        }
+        self.navigationController.present(activityViewController, animated: true) {
+        }
+    }
+
     // MARK: - NEVPNManager handling
 
     @objc private func VPNStatusDidChange(notification: NSNotification) {
@@ -151,7 +195,6 @@ class AppCoordinator: RootViewCoordinator {
 }
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
-
     func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus {
         let session = self.providerManager(for: tunnel)?.connection as? NETunnelProviderSession
         return session?.status ?? .invalid
@@ -330,6 +373,10 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
 }
 
 extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
+    func export(tunnel: Tunnel, barButtonItem: UIBarButtonItem) {
+        exportConfig(tunnel: tunnel, barButtonItem: barButtonItem)
+    }
+
     func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
         saveTunnel(tunnel)
     }
