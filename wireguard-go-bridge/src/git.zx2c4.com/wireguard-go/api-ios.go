@@ -5,6 +5,7 @@
 
 package main
 
+// #include <stdlib.h>
 // #include <sys/types.h>
 // static void callLogger(void *func, int level, const char *tag, const char *msg)
 // {
