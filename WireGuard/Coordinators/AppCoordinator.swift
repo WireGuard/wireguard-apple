@@ -99,17 +99,36 @@ class AppCoordinator: RootViewCoordinator {
 
     func importConfig(config: URL) throws {
         do {
-            let configString = try String(contentsOf: config)
+            try importConfig(configString: try String(contentsOf: config), title: config.deletingPathExtension().lastPathComponent)
+        } catch {
+            throw AppCoordinatorError.configImportError(msg: "Failed")
+        }
+    }
+
+    func importConfig(configString: String, title: String) throws {
+        do {
             let addContext = persistentContainer.newBackgroundContext()
             let tunnel = try Tunnel.fromConfig(configString, context: addContext)
-            let title = config.deletingPathExtension().lastPathComponent
             tunnel.title = title
             addContext.saveContext()
             self.saveTunnel(tunnel)
         } catch {
             throw AppCoordinatorError.configImportError(msg: "Failed")
         }
+    }
 
+    func importConfigs(configZip: URL) throws {
+        if let archive = Archive(url: configZip, accessMode: .read) {
+            for entry in archive {
+                var entryData = Data(capacity: 0)
+                _ = try archive.extract(entry) { (data) in
+                    entryData.append(data)
+                }
+                if let config = String(data: entryData, encoding: .utf8) {
+                    try importConfig(configString: config, title: entry.path)
+                }
+            }
+        }
     }
 
     // swiftlint:disable next function_body_length
