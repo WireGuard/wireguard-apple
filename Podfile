@@ -9,6 +9,7 @@ target 'WireGuard' do
   pod 'PromiseKit/CorePromise'
   pod 'Disk'
   pod 'BNRCoreDataStack'
+  pod 'ZIPFoundation'
 
   post_install do | installer |
     require 'fileutils'

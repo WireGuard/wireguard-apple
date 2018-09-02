@@ -87,11 +87,18 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="WireGuard Tunnels" largeTitleDisplayMode="always" id="j0L-5U-jDs">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="h2H-H8-3Tn">
-                            <connections>
-                                <action selector="addProvider:" destination="kTU-BV-32R" id="xSg-ap-3Fx"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="add" id="h2H-H8-3Tn">
+                                <connections>
+                                    <action selector="addProvider:" destination="kTU-BV-32R" id="xSg-ap-3Fx"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="action" id="zxB-ao-5JR">
+                                <connections>
+                                    <action selector="exportTunnels:" destination="kTU-BV-32R" id="PwM-I1-n6B"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                 </tableViewController>
