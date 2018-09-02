@@ -19,9 +19,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: Properties
 
     var wgHandle: Int32?
-    lazy var wgContext: WireGuardContext? = {
-        return WireGuardContext(packetFlow: self.packetFlow)
-    }()
+    var wgContext: WireGuardContext?
 
     // MARK: NEPacketTunnelProvider
 
@@ -42,6 +40,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
 
         configureLogger()
+        wgContext = WireGuardContext(packetFlow: self.packetFlow)
 
         let handle = connect(interfaceName: interfaceName, settings: settings)
 
