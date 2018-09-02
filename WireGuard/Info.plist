@@ -79,11 +79,6 @@
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>conf</string>
-			</dict>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
@@ -97,19 +92,19 @@
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>com.wireguard.config.quick</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>conf</string>
+			</dict>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<string>conf</string>
-			</dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.data</string>
+				<string>com.pkware.zip-archive</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>WireGuard configuration</string>
@@ -120,6 +115,28 @@
 			</array>
 			<key>UTTypeIdentifier</key>
 			<string>com.wireguard.config.quick</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<string>conf</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>WireGuard configurations</string>
+			<key>UTTypeIconFiles</key>
+			<array>
+				<string>icon_20pt.png</string>
+				<string>icon_60pt@3x.png</string>
+			</array>
+			<key>UTTypeIdentifier</key>
+			<string>com.wireguard.config.quick.confs</string>
+			<key>public.filename-extension</key>
+			<string>zip</string>
 		</dict>
 	</array>
 </dict>

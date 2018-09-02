@@ -32,14 +32,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 os_log("Failed to remove item from Inbox: %{public}@", log: Log.general, type: .error, url.absoluteString)
             }
         }
-        guard url.pathExtension == "conf" else { return false }
-
-        do {
-            try appCoordinator.importConfig(config: url)
-        } catch {
-            os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
-            return false
+        if url.pathExtension == "conf" {
+            do {
+                try appCoordinator.importConfig(config: url)
+            } catch {
+                os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
+                return false
+            }
+            return true
+        } else if url.pathExtension == "zip" {
+            do {
+                try appCoordinator.importConfigs(configZip: url)
+            } catch {
+                os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
+                return false
+            }
+            return true
         }
-        return true
+        return false
+
     }
 }
