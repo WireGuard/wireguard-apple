@@ -9,6 +9,7 @@
 import Foundation
 import NetworkExtension
 import os.log
+import ZIPFoundation
 
 import CoreData
 import BNRCoreDataStack
@@ -111,6 +112,72 @@ class AppCoordinator: RootViewCoordinator {
 
     }
 
+    // swiftlint:disable next function_body_length
+    func exportConfigs(barButtonItem: UIBarButtonItem) {
+        guard let path = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return
+        }
+        let saveFileURL = path.appendingPathComponent("wireguard-export.zip")
+        do {
+            try FileManager.default.removeItem(at: saveFileURL)
+        } catch {
+            os_log("Failed to delete file: %{public}@ : %{public}@", log: Log.general, type: .error, saveFileURL.absoluteString, error.localizedDescription)
+        }
+
+        guard let archive = Archive(url: saveFileURL, accessMode: .create) else {
+            return
+        }
+
+        do {
+            var tunnelsByTitle = [String: [Tunnel]]()
+            let tunnels = try Tunnel.allInContext(persistentContainer.viewContext)
+            tunnels.forEach {
+                guard let title = $0.title ?? $0.tunnelIdentifier else {
+                    // there is always a tunnelidentifier.
+                    return
+                }
+                if let tunnels = tunnelsByTitle[title] {
+                    tunnelsByTitle[title] = tunnels + [$0]
+                } else {
+                    tunnelsByTitle[title] = [$0]
+                }
+            }
+
+            func addEntry(title: String, tunnel: Tunnel) throws {
+                let data = tunnel.export().data(using: .utf8)!
+                let byteCount: UInt32 = UInt32(data.count)
+                try archive.addEntry(with: "\(title).conf", type: .file, uncompressedSize: byteCount, provider: { (position, size) -> Data in
+                    return data.subdata(in: position ..< size)
+                })
+            }
+
+            try tunnelsByTitle.keys.forEach {
+                if let tunnels = tunnelsByTitle[$0] {
+                    if tunnels.count == 1 {
+                        try addEntry(title: $0, tunnel: tunnels[0])
+                    } else {
+                        for (index, tunnel) in tunnels.enumerated() {
+                            try addEntry(title: $0 + "-\(index + 1)", tunnel: tunnel)
+                        }
+                    }
+                }
+            }
+        } catch {
+            os_log("Failed to create archive file: %{public}@ : %{public}@", log: Log.general, type: .error, saveFileURL.absoluteString, error.localizedDescription)
+            return
+        }
+
+        let activityViewController = UIActivityViewController(
+            activityItems: [saveFileURL],
+            applicationActivities: nil)
+        if let popoverPresentationController = activityViewController.popoverPresentationController {
+            popoverPresentationController.barButtonItem = barButtonItem
+        }
+        navigationController.present(activityViewController, animated: true) {
+        }
+    }
+
     func exportConfig(tunnel: Tunnel, barButtonItem: UIBarButtonItem) {
         let exportString = tunnel.export()
 
@@ -195,6 +262,10 @@ class AppCoordinator: RootViewCoordinator {
 }
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
+    func exportTunnels(tunnelsTableViewController: TunnelsTableViewController, barButtonItem: UIBarButtonItem) {
+        self.exportConfigs(barButtonItem: barButtonItem)
+    }
+
     func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus {
         let session = self.providerManager(for: tunnel)?.connection as? NETunnelProviderSession
         return session?.status ?? .invalid
