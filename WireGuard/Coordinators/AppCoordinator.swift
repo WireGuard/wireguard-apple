@@ -427,6 +427,7 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
                     os_log("error removing preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
                     return
                 }
+                self.providerManagers?.removeAll { $0 == manager }
                 os_log("removed preferences", log: Log.general, type: .info)
             }
         }
