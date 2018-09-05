@@ -10,6 +10,7 @@ import Foundation
 import NetworkExtension
 import os.log
 import ZIPFoundation
+import PromiseKit
 
 import CoreData
 import BNRCoreDataStack
@@ -64,35 +65,43 @@ class AppCoordinator: RootViewCoordinator {
 
     /// Starts the coordinator
     public func start() {
-        NETunnelProviderManager.loadAllFromPreferences { [weak self] (managers, error) in
-            if let error = error {
-                os_log("Unable to load provider managers: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-            }
-            self?.providerManagers = managers
-        }
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            self.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+            self.persistentContainer.loadPersistentStores { [weak self] (_, error) in
+                if let error = error {
+                    print("Unable to Load Persistent Store. \(error), \(error.localizedDescription)")
 
-        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
-        persistentContainer.loadPersistentStores { [weak self] (_, error) in
-            if let error = error {
-                print("Unable to Load Persistent Store. \(error), \(error.localizedDescription)")
-
-            } else {
-                DispatchQueue.main.async {
-                    //start
-                    if let tunnelsTableViewController = self?.storyboard.instantiateViewController(type: TunnelsTableViewController.self) {
-                        self?.tunnelsTableViewController = tunnelsTableViewController
-                        self?.tunnelsTableViewController.viewContext = self?.persistentContainer.viewContext
-                        self?.tunnelsTableViewController.delegate = self
-                        self?.navigationController.viewControllers = [tunnelsTableViewController]
-                        do {
-                            if let context = self?.persistentContainer.viewContext, try Tunnel.countInContext(context) == 0 {
-                                print("No tunnels ... yet")
+                } else {
+                    DispatchQueue.main.async {
+                        //start
+                        if let tunnelsTableViewController = self?.storyboard.instantiateViewController(type: TunnelsTableViewController.self) {
+                            self?.tunnelsTableViewController = tunnelsTableViewController
+                            self?.tunnelsTableViewController.viewContext = self?.persistentContainer.viewContext
+                            self?.tunnelsTableViewController.delegate = self
+                            self?.navigationController.viewControllers = [tunnelsTableViewController]
+                            do {
+                                if let context = self?.persistentContainer.viewContext, try Tunnel.countInContext(context) == 0 {
+                                    print("No tunnels ... yet")
+                                }
+                            } catch {
+                                self?.showError(error)
                             }
-                        } catch {
-                            self?.showError(error)
                         }
                     }
                 }
+            }
+            return Promise.value(())
+        }
+    }
+
+    func refreshProviderManagers() -> Promise<Void> {
+        return Promise { (resolver) in
+            NETunnelProviderManager.loadAllFromPreferences { [weak self] (managers, error) in
+                if let error = error {
+                    os_log("Unable to load provider managers: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                }
+                self?.providerManagers = managers
+                resolver.fulfill(())
             }
         }
     }
@@ -458,7 +467,10 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
             os_log("saved preferences", log: Log.general, type: .info)
         }
 
-        navigationController.popToRootViewController(animated: true)
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            self.navigationController.popToRootViewController(animated: true)
+            return Promise.value(())
+        }
     }
 }
 
