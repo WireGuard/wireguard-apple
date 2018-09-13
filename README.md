@@ -2,6 +2,8 @@
 
 To get started...
 
+Make sure you have Go available. A homebrew install will do. `brew install go`
+
 - Clone this repo.
   - `git clone https://git.zx2c4.com/wireguard-ios`
   - Init and update submodule: `git submodule init && git submodule update`
