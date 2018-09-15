@@ -35,6 +35,7 @@
 		4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
+		4ABF718E214D8B0300A1E0BF /* TunnelInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */; };
 		4ABFFEA0212D39A000107136 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 4ABFFE9F212D39A000107136 /* x25519.c */; };
 		4ABFFEA3212D3C8300107136 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ABFFEA2212D3C8300107136 /* Security.framework */; };
 		4AC086832120B9F900CEE5ED /* ProviderConfigurationKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */; };
@@ -121,6 +122,7 @@
 		4A61D83320D98D07006C7A76 /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		4A61D83420D98D25006C7A76 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
+		4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelInfoTableViewController.swift; sourceTree = "<group>"; };
 		4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
 		4ABFFE9E212D39A000107136 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		4ABFFE9F212D39A000107136 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				4A4BAD1220B5F82400F12B28 /* Identifyable.swift */,
 				4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */,
 				4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */,
+				4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */,
 				4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */,
 				5FCC4342212B3092009A9C58 /* QRScanViewController.swift */,
 			);
@@ -591,6 +594,7 @@
 				5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */,
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
 				5FCC4343212B3092009A9C58 /* QRScanViewController.swift in Sources */,
+				4ABF718E214D8B0300A1E0BF /* TunnelInfoTableViewController.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
 				4ABFFEA0212D39A000107136 /* x25519.c in Sources */,
 				4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */,

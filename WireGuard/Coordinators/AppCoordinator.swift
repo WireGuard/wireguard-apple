@@ -261,6 +261,22 @@ class AppCoordinator: RootViewCoordinator {
         })
     }
 
+    func showTunnelInfoViewController(tunnel: Tunnel, context: NSManagedObjectContext) {
+        let tunnelInfoViewController = storyboard.instantiateViewController(type: TunnelInfoTableViewController.self)
+
+        tunnelInfoViewController.configure(context: context, delegate: self, tunnel: tunnel)
+
+        self.navigationController.pushViewController(tunnelInfoViewController, animated: true)
+    }
+
+    func showTunnelConfigurationViewController(tunnel: Tunnel?, context: NSManagedObjectContext) {
+        let tunnelConfigurationViewController = storyboard.instantiateViewController(type: TunnelConfigurationTableViewController.self)
+
+        tunnelConfigurationViewController.configure(context: context, delegate: self, tunnel: tunnel)
+
+        self.navigationController.pushViewController(tunnelConfigurationViewController, animated: true)
+    }
+
     public func showError(_ error: Error) {
         showAlert(title: NSLocalizedString("Error", comment: "Error alert title"), message: error.localizedDescription)
     }
@@ -287,6 +303,20 @@ class AppCoordinator: RootViewCoordinator {
             return "Reasserting"
         }
     }
+}
+
+extension AppCoordinator: TunnelInfoTableViewControllerDelegate {
+    func configure(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) {
+        print("configure tunnel \(tunnel)")
+        let editContext = persistentContainer.newBackgroundContext()
+        var backgroundTunnel: Tunnel?
+        editContext.performAndWait {
+            backgroundTunnel = editContext.object(with: tunnel.objectID) as? Tunnel
+        }
+
+        showTunnelConfigurationViewController(tunnel: backgroundTunnel, context: editContext)
+    }
+
 }
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
@@ -401,23 +431,10 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
         manager?.connection.stopVPNTunnel()
     }
 
-    func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        print("configure tunnel \(tunnel)")
-        let editContext = persistentContainer.newBackgroundContext()
-        var backgroundTunnel: Tunnel?
-        editContext.performAndWait {
-            backgroundTunnel = editContext.object(with: tunnel.objectID) as? Tunnel
-        }
+    func info(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
+        print("info tunnel \(tunnel)")
 
-        showTunnelConfigurationViewController(tunnel: backgroundTunnel, context: editContext)
-    }
-
-    func showTunnelConfigurationViewController(tunnel: Tunnel?, context: NSManagedObjectContext) {
-        let tunnelConfigurationViewController = storyboard.instantiateViewController(type: TunnelConfigurationTableViewController.self)
-
-        tunnelConfigurationViewController.configure(context: context, delegate: self, tunnel: tunnel)
-
-        self.navigationController.pushViewController(tunnelConfigurationViewController, animated: true)
+        showTunnelInfoViewController(tunnel: tunnel, context: self.persistentContainer.viewContext)
     }
 
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
@@ -476,7 +493,7 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
         }
 
         _ = refreshProviderManagers().then { () -> Promise<Void> in
-            self.navigationController.popToRootViewController(animated: true)
+            self.navigationController.popViewController(animated: true)
             return Promise.value(())
         }
     }
