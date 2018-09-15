@@ -9,5 +9,5 @@
 import os.log
 
 struct Log {
-    static var general = OSLog(subsystem: "com.wireguard.ios.WireGuard", category: "general")
+    static var general = OSLog(subsystem: "com.wireguard.ios", category: "general")
 }
