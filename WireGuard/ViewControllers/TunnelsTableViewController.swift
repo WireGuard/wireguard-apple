@@ -7,8 +7,9 @@
 //
 
 import UIKit
-
+import os.log
 import CoreData
+
 import BNRCoreDataStack
 import NetworkExtension
 
@@ -17,7 +18,7 @@ protocol TunnelsTableViewControllerDelegate: class {
     func addProvider(tunnelsTableViewController: TunnelsTableViewController)
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
-    func configure(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
+    func info(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus
 }
@@ -39,11 +40,16 @@ class TunnelsTableViewController: UITableViewController {
 
     public func updateStatus(for tunnelIdentifier: String) {
         viewContext.perform {
-            let tunnel = try? Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
-            if let tunnel = tunnel {
-                if let indexPath = self.fetchedResultsController.indexPathForObject(tunnel!) {
-                    self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+            do {
+                let tunnel = try Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
+                if let tunnel = tunnel {
+                    if let indexPath = self.fetchedResultsController.indexPathForObject(tunnel) {
+                        self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+                    }
                 }
+            } catch {
+                os_log("Unable to load tunnel for tunnel identifier: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+
             }
         }
     }
@@ -104,7 +110,7 @@ class TunnelsTableViewController: UITableViewController {
         let section = sections[indexPath.section]
         let tunnel = section.objects[indexPath.row]
 
-        delegate?.configure(tunnel: tunnel, tunnelsTableViewController: self)
+        delegate?.info(tunnel: tunnel, tunnelsTableViewController: self)
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -117,7 +123,7 @@ class TunnelsTableViewController: UITableViewController {
         let section = sections[indexPath.section]
         let tunnel = section.objects[indexPath.row]
 
-        delegate?.configure(tunnel: tunnel, tunnelsTableViewController: self)
+        delegate?.info(tunnel: tunnel, tunnelsTableViewController: self)
 
     }
 
