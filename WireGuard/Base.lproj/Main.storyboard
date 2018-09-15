@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.13.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.9"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +31,7 @@
             </objects>
             <point key="canvasLocation" x="-1403" y="201"/>
         </scene>
-        <!--WireGuard Tunnels-->
+        <!--WireGuard-->
         <scene sceneID="Tud-vM-cYZ">
             <objects>
                 <tableViewController storyboardIdentifier="TunnelsTableViewController" id="kTU-BV-32R" customClass="TunnelsTableViewController" customModule="WireGuard" customModuleProvider="target" sceneMemberID="viewController">
@@ -86,7 +86,7 @@
                             <outlet property="delegate" destination="kTU-BV-32R" id="b6T-ZR-cmO"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="WireGuard Tunnels" largeTitleDisplayMode="always" id="j0L-5U-jDs">
+                    <navigationItem key="navigationItem" title="WireGuard" largeTitleDisplayMode="always" id="j0L-5U-jDs">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="h2H-H8-3Tn">
                                 <connections>
