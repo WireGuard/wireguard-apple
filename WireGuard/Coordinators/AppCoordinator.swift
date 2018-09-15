@@ -482,7 +482,6 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
         let connectRule = NEOnDemandRuleConnect()
         connectRule.interfaceTypeMatch = .any
         manager.onDemandRules = [connectRule]
-//        manager.isOnDemandEnabled = true
 
         manager.saveToPreferences { (error) in
             if let error = error {
