@@ -328,42 +328,49 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     }
 
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        let manager = self.providerManager(for: tunnel)!
-        let block = {
-            switch manager.connection.status {
-            case .invalid, .disconnected:
-                self.connect(tunnel: tunnel)
-            default:
-                break
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            let manager = self.providerManager(for: tunnel)!
+            let block = {
+                switch manager.connection.status {
+                case .invalid, .disconnected:
+                    self.connect(tunnel: tunnel)
+                default:
+                    break
+                }
             }
-        }
 
-        if manager.connection.status == .invalid {
-            manager.loadFromPreferences { (_) in
+            if manager.connection.status == .invalid {
+                manager.loadFromPreferences { (_) in
+                    block()
+                }
+            } else {
                 block()
             }
-        } else {
-            block()
+
+            return Promise.value(())
         }
     }
 
     func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        let manager = self.providerManager(for: tunnel)!
-        let block = {
-            switch manager.connection.status {
-            case .connected, .connecting:
-                self.disconnect(tunnel: tunnel)
-            default:
-                break
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            let manager = self.providerManager(for: tunnel)!
+            let block = {
+                switch manager.connection.status {
+                case .connected, .connecting:
+                    self.disconnect(tunnel: tunnel)
+                default:
+                    break
+                }
             }
-        }
 
-        if manager.connection.status == .invalid {
-            manager.loadFromPreferences { (_) in
+            if manager.connection.status == .invalid {
+                manager.loadFromPreferences { (_) in
+                    block()
+                }
+            } else {
                 block()
             }
-        } else {
-            block()
+            return Promise.value(())
         }
     }
 
