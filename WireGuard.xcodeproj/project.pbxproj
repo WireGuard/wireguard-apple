@@ -784,7 +784,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -794,7 +794,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -811,8 +811,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L82V4Y2P3C;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -876,7 +876,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
@@ -890,9 +890,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardNetworkExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wireguard.ios.network-extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Network Extension Development";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -907,8 +907,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L82V4Y2P3C;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
@@ -921,7 +921,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardNetworkExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.wireguard.ios.network-extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;

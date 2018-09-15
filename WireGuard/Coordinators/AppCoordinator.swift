@@ -22,7 +22,7 @@ enum AppCoordinatorError: Error {
 extension UINavigationController: Identifyable {}
 
 let APPGROUP = "group.com.wireguard.ios"
-let VPNBUNDLE = "com.wireguard.ios.WireGuardNetworkExtension"
+let VPNBUNDLE = "com.wireguard.ios.network-extension"
 
 class AppCoordinator: RootViewCoordinator {
 
