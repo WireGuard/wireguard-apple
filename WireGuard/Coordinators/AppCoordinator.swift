@@ -213,7 +213,7 @@ class AppCoordinator: RootViewCoordinator {
         do {
             try exportString.write(to: saveFileURL, atomically: true, encoding: .utf8)
         } catch {
-            os_log("Failed to export tunnelto: %{public}@", log: Log.general, type: .error, saveFileURL.absoluteString)
+            os_log("Failed to export tunnel to: %{public}@", log: Log.general, type: .error, saveFileURL.absoluteString)
             return
         }
 
@@ -509,5 +509,4 @@ extension AppCoordinator: QRScanViewControllerDelegate {
     func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController) {
         showTunnelConfigurationViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
     }
-
 }
