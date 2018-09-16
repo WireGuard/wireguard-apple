@@ -150,18 +150,6 @@ extension TunnelConfigurationTableViewController: InterfaceTableViewCellDelegate
                 }
 
                 self.tunnel.interface?.privateKey = privateKey.base64EncodedString()
-
-                if let peers = self.tunnel.peers?.array as? [Peer] {
-                    peers.forEach {
-                        var publicKey = Data(count: 32)
-                        privateKey.withUnsafeBytes({ (privateKeyBytes) -> Void in
-                            publicKey.withUnsafeMutableBytes({ (mutableBytes) -> Void in
-                                curve25519_derive_public_key(mutableBytes, privateKeyBytes)
-                            })
-                        })
-                        $0.publicKey = publicKey.base64EncodedString()
-                    }
-                }
             }
         }
         self.tableView.reloadData()
@@ -178,9 +166,17 @@ class InterfaceTableViewCell: UITableViewCell {
             nameField.text = model.tunnel?.title
             addressesField.text = model.addresses
             privateKeyField.text = model.privateKey
+            publicKeyField.text = model.publicKey
+
             listenPortField.text = String(model.listenPort)
             dnsField.text = model.dns
             mtuField.text = String(model.mtu)
+        }
+    }
+
+    @IBAction func copyPublicKey(_ sender: Any) {
+        if let publicKey = model.publicKey {
+            UIPasteboard.general.string = publicKey
         }
     }
 
@@ -189,6 +185,7 @@ class InterfaceTableViewCell: UITableViewCell {
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var addressesField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
+    @IBOutlet weak var publicKeyField: UILabel!
     @IBOutlet weak var listenPortField: UITextField!
     @IBOutlet weak var dnsField: UITextField!
     @IBOutlet weak var mtuField: UITextField!
@@ -208,6 +205,7 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
             model.tunnel?.title = string
         } else if sender == privateKeyField {
             model.privateKey = string
+            publicKeyField.text = model.publicKey
         } else if sender == addressesField {
             model.addresses = string
         } else if sender == listenPortField {
@@ -245,6 +243,12 @@ class PeerTableViewCell: UITableViewCell {
     @IBOutlet weak var allowedIpsField: UITextField!
     @IBOutlet weak var endpointField: UITextField!
     @IBOutlet weak var persistentKeepaliveField: UITextField!
+
+    @IBAction func copyPublicKey(_ sender: Any) {
+        if let publicKey = peer.publicKey {
+            UIPasteboard.general.string = publicKey
+        }
+    }
 
     @IBAction func deletePeer(_ sender: Any) {
         delegate?.delete(peer: peer)

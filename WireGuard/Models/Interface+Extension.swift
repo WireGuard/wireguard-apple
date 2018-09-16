@@ -10,6 +10,20 @@ import Foundation
 
 extension Interface {
 
+    var publicKey: String? {
+        if let privateKeyString = privateKey, let privateKey = Data(base64Encoded: privateKeyString) {
+            var publicKey = Data(count: 32)
+            privateKey.withUnsafeBytes({ (privateKeyBytes) -> Void in
+                publicKey.withUnsafeMutableBytes({ (mutableBytes) -> Void in
+                    curve25519_derive_public_key(mutableBytes, privateKeyBytes)
+                })
+            })
+            return publicKey.base64EncodedString()
+        } else {
+            return nil
+        }
+    }
+
     func validate() throws {
         guard let privateKey = privateKey, !privateKey.isEmpty else {
             throw InterfaceValidationError.emptyPrivateKey
