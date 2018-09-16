@@ -48,7 +48,6 @@ class TunnelConfigurationTableViewController: UITableViewController {
             tableView.insertRows(at: [insertedAt], with: .automatic)
 
             let peer = Peer(context: moc)
-            peer.allowedIPs = "0.0.0.0/0, ::/0"
             tunnel.addToPeers(peer)
 
             tableView.endUpdates()
