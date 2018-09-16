@@ -73,37 +73,39 @@ class InterfaceInfoTableViewCell: UITableViewCell {
         didSet {
             nameField.text = model.tunnel?.title
             addressesField.text = model.addresses
-            privateKeyField.text = model.privateKey
-            listenPortField.text = String(model.listenPort)
-            dnsField.text = model.dns
-            mtuField.text = String(model.mtu)
+            publicKeyField.text = model.publicKey
         }
     }
 
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var addressesField: UILabel!
-    @IBOutlet weak var privateKeyField: UILabel!
-    @IBOutlet weak var listenPortField: UILabel!
-    @IBOutlet weak var dnsField: UILabel!
-    @IBOutlet weak var mtuField: UILabel!
+    @IBOutlet weak var publicKeyField: UILabel!
+
+    @IBAction func copyPublicKey(_ sender: Any) {
+        if let publicKey = model.publicKey {
+            UIPasteboard.general.string = publicKey
+        }
+    }
 }
 
 class PeerInfoTableViewCell: UITableViewCell {
     var peer: Peer! {
         didSet {
             publicKeyField.text = peer.publicKey
-            preSharedKeyField.text = peer.presharedKey
             allowedIpsField.text = peer.allowedIPs
             endpointField.text = peer.endpoint
-            persistentKeepaliveField.text = String(peer.persistentKeepalive)
         }
     }
 
     @IBOutlet weak var publicKeyField: UILabel!
-    @IBOutlet weak var preSharedKeyField: UILabel!
     @IBOutlet weak var allowedIpsField: UILabel!
     @IBOutlet weak var endpointField: UILabel!
-    @IBOutlet weak var persistentKeepaliveField: UILabel!
+
+    @IBAction func copyPublicKey(_ sender: Any) {
+        if let publicKey = peer.publicKey {
+            UIPasteboard.general.string = publicKey
+        }
+    }
 }
 
 extension TunnelInfoTableViewController: Identifyable {}
