@@ -1,8 +1,4 @@
 //
-//  UITableView+WireGuard.swift
-//  WireGuard
-//
-//  Created by Jeroen Leenarts on 24-05-18.
 //  Copyright © 2018 WireGuard LLC. All rights reserved.
 //
 
