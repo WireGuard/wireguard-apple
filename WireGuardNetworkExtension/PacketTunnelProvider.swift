@@ -1,8 +1,4 @@
 //
-//  PacketTunnelProvider.swift
-//  WireGuardNetworkExtension
-//
-//  Created by Jeroen Leenarts on 19-06-18.
 //  Copyright © 2018 WireGuard LLC. All rights reserved.
 //
 

@@ -1,8 +1,4 @@
 //
-//  ValidatorsTests.swift
-//  WireGuardTests
-//
-//  Created by Jeroen Leenarts on 15-08-18.
 //  Copyright © 2018 WireGuard LLC. All rights reserved.
 //
 
