@@ -136,8 +136,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         return withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
             return withUnsafeMutablePointer(to: &wgContext) { (wgCtxPtr) -> Int32 in
                 return wgTurnOn(nameGoStr, settingsGoStr,
-                                // read_fn: Read from the TUN interface and pass it on to WireGuard
                     { (wgCtxPtr, buf, len) -> Int in
+                        // read_fn: Read from the TUN interface and pass it on to WireGuard
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }
                         let wgContext = wgCtxPtr.bindMemory(to: WireGuardContext.self, capacity: 1).pointee
@@ -151,8 +151,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                         }
                         return 0
                 },
-                    // write_fn: Receive packets from WireGuard and write to the TUN interface
                     { (wgCtxPtr, buf, len) -> Int in
+                        // write_fn: Receive packets from WireGuard and write to the TUN interface
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }
                         guard len > 0 else { return 0 }
