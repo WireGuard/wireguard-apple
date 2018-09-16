@@ -87,6 +87,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="WireGuard" largeTitleDisplayMode="always" id="j0L-5U-jDs">
+                        <barButtonItem key="backBarButtonItem" title="Tunnels" id="pxL-gR-QXU"/>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="h2H-H8-3Tn">
                                 <connections>
