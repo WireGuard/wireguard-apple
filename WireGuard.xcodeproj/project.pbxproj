@@ -10,6 +10,7 @@
 		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
 		4A430E802139DC8F0078172C /* icon_20pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */; };
 		4A430E842139DCFB0078172C /* icon_60pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E832139DCFB0078172C /* icon_60pt@3x.png */; };
+		4A4349752151865E00EF92F8 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD0900120DC4171000E9CF5 /* libwg-go.a */; };
 		4A4351592124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515A2124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515C21249E5700261999 /* ValidatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A43515B21249E5700261999 /* ValidatorsTests.swift */; };
@@ -46,6 +47,7 @@
 		4AD095C820DC4190000E9CF5 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD0900120DC4171000E9CF5 /* libwg-go.a */; };
 		4AEAC32920F14B3B007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32820F14B3B007B67AB /* Log.swift */; };
 		4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AEAC32A20F14BA9007B67AB /* Log.swift */; };
+		4AFB99C42150545500A745DA /* SetttingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB99C32150545500A745DA /* SetttingsTableViewController.swift */; };
 		5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D4CA21249F7D00DBA2E6 /* Peer+Extension.swift */; };
 		5FA1D4CD2124A05C00DBA2E6 /* Interface+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */; };
 		5FA1D5102124D80C00DBA2E6 /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
@@ -134,6 +136,7 @@
 		4AD095C920DC42CD000E9CF5 /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		4AEAC32820F14B3B007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		4AEAC32A20F14BA9007B67AB /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		4AFB99C32150545500A745DA /* SetttingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetttingsTableViewController.swift; sourceTree = "<group>"; };
 		5FA1D4CA21249F7D00DBA2E6 /* Peer+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Peer+Extension.swift"; sourceTree = "<group>"; };
 		5FA1D4CC2124A05C00DBA2E6 /* Interface+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Interface+Extension.swift"; sourceTree = "<group>"; };
 		5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Arrays.swift"; sourceTree = "<group>"; };
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ABFFEA3212D3C8300107136 /* Security.framework in Frameworks */,
+				4A4349752151865E00EF92F8 /* libwg-go.a in Frameworks */,
 				48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */,
 				4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */,
 			);
@@ -257,6 +261,7 @@
 				4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */,
 				4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */,
 				5FCC4342212B3092009A9C58 /* QRScanViewController.swift */,
+				4AFB99C32150545500A745DA /* SetttingsTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -593,6 +598,7 @@
 				5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */,
 				5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */,
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
+				4AFB99C42150545500A745DA /* SetttingsTableViewController.swift in Sources */,
 				5FCC4343212B3092009A9C58 /* QRScanViewController.swift in Sources */,
 				4ABF718E214D8B0300A1E0BF /* TunnelInfoTableViewController.swift in Sources */,
 				4A4BAD0E20B5F6C300F12B28 /* Coordinator.swift in Sources */,
@@ -796,6 +802,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/wireguard-go-bridge",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Development";
@@ -822,6 +832,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";

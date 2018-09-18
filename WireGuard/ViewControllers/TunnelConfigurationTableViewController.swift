@@ -9,13 +9,12 @@ import PromiseKit
 
 protocol TunnelConfigurationTableViewControllerDelegate: class {
     func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController)
-    func export(tunnel: Tunnel, barButtonItem: UIBarButtonItem)
+    func showSettings()
 }
 
 class TunnelConfigurationTableViewController: UITableViewController {
 
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    @IBOutlet weak var exportButton: UIBarButtonItem!
 
     private var viewContext: NSManagedObjectContext!
     private weak var delegate: TunnelConfigurationTableViewControllerDelegate?
@@ -41,6 +40,10 @@ class TunnelConfigurationTableViewController: UITableViewController {
         return tunnel
     }
 
+    @IBAction func showSettings(_ sender: Any) {
+        delegate?.showSettings()
+    }
+
     @IBAction func addPeer(_ sender: Any) {
         if let moc = tunnel.managedObjectContext {
             tableView.beginUpdates()
@@ -53,10 +56,6 @@ class TunnelConfigurationTableViewController: UITableViewController {
             tableView.endUpdates()
             tableView.scrollToRow(at: insertedAt, at: .middle, animated: true)
         }
-    }
-
-    @IBAction func exportTunnel(_ sender: UIBarButtonItem) {
-        self.delegate?.export(tunnel: tunnel, barButtonItem: sender)
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
