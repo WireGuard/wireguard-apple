@@ -9,6 +9,7 @@ import PromiseKit
 
 protocol TunnelInfoTableViewControllerDelegate: class {
     func configure(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController)
+    func showSettings()
 }
 
 class TunnelInfoTableViewController: UITableViewController {
@@ -61,6 +62,10 @@ class TunnelInfoTableViewController: UITableViewController {
             }
             return cell
         }
+    }
+
+    @IBAction func showSettings(_ sender: Any) {
+        delegate?.showSettings()
     }
 
     @IBAction func editTunnelConfiguration(_ sender: Any) {

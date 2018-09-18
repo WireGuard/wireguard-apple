@@ -135,8 +135,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private func connect(interfaceName: String, settings: String) -> Int32 { // swiftlint:disable:this cyclomatic_complexity
         return withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
             return withUnsafeMutablePointer(to: &wgContext) { (wgCtxPtr) -> Int32 in
-                return wgTurnOn(nameGoStr, settingsGoStr,
-                    { (wgCtxPtr, buf, len) -> Int in
+                return wgTurnOn(nameGoStr, settingsGoStr, { (wgCtxPtr, buf, len) -> Int in
                         // read_fn: Read from the TUN interface and pass it on to WireGuard
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }
@@ -150,8 +149,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                             return packetData.count
                         }
                         return 0
-                },
-                    { (wgCtxPtr, buf, len) -> Int in
+                }, { (wgCtxPtr, buf, len) -> Int in
                         // write_fn: Receive packets from WireGuard and write to the TUN interface
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }

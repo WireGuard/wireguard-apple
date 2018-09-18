@@ -137,7 +137,7 @@ class AppCoordinator: RootViewCoordinator {
     }
 
     // swiftlint:disable next function_body_length
-    func exportConfigs(barButtonItem: UIBarButtonItem) {
+    func exportConfigs(sourceView: UIView) {
         guard let path = FileManager.default
             .urls(for: .documentDirectory, in: .userDomainMask).first else {
                 return
@@ -196,7 +196,7 @@ class AppCoordinator: RootViewCoordinator {
             activityItems: [saveFileURL],
             applicationActivities: nil)
         if let popoverPresentationController = activityViewController.popoverPresentationController {
-            popoverPresentationController.barButtonItem = barButtonItem
+            popoverPresentationController.sourceView = sourceView
         }
         navigationController.present(activityViewController, animated: true) {
         }
@@ -273,6 +273,14 @@ class AppCoordinator: RootViewCoordinator {
         self.navigationController.pushViewController(tunnelConfigurationViewController, animated: true)
     }
 
+    func showSettings() {
+        let settingsTableViewController = storyboard.instantiateViewController(type: SettingsTableViewController.self)
+
+        settingsTableViewController.delegate = self
+
+        self.navigationController.pushViewController(settingsTableViewController, animated: true)
+    }
+
     public func showError(_ error: Error) {
         showAlert(title: NSLocalizedString("Error", comment: "Error alert title"), message: error.localizedDescription)
     }
@@ -316,10 +324,6 @@ extension AppCoordinator: TunnelInfoTableViewControllerDelegate {
 }
 
 extension AppCoordinator: TunnelsTableViewControllerDelegate {
-    func exportTunnels(tunnelsTableViewController: TunnelsTableViewController, barButtonItem: UIBarButtonItem) {
-        self.exportConfigs(barButtonItem: barButtonItem)
-    }
-
     func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus {
         let session = self.providerManager(for: tunnel)?.connection as? NETunnelProviderSession
         return session?.status ?? .invalid
@@ -495,18 +499,19 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
 }
 
 extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
-    func export(tunnel: Tunnel, barButtonItem: UIBarButtonItem) {
-        exportConfig(tunnel: tunnel, barButtonItem: barButtonItem)
-    }
-
     func didSave(tunnel: Tunnel, tunnelConfigurationTableViewController: TunnelConfigurationTableViewController) {
         saveTunnel(tunnel)
     }
-
 }
 
 extension AppCoordinator: QRScanViewControllerDelegate {
     func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController) {
         showTunnelConfigurationViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
+    }
+}
+
+extension AppCoordinator: SettingsTableViewControllerDelegate {
+    func exportTunnels(settingsTableViewController: SettingsTableViewController, sourceView: UIView) {
+        self.exportConfigs(sourceView: sourceView)
     }
 }

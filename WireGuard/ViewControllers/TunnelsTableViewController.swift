@@ -10,13 +10,13 @@ import BNRCoreDataStack
 import NetworkExtension
 
 protocol TunnelsTableViewControllerDelegate: class {
-    func exportTunnels(tunnelsTableViewController: TunnelsTableViewController, barButtonItem: UIBarButtonItem)
     func addProvider(tunnelsTableViewController: TunnelsTableViewController)
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func info(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController)
     func status(for tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) -> NEVPNStatus
+    func showSettings()
 }
 
 class TunnelsTableViewController: UITableViewController {
@@ -66,8 +66,8 @@ class TunnelsTableViewController: UITableViewController {
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
-    @IBAction func exportTunnels(_ sender: UIBarButtonItem) {
-        delegate?.exportTunnels(tunnelsTableViewController: self, barButtonItem: sender)
+    @IBAction func showSettings(_ sender: Any) {
+        delegate?.showSettings()
     }
 
     @IBAction func addProvider(_ sender: UIBarButtonItem) {
