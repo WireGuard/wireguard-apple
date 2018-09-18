@@ -24,6 +24,10 @@ class TunnelsTableViewController: UITableViewController {
 
     var viewContext: NSManagedObjectContext!
 
+    @IBOutlet var settingsButton: UIBarButtonItem!
+    @IBOutlet var editButton: UIBarButtonItem!
+    @IBOutlet var doneButton: UIBarButtonItem!
+
     private lazy var fetchedResultsController: FetchedResultsController<Tunnel> = {
         let fetchRequest = NSFetchRequest<Tunnel>()
         fetchRequest.entity = Tunnel.entity()
@@ -64,6 +68,26 @@ class TunnelsTableViewController: UITableViewController {
 
         // Get rid of seperator lines in table.
         tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateBarButtons()
+    }
+
+    @IBAction func editTunnels(_ sender: Any) {
+        tableView.setEditing(!tableView.isEditing, animated: true)
+        updateBarButtons()
+
+    }
+
+    private func updateBarButtons() {
+        navigationController?.setToolbarHidden(tableView.isEditing, animated: true)
+        if tableView.isEditing {
+            self.navigationItem.setRightBarButtonItems([doneButton], animated: true)
+        } else {
+            self.navigationItem.setRightBarButtonItems([settingsButton, editButton], animated: true)
+        }
     }
 
     @IBAction func showSettings(_ sender: Any) {
@@ -253,6 +277,11 @@ class TunnelTableViewCell: UITableViewCell {
         tunnelSwitch.isOn = status == .connected
         tunnelSwitch.onTintColor = status == .invalid || status == .reasserting ? .gray : .green
         tunnelSwitch.isEnabled = true
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tunnelSwitch.isHidden = editing
     }
 }
 
