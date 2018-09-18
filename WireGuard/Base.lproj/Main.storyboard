@@ -101,14 +101,31 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="WireGuard" largeTitleDisplayMode="always" id="j0L-5U-jDs">
                         <barButtonItem key="backBarButtonItem" title="Tunnels" id="pxL-gR-QXU"/>
-                        <barButtonItem key="rightBarButtonItem" title=" ⚙︎" id="DZP-sp-Hsg">
-                            <connections>
-                                <action selector="showSettings:" destination="kTU-BV-32R" id="UfC-XY-zhW"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title=" ⚙︎" id="DZP-sp-Hsg">
+                                <connections>
+                                    <action selector="showSettings:" destination="kTU-BV-32R" id="UfC-XY-zhW"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="edit" id="Bj0-7o-icS">
+                                <connections>
+                                    <action selector="editTunnels:" destination="kTU-BV-32R" id="NzT-sl-F5r"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="done" id="X9a-Od-S2p">
+                                <connections>
+                                    <action selector="editTunnels:" destination="kTU-BV-32R" id="n7j-D7-moO"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="doneButton" destination="X9a-Od-S2p" id="Dc9-5g-IBV"/>
+                        <outlet property="editButton" destination="Bj0-7o-icS" id="iAH-Vk-xLg"/>
+                        <outlet property="settingsButton" destination="DZP-sp-Hsg" id="6YI-c0-U9w"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4uZ-Vv-Fry" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
