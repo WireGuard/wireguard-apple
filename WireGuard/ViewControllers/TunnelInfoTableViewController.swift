@@ -26,6 +26,13 @@ class TunnelInfoTableViewController: UITableViewController {
         self.tunnel = tunnel
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Get rid of seperator lines in table.
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super .viewWillAppear(animated)
 

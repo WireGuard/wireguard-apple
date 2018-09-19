@@ -20,6 +20,13 @@ class TunnelConfigurationTableViewController: UITableViewController {
     private weak var delegate: TunnelConfigurationTableViewControllerDelegate?
     private var tunnel: Tunnel!
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // Get rid of seperator lines in table.
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+
     func configure(context: NSManagedObjectContext, delegate: TunnelConfigurationTableViewControllerDelegate? = nil, tunnel: Tunnel? = nil) {
         viewContext = context
         self.delegate = delegate
