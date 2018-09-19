@@ -521,7 +521,8 @@ extension AppCoordinator: TunnelConfigurationTableViewControllerDelegate {
 
 extension AppCoordinator: QRScanViewControllerDelegate {
     func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController) {
-        showTunnelConfigurationViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
+        qrScanViewController.navigationController?.popViewController(animated: true)
+        showTunnelInfoViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
     }
 }
 
