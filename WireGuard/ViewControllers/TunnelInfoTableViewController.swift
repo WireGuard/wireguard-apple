@@ -40,13 +40,13 @@ class TunnelInfoTableViewController: UITableViewController {
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 1:
-            return tunnel?.peers?.count ?? 1
+            return tunnel?.peers?.count ?? 0
         default:
             return 1
         }
