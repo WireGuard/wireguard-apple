@@ -95,13 +95,14 @@ class QRScanViewController: UIViewController {
                 }
             }
         }
-        
+
         previewLayer.frame = self.view.bounds
     }
 
     func scanDidComplete(withCode code: String) {
         do {
             let tunnel = try Tunnel.fromConfig(code, context: viewContext)
+            try viewContext.save()
             delegate?.didSave(tunnel: tunnel, qrScanViewController: self)
         } catch {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
