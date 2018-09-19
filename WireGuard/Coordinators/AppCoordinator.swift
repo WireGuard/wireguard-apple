@@ -11,6 +11,8 @@ import PromiseKit
 import CoreData
 import BNRCoreDataStack
 
+import MobileCoreServices
+
 enum AppCoordinatorError: Error {
     case configImportError(msg: String)
 }
@@ -25,6 +27,7 @@ class AppCoordinator: RootViewCoordinator {
     let persistentContainer = NSPersistentContainer(name: "WireGuard")
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     var providerManagers: [NETunnelProviderManager]?
+    private let documentPickerDelegate: AppDocumentPickerDelegate
 
     // MARK: - Properties
 
@@ -50,6 +53,9 @@ class AppCoordinator: RootViewCoordinator {
 
         self.window.rootViewController = self.navigationController
         self.window.makeKeyAndVisible()
+
+        documentPickerDelegate = AppDocumentPickerDelegate()
+        documentPickerDelegate.appCoordinator = self
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(VPNStatusDidChange(notification:)),
@@ -331,15 +337,24 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
 
     func addProvider(tunnelsTableViewController: TunnelsTableViewController) {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Add Manually", style: .default) { [unowned self] _ in
+        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("Add from File", comment: ""), style: .default) { [unowned self] _ in
+            self.addProviderFromFile()
+        })
+        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("Add Manually", comment: ""), style: .default) { [unowned self] _ in
             self.addProviderManually()
         })
-        actionSheet.addAction(UIAlertAction(title: "Scan QR Code", style: .default) { [unowned self] _ in
+        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("Scan QR Code", comment: ""), style: .default) { [unowned self] _ in
             self.addProviderWithQRScan()
         })
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        actionSheet.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
 
         tunnelsTableViewController.present(actionSheet, animated: true, completion: nil)
+    }
+
+    func addProviderFromFile() {
+        let documentPickerController = UIDocumentPickerViewController(documentTypes: [String(kUTTypeZipArchive), "com.wireguard.config.quick"], in: .import)
+        documentPickerController.delegate = documentPickerDelegate
+        tunnelsTableViewController.present(documentPickerController, animated: true, completion: nil)
     }
 
     func addProviderManually() {
@@ -513,5 +528,26 @@ extension AppCoordinator: QRScanViewControllerDelegate {
 extension AppCoordinator: SettingsTableViewControllerDelegate {
     func exportTunnels(settingsTableViewController: SettingsTableViewController, sourceView: UIView) {
         self.exportConfigs(sourceView: sourceView)
+    }
+}
+
+class AppDocumentPickerDelegate: NSObject, UIDocumentPickerDelegate {
+    weak var appCoordinator: AppCoordinator?
+
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        if url.pathExtension == "conf" {
+            do {
+                try appCoordinator?.importConfig(config: url)
+            } catch {
+                os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
+            }
+        } else if url.pathExtension == "zip" {
+            do {
+                try appCoordinator?.importConfigs(configZip: url)
+            } catch {
+                os_log("Unable to import config: %{public}@", log: Log.general, type: .error, url.absoluteString)
+            }
+        }
+
     }
 }
