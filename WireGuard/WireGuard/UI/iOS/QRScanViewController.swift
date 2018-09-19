@@ -63,6 +63,38 @@ class QRScanViewController: UIViewController {
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let connection = previewLayer.connection {
+
+            let currentDevice: UIDevice = UIDevice.current
+
+            let orientation: UIDeviceOrientation = currentDevice.orientation
+
+            let previewLayerConnection: AVCaptureConnection = connection
+
+            if previewLayerConnection.isVideoOrientationSupported {
+
+                switch orientation {
+                case .portrait:
+                    previewLayerConnection.videoOrientation = .portrait
+                case .landscapeRight:
+                    previewLayerConnection.videoOrientation = .landscapeLeft
+                case .landscapeLeft:
+                    previewLayerConnection.videoOrientation = .landscapeRight
+                case .portraitUpsideDown:
+                    previewLayerConnection.videoOrientation = .portraitUpsideDown
+                default:
+                    previewLayerConnection.videoOrientation = .portrait
+
+                }
+            }
+        }
+        
+        previewLayer.frame = self.view.bounds
+    }
+
     func scanDidComplete(withCode code: String) {
         do {
             let tunnelConfiguration = try WgQuickConfigFileParser.parse(code, name: "Scanned")
