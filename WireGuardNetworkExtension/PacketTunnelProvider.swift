@@ -192,21 +192,18 @@ class WireGuardContext {
         readPacketCondition.signal()
     }
 
+    func packetsRead(packets: [NEPacket]) {
+        outboundPackets.append(contentsOf: packets)
+        readPacketCondition.signal()
+    }
+
     func readPacket(isTunnelClosed: inout Bool) -> NEPacket? {
         if outboundPackets.isEmpty {
-            let readPacketCondition = NSCondition()
             readPacketCondition.lock()
-            var packetsObtained: [NEPacket]?
-            packetFlow.readPacketObjects { (packets: [NEPacket]) in
-                packetsObtained = packets
-                readPacketCondition.signal()
-            }
+            packetFlow.readPacketObjects(completionHandler: packetsRead)
             // Wait till the completion handler of packetFlow.readPacketObjects() finishes
-            while packetsObtained == nil && !self.isTunnelClosed {
+            while outboundPackets.isEmpty && !self.isTunnelClosed {
                 readPacketCondition.wait()
-            }
-            if let packetsObtained = packetsObtained {
-                outboundPackets = packetsObtained
             }
             readPacketCondition.unlock()
         }
