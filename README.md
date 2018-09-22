@@ -1,10 +1,9 @@
+
+# ***DO NOT USE: CODEBASE HORRIBLY BROKEN***
+
+----
+
 # [WireGuard](https://www.wireguard.com/) for iOS
-
-This is the sourcecode of the WireGuard iOS app. With this app you should be able to create device wide WireGuard VPN connections.
-
-Feel free to clone, experiment and modify. Just know that the Network Extension bits will only work on an actual iOS device. To do so, it is required to fully provision both the app and network extension. This is NOT straighforward.
-
-Get in touch on Freenode IRC channel wireguard.
 
 ## To get started...
 
