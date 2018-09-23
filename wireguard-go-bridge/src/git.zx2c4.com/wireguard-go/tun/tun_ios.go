@@ -51,8 +51,7 @@ func (tun *nativeTun) Events() chan TUNEvent {
 }
 
 func (tun *nativeTun) Read(buff []byte, offset int) (int, error) {
-	buff = buff[offset:]
-	ret := C.callFnWithCtx(tun.readFn, tun.ctx, unsafe.Pointer(&buff[0]), C.size_t(len(buff)))
+	ret := C.callFnWithCtx(tun.readFn, tun.ctx, unsafe.Pointer(&buff[offset]), C.size_t(len(buff) - offset))
 	if ret < 0 {
 		return 0, syscall.Errno(-ret)
 	}
@@ -60,8 +59,7 @@ func (tun *nativeTun) Read(buff []byte, offset int) (int, error) {
 }
 
 func (tun *nativeTun) Write(buff []byte, offset int) (int, error) {
-	buff = buff[offset:]
-	ret := C.callFnWithCtx(tun.writeFn, tun.ctx, unsafe.Pointer(&buff[0]), C.size_t(len(buff)))
+	ret := C.callFnWithCtx(tun.writeFn, tun.ctx, unsafe.Pointer(&buff[offset]), C.size_t(len(buff) - offset))
 	if ret < 0 {
 		return 0, syscall.Errno(-ret)
 	}
