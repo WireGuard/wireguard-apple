@@ -181,7 +181,7 @@ class WireGuardContext {
     private var packetFlow: NEPacketTunnelFlow
     private var outboundPackets: [NEPacket] = []
     private var isTunnelClosed: Bool = false
-    private let readPacketCondition = NSCondition()
+    private var readPacketCondition = NSCondition()
 
     init(packetFlow: NEPacketTunnelFlow) {
         self.packetFlow = packetFlow
@@ -193,7 +193,9 @@ class WireGuardContext {
     }
 
     func packetsRead(packets: [NEPacket]) {
+        readPacketCondition.lock()
         outboundPackets.append(contentsOf: packets)
+        readPacketCondition.unlock()
         readPacketCondition.signal()
     }
 
