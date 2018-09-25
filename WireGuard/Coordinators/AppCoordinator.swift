@@ -524,6 +524,10 @@ extension AppCoordinator: QRScanViewControllerDelegate {
         qrScanViewController.navigationController?.popViewController(animated: true)
         showTunnelInfoViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
     }
+
+    func didCancel(qrScanViewController: QRScanViewController) {
+        qrScanViewController.navigationController?.popViewController(animated: true)
+    }
 }
 
 extension AppCoordinator: SettingsTableViewControllerDelegate {

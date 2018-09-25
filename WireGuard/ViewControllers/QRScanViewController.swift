@@ -12,6 +12,7 @@ import UIKit
 
 protocol QRScanViewControllerDelegate: class {
     func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController)
+    func didCancel(qrScanViewController: QRScanViewController)
 }
 
 class QRScanViewController: UIViewController {
@@ -102,8 +103,19 @@ class QRScanViewController: UIViewController {
     func scanDidComplete(withCode code: String) {
         do {
             let tunnel = try Tunnel.fromConfig(code, context: viewContext)
-            try viewContext.save()
-            delegate?.didSave(tunnel: tunnel, qrScanViewController: self)
+            let alert = UIAlertController(title: NSLocalizedString("Enter a title for new tunnel", comment: ""), message: nil, preferredStyle: .alert)
+            alert.addTextField(configurationHandler: nil)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
+                do {
+                    tunnel.title = alert.textFields?[0].text
+                    try self?.viewContext.save()
+                    self?.delegate?.didSave(tunnel: tunnel, qrScanViewController: self!)
+                } catch {
+                    self?.scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
+                }
+            }))
+
         } catch {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
         }
