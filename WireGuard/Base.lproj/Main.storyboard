@@ -102,7 +102,7 @@
                     <navigationItem key="navigationItem" title="WireGuard" largeTitleDisplayMode="always" id="j0L-5U-jDs">
                         <barButtonItem key="backBarButtonItem" title="Tunnels" id="pxL-gR-QXU"/>
                         <rightBarButtonItems>
-                            <barButtonItem title=" ⚙︎" id="DZP-sp-Hsg">
+                            <barButtonItem image="settings" id="DZP-sp-Hsg">
                                 <connections>
                                     <action selector="showSettings:" destination="kTU-BV-32R" id="UfC-XY-zhW"/>
                                 </connections>
@@ -572,7 +572,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Tunnel settings" id="PPu-rX-T38">
                         <rightBarButtonItems>
-                            <barButtonItem title=" ⚙︎" id="Ph6-EV-NlT">
+                            <barButtonItem image="settings" id="Ph6-EV-NlT">
                                 <connections>
                                     <action selector="showSettings:" destination="0VM-73-EPX" id="wx3-3w-OhG"/>
                                 </connections>
@@ -826,7 +826,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Tunnel info" id="Eh1-Vi-78e">
                         <rightBarButtonItems>
-                            <barButtonItem title=" ⚙︎" id="OME-id-5vt">
+                            <barButtonItem image="settings" id="OME-id-5vt">
                                 <connections>
                                     <action selector="showSettings:" destination="h8W-vj-IcI" id="mZN-SL-gZJ"/>
                                 </connections>
@@ -998,6 +998,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="settings" width="22" height="22"/>
         <image name="trash" width="14" height="18"/>
     </resources>
     <color key="tintColor" red="0.53333333333333333" green="0.090196078431372548" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
