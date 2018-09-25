@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.12.1" systemVersion="17G2208" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Interface" representedClassName="Interface" syncable="YES">
         <attribute name="addresses" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dns" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="listenPort" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="mtu" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="listenPort" optional="YES" attributeType="Integer 16" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="mtu" optional="YES" attributeType="Integer 32" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="privateKey" attributeType="String" syncable="YES"/>
         <relationship name="tunnel" maxCount="1" deletionRule="Nullify" destinationEntity="Tunnel" inverseName="interface" inverseEntity="Tunnel" syncable="YES"/>
     </entity>
