@@ -116,6 +116,8 @@ class QRScanViewController: UIViewController {
                 }
             }))
 
+            self.present(alert, animated: true)
+
         } catch {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
         }
