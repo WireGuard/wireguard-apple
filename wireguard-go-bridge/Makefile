@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
 
-FILES := $(filter-out %/main.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go))
+FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go))
 
 ARCHES := arm64 armv7 x86_64
 GOARCH_arm64 := arm64

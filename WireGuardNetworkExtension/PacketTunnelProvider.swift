@@ -136,6 +136,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         return withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
             return withUnsafeMutablePointer(to: &wgContext) { (wgCtxPtr) -> Int32 in
                 return wgTurnOn(nameGoStr, settingsGoStr, { (wgCtxPtr, buf, len) -> Int in
+                    autoreleasepool {
                         // read_fn: Read from the TUN interface and pass it on to WireGuard
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }
@@ -149,7 +150,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                             return packetData.count
                         }
                         return 0
+                    }
                 }, { (wgCtxPtr, buf, len) -> Int in
+                    autoreleasepool {
                         // write_fn: Receive packets from WireGuard and write to the TUN interface
                         guard let wgCtxPtr = wgCtxPtr else { return 0 }
                         guard let buf = buf else { return 0 }
@@ -170,6 +173,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                             return len
                         }
                         return 0
+                    }
                 },
                     wgCtxPtr)
             }
@@ -203,18 +207,16 @@ class WireGuardContext {
         if outboundPackets.isEmpty {
             readPacketCondition.lock()
             packetFlow.readPacketObjects(completionHandler: packetsRead)
-            // Wait till the completion handler of packetFlow.readPacketObjects() finishes
             while outboundPackets.isEmpty && !self.isTunnelClosed {
                 readPacketCondition.wait()
             }
             readPacketCondition.unlock()
         }
         isTunnelClosed = self.isTunnelClosed
-        if outboundPackets.isEmpty {
-            return nil
-        } else {
+        if !outboundPackets.isEmpty {
             return outboundPackets.removeFirst()
         }
+        return nil
     }
 
     func writePacket(packet: NEPacket, isTunnelClosed: inout Bool) -> Bool {
