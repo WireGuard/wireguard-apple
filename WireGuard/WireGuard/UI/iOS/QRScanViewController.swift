@@ -101,8 +101,20 @@ class QRScanViewController: UIViewController {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
             return
         }
-        delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self)
-        dismiss(animated: true, completion: nil)
+
+        let alert = UIAlertController(title: NSLocalizedString("Enter a title for new tunnel", comment: ""), message: nil, preferredStyle: .alert)
+        alert.addTextField(configurationHandler: nil)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
+            let title = alert.textFields?[0].text ?? ""
+            if (title.isEmpty) { return }
+            tunnelConfiguration.interface.name = title
+            if let s = self {
+                s.delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: s)
+                s.dismiss(animated: true, completion: nil)
+            }
+        }))
+        present(alert, animated: true)
     }
 
     func scanDidEncounterError(title: String, message: String) {
