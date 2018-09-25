@@ -52,7 +52,6 @@ var tunnelHandles map[int32]*Device
 
 func init() {
 	versionString = C.CString(WireGuardGoVersion)
-	preallocatedBuffers = 64
 	roamingDisabled = true
 	tunnelHandles = make(map[int32]*Device)
 	signals := make(chan os.Signal)
