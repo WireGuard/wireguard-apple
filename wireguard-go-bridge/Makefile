@@ -24,7 +24,7 @@ src/.prepared: $(FILES) src/git.zx2c4.com/wireguard-go/api-ios.go src/git.zx2c4.
 	find . -type d -empty -delete
 	mkdir -p $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILES)))
 	$(foreach FILE,$(FILES),ln -sf $(abspath $(FILE)) $(subst ../wireguard-go/,./src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(notdir $(FILE));)
-	GOPATH=$(PWD) go get -v -d git.zx2c4.com/wireguard-go
+	GOPATH=$(CURDIR) go get -v -d git.zx2c4.com/wireguard-go
 	touch $@
 
 define libwg-go-a
@@ -33,7 +33,7 @@ libwg-go-$(1).a: $(FILES) src/git.zx2c4.com/wireguard-go/api-ios.go src/git.zx2c
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
 	GOARCH=$(GOARCH_$(1)) \
-	GOPATH=$(PWD) \
+	GOPATH=$(CURDIR) \
 	go build -tags ios -v -o libwg-go-$(1).a -buildmode c-archive git.zx2c4.com/wireguard-go
 	@rm -f libwg-go-$(1).h
 endef
