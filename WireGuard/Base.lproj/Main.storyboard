@@ -70,6 +70,7 @@
                                         </switch>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="3kG-Lh-YJw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="LTX-Ir-wae" secondAttribute="trailing" constant="10" id="2fo-Df-eKg"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="LTX-Ir-wae" secondAttribute="bottom" id="S3B-b1-6Qv"/>
                                         <constraint firstAttribute="trailing" secondItem="3kG-Lh-YJw" secondAttribute="trailing" id="hT2-xN-OxL"/>
                                         <constraint firstItem="LTX-Ir-wae" firstAttribute="leading" secondItem="5vz-m1-nzL" secondAttribute="leadingMargin" id="n1M-My-hfr"/>
@@ -1003,7 +1004,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="settings" width="22" height="22"/>
+        <image name="settings" width="4" height="13"/>
         <image name="trash" width="14" height="18"/>
     </resources>
     <color key="tintColor" red="0.53333333333333333" green="0.090196078431372548" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
