@@ -110,14 +110,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Handle IPC messages from the app.
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
-        guard let messageString = NSString(data: messageData, encoding: String.Encoding.utf8.rawValue) else {
-            completionHandler?(nil)
-            return
+        let responseData: Data?
+
+        switch ExtensionMessage(messageData) {
+        case ExtensionMessage.requestVersion:
+            responseData = (wgVersion().flatMap { String(cString: $0) } ?? "").data(using: .utf8)
+        default:
+            responseData = nil
         }
 
-        os_log("Got a message from the app: %s", log: Log.general, type: .info, messageString)
-
-        let responseData = "Hello app".data(using: String.Encoding.utf8)
         completionHandler?(responseData)
     }
 
