@@ -14,18 +14,26 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     // MARK: Properties
 
-    var wgHandle: Int32?
-    var wgContext: WireGuardContext?
+    private var wgHandle: Int32?
+    private var wgContext: WireGuardContext?
+
+    private var config: NETunnelProviderProtocol {
+        return self.protocolConfiguration as! NETunnelProviderProtocol // swiftlint:disable:this force_cast
+    }
+
+    private var interfaceName: String {
+        return config.providerConfiguration![PCKeys.title.rawValue]! as! String // swiftlint:disable:this force_cast
+    }
+
+    private var settings: String {
+        return config.providerConfiguration![PCKeys.settings.rawValue]! as! String // swiftlint:disable:this force_cast
+    }
 
     // MARK: NEPacketTunnelProvider
 
     /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         os_log("Starting tunnel", log: Log.general, type: .info)
-
-        let config = self.protocolConfiguration as! NETunnelProviderProtocol // swiftlint:disable:this force_cast
-        let interfaceName = config.providerConfiguration![PCKeys.title.rawValue]! as! String // swiftlint:disable:this force_cast
-        let settings = config.providerConfiguration![PCKeys.settings.rawValue]! as! String // swiftlint:disable:this force_cast
 
         let validatedEndpoints = (config.providerConfiguration?[PCKeys.endpoints.rawValue] as? String ?? "").commaSeparatedToArray().compactMap { try? Endpoint(endpointString: String($0)) }.compactMap {$0}
         let validatedAddresses = (config.providerConfiguration?[PCKeys.addresses.rawValue] as? String ?? "").commaSeparatedToArray().compactMap { try? CIDRAddress(stringRepresentation: String($0)) }.compactMap { $0 }
