@@ -174,9 +174,9 @@ class InterfaceTableViewCell: UITableViewCell {
             privateKeyField.text = model.privateKey
             publicKeyField.text = model.publicKey
 
-            listenPortField.text = String(model.listenPort)
+            listenPortField.text = model.listenPort > 0 ? String(model.listenPort) : nil
             dnsField.text = model.dns
-            mtuField.text = String(model.mtu)
+            mtuField.text = model.mtu > 0 ? String(model.mtu) : nil
         }
     }
 
@@ -217,12 +217,16 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
         } else if sender == listenPortField {
             if let string = string, let port = Int16(string) {
                 model.listenPort = port
+            } else {
+                model.listenPort = 0
             }
         } else if sender == dnsField {
             model.dns = string
         } else if sender == mtuField {
             if let string = string, let mtu = Int32(string) {
                 model.mtu = mtu
+            } else {
+                model.mtu = 0
             }
         }
     }
