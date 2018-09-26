@@ -11,7 +11,7 @@ import Foundation
 extension String {
 
     func isBase64() -> Bool {
-        let base64Predicate = NSPredicate(format: "SELF MATCHES %@", "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$")
+        let base64Predicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9+/]{43}=$")
         return base64Predicate.evaluate(with: self)
     }
 
