@@ -134,8 +134,8 @@ static void curve25519_shared_secret(uint8_t shared_secret[32], const uint8_t pr
 
     for (i = 254; i >= 0; --i) {
         r = (z[i >> 3] >> (i & 7)) & 1;
-        cswap(a, b, r);
-        cswap(c, d, r);
+        cswap(a, b, (int)r);
+        cswap(c, d, (int)r);
         add(e, a, c);
         subtract(a, a, c);
         add(c, b, d);
@@ -154,8 +154,8 @@ static void curve25519_shared_secret(uint8_t shared_secret[32], const uint8_t pr
         multmod(a, d, f);
         multmod(d, b, x);
         multmod(b, e, e);
-        cswap(a, b, r);
-        cswap(c, d, r);
+        cswap(a, b, (int)r);
+        cswap(c, d, (int)r);
     }
     invert(c, c);
     multmod(a, a, c);
