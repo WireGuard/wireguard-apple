@@ -34,6 +34,11 @@
 		4A4BAD2320B6026900F12B28 /* Interface+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BAD1F20B6026900F12B28 /* Interface+CoreDataClass.swift */; };
 		4A61D82E20D98CE2006C7A76 /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 4A61D82620D98CE1006C7A76 /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A61D83420D98D25006C7A76 /* NetworkExtension.framework */; };
+		4A8A2296215B77D300736141 /* AppCoordinator+QRScanViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A2295215B77D300736141 /* AppCoordinator+QRScanViewControllerDelegate.swift */; };
+		4A8A2298215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A2297215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift */; };
+		4A8A229A215B782E00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A2299215B782D00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift */; };
+		4A8A229C215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229B215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift */; };
+		4A8A229E215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
 		4ABF718E214D8B0300A1E0BF /* TunnelInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */; };
@@ -123,6 +128,11 @@
 		4A61D82B20D98CE2006C7A76 /* WireGuardNetworkExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardNetworkExtension.entitlements; sourceTree = "<group>"; };
 		4A61D83320D98D07006C7A76 /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		4A61D83420D98D25006C7A76 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		4A8A2295215B77D300736141 /* AppCoordinator+QRScanViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+QRScanViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		4A8A2297215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+SettingsTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		4A8A2299215B782D00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		4A8A229B215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelsTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelInfoTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
 		4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelInfoTableViewController.swift; sourceTree = "<group>"; };
 		4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -248,6 +258,11 @@
 				4A4BAD0D20B5F6C300F12B28 /* Coordinator.swift */,
 				4A4BAD0F20B5F6EC00F12B28 /* RootCoordinator.swift */,
 				4A4BAD0B20B5F6AA00F12B28 /* AppCoordinator.swift */,
+				4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */,
+				4A8A229B215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift */,
+				4A8A2295215B77D300736141 /* AppCoordinator+QRScanViewControllerDelegate.swift */,
+				4A8A2297215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift */,
+				4A8A2299215B782D00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -585,16 +600,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A8A229A215B782E00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift in Sources */,
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
 				4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */,
+				4A8A2298215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift in Sources */,
 				4AEAC32B20F14BA9007B67AB /* Log.swift in Sources */,
+				4A8A229E215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift in Sources */,
 				4A4BAD1320B5F82400F12B28 /* Identifyable.swift in Sources */,
 				4A4BAD1720B5F8DE00F12B28 /* WireGuard.xcdatamodeld in Sources */,
 				5FCC4347212B3E2C009A9C58 /* Attribute.swift in Sources */,
 				4A4BAD1A20B5F8FF00F12B28 /* Tunnel+CoreDataClass.swift in Sources */,
 				4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */,
 				4A4BAD1020B5F6EC00F12B28 /* RootCoordinator.swift in Sources */,
+				4A8A2296215B77D300736141 /* AppCoordinator+QRScanViewControllerDelegate.swift in Sources */,
 				4A4351592124956200261999 /* Validators.swift in Sources */,
+				4A8A229C215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift in Sources */,
 				5FA1D4CB21249F7D00DBA2E6 /* Peer+Extension.swift in Sources */,
 				5FA1D5122124DA6400DBA2E6 /* String+Base64.swift in Sources */,
 				4AC5462E2116306F00749D21 /* Tunnel+Extension.swift in Sources */,
