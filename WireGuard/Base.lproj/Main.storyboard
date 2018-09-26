@@ -108,7 +108,7 @@
                                     <action selector="showSettings:" destination="kTU-BV-32R" id="UfC-XY-zhW"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="edit" id="Bj0-7o-icS">
+                            <barButtonItem systemItem="trash" id="Bj0-7o-icS">
                                 <connections>
                                     <action selector="editTunnels:" destination="kTU-BV-32R" id="NzT-sl-F5r"/>
                                 </connections>
