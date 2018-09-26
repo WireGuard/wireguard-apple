@@ -10,7 +10,6 @@
 		48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 861983CAE8FDC13BC83E7E04 /* Pods_WireGuard.framework */; };
 		4A430E802139DC8F0078172C /* icon_20pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */; };
 		4A430E842139DCFB0078172C /* icon_60pt@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A430E832139DCFB0078172C /* icon_60pt@3x.png */; };
-		4A4349752151865E00EF92F8 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AD0900120DC4171000E9CF5 /* libwg-go.a */; };
 		4A4351592124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515A2124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515C21249E5700261999 /* ValidatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A43515B21249E5700261999 /* ValidatorsTests.swift */; };
@@ -39,6 +38,8 @@
 		4A8A229A215B782E00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A2299215B782D00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift */; };
 		4A8A229C215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229B215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift */; };
 		4A8A229E215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */; };
+		4A8A22A0215B821A00736141 /* ExtensionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229F215B821A00736141 /* ExtensionMessage.swift */; };
+		4A8A22A1215B823100736141 /* ExtensionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8A229F215B821A00736141 /* ExtensionMessage.swift */; };
 		4A8AABD820B6A79100B6D8C1 /* UITableView+WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */; };
 		4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FA1D50F2124D80C00DBA2E6 /* String+Arrays.swift */; };
 		4ABF718E214D8B0300A1E0BF /* TunnelInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */; };
@@ -133,6 +134,7 @@
 		4A8A2299215B782D00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		4A8A229B215B787E00736141 /* AppCoordinator+TunnelsTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelsTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelInfoTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		4A8A229F215B821A00736141 /* ExtensionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMessage.swift; sourceTree = "<group>"; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
 		4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelInfoTableViewController.swift; sourceTree = "<group>"; };
 		4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -162,7 +164,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4ABFFEA3212D3C8300107136 /* Security.framework in Frameworks */,
-				4A4349752151865E00EF92F8 /* libwg-go.a in Frameworks */,
 				48CF751B34E9703133F1B1AF /* Pods_WireGuard.framework in Frameworks */,
 				4A61D83520D98D25006C7A76 /* NetworkExtension.framework in Frameworks */,
 			);
@@ -325,6 +326,7 @@
 			children = (
 				4AC086822120B9F900CEE5ED /* ProviderConfigurationKeys.swift */,
 				4A4351582124956200261999 /* Validators.swift */,
+				4A8A229F215B821A00736141 /* ExtensionMessage.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -601,6 +603,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A8A229A215B782E00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift in Sources */,
+				4A8A22A0215B821A00736141 /* ExtensionMessage.swift in Sources */,
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,
 				4A4BAD2220B6026900F12B28 /* Interface+CoreDataProperties.swift in Sources */,
 				4A8A2298215B780600736141 /* AppCoordinator+SettingsTableViewControllerDelegate.swift in Sources */,
@@ -653,6 +656,7 @@
 				4A43515A2124956200261999 /* Validators.swift in Sources */,
 				4AADEA2B212616F7008C24FD /* String+Arrays.swift in Sources */,
 				4AEAC32920F14B3B007B67AB /* Log.swift in Sources */,
+				4A8A22A1215B823100736141 /* ExtensionMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,7 +820,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -848,7 +851,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuard/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
