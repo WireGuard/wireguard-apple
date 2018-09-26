@@ -534,7 +534,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = $SRCROOT/Scripts/set_build_number.sh;
+			shellScript = "$SRCROOT/Scripts/set_build_number.sh\n";
 		};
 		6F743EFD0F63EA8C605CE349 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
