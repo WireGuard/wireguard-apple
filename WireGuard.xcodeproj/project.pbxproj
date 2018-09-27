@@ -389,7 +389,7 @@
 			buildPhases = (
 			);
 			buildToolPath = "$(PROJECT_DIR)/wireguard-go-bridge/xcode-build-helper.sh";
-			buildWorkingDirectory = "/Users/jeroenleenarts/code/wireguard-ios/wireguard-go-bridge";
+			buildWorkingDirectory = "$(PROJECT_DIR)/wireguard-go-bridge";
 			dependencies = (
 			);
 			name = WireGuardGoBridge;
