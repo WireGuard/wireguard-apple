@@ -12,8 +12,6 @@ Make sure you have Go available. A homebrew install will do. `brew install go`
 - Clone this repo.
   - `git clone https://git.zx2c4.com/wireguard-ios`
   - Init and update submodule: `git submodule init && git submodule update`
-- Prepare WireGuard Go bindings
-  - `cd wireguard-go-bridge && make`
 - Prepare Xcode project
   - Run `pod install`
   - Open `WireGuard.xcworkspace`
