@@ -291,6 +291,73 @@ class AppCoordinator: RootViewCoordinator {
         showAlert(title: NSLocalizedString("Error", comment: "Error alert title"), message: error.localizedDescription)
     }
 
+    func connect(tunnel: Tunnel) {
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            let manager = self.providerManager(for: tunnel)!
+            let block = {
+                switch manager.connection.status {
+                case .invalid, .disconnected:
+                    os_log("connect tunnel: %{public}@", log: Log.general, type: .info, tunnel.description)
+                    // Should the manager be enabled?
+
+                    let manager = self.providerManager(for: tunnel)
+                    manager?.isEnabled = true
+                    manager?.saveToPreferences { (error) in
+                        if let error = error {
+                            os_log("error saving preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                            return
+                        }
+                        os_log("saved preferences", log: Log.general, type: .info)
+
+                        let session = manager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
+                        do {
+                            try session.startTunnel()
+                        } catch let error {
+                            os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
+                        }
+                    }
+
+                default:
+                    break
+                }
+            }
+
+            if manager.connection.status == .invalid {
+                manager.loadFromPreferences { (_) in
+                    block()
+                }
+            } else {
+                block()
+            }
+
+            return Promise.value(())
+        }
+    }
+
+    func disconnect(tunnel: Tunnel) {
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            let manager = self.providerManager(for: tunnel)!
+            let block = {
+                switch manager.connection.status {
+                case .connected, .connecting:
+                    let manager = self.providerManager(for: tunnel)
+                    manager?.connection.stopVPNTunnel()
+                default:
+                    break
+                }
+            }
+
+            if manager.connection.status == .invalid {
+                manager.loadFromPreferences { (_) in
+                    block()
+                }
+            } else {
+                block()
+            }
+            return Promise.value(())
+        }
+    }
+
     private func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button"), style: .default))
@@ -311,6 +378,18 @@ class AppCoordinator: RootViewCoordinator {
             return "Invalid"
         case .reasserting:
             return "Reasserting"
+        }
+    }
+
+    func providerManager(for tunnel: Tunnel) -> NETunnelProviderManager? {
+        return self.providerManagers?.first {
+            guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
+                return false
+            }
+            guard let tunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
+                return false
+            }
+            return tunnelIdentifier == tunnel.tunnelIdentifier
         }
     }
 }

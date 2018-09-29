@@ -4,12 +4,17 @@
 
 import UIKit
 import CoreData
+import NetworkExtension
+
 import BNRCoreDataStack
 import PromiseKit
 
 protocol TunnelInfoTableViewControllerDelegate: class {
+    func connect(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController)
+    func disconnect(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController)
     func configure(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController)
     func showSettings()
+    func status(for tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) -> NEVPNStatus
 }
 
 class TunnelInfoTableViewController: UITableViewController {
@@ -31,6 +36,11 @@ class TunnelInfoTableViewController: UITableViewController {
 
         // Get rid of seperator lines in table.
         tableView.tableFooterView = UIView(frame: CGRect.zero)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(VPNStatusDidChange(notification:)),
+                                               name: .NEVPNStatusDidChange,
+                                               object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -56,7 +66,8 @@ class TunnelInfoTableViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(type: InterfaceInfoTableViewCell.self, for: indexPath)
-            cell.model = tunnel.interface
+            cell.delegate = self
+            cell.configure(model: tunnel.interface, status: delegate?.status(for: tunnel, tunnelInfoTableViewController: self) ?? .invalid)
             return cell
         default:
             let cell =  tableView.dequeueReusableCell(type: PeerInfoTableViewCell.self, for: indexPath)
@@ -78,10 +89,46 @@ class TunnelInfoTableViewController: UITableViewController {
     @IBAction func editTunnelConfiguration(_ sender: Any) {
         delegate?.configure(tunnel: self.tunnel, tunnelInfoTableViewController: self)
     }
+
+    @objc private func VPNStatusDidChange(notification: NSNotification) {
+        guard let session = notification.object as? NETunnelProviderSession else {
+            return
+        }
+
+        guard let prot = session.manager.protocolConfiguration as? NETunnelProviderProtocol else {
+            return
+        }
+
+        guard let changedTunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
+            return
+        }
+
+        guard tunnel.tunnelIdentifier == changedTunnelIdentifier else {
+            return
+        }
+
+        self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+    }
+}
+
+extension TunnelInfoTableViewController: InterfaceInfoTableViewCellDelegate {
+    func connect(tunnelIdentifier: String) {
+        delegate?.connect(tunnel: tunnel, tunnelInfoTableViewController: self)
+    }
+
+    func disconnect(tunnelIdentifier: String) {
+        delegate?.disconnect(tunnel: tunnel, tunnelInfoTableViewController: self)
+    }
+}
+
+protocol InterfaceInfoTableViewCellDelegate: class {
+    func connect(tunnelIdentifier: String)
+    func disconnect(tunnelIdentifier: String)
 }
 
 class InterfaceInfoTableViewCell: UITableViewCell {
-    var model: Interface! {
+    weak var delegate: InterfaceInfoTableViewCellDelegate?
+    private var model: Interface! {
         didSet {
             nameField.text = model.tunnel?.title
             addressesField.text = model.addresses
@@ -89,9 +136,41 @@ class InterfaceInfoTableViewCell: UITableViewCell {
         }
     }
 
+    func configure(model: Interface!, status: NEVPNStatus) {
+        self.model = model
+
+        if status == .connecting || status == .disconnecting || status == .reasserting {
+            activityIndicator.startAnimating()
+            tunnelSwitch.isHidden = true
+        } else {
+            activityIndicator.stopAnimating()
+            tunnelSwitch.isHidden = false
+        }
+
+        tunnelSwitch.isOn = status == .connected
+        tunnelSwitch.onTintColor = status == .invalid || status == .reasserting ? .gray : .green
+        tunnelSwitch.isEnabled = true
+    }
+
+    @IBAction func tunnelSwitchChanged(_ sender: Any) {
+        tunnelSwitch.isEnabled = false
+
+        guard let tunnelIdentifier = model.tunnel?.tunnelIdentifier else {
+            return
+        }
+
+        if tunnelSwitch.isOn {
+            delegate?.connect(tunnelIdentifier: tunnelIdentifier)
+        } else {
+            delegate?.disconnect(tunnelIdentifier: tunnelIdentifier)
+        }
+    }
+
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var addressesField: UILabel!
     @IBOutlet weak var publicKeyField: UILabel!
+    @IBOutlet weak var tunnelSwitch: UISwitch!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     @IBAction func copyPublicKey(_ sender: Any) {
         if let publicKey = model.publicKey {

@@ -617,12 +617,36 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="LbD-1j-3B4">
                                             <rect key="frame" x="16" y="11" width="343" height="246"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interface" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qcg-LJ-nRV">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Sa-Tj-Ueo">
                                                     <rect key="frame" x="0.0" y="0.0" width="343" height="51"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Interface" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qcg-LJ-nRV">
+                                                            <rect key="frame" x="0.0" y="15.5" width="286" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="odM-GH-fla">
+                                                            <rect key="frame" x="294" y="10" width="51" height="31"/>
+                                                            <connections>
+                                                                <action selector="tunnelSwitchChanged:" destination="4nk-ch-nYS" eventType="valueChanged" id="u0k-RB-DqP"/>
+                                                            </connections>
+                                                        </switch>
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="EcT-Wp-yDm">
+                                                            <rect key="frame" x="308" y="15.5" width="20" height="20"/>
+                                                        </activityIndicatorView>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstItem="EcT-Wp-yDm" firstAttribute="centerY" secondItem="9Sa-Tj-Ueo" secondAttribute="centerY" id="DcF-AC-6ha"/>
+                                                        <constraint firstItem="odM-GH-fla" firstAttribute="centerY" secondItem="9Sa-Tj-Ueo" secondAttribute="centerY" id="Y9x-NO-H4S"/>
+                                                        <constraint firstAttribute="trailing" secondItem="odM-GH-fla" secondAttribute="trailing" id="hMu-gM-CG1"/>
+                                                        <constraint firstItem="odM-GH-fla" firstAttribute="leading" secondItem="Qcg-LJ-nRV" secondAttribute="trailing" constant="8" id="iDB-Jf-5Ad"/>
+                                                        <constraint firstAttribute="trailing" secondItem="EcT-Wp-yDm" secondAttribute="trailing" constant="15" id="mDG-cy-oEG"/>
+                                                        <constraint firstItem="Qcg-LJ-nRV" firstAttribute="centerY" secondItem="9Sa-Tj-Ueo" secondAttribute="centerY" id="piF-RV-qzI"/>
+                                                        <constraint firstItem="Qcg-LJ-nRV" firstAttribute="leading" secondItem="9Sa-Tj-Ueo" secondAttribute="leading" id="vpU-wH-wQf"/>
+                                                    </constraints>
+                                                </view>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="wJ9-cl-tZH">
                                                     <rect key="frame" x="0.0" y="65" width="343" height="51"/>
                                                     <subviews>
@@ -711,9 +735,11 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="activityIndicator" destination="EcT-Wp-yDm" id="0YQ-7s-ckk"/>
                                     <outlet property="addressesField" destination="nxw-Kz-Bhj" id="e7Y-Z0-3Mk"/>
                                     <outlet property="nameField" destination="t89-wK-B5h" id="6fz-z4-Gf5"/>
                                     <outlet property="publicKeyField" destination="bCm-fp-MGf" id="O6Q-Tf-gKf"/>
+                                    <outlet property="tunnelSwitch" destination="odM-GH-fla" id="m31-9W-GgE"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="PeerInfoTableViewCell" rowHeight="268" id="E8O-dS-GmI" customClass="PeerInfoTableViewCell" customModule="WireGuard" customModuleProvider="target">
