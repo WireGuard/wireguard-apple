@@ -55,77 +55,11 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     }
 
     func connect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        _ = refreshProviderManagers().then { () -> Promise<Void> in
-            let manager = self.providerManager(for: tunnel)!
-            let block = {
-                switch manager.connection.status {
-                case .invalid, .disconnected:
-                    self.connect(tunnel: tunnel)
-                default:
-                    break
-                }
-            }
-
-            if manager.connection.status == .invalid {
-                manager.loadFromPreferences { (_) in
-                    block()
-                }
-            } else {
-                block()
-            }
-
-            return Promise.value(())
-        }
+        connect(tunnel: tunnel)
     }
 
     func disconnect(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        _ = refreshProviderManagers().then { () -> Promise<Void> in
-            let manager = self.providerManager(for: tunnel)!
-            let block = {
-                switch manager.connection.status {
-                case .connected, .connecting:
-                    self.disconnect(tunnel: tunnel)
-                default:
-                    break
-                }
-            }
-
-            if manager.connection.status == .invalid {
-                manager.loadFromPreferences { (_) in
-                    block()
-                }
-            } else {
-                block()
-            }
-            return Promise.value(())
-        }
-    }
-
-    private func connect(tunnel: Tunnel) {
-        os_log("connect tunnel: %{public}@", log: Log.general, type: .info, tunnel.description)
-        // Should the manager be enabled?
-
-        let manager = providerManager(for: tunnel)
-        manager?.isEnabled = true
-        manager?.saveToPreferences { (error) in
-            if let error = error {
-                os_log("error saving preferences: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-                return
-            }
-            os_log("saved preferences", log: Log.general, type: .info)
-
-            let session = manager?.connection as! NETunnelProviderSession //swiftlint:disable:this force_cast
-            do {
-                try session.startTunnel()
-            } catch let error {
-                os_log("error starting tunnel: %{public}@", log: Log.general, type: .error, error.localizedDescription)
-            }
-        }
-    }
-
-    func disconnect(tunnel: Tunnel) {
-        let manager = providerManager(for: tunnel)
-        manager?.connection.stopVPNTunnel()
+        disconnect(tunnel: tunnel)
     }
 
     func info(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
@@ -151,18 +85,6 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
                 self.providerManagers?.removeAll { $0 == manager }
                 os_log("removed preferences", log: Log.general, type: .info)
             }
-        }
-    }
-
-    private func providerManager(for tunnel: Tunnel) -> NETunnelProviderManager? {
-        return self.providerManagers?.first {
-            guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
-                return false
-            }
-            guard let tunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
-                return false
-            }
-            return tunnelIdentifier == tunnel.tunnelIdentifier
         }
     }
 

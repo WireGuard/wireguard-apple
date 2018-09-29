@@ -3,8 +3,22 @@
 //
 
 import Foundation
+import NetworkExtension
 
 extension AppCoordinator: TunnelInfoTableViewControllerDelegate {
+    func connect(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) {
+        connect(tunnel: tunnel)
+    }
+
+    func disconnect(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) {
+        disconnect(tunnel: tunnel)
+    }
+
+    func status(for tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) -> NEVPNStatus {
+        let session = self.providerManager(for: tunnel)?.connection as? NETunnelProviderSession
+        return session?.status ?? .invalid
+    }
+
     func configure(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) {
         print("configure tunnel \(tunnel)")
         let editContext = persistentContainer.newBackgroundContext()

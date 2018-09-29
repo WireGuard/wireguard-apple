@@ -44,7 +44,7 @@ class TunnelsTableViewController: UITableViewController {
                 let tunnel = try Tunnel.findFirstInContext(self.viewContext, predicate: NSPredicate(format: "tunnelIdentifier == %@", tunnelIdentifier))
                 if let tunnel = tunnel {
                     if let indexPath = self.fetchedResultsController.indexPathForObject(tunnel) {
-                        self.tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+                        self.tableView.reloadRows(at: [indexPath], with: .none)
                     }
                 }
             } catch {
