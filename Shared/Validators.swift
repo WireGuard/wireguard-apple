@@ -31,12 +31,12 @@ struct Endpoint {
     var addressType: AddressType
 
     init?(endpointString: String, needsPort: Bool = true) throws {
-        var ipString: String
+        var hostString: String
         if needsPort {
             guard let range = endpointString.range(of: ":", options: .backwards, range: nil, locale: nil) else {
                 throw EndpointValidationError.noIpAndPort(endpointString)
             }
-            ipString = String(endpointString[..<range.lowerBound])
+            hostString = String(endpointString[..<range.lowerBound])
 
             let portString = endpointString[range.upperBound...]
 
@@ -45,10 +45,12 @@ struct Endpoint {
             }
             self.port = port
         } else {
-            ipString = endpointString
+            hostString = endpointString
         }
 
-        ipString = ipString.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+        hostString = hostString.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+
+        let ipString = convertToipAddress(from: hostString)
 
         ipAddress = String(ipString)
         let addressType = validateIpAddress(ipToValidate: ipAddress)
@@ -57,6 +59,22 @@ struct Endpoint {
         }
         self.addressType = addressType
     }
+}
+
+private func convertToipAddress(from hostname: String) -> String {
+    let host = CFHostCreateWithName(nil, hostname as CFString).takeRetainedValue()
+    CFHostStartInfoResolution(host, .addresses, nil)
+    var success: DarwinBoolean = false
+    if let addresses = CFHostGetAddressing(host, &success)?.takeUnretainedValue() as NSArray?,
+        let theAddress = addresses.firstObject as? NSData {
+        var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+        if getnameinfo(theAddress.bytes.assumingMemoryBound(to: sockaddr.self), socklen_t(theAddress.length),
+                       &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 {
+            let numAddress = String(cString: hostname)
+            return numAddress
+        }
+    }
+    return hostname
 }
 
 func validateIpAddress(ipToValidate: String) -> AddressType {
