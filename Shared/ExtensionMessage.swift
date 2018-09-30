@@ -19,7 +19,7 @@ public class ExtensionMessage: Equatable {
     }
 
     // MARK: Equatable
-    public static func ==(lhs: ExtensionMessage, rhs: ExtensionMessage) -> Bool {
+    public static func == (lhs: ExtensionMessage, rhs: ExtensionMessage) -> Bool {
         return (lhs.data == rhs.data)
     }
 }
