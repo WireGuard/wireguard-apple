@@ -142,6 +142,42 @@ class AppCoordinator: RootViewCoordinator {
         }
     }
 
+    func checkAndCleanConfigs() {
+        _ = refreshProviderManagers().then { () -> Promise<Void> in
+            guard let providerManagers = self.providerManagers else {
+                return Promise.value(())
+            }
+            let tunnels = try Tunnel.allInContext(self.persistentContainer.viewContext)
+            let tunnelIdentifiers = tunnels.compactMap {$0.tunnelIdentifier}
+
+            let unknownManagers = providerManagers.filter {
+                guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
+                    return false
+                }
+                guard let candidateTunnelIdentifier = prot.providerConfiguration?[PCKeys.tunnelIdentifier.rawValue] as? String else {
+                    return false
+                }
+
+                return !tunnelIdentifiers.contains(candidateTunnelIdentifier)
+            }
+
+            let deletionPromises = unknownManagers.map({ (manager) -> Promise<NETunnelProviderManager> in
+                return Promise(resolver: { resolver in
+                    return manager.removeFromPreferences(completionHandler: { (error) in
+                        if let error = error {
+                            resolver.reject(error)
+                        } else {
+                            resolver.fulfill(manager)
+                        }
+                    })
+                })
+            })
+
+            return when(resolved: deletionPromises).asVoid()
+
+        }
+    }
+
     // swiftlint:disable next function_body_length
     func exportConfigs(sourceView: UIView) {
         guard let path = FileManager.default
