@@ -35,8 +35,15 @@ class SettingsTableViewController: UITableViewController {
                 label.text = goVersion
             }
             return Guarantee.value(())
-            }.recover({ (_) in
-                self.goVersionInfoLabel.text = NSLocalizedString("Unknown", comment: "")
+            }.recover({ (error) in
+                switch error {
+                case GoVersionCoordinatorError.noEnabledSession:
+                    self.goVersionInfoLabel.text = NSLocalizedString("Unavailable", comment: "")
+                    self.showNotEnabledAlert()
+                default:
+                    self.goVersionInfoLabel.text = NSLocalizedString("Unknown", comment: "")
+                }
+
             })
     }
 
@@ -67,6 +74,13 @@ class SettingsTableViewController: UITableViewController {
 
     func goVersionInformation() -> Promise<String> {
         return self.delegate?.goVersionInformation() ?? Promise(error: GoVersionError.noDelegate)
+    }
+
+    private func showNotEnabledAlert() {
+        let notEnabledAlertController = UIAlertController(title: NSLocalizedString("Go version", comment: ""), message: NSLocalizedString("Enable a WireGuard config by connecting or by selecting one in the VPN section of the device Settings app.", comment: ""), preferredStyle: .alert)
+        notEnabledAlertController.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: "Generic OK button"), style: .default, handler: nil))
+
+        present(notEnabledAlertController, animated: true, completion: nil)
     }
 
     private func showCopyConfirmation() {
