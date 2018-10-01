@@ -112,7 +112,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
         let responseData: Data?
 
-        switch ExtensionMessage(messageData) {
+        let message = ExtensionMessage(messageData)
+
+        switch message {
         case ExtensionMessage.requestVersion:
             responseData = (wgVersion().flatMap { String(cString: $0) } ?? "").data(using: .utf8)
         default:
