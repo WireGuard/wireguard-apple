@@ -1,7 +1,7 @@
 PODS:
   - BNRCoreDataStack (2.3.1)
-  - Disk (0.3.3)
-  - PromiseKit/CorePromise (6.3.4)
+  - Disk (0.4.0)
+  - PromiseKit/CorePromise (6.4.1)
   - SwiftLint (0.27.0)
   - ZIPFoundation (0.9.6)
 
@@ -22,8 +22,8 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   BNRCoreDataStack: d9d7d0ed1afd27dca5a903dde1250aa4c6dbc3f5
-  Disk: d1f55cd61f6ca20f368232d0c6e37e3c3dfcb63e
-  PromiseKit: e1425568123ec844a944c93f2bcb29d511d39cf5
+  Disk: ef2956657d5bb56034b38b29b352170165226440
+  PromiseKit: 4c76a6506638034e3d7bede97b2ff7743f7bd2dc
   SwiftLint: 3207c1faa2240bf8973b191820a116113cd11073
   ZIPFoundation: 68c35eb2637c21abe56dc60b3277636443bc1501
 
