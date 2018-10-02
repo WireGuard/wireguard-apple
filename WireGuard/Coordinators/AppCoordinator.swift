@@ -22,7 +22,7 @@ extension UINavigationController: Identifyable {}
 let APPGROUP = "group.com.wireguard.ios"
 let VPNBUNDLE = "com.wireguard.ios.network-extension"
 
-class AppCoordinator: RootViewCoordinator {
+class AppCoordinator: RootViewCoordinator { // swiftlint:disable:this type_body_length
 
     let persistentContainer = NSPersistentContainer(name: "WireGuard")
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -400,23 +400,6 @@ class AppCoordinator: RootViewCoordinator {
         self.navigationController.present(alert, animated: true)
     }
 
-    private func description(for status: NEVPNStatus) -> String {
-        switch status {
-        case .connected:
-            return "Connected"
-        case .connecting:
-            return "Connecting"
-        case .disconnected:
-            return "Disconnected"
-        case .disconnecting:
-            return "Disconnecting"
-        case .invalid:
-            return "Invalid"
-        case .reasserting:
-            return "Reasserting"
-        }
-    }
-
     func providerManager(for tunnel: Tunnel) -> NETunnelProviderManager? {
         return self.providerManagers?.first {
             guard let prot = $0.protocolConfiguration as? NETunnelProviderProtocol else {
@@ -448,5 +431,24 @@ class AppDocumentPickerDelegate: NSObject, UIDocumentPickerDelegate {
             }
         }
 
+    }
+}
+
+extension NEVPNStatus {
+    var statusDescription: String {
+        switch self {
+        case .connected:
+            return "Connected"
+        case .connecting:
+            return "Connecting"
+        case .disconnected:
+            return "Disconnected"
+        case .disconnecting:
+            return "Disconnecting"
+        case .invalid:
+            return "Invalid"
+        case .reasserting:
+            return "Reasserting"
+        }
     }
 }
