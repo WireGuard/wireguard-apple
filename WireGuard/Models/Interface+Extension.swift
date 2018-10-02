@@ -1,8 +1,4 @@
 //
-//  Interface+Extension.swift
-//  WireGuard
-//
-//  Created by Eric Kuck on 8/15/18.
 //  Copyright © 2018 WireGuard LLC. All rights reserved.
 //
 
