@@ -63,14 +63,10 @@ extension AppCoordinator: TunnelsTableViewControllerDelegate {
     }
 
     func info(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        print("info tunnel \(tunnel)")
-
         showTunnelInfoViewController(tunnel: tunnel, context: self.persistentContainer.viewContext)
     }
 
     func delete(tunnel: Tunnel, tunnelsTableViewController: TunnelsTableViewController) {
-        print("delete tunnel \(tunnel)")
-
         if let moc = tunnel.managedObjectContext {
             moc.perform {
                 moc.delete(tunnel)
