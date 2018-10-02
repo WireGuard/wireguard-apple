@@ -14,6 +14,7 @@
 		4A4351592124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515A2124956200261999 /* Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4351582124956200261999 /* Validators.swift */; };
 		4A43515C21249E5700261999 /* ValidatorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A43515B21249E5700261999 /* ValidatorsTests.swift */; };
+		4A4B1B932163D24E00DDA3BB /* CopyableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4B1B922163D24E00DDA3BB /* CopyableLabel.swift */; };
 		4A4BA6D820B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */; };
 		4A4BACE620B5F1BF00F12B28 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */; };
 		4A4BACE820B5F1BF00F12B28 /* TunnelsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4BACE720B5F1BF00F12B28 /* TunnelsTableViewController.swift */; };
@@ -109,6 +110,7 @@
 		4A430E832139DCFB0078172C /* icon_60pt@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_60pt@3x.png"; path = "WireGuard/Assets.xcassets/AppIcon.appiconset/icon_60pt@3x.png"; sourceTree = SOURCE_ROOT; };
 		4A4351582124956200261999 /* Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validators.swift; sourceTree = "<group>"; };
 		4A43515B21249E5700261999 /* ValidatorsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidatorsTests.swift; sourceTree = "<group>"; };
+		4A4B1B922163D24E00DDA3BB /* CopyableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyableLabel.swift; sourceTree = "<group>"; };
 		4A4BA6D720B73CBA00223AB8 /* TunnelConfigurationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfigurationTableViewController.swift; sourceTree = "<group>"; };
 		4A4BACE220B5F1BF00F12B28 /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A4BACE520B5F1BF00F12B28 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -196,6 +198,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A4B1B912163D23C00DDA3BB /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				4A4B1B922163D24E00DDA3BB /* CopyableLabel.swift */,
+			);
+			path = CustomViews;
+			sourceTree = "<group>";
+		};
 		4A4BACD920B5F1BF00F12B28 = {
 			isa = PBXGroup;
 			children = (
@@ -224,6 +234,7 @@
 		4A4BACE420B5F1BF00F12B28 /* WireGuard */ = {
 			isa = PBXGroup;
 			children = (
+				4A4B1B912163D23C00DDA3BB /* CustomViews */,
 				4ABFFEA1212D39CA00107136 /* Crypto */,
 				4A61D83320D98D07006C7A76 /* WireGuard.entitlements */,
 				4A4BAD1420B5F8C000F12B28 /* Models */,
@@ -635,6 +646,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A4B1B932163D24E00DDA3BB /* CopyableLabel.swift in Sources */,
 				4A8A229A215B782E00736141 /* AppCoordinator+TunnelConfigurationTableViewControllerDelegate.swift in Sources */,
 				4A8A22A0215B821A00736141 /* ExtensionMessage.swift in Sources */,
 				4A4BAD0C20B5F6AA00F12B28 /* AppCoordinator.swift in Sources */,

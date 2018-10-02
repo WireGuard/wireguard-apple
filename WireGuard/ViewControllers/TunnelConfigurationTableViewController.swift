@@ -180,18 +180,12 @@ class InterfaceTableViewCell: UITableViewCell {
         }
     }
 
-    @IBAction func copyPublicKey(_ sender: Any) {
-        if let publicKey = model.publicKey {
-            UIPasteboard.general.string = publicKey
-        }
-    }
-
     weak var delegate: InterfaceTableViewCellDelegate?
 
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var addressesField: UITextField!
     @IBOutlet weak var privateKeyField: UITextField!
-    @IBOutlet weak var publicKeyField: UILabel!
+    @IBOutlet weak var publicKeyField: CopyableLabel!
     @IBOutlet weak var listenPortField: UITextField!
     @IBOutlet weak var dnsField: UITextField!
     @IBOutlet weak var mtuField: UITextField!
@@ -253,12 +247,6 @@ class PeerTableViewCell: UITableViewCell {
     @IBOutlet weak var allowedIpsField: UITextField!
     @IBOutlet weak var endpointField: UITextField!
     @IBOutlet weak var persistentKeepaliveField: UITextField!
-
-    @IBAction func copyPublicKey(_ sender: Any) {
-        if let publicKey = peer.publicKey {
-            UIPasteboard.general.string = publicKey
-        }
-    }
 
     @IBAction func deletePeer(_ sender: Any) {
         delegate?.delete(peer: peer)

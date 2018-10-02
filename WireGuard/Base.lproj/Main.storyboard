@@ -223,25 +223,14 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="15.5"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jrM-B3-YSD">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="243" height="15.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="15.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                     <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oxw-Sl-4if">
-                                                                    <rect key="frame" x="243" y="0.0" width="100" height="15.5"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" constant="100" id="cMG-GD-Qad"/>
-                                                                    </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <state key="normal" title="Copy"/>
-                                                                    <connections>
-                                                                        <action selector="copyPublicKey:" destination="06N-KU-LSv" eventType="touchUpInside" id="bkX-yC-E6w"/>
-                                                                    </connections>
-                                                                </button>
                                                             </subviews>
                                                         </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qks-JK-qzc">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qks-JK-qzc" customClass="CopyableLabel" customModule="WireGuard" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="15.5" width="343" height="33.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="33.5" id="YP4-TS-hbj"/>
@@ -428,22 +417,11 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="16"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s9R-Af-RNn">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="243" height="16"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="16"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                     <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k1n-bm-do3">
-                                                                    <rect key="frame" x="243" y="0.0" width="100" height="16"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" constant="100" id="qqO-dK-9SJ"/>
-                                                                    </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <state key="normal" title="Copy"/>
-                                                                    <connections>
-                                                                        <action selector="copyPublicKey:" destination="gzz-88-0IG" eventType="touchUpInside" id="ozU-nW-UXP"/>
-                                                                    </connections>
-                                                                </button>
                                                             </subviews>
                                                         </stackView>
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RLw-0o-akQ">
@@ -482,13 +460,18 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="vxg-u7-VjZ">
                                                     <rect key="frame" x="0.0" y="180" width="343" height="46"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allowed IPs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDL-EX-UqG">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SJS-V6-FwE">
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="16"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                            <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="(generated)" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iiY-Tl-UcH">
+                                                            <subviews>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Allowed IPs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDL-EX-UqG">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="16"/>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                                    <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                            </subviews>
+                                                        </stackView>
+                                                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iiY-Tl-UcH">
                                                             <rect key="frame" x="0.0" y="16" width="343" height="30"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -674,25 +657,14 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="17.5"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vWC-ql-O8v">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="243" height="17.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="17.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                     <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QuI-0b-Odb">
-                                                                    <rect key="frame" x="243" y="0.0" width="100" height="17.5"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" constant="100" id="Cwg-HP-HvQ"/>
-                                                                    </constraints>
-                                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <state key="normal" title="Copy"/>
-                                                                    <connections>
-                                                                        <action selector="copyPublicKey:" destination="4nk-ch-nYS" eventType="touchUpInside" id="4i8-TJ-9Ix"/>
-                                                                    </connections>
-                                                                </button>
                                                             </subviews>
                                                         </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCm-fp-MGf">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCm-fp-MGf" customClass="CopyableLabel" customModule="WireGuard" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="17.5" width="343" height="33.5"/>
                                                             <gestureRecognizers/>
                                                             <constraints>
@@ -765,25 +737,20 @@
                                                             <rect key="frame" x="0.0" y="0.0" width="343" height="17.5"/>
                                                             <subviews>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Public key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="quD-G5-mlN">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="243" height="17.5"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="343" height="17.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                     <color key="textColor" red="0.60784313729999995" green="0.60784313729999995" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pfR-7r-TKm">
-                                                                    <rect key="frame" x="243" y="0.0" width="100" height="17.5"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="width" constant="100" id="fQD-S2-KoL"/>
-                                                                    </constraints>
+                                                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copied" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGI-77-A75">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="17.5"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                                    <state key="normal" title="Copy"/>
-                                                                    <connections>
-                                                                        <action selector="copyPublicKey:" destination="E8O-dS-GmI" eventType="touchUpInside" id="fe2-gy-StL"/>
-                                                                    </connections>
-                                                                </button>
+                                                                    <color key="textColor" red="0.52156862749999999" green="0.21176470589999999" blue="0.1764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                             </subviews>
                                                         </stackView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QB9-fz-eN5">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QB9-fz-eN5" customClass="CopyableLabel" customModule="WireGuard" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="17.5" width="343" height="33.5"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="33.5" id="T62-rA-BQP"/>
@@ -846,6 +813,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="allowedIpsField" destination="h84-DM-thL" id="CR8-i3-y2q"/>
+                                    <outlet property="copiedStatusLabel" destination="zGI-77-A75" id="zev-Na-P2u"/>
                                     <outlet property="endpointField" destination="pju-S6-5Ls" id="y3c-20-rkp"/>
                                     <outlet property="publicKeyField" destination="QB9-fz-eN5" id="hfg-EO-IRw"/>
                                 </connections>
