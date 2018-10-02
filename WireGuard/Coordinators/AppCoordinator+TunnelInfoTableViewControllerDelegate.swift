@@ -20,7 +20,6 @@ extension AppCoordinator: TunnelInfoTableViewControllerDelegate {
     }
 
     func configure(tunnel: Tunnel, tunnelInfoTableViewController: TunnelInfoTableViewController) {
-        print("configure tunnel \(tunnel)")
         let editContext = persistentContainer.newBackgroundContext()
         var backgroundTunnel: Tunnel?
         editContext.performAndWait {

@@ -75,7 +75,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if validatedIPv6Addresses.count > 0 {
             let ipv6Settings = NEIPv6Settings(addresses: validatedIPv6Addresses.map { $0.ipAddress }, networkPrefixLengths: validatedIPv6Addresses.map { NSNumber(value: $0.subnet) })
             ipv6Settings.includedRoutes = [NEIPv6Route.default()]
-            ipv6Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv6}.map { NEIPv6Route(destinationAddress: $0.ipAddress, networkPrefixLength: 128)}
+            ipv6Settings.excludedRoutes = validatedEndpoints.filter { $0.addressType == .IPv6 }.map { NEIPv6Route(destinationAddress: $0.ipAddress, networkPrefixLength: 128) }
 
             newSettings.ipv6Settings = ipv6Settings
         }

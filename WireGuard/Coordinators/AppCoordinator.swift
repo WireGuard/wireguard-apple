@@ -71,8 +71,7 @@ class AppCoordinator: RootViewCoordinator { // swiftlint:disable:this type_body_
             self.persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
             self.persistentContainer.loadPersistentStores { [weak self] (_, error) in
                 if let error = error {
-                    print("Unable to Load Persistent Store. \(error), \(error.localizedDescription)")
-
+                    os_log("Unable to load Persistent Store: %{public}@", log: Log.general, type: .error, error.localizedDescription)
                 } else {
                     DispatchQueue.main.async {
                         //start
@@ -81,13 +80,6 @@ class AppCoordinator: RootViewCoordinator { // swiftlint:disable:this type_body_
                             self?.tunnelsTableViewController.viewContext = self?.persistentContainer.viewContext
                             self?.tunnelsTableViewController.delegate = self
                             self?.navigationController.viewControllers = [tunnelsTableViewController]
-                            do {
-                                if let context = self?.persistentContainer.viewContext, try Tunnel.countInContext(context) == 0 {
-                                    print("No tunnels ... yet")
-                                }
-                            } catch {
-                                self?.showError(error)
-                            }
                         }
                     }
                 }
