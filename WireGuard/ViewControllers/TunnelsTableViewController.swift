@@ -188,6 +188,7 @@ extension TunnelsTableViewController: Identifyable {}
 class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsControllerDelegate {
 
     private weak var tableView: UITableView?
+    private var arrowImage: UIImageView?
 
     // MARK: - Lifecycle
     init(tableView: UITableView) {
@@ -196,6 +197,7 @@ class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsController
 
     func fetchedResultsControllerDidPerformFetch(_ controller: FetchedResultsController<Tunnel>) {
         tableView?.reloadData()
+        updateEmptyIndicator(controller)
     }
 
     func fetchedResultsControllerWillChangeContent(_ controller: FetchedResultsController<Tunnel>) {
@@ -204,6 +206,7 @@ class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsController
 
     func fetchedResultsControllerDidChangeContent(_ controller: FetchedResultsController<Tunnel>) {
         tableView?.endUpdates()
+        updateEmptyIndicator(controller)
     }
 
     func fetchedResultsController(_ controller: FetchedResultsController<Tunnel>, didChangeObject change: FetchedResultsObjectChange<Tunnel>) {
@@ -231,6 +234,23 @@ class TunnelFetchedResultsControllerDelegate: NSObject, FetchedResultsController
 
         case let .delete(_, index):
             tableView.deleteSections(IndexSet(integer: index), with: .automatic)
+        }
+    }
+
+    private func updateEmptyIndicator(_ controller: FetchedResultsController<Tunnel>) {
+        guard let tableView = tableView else { return }
+        if controller.count > 0 {
+            tableView.backgroundView = nil
+            arrowImage = nil
+        } else {
+            if arrowImage == nil {
+                let imageView = UIImageView(image: UIImage(named: "Arrow"))
+                imageView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+                imageView.frame = tableView.bounds
+                imageView.contentMode = .bottomRight
+                tableView.backgroundView = imageView
+                arrowImage = imageView
+            }
         }
     }
 }
