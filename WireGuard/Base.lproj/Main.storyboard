@@ -885,6 +885,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <imageView key="tableFooterView" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wireguard" id="s2Q-Rh-mqC">
+                            <rect key="frame" x="0.0" y="261.5" width="375" height="55"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
                         <sections>
                             <tableViewSection headerTitle="Version Information" id="zRZ-jm-jpm">
                                 <cells>
@@ -1000,6 +1004,7 @@
     <resources>
         <image name="settings" width="4" height="13"/>
         <image name="trash" width="14" height="18"/>
+        <image name="wireguard" width="1875" height="334"/>
     </resources>
     <color key="tintColor" red="0.53333333333333333" green="0.090196078431372548" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
 </document>
