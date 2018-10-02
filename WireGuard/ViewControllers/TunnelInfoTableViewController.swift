@@ -168,15 +168,9 @@ class InterfaceInfoTableViewCell: UITableViewCell {
 
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var addressesField: UILabel!
-    @IBOutlet weak var publicKeyField: UILabel!
+    @IBOutlet weak var publicKeyField: CopyableLabel!
     @IBOutlet weak var tunnelSwitch: UISwitch!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-
-    @IBAction func copyPublicKey(_ sender: Any) {
-        if let publicKey = model.publicKey {
-            UIPasteboard.general.string = publicKey
-        }
-    }
 }
 
 class PeerInfoTableViewCell: UITableViewCell {
@@ -188,15 +182,11 @@ class PeerInfoTableViewCell: UITableViewCell {
         }
     }
 
-    @IBOutlet weak var publicKeyField: UILabel!
+    @IBOutlet weak var publicKeyField: CopyableLabel!
     @IBOutlet weak var allowedIpsField: UILabel!
     @IBOutlet weak var endpointField: UILabel!
+    @IBOutlet weak var copiedStatusLabel: UILabel!
 
-    @IBAction func copyPublicKey(_ sender: Any) {
-        if let publicKey = peer.publicKey {
-            UIPasteboard.general.string = publicKey
-        }
-    }
 }
 
 extension TunnelInfoTableViewController: Identifyable {}
