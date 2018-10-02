@@ -103,7 +103,7 @@
 /* Begin PBXFileReference section */
 		0CE52E030FAA93F3BF5747B2 /* Pods-WireGuard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.release.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.release.xcconfig"; sourceTree = "<group>"; };
 		25E2BE31A33C8CCE6E79B6EF /* Pods-WireGuard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WireGuard.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WireGuard/Pods-WireGuard.debug.xcconfig"; sourceTree = "<group>"; };
-		4A0F8694215C0726002AEE4B /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = "<group>"; };
+		4A0F8694215C0726002AEE4B /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A430E7F2139DC8F0078172C /* icon_20pt@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_20pt@3x.png"; sourceTree = "<group>"; };
 		4A430E812139DCCB0078172C /* icon_20pt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_20pt.png; sourceTree = "<group>"; };
 		4A430E832139DCFB0078172C /* icon_60pt@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_60pt@3x.png"; path = "WireGuard/Assets.xcassets/AppIcon.appiconset/icon_60pt@3x.png"; sourceTree = SOURCE_ROOT; };
@@ -144,7 +144,6 @@
 		4A8A229D215B793C00736141 /* AppCoordinator+TunnelInfoTableViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppCoordinator+TunnelInfoTableViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		4A8A229F215B821A00736141 /* ExtensionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMessage.swift; sourceTree = "<group>"; };
 		4A8A22A7215BC6A800736141 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		4A8A22AC215BCFB000736141 /* xcode-build-helper.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "xcode-build-helper.sh"; sourceTree = "<group>"; };
 		4A8AABD720B6A79100B6D8C1 /* UITableView+WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+WireGuard.swift"; sourceTree = "<group>"; };
 		4ABF718D214D8B0300A1E0BF /* TunnelInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelInfoTableViewController.swift; sourceTree = "<group>"; };
 		4ABFFE9D212D399F00107136 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -343,7 +342,6 @@
 		4AD08FFE20DC4171000E9CF5 /* wireguard-go-bridge */ = {
 			isa = PBXGroup;
 			children = (
-				4A8A22AC215BCFB000736141 /* xcode-build-helper.sh */,
 				4A8A22A7215BC6A800736141 /* Makefile */,
 				4A0F8694215C0726002AEE4B /* libwg-go.a */,
 				4AD0900720DC4171000E9CF5 /* wireguard.h */,
@@ -388,7 +386,7 @@
 			buildConfigurationList = 4A8A22A9215BC9B200736141 /* Build configuration list for PBXLegacyTarget "WireGuardGoBridge" */;
 			buildPhases = (
 			);
-			buildToolPath = "$(PROJECT_DIR)/wireguard-go-bridge/xcode-build-helper.sh";
+			buildToolPath = make;
 			buildWorkingDirectory = "$(PROJECT_DIR)/wireguard-go-bridge";
 			dependencies = (
 			);
@@ -470,6 +468,7 @@
 				TargetAttributes = {
 					4A4BACE120B5F1BF00F12B28 = {
 						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 1000;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -484,6 +483,7 @@
 					};
 					4A4BACF520B5F1C100F12B28 = {
 						CreatedOnToolsVersion = 9.3.1;
+						LastSwiftMigration = 1000;
 						TestTargetID = 4A4BACE120B5F1BF00F12B28;
 					};
 					4A61D82520D98CE1006C7A76 = {
@@ -790,6 +790,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -843,6 +844,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -859,7 +861,6 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				INFOPLIST_FILE = WireGuard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -873,8 +874,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -890,7 +890,6 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				INFOPLIST_FILE = WireGuard/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -903,8 +902,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Development";
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -923,8 +921,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WireGuard.app/WireGuard";
 			};
 			name = Debug;
@@ -944,8 +941,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wireguard.ios.WireGuardTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WireGuard.app/WireGuard";
 			};
 			name = Release;
@@ -960,15 +956,10 @@
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.wireguard.ios.network-extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -976,8 +967,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -991,23 +981,17 @@
 				DEVELOPMENT_TEAM = L82V4Y2P3C;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
-				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/wireguard-go-bridge",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.wireguard.ios.network-extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "WireGuard Network Extension Development";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
