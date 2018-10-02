@@ -237,7 +237,7 @@ class PeerTableViewCell: UITableViewCell {
             preSharedKeyField.text = peer.presharedKey
             allowedIpsField.text = peer.allowedIPs
             endpointField.text = peer.endpoint
-            persistentKeepaliveField.text = String(peer.persistentKeepalive)
+            persistentKeepaliveField.text = peer.persistentKeepalive > 0 ? String(peer.persistentKeepalive) : nil
         }
     }
     weak var delegate: PeerTableViewCellDelegate?
@@ -269,6 +269,8 @@ extension PeerTableViewCell: UITextFieldDelegate {
         } else if sender == persistentKeepaliveField {
             if let string = string, let persistentKeepalive = Int32(string) {
                 peer.persistentKeepalive = persistentKeepalive
+            } else {
+                peer.persistentKeepalive = 0
             }
         }
     }
