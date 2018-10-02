@@ -11,7 +11,6 @@ enum GoVersionError: Error {
 
 protocol SettingsTableViewControllerDelegate: class {
     func exportTunnels(settingsTableViewController: SettingsTableViewController, sourceView: UIView)
-    func goVersionInformation() -> Promise<String>
 }
 
 class SettingsTableViewController: UITableViewController {
@@ -27,24 +26,7 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         versionInfoLabel.text = versionInformation
-        _ = firstly { () -> Promise<String> in
-            self.goVersionInfoLabel.text = NSLocalizedString("Loading...", comment: "")
-            return goVersionInformation()
-        }.then { (goVersion: String) -> Guarantee<Void> in
-            if let label = self.goVersionInfoLabel {
-                label.text = goVersion
-            }
-            return Guarantee.value(())
-            }.recover({ (error) in
-                switch error {
-                case GoVersionCoordinatorError.noEnabledSession:
-                    self.goVersionInfoLabel.text = NSLocalizedString("Unavailable", comment: "")
-                    self.showNotEnabledAlert()
-                default:
-                    self.goVersionInfoLabel.text = NSLocalizedString("Unknown", comment: "")
-                }
-
-            })
+        goVersionInfoLabel.text = goVersionInformation
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -72,8 +54,8 @@ class SettingsTableViewController: UITableViewController {
         return versionElements.joined(separator: " ")
     }
 
-    func goVersionInformation() -> Promise<String> {
-        return self.delegate?.goVersionInformation() ?? Promise(error: GoVersionError.noDelegate)
+    var goVersionInformation: String {
+        return Bundle.main.infoDictionary!["WireGuardGoVersion"] as? String ?? "Unknown!!!"
     }
 
     private func showNotEnabledAlert() {

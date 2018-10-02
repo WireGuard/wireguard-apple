@@ -329,7 +329,9 @@ class AppCoordinator: RootViewCoordinator { // swiftlint:disable:this type_body_
 
     func connect(tunnel: Tunnel) {
         _ = refreshProviderManagers().then { () -> Promise<Void> in
-            let manager = self.providerManager(for: tunnel)!
+            guard let manager = self.providerManager(for: tunnel) else {
+                return Promise.value(())
+            }
             let block = {
                 switch manager.connection.status {
                 case .invalid, .disconnected:
@@ -410,6 +412,26 @@ class AppCoordinator: RootViewCoordinator { // swiftlint:disable:this type_body_
             }
             return tunnelIdentifier == tunnel.tunnelIdentifier
         }
+    }
+
+    func extensionGoVersionInformation() -> Promise<String> {
+        return Promise(resolver: { (resolver) in
+            guard let session = self.providerManagers?.first(where: { $0.isEnabled })?.connection as? NETunnelProviderSession else {
+                resolver.reject(GoVersionCoordinatorError.noEnabledSession)
+                return
+            }
+            do {
+                try session.sendProviderMessage(ExtensionMessage.requestVersion.data, responseHandler: { (data) in
+                    guard let data = data, let responseString = String(data: data, encoding: .utf8) else {
+                        resolver.reject(GoVersionCoordinatorError.noResponse)
+                        return
+                    }
+                    resolver.fulfill(responseString)
+                })
+            } catch {
+                resolver.reject(error)
+            }
+        })
     }
 }
 
