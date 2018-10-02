@@ -417,6 +417,7 @@
 				4A4BACDE20B5F1BF00F12B28 /* Sources */,
 				4A4BACDF20B5F1BF00F12B28 /* Frameworks */,
 				4A4BACE020B5F1BF00F12B28 /* Resources */,
+				4A7CE90F2163EE6000D60BD7 /* Set wireguard go version */,
 				4A4BAD0920B5F56200F12B28 /* Set build number */,
 				6F743EFD0F63EA8C605CE349 /* [CP] Embed Pods Frameworks */,
 				4A61D83220D98CE2006C7A76 /* Embed App Extensions */,
@@ -596,6 +597,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "$SRCROOT/Scripts/set_build_number.sh\n";
+		};
+		4A7CE90F2163EE6000D60BD7 /* Set wireguard go version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set wireguard go version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "$SRCROOT/Scripts/extract_wireguard_go_version.sh\n";
 		};
 		6F743EFD0F63EA8C605CE349 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

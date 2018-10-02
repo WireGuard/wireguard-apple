@@ -7,6 +7,8 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Version Info</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -14,7 +16,17 @@
 			<key>Key</key>
 			<string>version_preference</string>
 			<key>Title</key>
-			<string>Version Info</string>
+			<string>WireGuard iOS</string>
+			<key>Type</key>
+			<string>PSTitleValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<string>Set at build time.</string>
+			<key>Key</key>
+			<string>wireguard_version_preference</string>
+			<key>Title</key>
+			<string>WireGuard Go</string>
 			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 		</dict>
