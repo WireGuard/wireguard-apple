@@ -105,7 +105,9 @@ class QRScanViewController: UIViewController {
             let tunnel = try Tunnel.fromConfig(code, context: viewContext)
             let alert = UIAlertController(title: NSLocalizedString("Enter a title for new tunnel", comment: ""), message: nil, preferredStyle: .alert)
             alert.addTextField(configurationHandler: nil)
-            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { [weak self] _ in
+                self?.delegate?.didCancel(qrScanViewController: self!)
+            }))
             alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
                 do {
                     tunnel.title = alert.textFields?[0].text
