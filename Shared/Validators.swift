@@ -122,25 +122,42 @@ struct CIDRAddress {
     var addressType: AddressType
 
     init?(stringRepresentation: String) throws {
-        guard let range = stringRepresentation.range(of: "/", options: .backwards, range: nil, locale: nil) else {
-            throw CIDRAddressValidationError.noIpAndSubnet(stringRepresentation)
+        let subnetString: String.SubSequence
+        if let range = stringRepresentation.range(of: "/", options: .backwards, range: nil, locale: nil) {
+            let ipString = stringRepresentation[..<range.lowerBound].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+            ipAddress = String(ipString)
+            subnetString = stringRepresentation[range.upperBound...]
+        } else {
+            let ipString = stringRepresentation
+            ipAddress = String(ipString)
+            subnetString = ""
         }
 
-        let ipString = stringRepresentation[..<range.lowerBound].replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-        let subnetString = stringRepresentation[range.upperBound...]
-
-        guard let subnet = Int32(subnetString) else {
-            throw CIDRAddressValidationError.invalidSubnet(String(subnetString))
-        }
-
-        ipAddress = String(ipString)
         let addressType = validateIpAddress(ipToValidate: ipAddress)
         guard addressType == .IPv4 || addressType == .IPv6 else {
             throw CIDRAddressValidationError.invalidIP(ipAddress)
         }
         self.addressType = addressType
 
-        self.subnet = subnet
+        if let subnet = Int32(subnetString) {
+            switch addressType {
+            case .IPv6:
+                self.subnet = subnet > 128 ? 128 : subnet
+            case .IPv4:
+                self.subnet = subnet > 32 ? 32 : subnet
+            case .other:
+                self.subnet = subnet
+            }
+        } else {
+            switch addressType {
+            case .IPv4:
+                subnet = 32
+            case .IPv6:
+                subnet = 128
+            case .other:
+                throw CIDRAddressValidationError.invalidSubnet(String(subnetString))
+            }
+        }
     }
 
     var subnetString: String {
@@ -155,5 +172,9 @@ struct CIDRAddress {
         let fourth = UInt8(truncatingIfNeeded: bitMask)
 
         return "\(first).\(second).\(third).\(fourth)"
+    }
+
+    var stringRepresentation: String {
+        return "\(ipAddress)/\(subnet)"
     }
 }

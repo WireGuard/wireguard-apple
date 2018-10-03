@@ -224,6 +224,14 @@ extension InterfaceTableViewCell: UITextFieldDelegate {
             }
         }
     }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == addressesField {
+            if let addresses = model.addresses?.commaSeparatedToArray() {
+                textField.text = addresses.compactMap { try? CIDRAddress(stringRepresentation: $0 ) }.compactMap { $0?.stringRepresentation }.joined(separator: ", ")
+            }
+        }
+    }
 }
 
 protocol PeerTableViewCellDelegate: class {
