@@ -49,11 +49,16 @@ struct Endpoint {
         }
 
         hostString = hostString.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
-
-        let ipString = convertToipAddress(from: hostString)
+        var addressType = validateIpAddress(ipToValidate: hostString)
+        let ipString: String
+        if addressType == .other {
+         ipString = convertToipAddress(from: hostString)
+        } else {
+            ipString = hostString
+        }
 
         ipAddress = String(ipString)
-        let addressType = validateIpAddress(ipToValidate: ipAddress)
+        addressType = validateIpAddress(ipToValidate: ipAddress)
         guard addressType == .IPv4 || addressType == .IPv6 else {
             throw EndpointValidationError.invalidIP(ipAddress)
         }
