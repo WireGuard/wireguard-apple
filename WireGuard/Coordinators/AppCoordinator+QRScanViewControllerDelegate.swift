@@ -8,6 +8,7 @@ extension AppCoordinator: QRScanViewControllerDelegate {
     func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController) {
         qrScanViewController.navigationController?.popViewController(animated: true)
         showTunnelInfoViewController(tunnel: tunnel, context: tunnel.managedObjectContext!)
+        saveTunnel(tunnel)
     }
 
     func didCancel(qrScanViewController: QRScanViewController) {
