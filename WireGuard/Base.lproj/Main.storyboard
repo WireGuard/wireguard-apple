@@ -171,7 +171,7 @@
                                                             <rect key="frame" x="0.0" y="16" width="343" height="33.5"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                             <connections>
                                                                 <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="Ike-ou-qa9"/>
                                                                 <outlet property="delegate" destination="06N-KU-LSv" id="TuA-ac-TIy"/>
@@ -254,7 +254,7 @@
                                                             <rect key="frame" x="0.0" y="16" width="343" height="33.5"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                             <connections>
                                                                 <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="z45-u7-zCB"/>
                                                                 <outlet property="delegate" destination="06N-KU-LSv" id="YZ0-LC-PjW"/>
@@ -275,7 +275,7 @@
                                                             <rect key="frame" x="0.0" y="16" width="343" height="33.5"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                             <connections>
                                                                 <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="HAL-o6-G7A"/>
                                                                 <outlet property="delegate" destination="06N-KU-LSv" id="M1a-B6-Cl2"/>
@@ -299,7 +299,7 @@
                                                                     <rect key="frame" x="0.0" y="16" width="235" height="33.5"/>
                                                                     <nil key="textColor"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                     <connections>
                                                                         <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="8gN-mk-GtN"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="YjV-8W-z5Q"/>
@@ -320,7 +320,7 @@
                                                                     <rect key="frame" x="0.0" y="16" width="100" height="33.5"/>
                                                                     <nil key="textColor"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                     <connections>
                                                                         <action selector="textfieldDidChange:" destination="06N-KU-LSv" eventType="editingChanged" id="fgZ-LJ-ksN"/>
                                                                         <outlet property="delegate" destination="06N-KU-LSv" id="F1E-lK-AsD"/>
@@ -449,7 +449,7 @@
                                                             <rect key="frame" x="0.0" y="16" width="343" height="30"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                             <connections>
                                                                 <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="Cxh-YH-bZv"/>
                                                                 <outlet property="delegate" destination="gzz-88-0IG" id="oAu-VZ-2dn"/>
@@ -475,7 +475,7 @@
                                                             <rect key="frame" x="0.0" y="16" width="343" height="30"/>
                                                             <nil key="textColor"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <textInputTraits key="textInputTraits"/>
+                                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                             <connections>
                                                                 <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="k1U-vW-Jom"/>
                                                                 <outlet property="delegate" destination="gzz-88-0IG" id="DXo-0s-9sc"/>
@@ -499,7 +499,7 @@
                                                                     <rect key="frame" x="0.0" y="16" width="232" height="30"/>
                                                                     <nil key="textColor"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                     <connections>
                                                                         <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="bjR-TZ-Sx8"/>
                                                                         <outlet property="delegate" destination="gzz-88-0IG" id="PLB-sa-SBV"/>
@@ -520,7 +520,7 @@
                                                                     <rect key="frame" x="0.0" y="16" width="103" height="30"/>
                                                                     <nil key="textColor"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                    <textInputTraits key="textInputTraits"/>
+                                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                                                                     <connections>
                                                                         <action selector="textfieldDidChange:" destination="gzz-88-0IG" eventType="editingChanged" id="fQC-Pf-jUQ"/>
                                                                         <outlet property="delegate" destination="gzz-88-0IG" id="sbH-Sb-rcW"/>
