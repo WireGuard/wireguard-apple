@@ -2,7 +2,7 @@
 #
 # Copyright (C) 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
 
-UPSTREAM_FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go))
+UPSTREAM_FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)) ../wireguard-go/go.mod ../wireguard-go/go.sum
 DOWNSTREAM_FILES := $(wildcard src/*.go) $(wildcard src/*/*.go)
 
 ARCHS ?= arm64 armv7 x86_64
@@ -19,41 +19,48 @@ CC_armv7 := $(shell xcrun --sdk iphoneos --find clang)
 CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
 CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
 DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
-GOBUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
+BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
 export GOOS := darwin
 export CGO_ENABLED := 1
 
 build: $(DESTDIR)/libwg-go.a
 
-$(GOBUILDDIR)/src/.prepared: $(UPSTREAM_FILES) $(DOWNSTREAM_FILES)
-	rm -rf $(GOBUILDDIR)/src
-	mkdir -p $(subst ../wireguard-go/,$(GOBUILDDIR)/src/git.zx2c4.com/wireguard-go/,$(dir $(UPSTREAM_FILES)))
-	mkdir -p $(subst src/,$(GOBUILDDIR)/src/git.zx2c4.com/wireguard-go/,$(dir $(DOWNSTREAM_FILES)))
-	$(foreach FILE,$(UPSTREAM_FILES),ln -sf $(abspath $(FILE)) $(subst ../wireguard-go/,$(GOBUILDDIR)/src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(notdir $(FILE));)
-	$(foreach FILE,$(DOWNSTREAM_FILES),ln -sf $(abspath $(FILE)) $(subst src/,$(GOBUILDDIR)/src/git.zx2c4.com/wireguard-go/,$(dir $(FILE)))$(notdir $(FILE));)
-	GOPATH=$(GOBUILDDIR) go get -v -d git.zx2c4.com/wireguard-go
-	touch $@
+define copy-src-to-build
+$(subst $(1),$(BUILDDIR)/,$(2)): $(2)
+	@mkdir -vp "$$(dir $$@)"
+	@cp -vp "$$<" "$$@"
+$(BUILDDIR)/.prepared: $(subst $(1),$(BUILDDIR)/,$(2))
+endef
+
+$(foreach FILE,$(UPSTREAM_FILES),$(eval $(call copy-src-to-build,../wireguard-go/,$(FILE))))
+$(foreach FILE,$(DOWNSTREAM_FILES),$(eval $(call copy-src-to-build,src/,$(FILE))))
+
+$(BUILDDIR)/.prepared:
+	cd "$(BUILDDIR)" && if ! GOPATH="$(BUILDDIR)/gopath" go get -tags ios; then chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; rm -rf "$(BUILDDIR)/gopath/pkg/mod"; exit 1; fi
+	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"
+	touch "$@"
 
 define libwg-go-a
-$(GOBUILDDIR)/libwg-go-$(1).a: $(UPSTREAM_FILES) $(DOWNSTREAM_FILES) $(GOBUILDDIR)/src/.prepared
+$(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
+	cd "$(BUILDDIR)" && \
 	CC="$(CC_$(1))" \
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
-	GOARCH=$(GOARCH_$(1)) \
-	GOPATH=$(GOBUILDDIR) \
-	go build -tags ios -v -o $(GOBUILDDIR)/libwg-go-$(1).a -buildmode c-archive git.zx2c4.com/wireguard-go
-	@rm -f $(GOBUILDDIR)/libwg-go-$(1).h
+	GOARCH="$(GOARCH_$(1))" \
+	GOPATH="$(BUILDDIR)/gopath" \
+	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
+	@rm -f "$(BUILDDIR)/libwg-go-$(1).h"
 endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
-$(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(GOBUILDDIR)/libwg-go-$(ARCH).a)
-	mkdir -p $(DESTDIR)
-	xcrun --sdk iphoneos lipo -create -output $@ $^
+$(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
+	@mkdir -vp "$(DESTDIR)"
+	xcrun --sdk iphoneos lipo -create -output "$@" $^
 
 $(DESTDIR)/example: example.c $(DESTDIR)/libwg-go.a
-	xcrun --sdk iphoneos clang -framework CoreFoundation -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) -arch arm64 -arch armv7 -L$(DESTDIR) -lwg-go -o $@ $<
+	xcrun --sdk iphoneos clang -framework CoreFoundation -isysroot "$(shell xcrun --sdk iphoneos --show-sdk-path)" -arch arm64 -arch armv7 -L"$(DESTDIR)" -lwg-go -o "$@" "$<"
 
 clean:
-	rm -rf $(GOBUILDDIR) $(DESTDIR)/libwg-go.a $(DESTDIR)/example
+	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/example"
 
 .PHONY: clean build
