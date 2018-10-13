@@ -3,7 +3,7 @@
 //  WireGuard
 //
 //  Created by Roopesh Chander on 12/10/18.
-//  Copyright © 2018 Roopesh Chander. All rights reserved.
+//  Copyright © 2018 WireGuard LLC. All rights reserved.
 //
 
 import UIKit
