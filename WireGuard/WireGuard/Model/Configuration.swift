@@ -8,6 +8,7 @@
 
 import Foundation
 
+@available(OSX 10.14, iOS 12.0, *)
 class TunnelConfiguration: Codable {
     var name: String
     let interface: InterfaceConfiguration
@@ -18,9 +19,10 @@ class TunnelConfiguration: Codable {
     }
 }
 
+@available(OSX 10.14, iOS 12.0, *)
 class InterfaceConfiguration: Codable {
     var privateKey: Data
-    var addresses: [String] = []
+    var addresses: [IPAddressRange] = []
     var listenPort: UInt64? = nil
     var mtu: UInt64? = nil
     var dns: String? = nil
@@ -29,10 +31,11 @@ class InterfaceConfiguration: Codable {
     }
 }
 
+@available(OSX 10.14, iOS 12.0, *)
 class PeerConfiguration: Codable {
     var publicKey: Data
     var preSharedKey: Data?
-    var allowedIPs: [String] = []
+    var allowedIPs: [IPAddressRange] = []
     var endpoint: String?
     var persistentKeepAlive: UInt64?
     init(publicKey: Data) {
