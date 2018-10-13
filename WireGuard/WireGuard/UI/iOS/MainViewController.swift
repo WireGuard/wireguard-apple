@@ -8,8 +8,16 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+class MainViewController: UISplitViewController {
     override func loadView() {
-        self.view = UIView()
+        let detailVC = UIViewController()
+        let detailNC = UINavigationController(rootViewController: detailVC)
+
+        let masterVC = TunnelsListTableViewController()
+        let masterNC = UINavigationController(rootViewController: masterVC)
+
+        self.viewControllers = [ masterNC, detailNC ]
+
+        super.loadView()
     }
 }
