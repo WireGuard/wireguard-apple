@@ -10,23 +10,23 @@ import Foundation
 
 @available(OSX 10.14, iOS 12.0, *)
 class TunnelConfiguration: Codable {
-    var name: String
     let interface: InterfaceConfiguration
     var peers: [PeerConfiguration] = []
-    init(name: String, interface: InterfaceConfiguration) {
-        self.name = name
+    init(interface: InterfaceConfiguration) {
         self.interface = interface
     }
 }
 
 @available(OSX 10.14, iOS 12.0, *)
 class InterfaceConfiguration: Codable {
+    var name: String
     var privateKey: Data
     var addresses: [IPAddressRange] = []
     var listenPort: UInt64? = nil
     var mtu: UInt64? = nil
     var dns: String? = nil
-    init(privateKey: Data) {
+    init(name: String, privateKey: Data) {
+        self.name = name
         self.privateKey = privateKey
     }
 }

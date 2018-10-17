@@ -13,7 +13,7 @@ class TunnelProviderManager {
     var name: String
     var tunnelConfiguration: TunnelConfiguration
     init(tunnelConfiguration: TunnelConfiguration) {
-        self.name = tunnelConfiguration.name
+        self.name = tunnelConfiguration.interface.name
         self.tunnelConfiguration = tunnelConfiguration
     }
 }
