@@ -36,7 +36,20 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     @objc func addButtonTapped(sender: UIBarButtonItem!) {
-        print("Add button tapped")
+        let alert = UIAlertController(title: "",
+                                      message: "Add a tunnel",
+                                      preferredStyle: .actionSheet)
+        alert.addAction(
+            UIAlertAction(title: "Create from scratch", style: .default) { (action) in
+                print("Write")
+            }
+        )
+        alert.addAction(
+            UIAlertAction(title: "Cancel", style: .cancel)
+        )
+        // popoverPresentationController will be nil on iPhone and non-nil on iPad
+        alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
