@@ -36,7 +36,7 @@ class PeerConfiguration: Codable {
     var publicKey: Data
     var preSharedKey: Data?
     var allowedIPs: [IPAddressRange] = []
-    var endpoint: String?
+    var endpoint: Endpoint?
     var persistentKeepAlive: UInt64?
     init(publicKey: Data) {
         self.publicKey = publicKey
