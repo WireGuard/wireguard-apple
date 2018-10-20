@@ -18,7 +18,7 @@ class TunnelConfiguration: Codable {
 }
 
 @available(OSX 10.14, iOS 12.0, *)
-class InterfaceConfiguration: Codable {
+struct InterfaceConfiguration: Codable {
     var name: String
     var privateKey: Data
     var addresses: [IPAddressRange] = []
@@ -35,7 +35,7 @@ class InterfaceConfiguration: Codable {
 }
 
 @available(OSX 10.14, iOS 12.0, *)
-class PeerConfiguration: Codable {
+struct PeerConfiguration: Codable {
     var publicKey: Data
     var preSharedKey: Data? {
         didSet(value) {
