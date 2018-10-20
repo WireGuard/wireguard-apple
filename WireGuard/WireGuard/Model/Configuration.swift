@@ -25,20 +25,31 @@ class InterfaceConfiguration: Codable {
     var listenPort: UInt64? = nil
     var mtu: UInt64? = nil
     var dns: String? = nil
+
     init(name: String, privateKey: Data) {
         self.name = name
         self.privateKey = privateKey
+        if (name.isEmpty) { fatalError("Empty name") }
+        if (privateKey.count != 32) { fatalError("Invalid private key") }
     }
 }
 
 @available(OSX 10.14, iOS 12.0, *)
 class PeerConfiguration: Codable {
     var publicKey: Data
-    var preSharedKey: Data?
+    var preSharedKey: Data? {
+        didSet(value) {
+            if let value = value {
+                if (value.count != 32) { fatalError("Invalid pre-shared key") }
+            }
+        }
+    }
     var allowedIPs: [IPAddressRange] = []
     var endpoint: Endpoint?
     var persistentKeepAlive: UInt64?
+
     init(publicKey: Data) {
         self.publicKey = publicKey
+        if (publicKey.count != 32) { fatalError("Invalid public key") }
     }
 }
