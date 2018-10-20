@@ -41,7 +41,11 @@ class TunnelsListTableViewController: UITableViewController {
                                       preferredStyle: .actionSheet)
         alert.addAction(
             UIAlertAction(title: "Create from scratch", style: .default) { (action) in
-                print("Write")
+                let editVC = TunnelEditTableViewController()
+                let editNC = UINavigationController(rootViewController: editVC)
+                self.present(editNC, animated: true) {
+                    print("Done")
+                }
             }
         )
         alert.addAction(
