@@ -52,29 +52,205 @@ class TunnelEditTableViewController: UITableViewController {
 
     class InterfaceData {
         var scratchpad: [InterfaceEditField: String] = [:]
+        var fieldsWithError: Set<InterfaceEditField> = []
+        var validatedConfiguration: InterfaceConfiguration? = nil
         subscript(field: InterfaceEditField) -> String {
             get {
+                ensureScratchpadIsPrepared() // When starting to read a config, setup the scratchpad to serve as a cache
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
-                scratchpad[field] = stringValue
+                ensureScratchpadIsPrepared() // When starting to edit a config, setup the scratchpad
+                validatedConfiguration = nil // The configuration will need to be revalidated
+                if (stringValue.isEmpty) {
+                    scratchpad.removeValue(forKey: field)
+                } else {
+                    scratchpad[field] = stringValue
+                }
             }
+        }
+        func ensureScratchpadIsPrepared() {
+            guard (scratchpad.isEmpty) else { return } // Already prepared
+            guard let config = validatedConfiguration else { return } // Nothing to prepare it with
+            scratchpad[.name] = config.name
+            scratchpad[.privateKey] = config.privateKey.base64EncodedString()
+            if (!config.addresses.isEmpty) {
+                scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
+            }
+            if let listenPort = config.listenPort {
+                scratchpad[.listenPort] = String(listenPort)
+            }
+            if let mtu = config.mtu {
+                scratchpad[.mtu] = String(mtu)
+            }
+            if let dns = config.dns {
+                scratchpad[.dns] = String(dns)
+            }
+        }
+        func validate() -> (success: Bool, errorMessage: String) {
+            var firstErrorMessage: String? = nil
+            func setErrorMessage(_ errorMessage: String) {
+                if (firstErrorMessage == nil) {
+                    firstErrorMessage = errorMessage
+                }
+            }
+            fieldsWithError.removeAll()
+            guard let name = scratchpad[.name] else {
+                fieldsWithError.insert(.name)
+                return(false, "Interface name is required")
+            }
+            guard let privateKeyString = scratchpad[.privateKey] else {
+                fieldsWithError.insert(.privateKey)
+                return (false, "Interface's private key is required")
+            }
+            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else {
+                fieldsWithError.insert(.privateKey)
+                return(false, "Interface's private key should be a 32-byte key in base64 encoding")
+            }
+            var config = InterfaceConfiguration(name: name, privateKey: privateKey)
+            if let addressesString = scratchpad[.addresses] {
+                var addresses: [IPAddressRange] = []
+                for addressString in addressesString.split(separator: ",") {
+                    let trimmedString = addressString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    if let address = IPAddressRange(from: trimmedString) {
+                        addresses.append(address)
+                    } else {
+                        fieldsWithError.insert(.addresses)
+                        setErrorMessage("Interface addresses should be a list of comma-separated IP addresses in CIDR notation")
+                    }
+                }
+                config.addresses = addresses
+            }
+            if let listenPortString = scratchpad[.listenPort] {
+                if let listenPort = UInt64(listenPortString) {
+                    config.listenPort = listenPort
+                } else {
+                    fieldsWithError.insert(.listenPort)
+                    setErrorMessage("Interface's listen port should be a number")
+                }
+            }
+            if let mtuString = scratchpad[.mtu] {
+                if let mtu = UInt64(mtuString) {
+                    config.mtu = mtu
+                } else {
+                    fieldsWithError.insert(.mtu)
+                    setErrorMessage("Interface's MTU should be a number")
+                }
+            }
+            // TODO: Validate DNS
+            if let dnsString = scratchpad[.dns] {
+                config.dns = dnsString
+            }
+
+            if let firstErrorMessage = firstErrorMessage {
+                return (false, firstErrorMessage)
+            }
+            validatedConfiguration = config
+            return (true, "")
         }
     }
 
     class PeerData {
         var index: Int
         var scratchpad: [PeerEditField: String] = [:]
+        var fieldsWithError: Set<PeerEditField> = []
+        var validatedConfiguration: PeerConfiguration? = nil
         init(index: Int) {
             self.index = index
         }
         subscript(field: PeerEditField) -> String {
             get {
+                ensureScratchpadIsPrepared() // When starting to read a config, setup the scratchpad to serve as a cache
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
-                scratchpad[field] = stringValue
+                ensureScratchpadIsPrepared() // When starting to edit a config, setup the scratchpad
+                validatedConfiguration = nil // The configuration will need to be revalidated
+                if (stringValue.isEmpty) {
+                    scratchpad.removeValue(forKey: field)
+                } else {
+                    scratchpad[field] = stringValue
+                }
             }
+        }
+        func ensureScratchpadIsPrepared() {
+            guard (scratchpad.isEmpty) else { return }
+            guard let config = validatedConfiguration else { return }
+            scratchpad[.publicKey] = config.publicKey.base64EncodedString()
+            if let preSharedKey = config.preSharedKey {
+                scratchpad[.preSharedKey] = preSharedKey.base64EncodedString()
+            }
+            if (!config.allowedIPs.isEmpty) {
+                scratchpad[.allowedIPs] = config.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
+            }
+            if let endpoint = config.endpoint {
+                scratchpad[.endpoint] = endpoint.stringRepresentation()
+            }
+            if let persistentKeepAlive = config.persistentKeepAlive {
+                scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
+            }
+        }
+        func validate() -> (success: Bool, errorMessage: String) {
+            var firstErrorMessage: String? = nil
+            func setErrorMessage(_ errorMessage: String) {
+                if (firstErrorMessage == nil) {
+                    firstErrorMessage = errorMessage
+                }
+            }
+            fieldsWithError.removeAll()
+            guard let publicKeyString = scratchpad[.publicKey] else {
+                fieldsWithError.insert(.publicKey)
+                return (success: false, errorMessage: "Peer's public key is required")
+            }
+            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else {
+                fieldsWithError.insert(.publicKey)
+                return (success: false, errorMessage: "Peer's public key should be a 32-byte key in base64 encoding")
+            }
+            var config = PeerConfiguration(publicKey: publicKey)
+            if let preSharedKeyString = scratchpad[.publicKey] {
+                if let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 {
+                    config.preSharedKey = preSharedKey
+                } else {
+                    fieldsWithError.insert(.preSharedKey)
+                    setErrorMessage("Peer's pre-shared key should be a 32-byte key in base64 encoding")
+                }
+            }
+            if let allowedIPsString = scratchpad[.allowedIPs] {
+                var allowedIPs: [IPAddressRange] = []
+                for allowedIPString in allowedIPsString.split(separator: ",") {
+                    let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    if let allowedIP = IPAddressRange(from: trimmedString) {
+                        allowedIPs.append(allowedIP)
+                    } else {
+                        fieldsWithError.insert(.allowedIPs)
+                        setErrorMessage("Peer's allowedIPs should be a list of comma-separated IP addresses in CIDR notation")
+                    }
+                }
+                config.allowedIPs = allowedIPs
+            }
+            if let endpointString = scratchpad[.endpoint] {
+                if let endpoint = Endpoint(from: endpointString) {
+                    config.endpoint = endpoint
+                } else {
+                    fieldsWithError.insert(.endpoint)
+                    setErrorMessage("Peer's endpoint should be of the form 'host:port' or '[host]:port'")
+                }
+            }
+            if let persistentKeepAliveString = scratchpad[.persistentKeepAlive] {
+                if let persistentKeepAlive = UInt64(persistentKeepAliveString) {
+                    config.persistentKeepAlive = persistentKeepAlive
+                } else {
+                    fieldsWithError.insert(.persistentKeepAlive)
+                    setErrorMessage("Peer's persistent keepalive should be a number")
+                }
+            }
+
+            if let firstErrorMessage = firstErrorMessage {
+                return (false, firstErrorMessage)
+            }
+            validatedConfiguration = config
+            scratchpad = [:]
+            return (true, "")
         }
     }
 
