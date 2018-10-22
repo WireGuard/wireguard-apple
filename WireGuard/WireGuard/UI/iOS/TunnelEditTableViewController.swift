@@ -225,7 +225,6 @@ extension TunnelEditTableViewController {
                 case .endpoint:
                     break
                 case .persistentKeepAlive:
-                    cell.hasLongKey = true
                     break
                 case .allowedIPs:
                     break
@@ -320,16 +319,6 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
             keyLabel.textColor = value ? UIColor.black : UIColor.gray
         }
     }
-    var hasLongKey: Bool {
-        get { return modifiableWidthRatioConstraint!.constant > 0 }
-        set(value) {
-            if (value) {
-                modifiableWidthRatioConstraint!.constant = 40
-            } else {
-                modifiableWidthRatioConstraint!.constant = 0
-            }
-        }
-    }
     var isValueValid: Bool = true {
         didSet(value) {
             if (value) {
@@ -342,7 +331,6 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
 
     let keyLabel: UILabel
     let valueTextField: UITextField
-    private var modifiableWidthRatioConstraint: NSLayoutConstraint? = nil
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
@@ -355,12 +343,15 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
                                                   relatedBy: .equal,
                                                   toItem: self, attribute: .width,
                                                   multiplier: 0.4, constant: 0)
+        // The "Persistent Keepalive" key doesn't fit into 0.4 * width on the iPhone SE,
+        // so set a CR priority > the 0.4-constraint's priority.
+        widthRatioConstraint.priority = .defaultHigh + 1
+        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
         NSLayoutConstraint.activate([
             keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             keyLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             widthRatioConstraint
             ])
-        modifiableWidthRatioConstraint = widthRatioConstraint
         contentView.addSubview(valueTextField)
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -380,7 +371,6 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
         value = ""
         placeholderText = ""
         isValueEditable = true
-        hasLongKey = false
         isValueValid = true
     }
 }
