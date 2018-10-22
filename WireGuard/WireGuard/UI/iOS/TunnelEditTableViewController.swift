@@ -50,25 +50,41 @@ class TunnelEditTableViewController: UITableViewController {
 
     // Scratchpad for entered data
 
-    class InterfaceDataSource {
-        var scratchpad: [InterfaceEditField: (value: String, isValid: Bool)] = [:]
-    }
-
-    class PeerDataSource {
-        var index: Int
-        var scratchpad: [PeerEditField: (value: String, isValid: Bool)] = [:]
-        init(index: Int) {
-            self.index = index
+    class InterfaceData {
+        var scratchpad: [InterfaceEditField: String] = [:]
+        subscript(field: InterfaceEditField) -> String {
+            get {
+                return scratchpad[field] ?? ""
+            }
+            set(stringValue) {
+                scratchpad[field] = stringValue
+            }
         }
     }
 
-    var interfaceData: InterfaceDataSource
-    var peersData: [PeerDataSource]
+    class PeerData {
+        var index: Int
+        var scratchpad: [PeerEditField: String] = [:]
+        init(index: Int) {
+            self.index = index
+        }
+        subscript(field: PeerEditField) -> String {
+            get {
+                return scratchpad[field] ?? ""
+            }
+            set(stringValue) {
+                scratchpad[field] = stringValue
+            }
+        }
+    }
+
+    var interfaceData: InterfaceData
+    var peersData: [PeerData]
 
     // MARK: TunnelEditTableViewController methods
 
     init() {
-        interfaceData = InterfaceDataSource()
+        interfaceData = InterfaceData()
         peersData = []
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
@@ -172,19 +188,44 @@ extension TunnelEditTableViewController {
                 switch (field) {
                 case .name:
                     cell.placeholderText = "Required"
+                    cell.value = interfaceData[.name]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.name] = value
+                    }
                 case .privateKey:
                     cell.placeholderText = "Required"
+                    cell.value = interfaceData[.privateKey]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.privateKey] = value
+                    }
                 case .publicKey:
                     cell.isValueEditable = false
+                    cell.value = "Unimplemented"
                 case .generateKeyPair:
                     break
                 case .addresses:
+                    cell.value = interfaceData[.addresses]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.addresses] = value
+                    }
                     break
                 case .listenPort:
+                    cell.value = interfaceData[.listenPort]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.listenPort] = value
+                    }
                     break
                 case .mtu:
                     cell.placeholderText = "Automatic"
+                    cell.value = interfaceData[.mtu]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.mtu] = value
+                    }
                 case .dns:
+                    cell.value = interfaceData[.dns]
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[.dns] = value
+                    }
                     break
                 }
                 return cell
@@ -220,13 +261,33 @@ extension TunnelEditTableViewController {
                 switch (field) {
                 case .publicKey:
                     cell.placeholderText = "Required"
+                    cell.value = peerData[.publicKey]
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[.publicKey] = value
+                    }
                 case .preSharedKey:
+                    cell.value = peerData[.preSharedKey]
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[.preSharedKey] = value
+                    }
                     break
                 case .endpoint:
+                    cell.value = peerData[.endpoint]
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[.endpoint] = value
+                    }
                     break
                 case .persistentKeepAlive:
+                    cell.value = peerData[.persistentKeepAlive]
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[.persistentKeepAlive] = value
+                    }
                     break
                 case .allowedIPs:
+                    cell.value = peerData[.allowedIPs]
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[.allowedIPs] = value
+                    }
                     break
                 case .excludePrivateIPs:
                     break
@@ -254,7 +315,7 @@ extension TunnelEditTableViewController {
         let numberOfPeerSections = peerEditFieldsBySection.count
         let numberOfPeers = peersData.count
 
-        let peer = PeerDataSource(index: peersData.count)
+        let peer = PeerData(index: peersData.count)
         peersData.append(peer)
 
         let firstAddedSectionIndex = (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections)
@@ -262,7 +323,7 @@ extension TunnelEditTableViewController {
         return addedSectionIndices
     }
 
-    func deletePeer(peer: PeerDataSource) -> IndexSet {
+    func deletePeer(peer: PeerData) -> IndexSet {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
         let numberOfPeers = peersData.count
@@ -329,8 +390,12 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
         }
     }
 
+    var onValueChanged: ((String) -> Void)? = nil
+
     let keyLabel: UILabel
     let valueTextField: UITextField
+
+    private var textFieldValueOnBeginEditing: String = ""
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
@@ -359,6 +424,7 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
             valueTextField.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 16),
             valueTextField.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
             ])
+        valueTextField.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -372,6 +438,21 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
         placeholderText = ""
         isValueEditable = true
         isValueValid = true
+        onValueChanged = nil
+    }
+}
+
+extension TunnelsEditTableViewKeyValueCell: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textFieldValueOnBeginEditing = textField.text ?? ""
+        isValueValid = true
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let isModified = (textField.text ?? "" != textFieldValueOnBeginEditing)
+        guard (isModified) else { return }
+        if let onValueChanged = onValueChanged {
+            onValueChanged(textField.text ?? "")
+        }
     }
 }
 
