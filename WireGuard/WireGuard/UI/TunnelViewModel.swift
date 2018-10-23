@@ -10,7 +10,7 @@ import UIKit
 
 class TunnelViewModel {
 
-    enum InterfaceEditField: String {
+    enum InterfaceField: String {
         case name = "Name"
         case privateKey = "Private key"
         case publicKey = "Public key"
@@ -21,7 +21,7 @@ class TunnelViewModel {
         case dns = "DNS servers"
     }
 
-    enum PeerEditField: String {
+    enum PeerField: String {
         case publicKey = "Public key"
         case preSharedKey = "Pre-shared key"
         case endpoint = "Endpoint"
@@ -32,11 +32,11 @@ class TunnelViewModel {
     }
 
     class InterfaceData {
-        var scratchpad: [InterfaceEditField: String] = [:]
-        var fieldsWithError: Set<InterfaceEditField> = []
+        var scratchpad: [InterfaceField: String] = [:]
+        var fieldsWithError: Set<InterfaceField> = []
         var validatedConfiguration: InterfaceConfiguration? = nil
 
-        subscript(field: InterfaceEditField) -> String {
+        subscript(field: InterfaceField) -> String {
             get {
                 if (scratchpad.isEmpty) {
                     // When starting to read a config, setup the scratchpad.
@@ -148,15 +148,15 @@ class TunnelViewModel {
 
     class PeerData {
         var index: Int
-        var scratchpad: [PeerEditField: String] = [:]
-        var fieldsWithError: Set<PeerEditField> = []
+        var scratchpad: [PeerField: String] = [:]
+        var fieldsWithError: Set<PeerField> = []
         var validatedConfiguration: PeerConfiguration? = nil
 
         init(index: Int) {
             self.index = index
         }
 
-        subscript(field: PeerEditField) -> String {
+        subscript(field: PeerField) -> String {
             get {
                 if (scratchpad.isEmpty) {
                     // When starting to read a config, setup the scratchpad.
