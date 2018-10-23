@@ -40,11 +40,11 @@ class TunnelsListTableViewController: UITableViewController {
                                       message: "Add a tunnel",
                                       preferredStyle: .actionSheet)
         alert.addAction(
-            UIAlertAction(title: "Create from scratch", style: .default) { (action) in
-                let editVC = TunnelEditTableViewController()
-                let editNC = UINavigationController(rootViewController: editVC)
-                self.present(editNC, animated: true) {
-                    print("Done")
+            UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
+                if let s = self, let tunnelsManager = s.tunnelsManager {
+                    let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager)
+                    let editNC = UINavigationController(rootViewController: editVC)
+                    s.present(editNC, animated: true)
                 }
             }
         )
