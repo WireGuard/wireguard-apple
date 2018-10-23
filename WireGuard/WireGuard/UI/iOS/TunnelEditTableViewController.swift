@@ -12,13 +12,13 @@ import UIKit
 
 class TunnelEditTableViewController: UITableViewController {
 
-    let interfaceEditFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
+    let interfaceFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
         [.name],
         [.privateKey, .publicKey, .generateKeyPair],
         [.addresses, .listenPort, .mtu, .dns]
     ]
 
-    let peerEditFieldsBySection: [[TunnelViewModel.PeerField]] = [
+    let peerFieldsBySection: [[TunnelViewModel.PeerField]] = [
         [.publicKey, .preSharedKey, .endpoint,
          .allowedIPs, .excludePrivateIPs,
          .persistentKeepAlive,
@@ -89,25 +89,25 @@ class TunnelEditTableViewController: UITableViewController {
 
 extension TunnelEditTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
         return numberOfInterfaceSections + (numberOfPeers * numberOfPeerSections) + 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
         if (section < numberOfInterfaceSections) {
             // Interface
-            return interfaceEditFieldsBySection[section].count
+            return interfaceFieldsBySection[section].count
         } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
             let fieldIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
-            return peerEditFieldsBySection[fieldIndex].count
+            return peerFieldsBySection[fieldIndex].count
         } else {
             // Add peer
             return 1
@@ -115,8 +115,8 @@ extension TunnelEditTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
         if (section < numberOfInterfaceSections) {
@@ -133,8 +133,8 @@ extension TunnelEditTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
         let section = indexPath.section
@@ -143,7 +143,7 @@ extension TunnelEditTableViewController {
         if (section < numberOfInterfaceSections) {
             // Interface
             let interfaceData = tunnelViewModel.interfaceData
-            let field = interfaceEditFieldsBySection[section][row]
+            let field = interfaceFieldsBySection[section][row]
             if (field == .generateKeyPair) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
                 cell.buttonText = field.rawValue
@@ -173,7 +173,7 @@ extension TunnelEditTableViewController {
             let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
             let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
             let peerData = tunnelViewModel.peersData[peerIndex]
-            let field = peerEditFieldsBySection[peerSectionIndex][row]
+            let field = peerFieldsBySection[peerSectionIndex][row]
             if (field == .deletePeer) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
                 cell.buttonText = field.rawValue
@@ -223,8 +223,8 @@ extension TunnelEditTableViewController {
     }
 
     func appendEmptyPeer() -> IndexSet {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
 
         tunnelViewModel.appendEmptyPeer()
         let addedPeerIndex = tunnelViewModel.peersData.count - 1
@@ -235,8 +235,8 @@ extension TunnelEditTableViewController {
     }
 
     func deletePeer(peer: TunnelViewModel.PeerData) -> IndexSet {
-        let numberOfInterfaceSections = interfaceEditFieldsBySection.count
-        let numberOfPeerSections = peerEditFieldsBySection.count
+        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let numberOfPeerSections = peerFieldsBySection.count
 
         assert(peer.index < tunnelViewModel.peersData.count)
         tunnelViewModel.deletePeer(peer: peer)
