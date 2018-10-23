@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
+		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
 		6F693A562179E556008551C1 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
 		6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774DF217181B1006A79B3 /* MainViewController.swift */; };
 		6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E0217181B1006A79B3 /* AppDelegate.swift */; };
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
+		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
 		6F693A552179E556008551C1 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		6F7774DF217181B1006A79B3 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F7774E0217181B1006A79B3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				6F7774DF217181B1006A79B3 /* MainViewController.swift */,
 				6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */,
 				6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */,
+				6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */,
 				6F7774EA217229DB006A79B3 /* IPAddressRange.swift in Sources */,
 				6F7774E82172020C006A79B3 /* Configuration.swift in Sources */,
+				6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */,
 				6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */,
 				6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */,
 			);

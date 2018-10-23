@@ -81,6 +81,18 @@ extension TunnelsListTableViewController {
     }
 }
 
+// MARK: UITableViewDelegate
+
+extension TunnelsListTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let tunnelsManager = tunnelsManager else { return }
+        let tunnelConfiguration = tunnelsManager.tunnel(at: indexPath.row).tunnelProvider.tunnelConfiguration
+        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
+                                                             tunnelConfiguration: tunnelConfiguration)
+        showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
+    }
+}
+
 // MARK: TunnelsManagerDelegate
 
 extension TunnelsListTableViewController: TunnelsManagerDelegate {
