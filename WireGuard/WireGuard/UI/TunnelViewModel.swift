@@ -109,11 +109,11 @@ class TunnelViewModel {
                 config.addresses = addresses
             }
             if let listenPortString = scratchpad[.listenPort] {
-                if let listenPort = UInt64(listenPortString) {
+                if let listenPort = UInt16(listenPortString) {
                     config.listenPort = listenPort
                 } else {
                     fieldsWithError.insert(.listenPort)
-                    errorMessages.append("Interface's listen port should be a number")
+                    errorMessages.append("Interface's listen port should be a 16-bit integer (0 to 65535)")
                 }
             }
             if let mtuString = scratchpad[.mtu] {
@@ -231,11 +231,11 @@ class TunnelViewModel {
                 }
             }
             if let persistentKeepAliveString = scratchpad[.persistentKeepAlive] {
-                if let persistentKeepAlive = UInt64(persistentKeepAliveString) {
+                if let persistentKeepAlive = UInt16(persistentKeepAliveString) {
                     config.persistentKeepAlive = persistentKeepAlive
                 } else {
                     fieldsWithError.insert(.persistentKeepAlive)
-                    errorMessages.append("Peer's persistent keepalive should be a number")
+                    errorMessages.append("Peer's persistent keepalive should be a 16-bit integer (0 to 65535)")
                 }
             }
 

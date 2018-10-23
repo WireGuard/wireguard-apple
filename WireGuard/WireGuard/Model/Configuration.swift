@@ -22,7 +22,7 @@ struct InterfaceConfiguration: Codable {
     var name: String
     var privateKey: Data
     var addresses: [IPAddressRange] = []
-    var listenPort: UInt64? = nil
+    var listenPort: UInt16? = nil
     var mtu: UInt64? = nil
     var dns: String? = nil
 
@@ -46,7 +46,7 @@ struct PeerConfiguration: Codable {
     }
     var allowedIPs: [IPAddressRange] = []
     var endpoint: Endpoint?
-    var persistentKeepAlive: UInt64?
+    var persistentKeepAlive: UInt16?
 
     init(publicKey: Data) {
         self.publicKey = publicKey
