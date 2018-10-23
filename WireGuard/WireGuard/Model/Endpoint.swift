@@ -23,26 +23,29 @@ extension Endpoint {
         // Separation of host and port is based on 'parse_endpoint' function in
         // https://git.zx2c4.com/WireGuard/tree/src/tools/config.c
         guard (!string.isEmpty) else { return nil }
+        let startOfPort: String.Index
+        let hostString: String
         if (string.first! == "[") {
             // Look for IPv6-style endpoint, like [::1]:80
             let startOfHost = string.index(after: string.startIndex)
             guard let endOfHost = string.dropFirst().firstIndex(of: "]") else { return nil }
             let afterEndOfHost = string.index(after: endOfHost)
             guard (string[afterEndOfHost] == ":") else { return nil }
-            let startOfPort = string.index(after: afterEndOfHost)
-            let hostString = String(string[startOfHost ..< endOfHost])
-            guard let endpointPort = NWEndpoint.Port(String(string[startOfPort ..< string.endIndex])) else { return nil }
-            host = NWEndpoint.Host(hostString)
-            port = endpointPort
+            startOfPort = string.index(after: afterEndOfHost)
+            hostString = String(string[startOfHost ..< endOfHost])
         } else {
             // Look for an IPv4-style endpoint, like 127.0.0.1:80
             guard let endOfHost = string.firstIndex(of: ":") else { return nil }
-            let startOfPort = string.index(after: endOfHost)
-            let hostString = String(string[string.startIndex ..< endOfHost])
-            guard let endpointPort = NWEndpoint.Port(String(string[startOfPort ..< string.endIndex])) else { return nil }
-            host = NWEndpoint.Host(hostString)
-            port = endpointPort
+            startOfPort = string.index(after: endOfHost)
+            hostString = String(string[string.startIndex ..< endOfHost])
         }
+        guard let endpointPort = NWEndpoint.Port(String(string[startOfPort ..< string.endIndex])) else { return nil }
+        let invalidCharacterIndex = hostString.unicodeScalars.firstIndex { (c) -> Bool in
+            return !CharacterSet.urlHostAllowed.contains(c)
+        }
+        guard (invalidCharacterIndex == nil) else { return nil }
+        host = NWEndpoint.Host(hostString)
+        port = endpointPort
     }
     func stringRepresentation() -> String {
         switch (host) {
