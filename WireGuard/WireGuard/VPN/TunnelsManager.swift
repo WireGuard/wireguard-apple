@@ -28,9 +28,14 @@ class TunnelContainer {
     }
 }
 
+protocol TunnelsManagerDelegate: class {
+    func tunnelsAdded(atIndex: Int, numberOfTunnels: Int)
+}
+
 class TunnelsManager {
 
     var tunnels: [TunnelContainer]
+    weak var delegate: TunnelsManagerDelegate? = nil
 
     enum TunnelsManagerError: Error {
         case tunnelsUninitialized
@@ -56,6 +61,7 @@ class TunnelsManager {
         }
         let tunnel = TunnelContainer(tunnel: tunnelProvider, index: 0)
         tunnels.insert(tunnel, at: 0)
+        delegate?.tunnelsAdded(atIndex: 0, numberOfTunnels: 1)
         completionHandler(nil)
     }
 

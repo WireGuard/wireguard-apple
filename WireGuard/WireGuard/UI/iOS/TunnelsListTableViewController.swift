@@ -30,8 +30,11 @@ class TunnelsListTableViewController: UITableViewController {
 
         TunnelsManager.create { [weak self] tunnelsManager in
             guard let tunnelsManager = tunnelsManager else { return }
-            self?.tunnelsManager = tunnelsManager
-            self?.tableView.reloadData()
+            if let s = self {
+                tunnelsManager.delegate = s
+                s.tunnelsManager = tunnelsManager
+                s.tableView.reloadData()
+            }
         }
     }
 
@@ -75,6 +78,14 @@ extension TunnelsListTableViewController {
             cell.tunnelName = tunnel.name
         }
         return cell
+    }
+}
+
+// MARK: TunnelsManagerDelegate
+
+extension TunnelsListTableViewController: TunnelsManagerDelegate {
+    func tunnelsAdded(atIndex index: Int, numberOfTunnels: Int) {
+        self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 }
 
