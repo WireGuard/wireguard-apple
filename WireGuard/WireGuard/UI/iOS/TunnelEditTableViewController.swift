@@ -25,9 +25,11 @@ class TunnelEditTableViewController: UITableViewController {
          .deletePeer]
     ]
 
+    let tunnelsManager: TunnelsManager
     let tunnelViewModel: TunnelViewModel
 
-    init() {
+    init(tunnelsManager tm: TunnelsManager) {
+        tunnelsManager = tm
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
@@ -52,11 +54,34 @@ class TunnelEditTableViewController: UITableViewController {
     }
 
     @objc func saveTapped() {
-        print("Save")
+        self.tableView.endEditing(false)
+        let tunnelSaveResult = tunnelViewModel.save()
+        switch (tunnelSaveResult) {
+        case .error(let errorMessage):
+            let erroringConfiguration = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ? "Interface" : "Peer"
+            showErrorAlert(title: "Invalid \(erroringConfiguration)", message: errorMessage)
+        case .saved(let tunnelConfiguration):
+            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (error) in
+                if let error = error {
+                    print("Could not save: \(error)")
+                    self?.showErrorAlert(title: "Could not save", message: "Internal error")
+                } else {
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     @objc func cancelTapped() {
         dismiss(animated: true, completion: nil)
+    }
+
+    func showErrorAlert(title: String, message: String) {
+        let okAction = UIAlertAction(title: "Ok", style: .default)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(okAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
