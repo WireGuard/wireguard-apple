@@ -12,256 +12,23 @@ import UIKit
 
 class TunnelEditTableViewController: UITableViewController {
 
-    // MARK: View model
-
-    enum InterfaceEditField: String {
-        case name = "Name"
-        case privateKey = "Private key"
-        case publicKey = "Public key"
-        case generateKeyPair = "Generate keypair"
-        case addresses = "Addresses"
-        case listenPort = "Listen port"
-        case mtu = "MTU"
-        case dns = "DNS servers"
-    }
-
-    let interfaceEditFieldsBySection: [[InterfaceEditField]] = [
+    let interfaceEditFieldsBySection: [[TunnelViewModel.InterfaceEditField]] = [
         [.name],
         [.privateKey, .publicKey, .generateKeyPair],
         [.addresses, .listenPort, .mtu, .dns]
     ]
 
-    enum PeerEditField: String {
-        case publicKey = "Public key"
-        case preSharedKey = "Pre-shared key"
-        case endpoint = "Endpoint"
-        case persistentKeepAlive = "Persistent Keepalive"
-        case allowedIPs = "Allowed IPs"
-        case excludePrivateIPs = "Exclude private IPs"
-        case deletePeer = "Delete peer"
-    }
-
-    let peerEditFieldsBySection: [[PeerEditField]] = [
+    let peerEditFieldsBySection: [[TunnelViewModel.PeerEditField]] = [
         [.publicKey, .preSharedKey, .endpoint,
          .allowedIPs, .excludePrivateIPs,
          .persistentKeepAlive,
          .deletePeer]
     ]
 
-    // Scratchpad for entered data
-
-    class InterfaceData {
-        var scratchpad: [InterfaceEditField: String] = [:]
-        var fieldsWithError: Set<InterfaceEditField> = []
-        var validatedConfiguration: InterfaceConfiguration? = nil
-        subscript(field: InterfaceEditField) -> String {
-            get {
-                ensureScratchpadIsPrepared() // When starting to read a config, setup the scratchpad to serve as a cache
-                return scratchpad[field] ?? ""
-            }
-            set(stringValue) {
-                ensureScratchpadIsPrepared() // When starting to edit a config, setup the scratchpad
-                validatedConfiguration = nil // The configuration will need to be revalidated
-                if (stringValue.isEmpty) {
-                    scratchpad.removeValue(forKey: field)
-                } else {
-                    scratchpad[field] = stringValue
-                }
-            }
-        }
-        func ensureScratchpadIsPrepared() {
-            guard (scratchpad.isEmpty) else { return } // Already prepared
-            guard let config = validatedConfiguration else { return } // Nothing to prepare it with
-            scratchpad[.name] = config.name
-            scratchpad[.privateKey] = config.privateKey.base64EncodedString()
-            if (!config.addresses.isEmpty) {
-                scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
-            }
-            if let listenPort = config.listenPort {
-                scratchpad[.listenPort] = String(listenPort)
-            }
-            if let mtu = config.mtu {
-                scratchpad[.mtu] = String(mtu)
-            }
-            if let dns = config.dns {
-                scratchpad[.dns] = String(dns)
-            }
-        }
-        func validate() -> (success: Bool, errorMessage: String) {
-            var firstErrorMessage: String? = nil
-            func setErrorMessage(_ errorMessage: String) {
-                if (firstErrorMessage == nil) {
-                    firstErrorMessage = errorMessage
-                }
-            }
-            fieldsWithError.removeAll()
-            guard let name = scratchpad[.name] else {
-                fieldsWithError.insert(.name)
-                return(false, "Interface name is required")
-            }
-            guard let privateKeyString = scratchpad[.privateKey] else {
-                fieldsWithError.insert(.privateKey)
-                return (false, "Interface's private key is required")
-            }
-            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else {
-                fieldsWithError.insert(.privateKey)
-                return(false, "Interface's private key should be a 32-byte key in base64 encoding")
-            }
-            var config = InterfaceConfiguration(name: name, privateKey: privateKey)
-            if let addressesString = scratchpad[.addresses] {
-                var addresses: [IPAddressRange] = []
-                for addressString in addressesString.split(separator: ",") {
-                    let trimmedString = addressString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if let address = IPAddressRange(from: trimmedString) {
-                        addresses.append(address)
-                    } else {
-                        fieldsWithError.insert(.addresses)
-                        setErrorMessage("Interface addresses should be a list of comma-separated IP addresses in CIDR notation")
-                    }
-                }
-                config.addresses = addresses
-            }
-            if let listenPortString = scratchpad[.listenPort] {
-                if let listenPort = UInt64(listenPortString) {
-                    config.listenPort = listenPort
-                } else {
-                    fieldsWithError.insert(.listenPort)
-                    setErrorMessage("Interface's listen port should be a number")
-                }
-            }
-            if let mtuString = scratchpad[.mtu] {
-                if let mtu = UInt64(mtuString) {
-                    config.mtu = mtu
-                } else {
-                    fieldsWithError.insert(.mtu)
-                    setErrorMessage("Interface's MTU should be a number")
-                }
-            }
-            // TODO: Validate DNS
-            if let dnsString = scratchpad[.dns] {
-                config.dns = dnsString
-            }
-
-            if let firstErrorMessage = firstErrorMessage {
-                return (false, firstErrorMessage)
-            }
-            validatedConfiguration = config
-            return (true, "")
-        }
-    }
-
-    class PeerData {
-        var index: Int
-        var scratchpad: [PeerEditField: String] = [:]
-        var fieldsWithError: Set<PeerEditField> = []
-        var validatedConfiguration: PeerConfiguration? = nil
-        init(index: Int) {
-            self.index = index
-        }
-        subscript(field: PeerEditField) -> String {
-            get {
-                ensureScratchpadIsPrepared() // When starting to read a config, setup the scratchpad to serve as a cache
-                return scratchpad[field] ?? ""
-            }
-            set(stringValue) {
-                ensureScratchpadIsPrepared() // When starting to edit a config, setup the scratchpad
-                validatedConfiguration = nil // The configuration will need to be revalidated
-                if (stringValue.isEmpty) {
-                    scratchpad.removeValue(forKey: field)
-                } else {
-                    scratchpad[field] = stringValue
-                }
-            }
-        }
-        func ensureScratchpadIsPrepared() {
-            guard (scratchpad.isEmpty) else { return }
-            guard let config = validatedConfiguration else { return }
-            scratchpad[.publicKey] = config.publicKey.base64EncodedString()
-            if let preSharedKey = config.preSharedKey {
-                scratchpad[.preSharedKey] = preSharedKey.base64EncodedString()
-            }
-            if (!config.allowedIPs.isEmpty) {
-                scratchpad[.allowedIPs] = config.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
-            }
-            if let endpoint = config.endpoint {
-                scratchpad[.endpoint] = endpoint.stringRepresentation()
-            }
-            if let persistentKeepAlive = config.persistentKeepAlive {
-                scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
-            }
-        }
-        func validate() -> (success: Bool, errorMessage: String) {
-            var firstErrorMessage: String? = nil
-            func setErrorMessage(_ errorMessage: String) {
-                if (firstErrorMessage == nil) {
-                    firstErrorMessage = errorMessage
-                }
-            }
-            fieldsWithError.removeAll()
-            guard let publicKeyString = scratchpad[.publicKey] else {
-                fieldsWithError.insert(.publicKey)
-                return (success: false, errorMessage: "Peer's public key is required")
-            }
-            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else {
-                fieldsWithError.insert(.publicKey)
-                return (success: false, errorMessage: "Peer's public key should be a 32-byte key in base64 encoding")
-            }
-            var config = PeerConfiguration(publicKey: publicKey)
-            if let preSharedKeyString = scratchpad[.publicKey] {
-                if let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 {
-                    config.preSharedKey = preSharedKey
-                } else {
-                    fieldsWithError.insert(.preSharedKey)
-                    setErrorMessage("Peer's pre-shared key should be a 32-byte key in base64 encoding")
-                }
-            }
-            if let allowedIPsString = scratchpad[.allowedIPs] {
-                var allowedIPs: [IPAddressRange] = []
-                for allowedIPString in allowedIPsString.split(separator: ",") {
-                    let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if let allowedIP = IPAddressRange(from: trimmedString) {
-                        allowedIPs.append(allowedIP)
-                    } else {
-                        fieldsWithError.insert(.allowedIPs)
-                        setErrorMessage("Peer's allowedIPs should be a list of comma-separated IP addresses in CIDR notation")
-                    }
-                }
-                config.allowedIPs = allowedIPs
-            }
-            if let endpointString = scratchpad[.endpoint] {
-                if let endpoint = Endpoint(from: endpointString) {
-                    config.endpoint = endpoint
-                } else {
-                    fieldsWithError.insert(.endpoint)
-                    setErrorMessage("Peer's endpoint should be of the form 'host:port' or '[host]:port'")
-                }
-            }
-            if let persistentKeepAliveString = scratchpad[.persistentKeepAlive] {
-                if let persistentKeepAlive = UInt64(persistentKeepAliveString) {
-                    config.persistentKeepAlive = persistentKeepAlive
-                } else {
-                    fieldsWithError.insert(.persistentKeepAlive)
-                    setErrorMessage("Peer's persistent keepalive should be a number")
-                }
-            }
-
-            if let firstErrorMessage = firstErrorMessage {
-                return (false, firstErrorMessage)
-            }
-            validatedConfiguration = config
-            scratchpad = [:]
-            return (true, "")
-        }
-    }
-
-    var interfaceData: InterfaceData
-    var peersData: [PeerData]
-
-    // MARK: TunnelEditTableViewController methods
+    let tunnelViewModel: TunnelViewModel
 
     init() {
-        interfaceData = InterfaceData()
-        peersData = []
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
     }
@@ -299,7 +66,7 @@ extension TunnelEditTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
+        let numberOfPeers = tunnelViewModel.peersData.count
 
         return numberOfInterfaceSections + (numberOfPeers * numberOfPeerSections) + 1
     }
@@ -307,7 +74,7 @@ extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
+        let numberOfPeers = tunnelViewModel.peersData.count
 
         if (section < numberOfInterfaceSections) {
             // Interface
@@ -325,7 +92,7 @@ extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
+        let numberOfPeers = tunnelViewModel.peersData.count
 
         if (section < numberOfInterfaceSections) {
             // Interface
@@ -343,13 +110,14 @@ extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
+        let numberOfPeers = tunnelViewModel.peersData.count
 
         let section = indexPath.section
         let row = indexPath.row
 
         if (section < numberOfInterfaceSections) {
             // Interface
+            let interfaceData = tunnelViewModel.interfaceData
             let field = interfaceEditFieldsBySection[section][row]
             if (field == .generateKeyPair) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
@@ -360,49 +128,18 @@ extension TunnelEditTableViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewKeyValueCell.id, for: indexPath) as! TunnelsEditTableViewKeyValueCell
+                // Set key
                 cell.key = field.rawValue
-                switch (field) {
-                case .name:
+                // Set placeholder text
+                if (field == .name || field == .privateKey) {
                     cell.placeholderText = "Required"
-                    cell.value = interfaceData[.name]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.name] = value
-                    }
-                case .privateKey:
-                    cell.placeholderText = "Required"
-                    cell.value = interfaceData[.privateKey]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.privateKey] = value
-                    }
-                case .publicKey:
-                    cell.isValueEditable = false
-                    cell.value = "Unimplemented"
-                case .generateKeyPair:
-                    break
-                case .addresses:
-                    cell.value = interfaceData[.addresses]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.addresses] = value
-                    }
-                    break
-                case .listenPort:
-                    cell.value = interfaceData[.listenPort]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.listenPort] = value
-                    }
-                    break
-                case .mtu:
+                } else if (field == .mtu) {
                     cell.placeholderText = "Automatic"
-                    cell.value = interfaceData[.mtu]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.mtu] = value
-                    }
-                case .dns:
-                    cell.value = interfaceData[.dns]
-                    cell.onValueChanged = { [weak interfaceData] value in
-                        interfaceData?[.dns] = value
-                    }
-                    break
+                }
+                // Bind values to view model
+                cell.value = interfaceData[field]
+                cell.onValueChanged = { [weak interfaceData] value in
+                    interfaceData?[field] = value
                 }
                 return cell
             }
@@ -410,7 +147,7 @@ extension TunnelEditTableViewController {
             // Peer
             let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
             let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
-            let peerData = peersData[peerIndex]
+            let peerData = tunnelViewModel.peersData[peerIndex]
             let field = peerEditFieldsBySection[peerSectionIndex][row]
             if (field == .deletePeer) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
@@ -433,42 +170,16 @@ extension TunnelEditTableViewController {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewKeyValueCell.id, for: indexPath) as! TunnelsEditTableViewKeyValueCell
+                // Set key
                 cell.key = field.rawValue
-                switch (field) {
-                case .publicKey:
+                // Set placeholder text
+                if (field == .publicKey) {
                     cell.placeholderText = "Required"
-                    cell.value = peerData[.publicKey]
-                    cell.onValueChanged = { [weak peerData] value in
-                        peerData?[.publicKey] = value
-                    }
-                case .preSharedKey:
-                    cell.value = peerData[.preSharedKey]
-                    cell.onValueChanged = { [weak peerData] value in
-                        peerData?[.preSharedKey] = value
-                    }
-                    break
-                case .endpoint:
-                    cell.value = peerData[.endpoint]
-                    cell.onValueChanged = { [weak peerData] value in
-                        peerData?[.endpoint] = value
-                    }
-                    break
-                case .persistentKeepAlive:
-                    cell.value = peerData[.persistentKeepAlive]
-                    cell.onValueChanged = { [weak peerData] value in
-                        peerData?[.persistentKeepAlive] = value
-                    }
-                    break
-                case .allowedIPs:
-                    cell.value = peerData[.allowedIPs]
-                    cell.onValueChanged = { [weak peerData] value in
-                        peerData?[.allowedIPs] = value
-                    }
-                    break
-                case .excludePrivateIPs:
-                    break
-                case .deletePeer:
-                    break
+                }
+                // Bind values to view model
+                cell.value = peerData[field]
+                cell.onValueChanged = { [weak peerData] value in
+                    peerData?[field] = value
                 }
                 return cell
             }
@@ -489,29 +200,21 @@ extension TunnelEditTableViewController {
     func appendEmptyPeer() -> IndexSet {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
 
-        let peer = PeerData(index: peersData.count)
-        peersData.append(peer)
+        tunnelViewModel.appendEmptyPeer()
+        let addedPeerIndex = tunnelViewModel.peersData.count - 1
 
-        let firstAddedSectionIndex = (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections)
+        let firstAddedSectionIndex = (numberOfInterfaceSections + addedPeerIndex * numberOfPeerSections)
         let addedSectionIndices = IndexSet(integersIn: firstAddedSectionIndex ..< firstAddedSectionIndex + numberOfPeerSections)
         return addedSectionIndices
     }
 
-    func deletePeer(peer: PeerData) -> IndexSet {
+    func deletePeer(peer: TunnelViewModel.PeerData) -> IndexSet {
         let numberOfInterfaceSections = interfaceEditFieldsBySection.count
         let numberOfPeerSections = peerEditFieldsBySection.count
-        let numberOfPeers = peersData.count
 
-        assert(peer.index < numberOfPeers)
-
-        let removedPeer = peersData.remove(at: peer.index)
-        assert(removedPeer.index == peer.index)
-        for p in peersData[peer.index ..< peersData.count] {
-            assert(p.index > 0)
-            p.index = p.index - 1
-        }
+        assert(peer.index < tunnelViewModel.peersData.count)
+        tunnelViewModel.deletePeer(peer: peer)
 
         let firstRemovedSectionIndex = (numberOfInterfaceSections + peer.index * numberOfPeerSections)
         let removedSectionIndices = IndexSet(integersIn: firstRemovedSectionIndex ..< firstRemovedSectionIndex + numberOfPeerSections)
