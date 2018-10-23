@@ -24,7 +24,7 @@ struct InterfaceConfiguration: Codable {
     var addresses: [IPAddressRange] = []
     var listenPort: UInt16? = nil
     var mtu: UInt64? = nil
-    var dns: String? = nil
+    var dns: [DNSServer] = []
 
     init(name: String, privateKey: Data) {
         self.name = name

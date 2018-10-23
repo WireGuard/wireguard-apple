@@ -74,8 +74,8 @@ class TunnelViewModel {
             if let mtu = config.mtu {
                 scratchpad[.mtu] = String(mtu)
             }
-            if let dns = config.dns {
-                scratchpad[.dns] = String(dns)
+            if (!config.dns.isEmpty) {
+                scratchpad[.dns] = config.dns.map { $0.stringRepresentation() }.joined(separator: ", ")
             }
         }
 
@@ -124,9 +124,18 @@ class TunnelViewModel {
                     errorMessages.append("Interface's MTU should be a number")
                 }
             }
-            // TODO: Validate DNS
             if let dnsString = scratchpad[.dns] {
-                config.dns = dnsString
+                var dnsServers: [DNSServer] = []
+                for dnsServerString in dnsString.split(separator: ",") {
+                    let trimmedString = dnsServerString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                    if let dnsServer = DNSServer(from: trimmedString) {
+                        dnsServers.append(dnsServer)
+                    } else {
+                        fieldsWithError.insert(.dns)
+                        errorMessages.append("Interface's DNS should be a list of comma-separated IP addresses")
+                    }
+                }
+                config.dns = dnsServers
             }
 
             guard (errorMessages.isEmpty) else {
