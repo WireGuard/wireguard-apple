@@ -12,13 +12,13 @@ import UIKit
 
 class TunnelEditTableViewController: UITableViewController {
 
-    let interfaceEditFieldsBySection: [[TunnelViewModel.InterfaceEditField]] = [
+    let interfaceEditFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
         [.name],
         [.privateKey, .publicKey, .generateKeyPair],
         [.addresses, .listenPort, .mtu, .dns]
     ]
 
-    let peerEditFieldsBySection: [[TunnelViewModel.PeerEditField]] = [
+    let peerEditFieldsBySection: [[TunnelViewModel.PeerField]] = [
         [.publicKey, .preSharedKey, .endpoint,
          .allowedIPs, .excludePrivateIPs,
          .persistentKeepAlive,
