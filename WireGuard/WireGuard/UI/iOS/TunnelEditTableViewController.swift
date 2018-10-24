@@ -63,13 +63,27 @@ class TunnelEditTableViewController: UITableViewController {
             let erroringConfiguration = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ? "Interface" : "Peer"
             showErrorAlert(title: "Invalid \(erroringConfiguration)", message: errorMessage)
         case .saved(let tunnelConfiguration):
-            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (tunnel, error) in
-                if let error = error {
-                    print("Could not save: \(error)")
-                    self?.showErrorAlert(title: "Could not save", message: "Internal error")
-                } else {
-                    self?.delegate?.saved(tunnel: tunnel)
-                    self?.dismiss(animated: true, completion: nil)
+            if let tunnel = tunnel {
+                // We're modifying an existing tunnel
+                tunnelsManager.modify(tunnel: tunnel, with: tunnelConfiguration) { [weak self] (error) in
+                    if let error = error {
+                        print("Could not modify tunnel: \(error)")
+                        self?.showErrorAlert(title: "Could not save", message: "Internal error")
+                    } else {
+                        self?.delegate?.saved(tunnel: tunnel)
+                        self?.dismiss(animated: true, completion: nil)
+                    }
+                }
+            } else {
+                // We're adding a new tunnel
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (tunnel, error) in
+                    if let error = error {
+                        print("Could not add tunnel: \(error)")
+                        self?.showErrorAlert(title: "Could not save", message: "Internal error")
+                    } else {
+                        self?.delegate?.saved(tunnel: tunnel)
+                        self?.dismiss(animated: true, completion: nil)
+                    }
                 }
             }
         }
