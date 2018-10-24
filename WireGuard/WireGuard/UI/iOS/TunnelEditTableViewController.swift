@@ -295,6 +295,7 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
         set(value) {
             valueTextField.isEnabled = value
             keyLabel.textColor = value ? UIColor.black : UIColor.gray
+            valueTextField.textColor = value ? UIColor.black : UIColor.gray
         }
     }
     var isValueValid: Bool = true {
