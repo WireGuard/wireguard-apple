@@ -41,6 +41,7 @@ class TunnelsListTableViewController: UITableViewController {
             UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
                 if let s = self, let tunnelsManager = s.tunnelsManager {
                     let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager)
+                    editVC.delegate = s
                     let editNC = UINavigationController(rootViewController: editVC)
                     s.present(editNC, animated: true)
                 }
@@ -52,6 +53,17 @@ class TunnelsListTableViewController: UITableViewController {
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+// MARK: TunnelEditTableViewControllerDelegate
+
+extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate {
+    func saved(tunnel: TunnelContainer) {
+        guard let tunnelsManager = tunnelsManager else { return }
+        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
+                                                             tunnel: tunnel)
+        showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
     }
 }
 
@@ -81,9 +93,9 @@ extension TunnelsListTableViewController {
 extension TunnelsListTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let tunnelsManager = tunnelsManager else { return }
-        let tunnelConfiguration = tunnelsManager.tunnel(at: indexPath.row).tunnelProvider.tunnelConfiguration
+        let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
-                                                             tunnelConfiguration: tunnelConfiguration)
+                                                             tunnel: tunnel)
         showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
     }
 }
