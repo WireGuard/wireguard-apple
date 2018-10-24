@@ -3,9 +3,15 @@
 
 import UIKit
 
+protocol TunnelEditTableViewControllerDelegate: class {
+    func saved(tunnel: TunnelContainer)
+}
+
 // MARK: TunnelEditTableViewController
 
 class TunnelEditTableViewController: UITableViewController {
+
+    weak var delegate: TunnelEditTableViewControllerDelegate? = nil
 
     let interfaceFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
         [.name],
@@ -20,11 +26,13 @@ class TunnelEditTableViewController: UITableViewController {
     ]
 
     let tunnelsManager: TunnelsManager
+    let tunnel: TunnelContainer?
     let tunnelViewModel: TunnelViewModel
 
-    init(tunnelsManager tm: TunnelsManager) {
+    init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer? = nil) {
         tunnelsManager = tm
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
+        tunnel = t
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t?.tunnelProvider.tunnelConfiguration)
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
     }
@@ -55,11 +63,12 @@ class TunnelEditTableViewController: UITableViewController {
             let erroringConfiguration = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ? "Interface" : "Peer"
             showErrorAlert(title: "Invalid \(erroringConfiguration)", message: errorMessage)
         case .saved(let tunnelConfiguration):
-            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (error) in
+            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (tunnel, error) in
                 if let error = error {
                     print("Could not save: \(error)")
                     self?.showErrorAlert(title: "Could not save", message: "Internal error")
                 } else {
+                    self?.delegate?.saved(tunnel: tunnel)
                     self?.dismiss(animated: true, completion: nil)
                 }
             }

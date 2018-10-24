@@ -49,7 +49,7 @@ class TunnelsManager {
         completionHandler(TunnelsManager(tunnelProviders: []))
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (Error?) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer, Error?) -> Void) {
         let tunnelProvider = TunnelProviderManager(tunnelConfiguration: tunnelConfiguration)
         for tunnel in tunnels {
             tunnel.index = tunnel.index + 1
@@ -57,7 +57,7 @@ class TunnelsManager {
         let tunnel = TunnelContainer(tunnel: tunnelProvider, index: 0)
         tunnels.insert(tunnel, at: 0)
         delegate?.tunnelsAdded(atIndex: 0, numberOfTunnels: 1)
-        completionHandler(nil)
+        completionHandler(tunnel, nil)
     }
 
     func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (Error?) -> Void) {

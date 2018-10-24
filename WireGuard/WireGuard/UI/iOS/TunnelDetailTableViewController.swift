@@ -19,11 +19,13 @@ class TunnelDetailTableViewController: UITableViewController {
     ]
 
     let tunnelsManager: TunnelsManager
+    let tunnel: TunnelContainer
     let tunnelViewModel: TunnelViewModel
 
-    init(tunnelsManager tm: TunnelsManager, tunnelConfiguration: TunnelConfiguration) {
+    init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
         tunnelsManager = tm
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+        tunnel = t
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelProvider.tunnelConfiguration)
         super.init(style: .grouped)
     }
 
