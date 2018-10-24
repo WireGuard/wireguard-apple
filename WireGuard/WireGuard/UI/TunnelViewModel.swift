@@ -61,6 +61,7 @@ class TunnelViewModel {
             guard let config = validatedConfiguration else { return }
             scratchpad[.name] = config.name
             scratchpad[.privateKey] = config.privateKey.base64EncodedString()
+            scratchpad[.publicKey] = config.publicKey.base64EncodedString()
             if (!config.addresses.isEmpty) {
                 scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
             }
