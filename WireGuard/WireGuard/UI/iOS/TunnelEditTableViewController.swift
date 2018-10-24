@@ -141,8 +141,16 @@ extension TunnelEditTableViewController {
             if (field == .generateKeyPair) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
                 cell.buttonText = field.rawValue
-                cell.onTapped = {
-                    print("Generating keypair is unimplemented") // TODO
+                cell.onTapped = { [weak self, weak interfaceData] in
+                    if let interfaceData = interfaceData, let s = self {
+                        interfaceData[.privateKey] = Curve25519.generatePrivateKey().base64EncodedString()
+                        if let privateKeyRow = s.interfaceFieldsBySection[section].firstIndex(of: .privateKey),
+                            let publicKeyRow = s.interfaceFieldsBySection[section].firstIndex(of: .publicKey) {
+                            let privateKeyIndex = IndexPath(row: privateKeyRow, section: section)
+                            let publicKeyIndex = IndexPath(row: publicKeyRow, section: section)
+                            s.tableView.reloadRows(at: [privateKeyIndex, publicKeyIndex], with: .automatic)
+                        }
+                    }
                 }
                 return cell
             } else {
