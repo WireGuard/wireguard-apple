@@ -1,10 +1,5 @@
-//
-//  TunnelsManager.swift
-//  WireGuard
-//
-//  Created by Roopesh Chander on 13/10/18.
-//  Copyright © 2018 WireGuard LLC. All rights reserved.
-//
+// SPDX-License-Identifier: MIT
+// Copyright © 2018 WireGuard LLC. All rights reserved.
 
 import Foundation
 
