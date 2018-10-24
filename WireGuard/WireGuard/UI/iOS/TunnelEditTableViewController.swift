@@ -163,6 +163,10 @@ extension TunnelEditTableViewController {
                 } else if (field == .mtu) {
                     cell.placeholderText = "Automatic"
                 }
+                // Set editable
+                if (field == .publicKey) {
+                    cell.isValueEditable = false
+                }
                 // Bind values to view model
                 cell.value = interfaceData[field]
                 cell.onValueChanged = { [weak interfaceData] value in
