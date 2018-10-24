@@ -15,8 +15,7 @@ class TunnelEditTableViewController: UITableViewController {
 
     let peerFieldsBySection: [[TunnelViewModel.PeerField]] = [
         [.publicKey, .preSharedKey, .endpoint,
-         .allowedIPs, .excludePrivateIPs,
-         .persistentKeepAlive,
+         .allowedIPs, .persistentKeepAlive,
          .deletePeer]
     ]
 
