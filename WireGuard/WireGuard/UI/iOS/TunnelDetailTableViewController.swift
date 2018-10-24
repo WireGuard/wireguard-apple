@@ -50,7 +50,10 @@ class TunnelDetailTableViewController: UITableViewController {
 
 extension TunnelDetailTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let interfaceData = tunnelViewModel.interfaceData
+        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
+            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
+        }.count
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
@@ -58,17 +61,22 @@ extension TunnelDetailTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let interfaceData = tunnelViewModel.interfaceData
+        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
+            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
+            }.count
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
         if (section < numberOfInterfaceSections) {
             // Interface
-            return interfaceFieldsBySection[section].count
+            return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).count
         } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
-            let fieldIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
-            return peerFieldsBySection[fieldIndex].count
+            let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
+            let peerData = tunnelViewModel.peersData[peerIndex]
+            let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
+            return peerData.filterFieldsWithValueOrControl(peerFields: peerFieldsBySection[peerSectionIndex]).count
         } else {
             // Add peer
             return 1
@@ -76,7 +84,10 @@ extension TunnelDetailTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let interfaceData = tunnelViewModel.interfaceData
+        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
+            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
+            }.count
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
@@ -94,7 +105,10 @@ extension TunnelDetailTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let numberOfInterfaceSections = interfaceFieldsBySection.count
+        let interfaceData = tunnelViewModel.interfaceData
+        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
+            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
+            }.count
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
@@ -103,8 +117,7 @@ extension TunnelDetailTableViewController {
 
         if (section < numberOfInterfaceSections) {
             // Interface
-            let interfaceData = tunnelViewModel.interfaceData
-            let field = interfaceFieldsBySection[section][row]
+            let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section])[row]
             if (field == .copyPublicKey) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
                 cell.buttonText = field.rawValue
@@ -129,7 +142,8 @@ extension TunnelDetailTableViewController {
             let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
             let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
             let peerData = tunnelViewModel.peersData[peerIndex]
-            let field = peerFieldsBySection[peerSectionIndex][row]
+            let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFieldsBySection[peerSectionIndex])[row]
+
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
             // Set key and value
             cell.key = field.rawValue

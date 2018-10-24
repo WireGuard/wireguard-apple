@@ -17,6 +17,10 @@ class TunnelViewModel {
         case dns = "DNS servers"
     }
 
+    static let interfaceFieldsWithControl: Set<InterfaceField> = [
+        .generateKeyPair, .copyPublicKey
+    ]
+
     enum PeerField: String {
         case publicKey = "Public key"
         case preSharedKey = "Pre-shared key"
@@ -26,6 +30,10 @@ class TunnelViewModel {
         case excludePrivateIPs = "Exclude private IPs"
         case deletePeer = "Delete peer"
     }
+
+    static let peerFieldsWithControl: Set<PeerField> = [
+        .excludePrivateIPs, .deletePeer
+    ]
 
     static let keyLengthInBase64 = 44
 
@@ -153,6 +161,16 @@ class TunnelViewModel {
             validatedConfiguration = config
             return .saved(config)
         }
+
+        func filterFieldsWithValueOrControl(interfaceFields: [InterfaceField]) -> [InterfaceField] {
+            return interfaceFields.filter { (field) -> Bool in
+                if (TunnelViewModel.interfaceFieldsWithControl.contains(field)) {
+                    return true
+                }
+                return (!self[field].isEmpty)
+            }
+            // TODO: Cache this to avoid recomputing
+        }
     }
 
     class PeerData {
@@ -262,6 +280,16 @@ class TunnelViewModel {
             }
             validatedConfiguration = config
             return .saved(config)
+        }
+
+        func filterFieldsWithValueOrControl(peerFields: [PeerField]) -> [PeerField] {
+            return peerFields.filter { (field) -> Bool in
+                if (TunnelViewModel.peerFieldsWithControl.contains(field)) {
+                    return true
+                }
+                return (!self[field].isEmpty)
+            }
+            // TODO: Cache this to avoid recomputing
         }
     }
 
