@@ -6,7 +6,7 @@ import Foundation
 class TunnelProviderManager {
     // Mock of NETunnelProviderManager
     var name: String
-    var tunnelConfiguration: TunnelConfiguration
+    fileprivate var tunnelConfiguration: TunnelConfiguration
     init(tunnelConfiguration: TunnelConfiguration) {
         self.name = tunnelConfiguration.interface.name
         self.tunnelConfiguration = tunnelConfiguration
@@ -16,6 +16,9 @@ class TunnelProviderManager {
 class TunnelContainer {
     var name: String { return tunnelProvider.name }
     let tunnelProvider: TunnelProviderManager
+    var tunnelConfiguration: TunnelConfiguration {
+        get { return tunnelProvider.tunnelConfiguration }
+    }
     var index: Int
     init(tunnel: TunnelProviderManager, index: Int) {
         self.tunnelProvider = tunnel

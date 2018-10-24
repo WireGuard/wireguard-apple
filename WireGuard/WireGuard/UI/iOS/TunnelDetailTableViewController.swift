@@ -25,7 +25,7 @@ class TunnelDetailTableViewController: UITableViewController {
     init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
         tunnelsManager = tm
         tunnel = t
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelProvider.tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration)
         super.init(style: .grouped)
     }
 
@@ -55,7 +55,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func saved(tunnel: TunnelContainer) {
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelProvider.tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         self.tableView.reloadData()
     }
 }

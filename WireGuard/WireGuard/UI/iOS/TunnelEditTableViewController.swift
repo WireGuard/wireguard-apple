@@ -32,7 +32,7 @@ class TunnelEditTableViewController: UITableViewController {
     init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer? = nil) {
         tunnelsManager = tm
         tunnel = t
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t?.tunnelProvider.tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t?.tunnelConfiguration)
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
     }
