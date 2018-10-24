@@ -134,11 +134,11 @@ class TunnelViewModel {
                 }
             }
             if let mtuString = scratchpad[.mtu] {
-                if let mtu = UInt64(mtuString) {
+                if let mtu = UInt16(mtuString) {
                     config.mtu = mtu
                 } else {
                     fieldsWithError.insert(.mtu)
-                    errorMessages.append("Interface's MTU should be a number")
+                    errorMessages.append("Interface's MTU should be a 16-bit integer (0 to 65535)")
                 }
             }
             if let dnsString = scratchpad[.dns] {
