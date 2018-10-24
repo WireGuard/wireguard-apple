@@ -160,6 +160,17 @@ extension TunnelEditTableViewController {
                 cell.onValueChanged = { [weak interfaceData] value in
                     interfaceData?[field] = value
                 }
+                // Compute public key live
+                if (field == .privateKey) {
+                    cell.onValueBeingEdited = { [weak self, weak interfaceData] value in
+                        if let interfaceData = interfaceData, let s = self {
+                            interfaceData[.privateKey] = value
+                            if let row = s.interfaceFieldsBySection[section].firstIndex(of: .publicKey) {
+                                s.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
+                            }
+                        }
+                    }
+                }
                 return cell
             }
         } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
@@ -289,6 +300,7 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
     }
 
     var onValueChanged: ((String) -> Void)? = nil
+    var onValueBeingEdited: ((String) -> Void)? = nil
 
     let keyLabel: UILabel
     let valueTextField: UITextField
@@ -351,6 +363,13 @@ extension TunnelsEditTableViewKeyValueCell: UITextFieldDelegate {
         if let onValueChanged = onValueChanged {
             onValueChanged(textField.text ?? "")
         }
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let onValueBeingEdited = onValueBeingEdited {
+            let modifiedText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
+            onValueBeingEdited(modifiedText)
+        }
+        return true
     }
 }
 

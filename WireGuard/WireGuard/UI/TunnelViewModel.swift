@@ -27,6 +27,8 @@ class TunnelViewModel {
         case deletePeer = "Delete peer"
     }
 
+    static let keyLengthInBase64 = 44
+
     class InterfaceData {
         var scratchpad: [InterfaceField: String] = [:]
         var fieldsWithError: Set<InterfaceField> = []
@@ -52,6 +54,16 @@ class TunnelViewModel {
                     scratchpad.removeValue(forKey: field)
                 } else {
                     scratchpad[field] = stringValue
+                }
+                if (field == .privateKey) {
+                    if (stringValue.count == TunnelViewModel.keyLengthInBase64),
+                        let privateKey = Data(base64Encoded: stringValue),
+                        privateKey.count == 32 {
+                        let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
+                        scratchpad[.publicKey] = publicKey.base64EncodedString()
+                    } else {
+                        scratchpad.removeValue(forKey: .publicKey)
+                    }
                 }
             }
         }
