@@ -12,6 +12,7 @@
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
 		6F6899A62180447E0012E523 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
 		6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
+		6F6899AC218099F00012E523 /* WgQuickConfigFileParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899AB218099F00012E523 /* WgQuickConfigFileParser.swift */; };
 		6F693A562179E556008551C1 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
 		6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774DF217181B1006A79B3 /* MainViewController.swift */; };
 		6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E0217181B1006A79B3 /* AppDelegate.swift */; };
@@ -33,6 +34,7 @@
 		6F6899A42180447E0012E523 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		6F6899A52180447E0012E523 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
 		6F6899A7218044FC0012E523 /* Curve25519.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Curve25519.swift; sourceTree = "<group>"; };
+		6F6899AB218099F00012E523 /* WgQuickConfigFileParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WgQuickConfigFileParser.swift; sourceTree = "<group>"; };
 		6F693A552179E556008551C1 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		6F7774DF217181B1006A79B3 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F7774E0217181B1006A79B3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +72,14 @@
 				6F6899A7218044FC0012E523 /* Curve25519.swift */,
 			);
 			path = Crypto;
+			sourceTree = "<group>";
+		};
+		6F6899AA218099D00012E523 /* Parsing */ = {
+			isa = PBXGroup;
+			children = (
+				6F6899AB218099F00012E523 /* WgQuickConfigFileParser.swift */,
+			);
+			path = Parsing;
 			sourceTree = "<group>";
 		};
 		6F7774DD217181B1006A79B3 /* UI */ = {
@@ -133,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				6F6899A32180445A0012E523 /* Crypto */,
+				6F6899AA218099D00012E523 /* Parsing */,
 				6F7774E6217201E0006A79B3 /* Model */,
 				6F7774DD217181B1006A79B3 /* UI */,
 				6F7774ED21722D0C006A79B3 /* VPN */,
@@ -230,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F6899AC218099F00012E523 /* WgQuickConfigFileParser.swift in Sources */,
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
