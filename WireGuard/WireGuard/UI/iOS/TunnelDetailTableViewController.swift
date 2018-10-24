@@ -20,7 +20,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
-    let tunnelViewModel: TunnelViewModel
+    var tunnelViewModel: TunnelViewModel
 
     init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
         tunnelsManager = tm
@@ -44,7 +44,19 @@ class TunnelDetailTableViewController: UITableViewController {
     }
 
     @objc func editTapped() {
-        print("Edit")
+        let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+        editVC.delegate = self
+        let editNC = UINavigationController(rootViewController: editVC)
+        present(editNC, animated: true)
+    }
+}
+
+// MARK: TunnelEditTableViewControllerDelegate
+
+extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
+    func saved(tunnel: TunnelContainer) {
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelProvider.tunnelConfiguration)
+        self.tableView.reloadData()
     }
 }
 
