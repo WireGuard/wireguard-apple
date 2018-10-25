@@ -6,6 +6,7 @@ import UIKit
 class TunnelsListTableViewController: UITableViewController {
 
     var tunnelsManager: TunnelsManager? = nil
+    var onTunnelsManagerReady: ((TunnelsManager) -> Void)? = nil
 
     init() {
         super.init(style: .plain)
@@ -28,6 +29,8 @@ class TunnelsListTableViewController: UITableViewController {
             if let s = self {
                 tunnelsManager.delegate = s
                 s.tunnelsManager = tunnelsManager
+                s.onTunnelsManagerReady?(tunnelsManager)
+                s.onTunnelsManagerReady = nil
                 s.tableView.reloadData()
             }
         }
@@ -40,10 +43,7 @@ class TunnelsListTableViewController: UITableViewController {
         alert.addAction(
             UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
                 if let s = self, let tunnelsManager = s.tunnelsManager {
-                    let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager)
-                    editVC.delegate = s
-                    let editNC = UINavigationController(rootViewController: editVC)
-                    s.present(editNC, animated: true)
+                    s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
                 }
             }
         )
@@ -52,6 +52,41 @@ class TunnelsListTableViewController: UITableViewController {
         )
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    func openForEditing(configFileURL: URL) {
+        let tunnelConfiguration: TunnelConfiguration?
+        let name = configFileURL.deletingPathExtension().lastPathComponent
+        do {
+            let fileContents = try String(contentsOf: configFileURL)
+            try tunnelConfiguration = WgQuickConfigFileParser.parse(fileContents)
+        } catch {
+            showErrorAlert(title: "Could not import config", message: "There was an error importing the config file")
+            return
+        }
+        tunnelConfiguration?.interface.name = name
+        if let tunnelsManager = tunnelsManager {
+            presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
+        } else {
+            onTunnelsManagerReady = { [weak self] tunnelsManager in
+                self?.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
+            }
+        }
+    }
+
+    func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
+        let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
+        editVC.delegate = self
+        let editNC = UINavigationController(rootViewController: editVC)
+        self.present(editNC, animated: true)
+    }
+
+    func showErrorAlert(title: String, message: String) {
+        let okAction = UIAlertAction(title: "Ok", style: .default)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(okAction)
+
         self.present(alert, animated: true, completion: nil)
     }
 }
