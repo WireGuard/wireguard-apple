@@ -98,7 +98,8 @@ extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate 
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
                                                              tunnel: tunnel)
-        showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
+        let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
+        showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
     }
     func tunnelEditingCancelled() {
         // Nothing to do here
@@ -134,7 +135,8 @@ extension TunnelsListTableViewController {
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
                                                              tunnel: tunnel)
-        showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
+        let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
+        showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
     }
 }
 
