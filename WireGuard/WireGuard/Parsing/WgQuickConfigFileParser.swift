@@ -21,15 +21,13 @@ class WgQuickConfigFileParser {
 
     // Based on the parser written by Eric Kuck <eric@bluelinelabs.com> in commit 5ef1656
 
-    static func parse(_ text: String, name: String) throws -> TunnelConfiguration {
-
-        assert(!name.isEmpty)
+    static func parse(_ text: String) throws -> TunnelConfiguration {
 
         func collate(interfaceAttributes attributes: [String:String]) -> InterfaceConfiguration? {
             // required wg fields
             guard let privateKeyString = attributes["PrivateKey"] else { return nil }
             guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else { return nil }
-            var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
+            var interface = InterfaceConfiguration(name: "", privateKey: privateKey)
             // other wg fields
             if let listenPortString = attributes["ListenPort"] {
                 guard let listenPort = UInt16(listenPortString) else { return nil }
