@@ -4,7 +4,8 @@
 import UIKit
 
 protocol TunnelEditTableViewControllerDelegate: class {
-    func saved(tunnel: TunnelContainer)
+    func tunnelSaved(tunnel: TunnelContainer)
+    func tunnelEditingCancelled()
 }
 
 // MARK: TunnelEditTableViewController
@@ -81,8 +82,8 @@ class TunnelEditTableViewController: UITableViewController {
                         print("Could not modify tunnel: \(error)")
                         self?.showErrorAlert(title: "Could not save", message: "Internal error")
                     } else {
-                        self?.delegate?.saved(tunnel: tunnel)
                         self?.dismiss(animated: true, completion: nil)
+                        self?.delegate?.tunnelSaved(tunnel: tunnel)
                     }
                 }
             } else {
@@ -92,8 +93,8 @@ class TunnelEditTableViewController: UITableViewController {
                         print("Could not add tunnel: \(error)")
                         self?.showErrorAlert(title: "Could not save", message: "Internal error")
                     } else {
-                        self?.delegate?.saved(tunnel: tunnel)
                         self?.dismiss(animated: true, completion: nil)
+                        self?.delegate?.tunnelSaved(tunnel: tunnel)
                     }
                 }
             }
@@ -102,6 +103,7 @@ class TunnelEditTableViewController: UITableViewController {
 
     @objc func cancelTapped() {
         dismiss(animated: true, completion: nil)
+        self.delegate?.tunnelEditingCancelled()
     }
 
     func showErrorAlert(title: String, message: String) {

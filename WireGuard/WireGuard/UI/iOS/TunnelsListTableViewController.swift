@@ -94,11 +94,14 @@ class TunnelsListTableViewController: UITableViewController {
 // MARK: TunnelEditTableViewControllerDelegate
 
 extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate {
-    func saved(tunnel: TunnelContainer) {
+    func tunnelSaved(tunnel: TunnelContainer) {
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
                                                              tunnel: tunnel)
         showDetailViewController(tunnelDetailVC, sender: self) // Shall get propagated up to the split-vc
+    }
+    func tunnelEditingCancelled() {
+        // Nothing to do here
     }
 }
 

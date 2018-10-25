@@ -54,9 +54,12 @@ class TunnelDetailTableViewController: UITableViewController {
 // MARK: TunnelEditTableViewControllerDelegate
 
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
-    func saved(tunnel: TunnelContainer) {
+    func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         self.tableView.reloadData()
+    }
+    func tunnelEditingCancelled() {
+        // Nothing to do
     }
 }
 
