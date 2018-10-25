@@ -5,7 +5,7 @@ import Foundation
 
 @available(OSX 10.14, iOS 12.0, *)
 class TunnelConfiguration: Codable {
-    let interface: InterfaceConfiguration
+    var interface: InterfaceConfiguration
     var peers: [PeerConfiguration] = []
     init(interface: InterfaceConfiguration) {
         self.interface = interface

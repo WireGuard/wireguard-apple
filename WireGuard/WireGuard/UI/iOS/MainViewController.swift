@@ -4,6 +4,8 @@
 import UIKit
 
 class MainViewController: UISplitViewController {
+    var tunnelsListVC: TunnelsListTableViewController?
+
     override func loadView() {
         let detailVC = UIViewController()
         let detailNC = UINavigationController(rootViewController: detailVC)
@@ -14,6 +16,8 @@ class MainViewController: UISplitViewController {
         self.viewControllers = [ masterNC, detailNC ]
 
         super.loadView()
+
+        tunnelsListVC = masterVC
     }
 
     override func viewDidLoad() {
@@ -21,6 +25,10 @@ class MainViewController: UISplitViewController {
 
         // On iPad, always show both masterVC and detailVC, even in portrait mode, like the Settings app
         self.preferredDisplayMode = .allVisible
+    }
+
+    func openForEditing(configFileURL: URL) {
+        tunnelsListVC?.openForEditing(configFileURL: configFileURL)
     }
 }
 
