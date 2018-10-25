@@ -47,6 +47,7 @@ class TunnelDetailTableViewController: UITableViewController {
         let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
         editVC.delegate = self
         let editNC = UINavigationController(rootViewController: editVC)
+        editNC.modalPresentationStyle = .formSheet
         present(editNC, animated: true)
     }
 }
