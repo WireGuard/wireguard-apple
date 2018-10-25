@@ -34,7 +34,7 @@ class TunnelEditTableViewController: UITableViewController {
         // Use this initializer to edit an existing tunnel.
         tunnelsManager = tm
         tunnel = t
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration())
         super.init(style: .grouped)
     }
 
@@ -92,7 +92,9 @@ class TunnelEditTableViewController: UITableViewController {
                         self?.showErrorAlert(title: "Could not save", message: "Internal error")
                     } else {
                         self?.dismiss(animated: true, completion: nil)
-                        self?.delegate?.tunnelSaved(tunnel: tunnel)
+                        if let tunnel = tunnel {
+                            self?.delegate?.tunnelSaved(tunnel: tunnel)
+                        }
                     }
                 }
             }

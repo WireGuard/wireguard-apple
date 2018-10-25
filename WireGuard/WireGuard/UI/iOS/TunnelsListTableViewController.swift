@@ -165,8 +165,16 @@ extension TunnelsListTableViewController {
 // MARK: TunnelsManagerDelegate
 
 extension TunnelsListTableViewController: TunnelsManagerDelegate {
-    func tunnelsAdded(atIndex index: Int, numberOfTunnels: Int) {
-        self.tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    func tunnelAdded(at index: Int) {
+        tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+
+    func tunnelModified(at index: Int) {
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+
+    func tunnelsChanged() {
+        tableView.reloadData()
     }
 }
 
