@@ -175,7 +175,8 @@ extension NETunnelProviderProtocol {
 
         providerBundleIdentifier = "\(appId).WireGuardNetworkExtension"
         providerConfiguration = [
-            "tunnelConfiguration": serializedTunnelConfiguration
+            "tunnelConfiguration": serializedTunnelConfiguration,
+            "tunnelConfigurationVersion": 1
         ]
         serverAddress = firstValidEndpoint?.stringRepresentation() ?? "Unspecified"
         username = tunnelConfiguration.interface.name
