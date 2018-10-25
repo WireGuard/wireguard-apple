@@ -29,10 +29,21 @@ class TunnelEditTableViewController: UITableViewController {
     let tunnel: TunnelContainer?
     let tunnelViewModel: TunnelViewModel
 
-    init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer? = nil) {
+    init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
+        // Use this initializer to edit an existing tunnel.
         tunnelsManager = tm
         tunnel = t
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t?.tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration)
+        super.init(style: .grouped)
+        self.modalPresentationStyle = .formSheet
+    }
+
+    init(tunnelsManager tm: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
+        // Use this initializer to create a new tunnel.
+        // If tunnelConfiguration is passed, data will be prepopulated from that configuration.
+        tunnelsManager = tm
+        tunnel = nil
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
         super.init(style: .grouped)
         self.modalPresentationStyle = .formSheet
     }
