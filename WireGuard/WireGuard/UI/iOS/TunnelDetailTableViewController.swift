@@ -96,7 +96,7 @@ extension TunnelDetailTableViewController {
             let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
             return peerData.filterFieldsWithValueOrControl(peerFields: peerFieldsBySection[peerSectionIndex]).count
         } else {
-            // Add peer
+            // Delete tunnel
             return 1
         }
     }
