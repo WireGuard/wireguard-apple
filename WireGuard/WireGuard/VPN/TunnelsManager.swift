@@ -53,6 +53,7 @@ class TunnelsManager {
     }
 
     func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer, Error?) -> Void) {
+        assert(!tunnelConfiguration.interface.name.isEmpty)
         let tunnelProvider = TunnelProviderManager(tunnelConfiguration: tunnelConfiguration)
         for tunnel in tunnels {
             tunnel.index = tunnel.index + 1

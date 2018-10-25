@@ -28,7 +28,6 @@ struct InterfaceConfiguration: Codable {
     init(name: String, privateKey: Data) {
         self.name = name
         self.privateKey = privateKey
-        if (name.isEmpty) { fatalError("Empty name") }
         if (privateKey.count != 32) { fatalError("Invalid private key") }
     }
 }
