@@ -40,16 +40,21 @@ class TunnelsListTableViewController: UITableViewController {
         let alert = UIAlertController(title: "",
                                       message: "Add a tunnel",
                                       preferredStyle: .actionSheet)
-        alert.addAction(
-            UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
-                if let s = self, let tunnelsManager = s.tunnelsManager {
-                    s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
-                }
+        let importFileAction = UIAlertAction(title: "Import wg-quick config (.conf)", style: .default) { [weak self] (action) in
+            self?.presentViewControllerForFileImport()
+        }
+        alert.addAction(importFileAction)
+
+        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
+            if let s = self, let tunnelsManager = s.tunnelsManager {
+                s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
             }
-        )
-        alert.addAction(
-            UIAlertAction(title: "Cancel", style: .cancel)
-        )
+        }
+        alert.addAction(createFromScratchAction)
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(alert, animated: true, completion: nil)
@@ -83,6 +88,12 @@ class TunnelsListTableViewController: UITableViewController {
         self.present(editNC, animated: true)
     }
 
+    func presentViewControllerForFileImport() {
+        let filePicker = FileImportViewController(documentTypes: [.wgQuickConfigFile])
+        filePicker.delegate = self
+        self.present(filePicker, animated: true)
+    }
+
     func showErrorAlert(title: String, message: String) {
         let okAction = UIAlertAction(title: "Ok", style: .default)
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -104,6 +115,16 @@ extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate 
     }
     func tunnelEditingCancelled() {
         // Nothing to do here
+    }
+}
+
+// MARK: UIDocumentPickerDelegate
+
+extension TunnelsListTableViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        if let url = urls.first {
+            openForEditing(configFileURL: url)
+        }
     }
 }
 
