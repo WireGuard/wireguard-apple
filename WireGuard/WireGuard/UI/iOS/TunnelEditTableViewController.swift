@@ -36,7 +36,6 @@ class TunnelEditTableViewController: UITableViewController {
         tunnel = t
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration)
         super.init(style: .grouped)
-        self.modalPresentationStyle = .formSheet
     }
 
     init(tunnelsManager tm: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
@@ -46,7 +45,6 @@ class TunnelEditTableViewController: UITableViewController {
         tunnel = nil
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
         super.init(style: .grouped)
-        self.modalPresentationStyle = .formSheet
     }
 
     required init?(coder aDecoder: NSCoder) {
