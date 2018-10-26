@@ -256,13 +256,14 @@ class TunnelContainer: NSObject {
     fileprivate func activate(completionHandler: @escaping (Bool) -> Void) {
         assert(status == .inactive)
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
-        let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
+        let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
         let dnsResolver = DNSResolver(endpoints: endpoints)
         assert(self.dnsResolver == nil)
         self.dnsResolver = dnsResolver
         status = .resolvingEndpointDomains
         dnsResolver.resolve { [weak self] endpoints in
-            guard (!endpoints.contains { $0 == nil }) else {
+            guard let endpoints = endpoints else {
+                // TODO: Show error message
                 completionHandler(false)
                 return
             }

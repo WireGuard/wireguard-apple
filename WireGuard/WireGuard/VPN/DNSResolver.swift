@@ -5,19 +5,34 @@ import Network
 import Foundation
 
 class DNSResolver {
-    let endpoints: [Endpoint]
+    let endpoints: [Endpoint?]
 
-    init(endpoints: [Endpoint]) {
+    init(endpoints: [Endpoint?]) {
         self.endpoints = endpoints
     }
 
-    func resolve(completionHandler: @escaping ([Endpoint?]) -> Void) {
+    func resolve(completionHandler: @escaping ([Endpoint?]?) -> Void) {
         let endpoints = self.endpoints
         DispatchQueue.global(qos: .userInitiated).async {
-            var resolvedEndpoints = Array<Endpoint?>(repeating: nil, count: endpoints.count)
-            for (i, endpoint) in endpoints.enumerated() {
-                let resolvedEndpoint = DNSResolver.resolveSync(endpoint: endpoint)
-                resolvedEndpoints[i] = resolvedEndpoint
+            var resolvedEndpoints: [Endpoint?] = []
+            var isError = false
+            for endpoint in endpoints {
+                if let endpoint = endpoint {
+                    if let resolvedEndpoint = DNSResolver.resolveSync(endpoint: endpoint) {
+                        resolvedEndpoints.append(resolvedEndpoint)
+                    } else {
+                        isError = true
+                        break
+                    }
+                } else {
+                    resolvedEndpoints.append(nil)
+                }
+            }
+            if (isError) {
+                DispatchQueue.main.async {
+                    completionHandler(nil)
+                }
+                return
             }
             DispatchQueue.main.async {
                 completionHandler(resolvedEndpoints)
