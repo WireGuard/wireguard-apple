@@ -14,14 +14,14 @@ static struct {
 
 static bool is_closed = false;
 
-ssize_t do_read(const void *ctx, const unsigned char *buf, size_t len)
+ssize_t do_read(void *ctx, unsigned char *buf, size_t len)
 {
 	printf("Reading from instance with ctx %p into buffer %p of length %zu\n", ctx, buf, len);
 	sleep(1);
 	return is_closed ? -1 : 0;
 }
 
-ssize_t do_write(const void *ctx, const unsigned char *buf, size_t len)
+ssize_t do_write(void *ctx, unsigned char *buf, size_t len)
 {
 	printf("Writing from instance with ctx %p into buffer %p of length %zu\n", ctx, buf, len);
 	return len;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
 	printf("WireGuard Go Version %s\n", wgVersion());
 	wgSetLogger(do_log);
-	handle = wgTurnOn((gostring_t){ .p = "test", .n = 4 }, (gostring_t){ .p = "", .n = 0 }, do_read, do_write, &ctx);
+	handle = wgTurnOn((gostring_t){ .p = "test", .n = 4 }, (gostring_t){ .p = "", .n = 0 }, 0, do_read, do_write, &ctx);
 	sleep(5);
 	is_closed = true;
 	wgTurnOff(handle);
