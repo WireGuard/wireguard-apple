@@ -5,19 +5,6 @@ import Foundation
 import NetworkExtension
 import os.log
 
-class TunnelContainer {
-    var name: String { return tunnelProvider.localizedDescription ?? "" }
-    fileprivate let tunnelProvider: NETunnelProviderManager
-    fileprivate var index: Int
-    init(tunnel: NETunnelProviderManager, index: Int) {
-        self.tunnelProvider = tunnel
-        self.index = index
-    }
-    func tunnelConfiguration() -> TunnelConfiguration? {
-        return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
-    }
-}
-
 protocol TunnelsManagerDelegate: class {
     func tunnelAdded(at: Int)
     func tunnelModified(at: Int)
@@ -32,6 +19,9 @@ class TunnelsManager {
     private var isAddingTunnel: Bool = false
     private var isModifyingTunnel: Bool = false
     private var isDeletingTunnel: Bool = false
+
+    private var currentlyActiveTunnel: TunnelContainer?
+    private var tunnelStatusObservationToken: AnyObject?
 
     enum TunnelsManagerError: Error {
         case tunnelsUninitialized
@@ -49,7 +39,7 @@ class TunnelsManager {
     static func create(completionHandler: @escaping (TunnelsManager?) -> Void) {
         NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
             if let error = error {
-                os_log("Failed to load tunnel provider managers %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 return
             }
             completionHandler(TunnelsManager(tunnelProviders: managers ?? []))
@@ -161,6 +151,52 @@ class TunnelsManager {
     func tunnel(at index: Int) -> TunnelContainer {
         return tunnels[index]
     }
+
+    func activate(tunnel: TunnelContainer, completionHandler: @escaping (Bool) -> Void) {
+        guard (tunnel.status == .inactive) else {
+            completionHandler(false)
+            return
+        }
+        if let currentlyActiveTunnel = currentlyActiveTunnel {
+            assert(tunnel.index != currentlyActiveTunnel.index)
+            tunnel.status = .waitingForOtherDeactivation
+            currentlyActiveTunnel.deactivate { [weak self] isDeactivated in
+                guard let s = self, isDeactivated else {
+                    completionHandler(false)
+                    return
+                }
+                tunnel.activate { [weak s] (isActivated) in
+                    if (isActivated) {
+                        s?.currentlyActiveTunnel = tunnel
+                    }
+                    completionHandler(isActivated)
+                }
+            }
+        } else {
+            tunnel.activate { [weak self] (isActivated) in
+                if (isActivated) {
+                    self?.currentlyActiveTunnel = tunnel
+                }
+                completionHandler(isActivated)
+            }
+        }
+    }
+
+    func deactivate(tunnel: TunnelContainer, completionHandler: @escaping (Bool) -> Void) {
+        guard let currentlyActiveTunnel = currentlyActiveTunnel else {
+            completionHandler(false)
+            return
+        }
+        assert(tunnel.index == currentlyActiveTunnel.index)
+        guard (tunnel.status != .inactive) else {
+            completionHandler(false)
+            return
+        }
+        tunnel.deactivate { [weak self] isDeactivated in
+            self?.currentlyActiveTunnel = nil
+            completionHandler(isDeactivated)
+        }
+    }
 }
 
 extension NETunnelProviderProtocol {
@@ -185,5 +221,114 @@ extension NETunnelProviderProtocol {
     func tunnelConfiguration() -> TunnelConfiguration? {
         guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return nil }
         return try? JSONDecoder().decode(TunnelConfiguration.self, from: serializedTunnelConfiguration)
+    }
+}
+
+class TunnelContainer: NSObject {
+    @objc dynamic var name: String
+    @objc dynamic var status: TunnelStatus
+
+    fileprivate let tunnelProvider: NETunnelProviderManager
+    fileprivate var index: Int
+    fileprivate var statusObservationToken: AnyObject?
+
+    private var onActive: ((Bool) -> Void)? = nil
+    private var onInactive: ((Bool) -> Void)? = nil
+
+    init(tunnel: NETunnelProviderManager, index: Int) {
+        self.name = tunnel.localizedDescription ?? "Unnamed"
+        let status = TunnelStatus(from: tunnel.connection.status)
+        self.status = status
+        self.tunnelProvider = tunnel
+        self.index = index
+        super.init()
+        if (status != .inactive) {
+            startObservingTunnelStatus()
+        }
+    }
+
+    func tunnelConfiguration() -> TunnelConfiguration? {
+        return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
+    }
+
+    fileprivate func activate(completionHandler: @escaping (Bool) -> Void) {
+        assert(status == .inactive)
+        assert(onActive == nil)
+        onActive = completionHandler
+        startObservingTunnelStatus()
+        let session = (tunnelProvider.connection as! NETunnelProviderSession)
+        do {
+            try session.startTunnel(options: [:]) // TODO: Provide options
+        } catch (let error) {
+            os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+            onActive = nil
+            completionHandler(false)
+        }
+    }
+
+    fileprivate func deactivate(completionHandler: @escaping (Bool) -> Void) {
+        assert(status == .active)
+        assert(onInactive == nil)
+        onInactive = completionHandler
+        assert(statusObservationToken != nil)
+        let session = (tunnelProvider.connection as! NETunnelProviderSession)
+        session.stopTunnel()
+    }
+
+    private func startObservingTunnelStatus() {
+        let connection = tunnelProvider.connection
+        statusObservationToken = NotificationCenter.default.addObserver(
+            forName: .NEVPNStatusDidChange,
+            object: connection,
+            queue: nil) { [weak self] (_) in
+                let status = TunnelStatus(from: connection.status)
+                if let s = self {
+                    s.status = status
+                    if (status == .active) {
+                        s.onActive?(true)
+                        s.onInactive?(false)
+                        s.onActive = nil
+                        s.onInactive = nil
+                    } else if (status == .inactive) {
+                        s.onActive?(false)
+                        s.onInactive?(true)
+                        s.onActive = nil
+                        s.onInactive = nil
+                        s.stopObservingTunnelStatus()
+                    }
+                }
+        }
+    }
+
+    private func stopObservingTunnelStatus() {
+        statusObservationToken = nil
+    }
+}
+
+@objc enum TunnelStatus: Int {
+    case inactive
+    case activating
+    case active
+    case deactivating
+    case reasserting // On editing an active tunnel, the tunnel shall deactive and then activate
+
+    case waitingForOtherDeactivation // Waiting to activate; waiting for deactivation of another tunnel
+    case resolvingEndpointDomains // DNS resolution in progress
+
+    init(from vpnStatus: NEVPNStatus) {
+        switch (vpnStatus) {
+        case .connected:
+            self = .active
+        case .connecting:
+            self = .activating
+        case .disconnected:
+            self = .inactive
+        case .disconnecting:
+            self = .deactivating
+        case .reasserting:
+            self = .reasserting
+        case .invalid:
+            self = .inactive
+        }
     }
 }
