@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1421832391000F85AD /* DNSResolver.swift */; };
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F5D0C1421832391000F85AD /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
 		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				6F7774EE21722D97006A79B3 /* TunnelsManager.swift */,
+				6F5D0C1421832391000F85AD /* DNSResolver.swift */,
 			);
 			path = VPN;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				6F6899AC218099F00012E523 /* WgQuickConfigFileParser.swift in Sources */,
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */,
+				6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
