@@ -235,6 +235,8 @@ class TunnelContainer: NSObject {
     private var onActive: ((Bool) -> Void)? = nil
     private var onInactive: ((Bool) -> Void)? = nil
 
+    private var dnsResolver: DNSResolver? = nil
+
     init(tunnel: NETunnelProviderManager, index: Int) {
         self.name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
@@ -253,16 +255,33 @@ class TunnelContainer: NSObject {
 
     fileprivate func activate(completionHandler: @escaping (Bool) -> Void) {
         assert(status == .inactive)
-        assert(onActive == nil)
-        onActive = completionHandler
-        startObservingTunnelStatus()
-        let session = (tunnelProvider.connection as! NETunnelProviderSession)
-        do {
-            try session.startTunnel(options: [:]) // TODO: Provide options
-        } catch (let error) {
-            os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-            onActive = nil
-            completionHandler(false)
+        guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
+        let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
+        let dnsResolver = DNSResolver(endpoints: endpoints)
+        assert(self.dnsResolver == nil)
+        self.dnsResolver = dnsResolver
+        status = .resolvingEndpointDomains
+        dnsResolver.resolve { [weak self] endpoints in
+            guard (!endpoints.contains { $0 == nil }) else {
+                completionHandler(false)
+                return
+            }
+            guard let s = self else {
+                completionHandler(false)
+                return
+            }
+            s.dnsResolver = nil
+            assert(s.onActive == nil)
+            s.onActive = completionHandler
+            s.startObservingTunnelStatus()
+            let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
+            do {
+                try session.startTunnel(options: [:]) // TODO: Provide options
+            } catch (let error) {
+                os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                s.onActive = nil
+                completionHandler(false)
+            }
         }
     }
 
