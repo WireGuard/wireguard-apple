@@ -39,6 +39,7 @@ class TunnelDetailTableViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped))
 
         self.tableView.rowHeight = 44
+        self.tableView.register(TunnelDetailTableViewStatusCell.self, forCellReuseIdentifier: TunnelDetailTableViewStatusCell.id)
         self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
         self.tableView.register(TunnelDetailTableViewButtonCell.self, forCellReuseIdentifier: TunnelDetailTableViewButtonCell.id)
     }
@@ -49,6 +50,14 @@ class TunnelDetailTableViewController: UITableViewController {
         let editNC = UINavigationController(rootViewController: editVC)
         editNC.modalPresentationStyle = .formSheet
         present(editNC, animated: true)
+    }
+
+    func showErrorAlert(title: String, message: String) {
+        let okAction = UIAlertAction(title: "Ok", style: .default)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(okAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -75,7 +84,7 @@ extension TunnelDetailTableViewController {
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
-        return numberOfInterfaceSections + (numberOfPeers * numberOfPeerSections) + 1
+        return 1 + numberOfInterfaceSections + (numberOfPeers * numberOfPeerSections) + 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,10 +95,13 @@ extension TunnelDetailTableViewController {
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
-        if (section < numberOfInterfaceSections) {
+        if (section == 0) {
+            // Status
+            return 1
+        } else if (section < (1 + numberOfInterfaceSections)) {
             // Interface
-            return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).count
-        } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
+            return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section - 1]).count
+        } else if ((numberOfPeers > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
             let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
             let peerData = tunnelViewModel.peersData[peerIndex]
@@ -109,13 +121,16 @@ extension TunnelDetailTableViewController {
         let numberOfPeerSections = peerFieldsBySection.count
         let numberOfPeers = tunnelViewModel.peersData.count
 
-        if (section < numberOfInterfaceSections) {
+        if (section == 0) {
+            // Status
+            return "Status"
+        } else if (section < 1 + numberOfInterfaceSections) {
             // Interface
-            return (section == 0) ? "Interface" : nil
-        } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
+            return (section == 1) ? "Interface" : nil
+        } else if ((numberOfPeers > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
-            let fieldIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
-            return (fieldIndex == 0) ? "Peer" : nil
+            let peerSectionIndex = (section - 1 - numberOfInterfaceSections) % numberOfPeerSections
+            return (peerSectionIndex == 0) ? "Peer" : nil
         } else {
             // Add peer
             return nil
@@ -133,9 +148,41 @@ extension TunnelDetailTableViewController {
         let section = indexPath.section
         let row = indexPath.row
 
-        if (section < numberOfInterfaceSections) {
+        if (section == 0) {
+            // Status
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewStatusCell.id, for: indexPath) as! TunnelDetailTableViewStatusCell
+            cell.tunnel = self.tunnel
+            cell.onSwitchToggled = { [weak self] isOn in
+                cell.isSwitchInteractionEnabled = false
+                guard let s = self else { return }
+                if (isOn) {
+                    s.tunnelsManager.activate(tunnel: s.tunnel) { [weak s] isActivated in
+                        if (!isActivated) {
+                            DispatchQueue.main.async {
+                                cell.setSwitchStatus(isOn: false)
+                            }
+                            s?.showErrorAlert(title: "Could not activate",
+                                              message: "Could not activate the tunnel because of an internal error")
+                        }
+                        cell.isSwitchInteractionEnabled = true
+                    }
+                } else {
+                    s.tunnelsManager.deactivate(tunnel: s.tunnel) { [weak s] isDeactivated in
+                        cell.isSwitchInteractionEnabled = true
+                        if (!isDeactivated) {
+                            DispatchQueue.main.async {
+                                cell.setSwitchStatus(isOn: true)
+                            }
+                            s?.showErrorAlert(title: "Could not deactivate",
+                                              message: "Could not deactivate the tunnel because of an internal error")
+                        }
+                    }
+                }
+            }
+            return cell
+        } else if (section < 1 + numberOfInterfaceSections) {
             // Interface
-            let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section])[row]
+            let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section - 1])[row]
             if (field == .copyPublicKey) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
                 cell.buttonText = field.rawValue
@@ -155,10 +202,10 @@ extension TunnelDetailTableViewController {
                 }
                 return cell
             }
-        } else if ((numberOfPeers > 0) && (section < (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
+        } else if ((numberOfPeers > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
-            let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
-            let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
+            let peerIndex = Int((section - 1 - numberOfInterfaceSections) / numberOfPeerSections)
+            let peerSectionIndex = (section - 1 - numberOfInterfaceSections) % numberOfPeerSections
             let peerData = tunnelViewModel.peersData[peerIndex]
             let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFieldsBySection[peerSectionIndex])[row]
 
@@ -174,7 +221,7 @@ extension TunnelDetailTableViewController {
 
             return cell
         } else {
-            assert(section == (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))
+            assert(section == (1 + numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
@@ -183,6 +230,88 @@ extension TunnelDetailTableViewController {
             }
             return cell
         }
+    }
+}
+
+class TunnelDetailTableViewStatusCell: UITableViewCell {
+    static let id: String = "TunnelDetailTableViewStatusCell"
+
+    var tunnel: TunnelContainer? {
+        didSet(value) {
+            update(from: tunnel?.status)
+            statusObservervationToken = tunnel?.observe(\.status) { [weak self] (tunnel, _) in
+                self?.update(from: tunnel.status)
+            }
+        }
+    }
+    var isSwitchInteractionEnabled: Bool {
+        get { return statusSwitch.isUserInteractionEnabled }
+        set(value) { statusSwitch.isUserInteractionEnabled = value }
+    }
+    var onSwitchToggled: ((Bool) -> Void)? = nil
+    private var isOnSwitchToggledHandlerEnabled: Bool = true
+
+    func setSwitchStatus(isOn: Bool) {
+        statusSwitch.isOn = isOn
+    }
+
+    let statusSwitch: UISwitch
+    private var statusObservervationToken: AnyObject? = nil
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        statusSwitch = UISwitch()
+        super.init(style: .default, reuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
+        accessoryView = statusSwitch
+
+        statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+    }
+
+    @objc func switchToggled() {
+        if (isOnSwitchToggledHandlerEnabled) {
+            onSwitchToggled?(statusSwitch.isOn)
+        }
+    }
+
+    private func update(from status: TunnelStatus?) {
+        guard let status = status else {
+            reset()
+            return
+        }
+        let text: String
+        switch (status) {
+        case .inactive:
+            text = "Inactive"
+        case .activating:
+            text = "Activating"
+        case .active:
+            text = "Active"
+        case .deactivating:
+            text = "Deactivating"
+        case .reasserting:
+            text = "Reactivating"
+        case .waitingForOtherDeactivation:
+            text = "Waiting"
+        case .resolvingEndpointDomains:
+            text = "Resolving domains"
+        }
+        textLabel?.text = text
+        setSwitchStatus(isOn: !(status == .deactivating || status == .inactive))
+        textLabel?.textColor = (status == .active || status == .inactive) ? UIColor.black : UIColor.gray
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func reset() {
+        textLabel?.text = "Invalid"
+        statusSwitch.isOn = false
+        textLabel?.textColor = UIColor.gray
+        statusSwitch.isUserInteractionEnabled = false
+    }
+
+    override func prepareForReuse() {
+        reset()
     }
 }
 
