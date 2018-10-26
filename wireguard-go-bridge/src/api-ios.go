@@ -79,7 +79,7 @@ func wgSetLogger(loggerFn uintptr) {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, settings string, readFn uintptr, writeFn uintptr, ctx uintptr) int32 {
+func wgTurnOn(ifnameRef string, settings string, mtu uint16, readFn uintptr, writeFn uintptr, ctx uintptr) int32 {
 	interfaceName := string([]byte(ifnameRef))
 
 	logger := &Logger{
@@ -90,7 +90,7 @@ func wgTurnOn(ifnameRef string, settings string, readFn uintptr, writeFn uintptr
 
 	logger.Debug.Println("Debug log enabled")
 
-	tun := tun.CreateTUN(1280, unsafe.Pointer(readFn), unsafe.Pointer(writeFn), unsafe.Pointer(ctx))
+	tun := tun.CreateTUN(mtu, unsafe.Pointer(readFn), unsafe.Pointer(writeFn), unsafe.Pointer(ctx))
 	logger.Info.Println("Attaching to interface")
 	device := NewDevice(tun, logger)
 

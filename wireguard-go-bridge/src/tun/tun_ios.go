@@ -26,10 +26,17 @@ type nativeTun struct {
 	ctx     unsafe.Pointer
 }
 
-func CreateTUN(mtu int, readFn unsafe.Pointer, writeFn unsafe.Pointer, ctx unsafe.Pointer) TUNDevice {
+func CreateTUN(mtu uint16, readFn unsafe.Pointer, writeFn unsafe.Pointer, ctx unsafe.Pointer) TUNDevice {
+	if mtu == 0 {
+		/* 0 means automatic MTU, which iOS makes outerMTU-80-15. The 80 is for
+		 * WireGuard and the 15 ensures our padding will work. Therefore, it's
+		 * safe to have this code assume a massive MTU.
+		 */
+		mtu = ^mtu
+	}
 	tun := &nativeTun{
 		events:  make(chan TUNEvent, 10),
-		mtu:     mtu,
+		mtu:     int(mtu),
 		readFn:  readFn,
 		writeFn: writeFn,
 		ctx:     ctx,
