@@ -36,20 +36,25 @@ $(foreach FILE,$(UPSTREAM_FILES),$(eval $(call copy-src-to-build,../wireguard-go
 $(foreach FILE,$(DOWNSTREAM_FILES),$(eval $(call copy-src-to-build,src/,$(FILE))))
 
 $(BUILDDIR)/.prepared:
-	cd "$(BUILDDIR)" && if ! GOPATH="$(BUILDDIR)/gopath" go get -tags ios; then chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; rm -rf "$(BUILDDIR)/gopath/pkg/mod"; exit 1; fi
-	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"
-	touch "$@"
+	@touch "$@"
 
 define libwg-go-a
 $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
 	cd "$(BUILDDIR)" && \
-	CC="$(CC_$(1))" \
+	export CC="$(CC_$(1))" \
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
 	GOARCH="$(GOARCH_$(1))" \
-	GOPATH="$(BUILDDIR)/gopath" \
-	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
-	@rm -f "$(BUILDDIR)/libwg-go-$(1).h"
+	GOPATH="$(BUILDDIR)/gopath"; \
+	if ! go get -tags ios; then \
+		ret=$$$$?; \
+		chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; \
+		rm -rf "$(BUILDDIR)/gopath/pkg/mod"; \
+		exit $$$$ret; \
+	fi; \
+	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; \
+	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive; \
+	rm -f "$(BUILDDIR)/libwg-go-$(1).h"
 endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
