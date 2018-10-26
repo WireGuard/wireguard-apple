@@ -103,9 +103,9 @@ extension TunnelDetailTableViewController {
             return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section - 1]).count
         } else if ((numberOfPeers > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))) {
             // Peer
-            let peerIndex = Int((section - numberOfInterfaceSections) / numberOfPeerSections)
+            let peerIndex = Int((section - 1 - numberOfInterfaceSections) / numberOfPeerSections)
             let peerData = tunnelViewModel.peersData[peerIndex]
-            let peerSectionIndex = (section - numberOfInterfaceSections) % numberOfPeerSections
+            let peerSectionIndex = (section - 1 - numberOfInterfaceSections) % numberOfPeerSections
             return peerData.filterFieldsWithValueOrControl(peerFields: peerFieldsBySection[peerSectionIndex]).count
         } else {
             // Delete tunnel
