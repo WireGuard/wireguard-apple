@@ -156,26 +156,12 @@ extension TunnelDetailTableViewController {
                 cell.isSwitchInteractionEnabled = false
                 guard let s = self else { return }
                 if (isOn) {
-                    s.tunnelsManager.activate(tunnel: s.tunnel) { [weak s] isActivated in
-                        if (!isActivated) {
-                            DispatchQueue.main.async {
-                                cell.setSwitchStatus(isOn: false)
-                            }
-                            s?.showErrorAlert(title: "Could not activate",
-                                              message: "Could not activate the tunnel because of an internal error")
-                        }
-                        cell.isSwitchInteractionEnabled = true
+                    s.tunnelsManager.startActivation(of: s.tunnel) { error in
+                        print("Error while activating: \(String(describing: error))")
                     }
                 } else {
-                    s.tunnelsManager.deactivate(tunnel: s.tunnel) { [weak s] isDeactivated in
-                        cell.isSwitchInteractionEnabled = true
-                        if (!isDeactivated) {
-                            DispatchQueue.main.async {
-                                cell.setSwitchStatus(isOn: true)
-                            }
-                            s?.showErrorAlert(title: "Could not deactivate",
-                                              message: "Could not deactivate the tunnel because of an internal error")
-                        }
+                    s.tunnelsManager.startDeactivation(of: s.tunnel) { error in
+                        print("Error while deactivating: \(String(describing: error))")
                     }
                 }
             }
@@ -251,10 +237,6 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
     var onSwitchToggled: ((Bool) -> Void)? = nil
     private var isOnSwitchToggledHandlerEnabled: Bool = true
 
-    func setSwitchStatus(isOn: Bool) {
-        statusSwitch.isOn = isOn
-    }
-
     let statusSwitch: UISwitch
     private var statusObservervationToken: AnyObject? = nil
 
@@ -289,13 +271,15 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
             text = "Deactivating"
         case .reasserting:
             text = "Reactivating"
-        case .waitingForOtherDeactivation:
-            text = "Waiting"
         case .resolvingEndpointDomains:
             text = "Resolving domains"
         }
         textLabel?.text = text
-        setSwitchStatus(isOn: !(status == .deactivating || status == .inactive))
+        DispatchQueue.main.async { [weak statusSwitch] in
+            guard let statusSwitch = statusSwitch else { return }
+            statusSwitch.isOn = !(status == .deactivating || status == .inactive)
+            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active || status == .resolvingEndpointDomains)
+        }
         textLabel?.textColor = (status == .active || status == .inactive) ? UIColor.black : UIColor.gray
     }
 

@@ -11,6 +11,15 @@ protocol TunnelsManagerDelegate: class {
     func tunnelsChanged()
 }
 
+enum TunnelsManagerError: Error {
+    case dnsResolutionFailed
+    case dnsResolutionCancelled
+    case tunnelOperationFailed
+    case attemptingActivationWhenAnotherTunnelIsActive
+    case attemptingActivationWhenTunnelIsNotInactive
+    case attemptingDeactivationWhenTunnelIsInactive
+}
+
 class TunnelsManager {
 
     var tunnels: [TunnelContainer]
@@ -20,12 +29,8 @@ class TunnelsManager {
     private var isModifyingTunnel: Bool = false
     private var isDeletingTunnel: Bool = false
 
-    private var currentlyActiveTunnel: TunnelContainer?
-    private var tunnelStatusObservationToken: AnyObject?
-
-    enum TunnelsManagerError: Error {
-        case tunnelsUninitialized
-    }
+    private var currentTunnel: TunnelContainer?
+    private var currentTunnelStatusObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0, index: 0) }
@@ -152,50 +157,34 @@ class TunnelsManager {
         return tunnels[index]
     }
 
-    func activate(tunnel: TunnelContainer, completionHandler: @escaping (Bool) -> Void) {
+    func startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
         guard (tunnel.status == .inactive) else {
-            completionHandler(false)
+            completionHandler(TunnelsManagerError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
-        if let currentlyActiveTunnel = currentlyActiveTunnel {
-            assert(tunnel.index != currentlyActiveTunnel.index)
-            tunnel.status = .waitingForOtherDeactivation
-            currentlyActiveTunnel.deactivate { [weak self] isDeactivated in
-                guard let s = self, isDeactivated else {
-                    completionHandler(false)
-                    return
-                }
-                tunnel.activate { [weak s] (isActivated) in
-                    if (isActivated) {
-                        s?.currentlyActiveTunnel = tunnel
-                    }
-                    completionHandler(isActivated)
-                }
-            }
-        } else {
-            tunnel.activate { [weak self] (isActivated) in
-                if (isActivated) {
-                    self?.currentlyActiveTunnel = tunnel
-                }
-                completionHandler(isActivated)
+        guard (currentTunnel == nil) else {
+            completionHandler(TunnelsManagerError.attemptingActivationWhenAnotherTunnelIsActive)
+            return
+        }
+        tunnel.startActivation(completionHandler: completionHandler)
+        currentTunnel = tunnel
+        currentTunnelStatusObservationToken = tunnel.observe(\.status) { [weak self] (tunnel, change) in
+            guard let s = self else { return }
+            if (tunnel.status == .inactive) {
+                s.currentTunnel = nil
+                s.currentTunnelStatusObservationToken = nil
             }
         }
     }
 
-    func deactivate(tunnel: TunnelContainer, completionHandler: @escaping (Bool) -> Void) {
-        guard let currentlyActiveTunnel = currentlyActiveTunnel else {
-            completionHandler(false)
+    func startDeactivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
+        if (tunnel.status == .inactive) {
+            completionHandler(TunnelsManagerError.attemptingDeactivationWhenTunnelIsInactive)
             return
         }
-        assert(tunnel.index == currentlyActiveTunnel.index)
-        guard (tunnel.status != .inactive) else {
-            completionHandler(false)
-            return
-        }
-        tunnel.deactivate { [weak self] isDeactivated in
-            self?.currentlyActiveTunnel = nil
-            completionHandler(isDeactivated)
-        }
+        assert(tunnel.index == currentTunnel!.index)
+
+        tunnel.startDeactivation()
     }
 }
 
@@ -232,9 +221,6 @@ class TunnelContainer: NSObject {
     fileprivate var index: Int
     fileprivate var statusObservationToken: AnyObject?
 
-    private var onActive: ((Bool) -> Void)? = nil
-    private var onInactive: ((Bool) -> Void)? = nil
-
     private var dnsResolver: DNSResolver? = nil
 
     init(tunnel: NETunnelProviderManager, index: Int) {
@@ -253,7 +239,7 @@ class TunnelContainer: NSObject {
         return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
     }
 
-    fileprivate func activate(completionHandler: @escaping (Bool) -> Void) {
+    fileprivate func startActivation(completionHandler: @escaping (Error?) -> Void) {
         assert(status == .inactive)
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
@@ -262,18 +248,17 @@ class TunnelContainer: NSObject {
         self.dnsResolver = dnsResolver
         status = .resolvingEndpointDomains
         dnsResolver.resolve { [weak self] endpoints in
-            guard let endpoints = endpoints else {
-                // TODO: Show error message
-                completionHandler(false)
+            guard let s = self else { return }
+            if (s.dnsResolver == nil) {
+                s.status = .inactive
+                completionHandler(TunnelsManagerError.dnsResolutionCancelled)
                 return
             }
-            guard let s = self else {
-                completionHandler(false)
+            guard let endpoints = endpoints else {
+                completionHandler(TunnelsManagerError.dnsResolutionFailed)
                 return
             }
             s.dnsResolver = nil
-            assert(s.onActive == nil)
-            s.onActive = completionHandler
             s.startObservingTunnelStatus()
             let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
             do {
@@ -282,19 +267,18 @@ class TunnelContainer: NSObject {
                 try session.startTunnel(options: tunnelOptions)
             } catch (let error) {
                 os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                s.onActive = nil
-                completionHandler(false)
+                completionHandler(error)
             }
         }
     }
 
-    fileprivate func deactivate(completionHandler: @escaping (Bool) -> Void) {
-        assert(status == .active)
-        assert(onInactive == nil)
-        onInactive = completionHandler
-        assert(statusObservationToken != nil)
-        let session = (tunnelProvider.connection as! NETunnelProviderSession)
-        session.stopTunnel()
+    fileprivate func startDeactivation() {
+        if (status != .inactive) {
+            dnsResolver = nil
+            assert(statusObservationToken != nil)
+            let session = (tunnelProvider.connection as! NETunnelProviderSession)
+            session.stopTunnel()
+        }
     }
 
     private func startObservingTunnelStatus() {
@@ -306,16 +290,7 @@ class TunnelContainer: NSObject {
                 let status = TunnelStatus(from: connection.status)
                 if let s = self {
                     s.status = status
-                    if (status == .active) {
-                        s.onActive?(true)
-                        s.onInactive?(false)
-                        s.onActive = nil
-                        s.onInactive = nil
-                    } else if (status == .inactive) {
-                        s.onActive?(false)
-                        s.onInactive?(true)
-                        s.onActive = nil
-                        s.onInactive = nil
+                    if (status == .inactive) {
                         s.stopObservingTunnelStatus()
                     }
                 }
@@ -323,7 +298,9 @@ class TunnelContainer: NSObject {
     }
 
     private func stopObservingTunnelStatus() {
-        statusObservationToken = nil
+        DispatchQueue.main.async { [weak self] in
+            self?.statusObservationToken = nil
+        }
     }
 }
 
@@ -334,7 +311,6 @@ class TunnelContainer: NSObject {
     case deactivating
     case reasserting // On editing an active tunnel, the tunnel shall deactive and then activate
 
-    case waitingForOtherDeactivation // Waiting to activate; waiting for deactivation of another tunnel
     case resolvingEndpointDomains // DNS resolution in progress
 
     init(from vpnStatus: NEVPNStatus) {
