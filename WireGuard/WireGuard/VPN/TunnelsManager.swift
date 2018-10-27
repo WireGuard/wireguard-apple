@@ -277,7 +277,9 @@ class TunnelContainer: NSObject {
             s.startObservingTunnelStatus()
             let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
             do {
-                try session.startTunnel(options: [:]) // TODO: Provide options
+                let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
+                    from: tunnelConfiguration, withResolvedEndpoints: endpoints)
+                try session.startTunnel(options: tunnelOptions)
             } catch (let error) {
                 os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 s.onActive = nil
