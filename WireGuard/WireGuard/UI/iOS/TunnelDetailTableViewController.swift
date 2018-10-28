@@ -174,7 +174,7 @@ extension TunnelDetailTableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
                 cell.buttonText = field.rawValue
                 cell.onTapped = {
-                    print("Copying public key is unimplemented") // TODO
+                    UIPasteboard.general.string = interfaceData[.publicKey]
                 }
                 return cell
             } else {
