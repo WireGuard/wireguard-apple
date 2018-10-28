@@ -22,6 +22,8 @@ class TunnelsListTableViewController: UITableViewController {
         let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
         self.navigationItem.rightBarButtonItem = addButtonItem
 
+        self.tableView.rowHeight = 60
+
         self.tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
 
         TunnelsManager.create { [weak self] tunnelsManager in
@@ -143,7 +145,19 @@ extension TunnelsListTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsListTableViewCell.id, for: indexPath) as! TunnelsListTableViewCell
         if let tunnelsManager = tunnelsManager {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
-            cell.tunnelName = tunnel.name
+            cell.tunnel = tunnel
+            cell.onSwitchToggled = { [weak self] isOn in
+                guard let s = self, let tunnelsManager = s.tunnelsManager else { return }
+                if (isOn) {
+                    tunnelsManager.startActivation(of: tunnel) { error in
+                        print("Error while activating: \(String(describing: error))")
+                    }
+                } else {
+                    tunnelsManager.startDeactivation(of: tunnel) { error in
+                        print("Error while deactivating: \(String(describing: error))")
+                    }
+                }
+            }
         }
         return cell
     }
@@ -180,21 +194,92 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
 
 class TunnelsListTableViewCell: UITableViewCell {
     static let id: String = "TunnelsListTableViewCell"
-    var tunnelName: String {
-        get { return textLabel?.text ?? "" }
-        set(value) { textLabel?.text = value }
+    var tunnel: TunnelContainer? {
+        didSet(value) {
+            // Bind to the tunnel's name
+            nameLabel.text = tunnel?.name ?? ""
+            nameObservervationToken = tunnel?.observe(\.name) { [weak self] (tunnel, _) in
+                self?.nameLabel.text = tunnel.name
+            }
+            // Bind to the tunnel's status
+            update(from: tunnel?.status)
+            statusObservervationToken = tunnel?.observe(\.status) { [weak self] (tunnel, _) in
+                self?.update(from: tunnel.status)
+            }
+        }
     }
+    var onSwitchToggled: ((Bool) -> Void)? = nil
+
+    let nameLabel: UILabel
+    let busyIndicator: UIActivityIndicatorView
+    let statusSwitch: UISwitch
+
+    private var statusObservervationToken: AnyObject? = nil
+    private var nameObservervationToken: AnyObject? = nil
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        nameLabel = UILabel()
+        busyIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        busyIndicator.hidesWhenStopped = true
+        statusSwitch = UISwitch()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(statusSwitch)
+        statusSwitch.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            statusSwitch.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8)
+            ])
+        contentView.addSubview(busyIndicator)
+        busyIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            busyIndicator.rightAnchor.constraint(equalTo: statusSwitch.leftAnchor, constant: -8)
+            ])
+        contentView.addSubview(nameLabel)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
+            nameLabel.rightAnchor.constraint(equalTo: busyIndicator.leftAnchor)
+            ])
         self.accessoryType = .disclosureIndicator
+
+        statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+    }
+
+    @objc func switchToggled() {
+        onSwitchToggled?(statusSwitch.isOn)
+    }
+
+    private func update(from status: TunnelStatus?) {
+        guard let status = status else {
+            reset()
+            return
+        }
+        DispatchQueue.main.async { [weak statusSwitch, weak busyIndicator] in
+            guard let statusSwitch = statusSwitch, let busyIndicator = busyIndicator else { return }
+            statusSwitch.isOn = !(status == .deactivating || status == .inactive)
+            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+            if (status == .inactive || status == .active) {
+                busyIndicator.stopAnimating()
+            } else {
+                busyIndicator.startAnimating()
+            }
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    private func reset() {
+        statusSwitch.isOn = false
+        statusSwitch.isUserInteractionEnabled = false
+        busyIndicator.stopAnimating()
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
+        reset()
     }
 }
