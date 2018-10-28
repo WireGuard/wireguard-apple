@@ -96,6 +96,9 @@ class TunnelsManager {
 
         let tunnelProviderManager = tunnel.tunnelProvider
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
+        if (isNameChanged) {
+            tunnel.name = tunnelName
+        }
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
