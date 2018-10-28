@@ -453,6 +453,7 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         buttonText = ""
         onTapped = nil
     }
@@ -482,6 +483,7 @@ class TunnelEditTableViewSwitchCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         message = ""
         isOn = false
     }
