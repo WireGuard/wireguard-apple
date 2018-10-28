@@ -30,6 +30,9 @@
 		6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
 		6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */; };
+		6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F621863B6100D8FBF6 /* unzip.c */; };
+		6FDEF7FC21863B6100D8FBF6 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F721863B6100D8FBF6 /* zip.c */; };
+		6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7FF21863C0100D8FBF6 /* ioapi.c */; };
 		6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC1E211EC472002C96EB /* Assets.xcassets */; };
 		6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */; };
 		6FF4AC472120B9E0002C96EB /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
@@ -94,6 +97,12 @@
 		6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelEditTableViewController.swift; sourceTree = "<group>"; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
+		6FDEF7F621863B6100D8FBF6 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		6FDEF7F721863B6100D8FBF6 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		6FDEF7F921863B6100D8FBF6 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		6FDEF7FA21863B6100D8FBF6 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		6FDEF7FE21863C0100D8FBF6 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		6FDEF7FF21863C0100D8FBF6 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
 		6FF4AC14211EC46F002C96EB /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FF4AC1E211EC472002C96EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FF4AC21211EC472002C96EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -204,6 +213,35 @@
 			path = VPN;
 			sourceTree = "<group>";
 		};
+		6FDEF7E72186320E00D8FBF6 /* ZipArchive */ = {
+			isa = PBXGroup;
+			children = (
+				6FDEF7F421863B6100D8FBF6 /* 3rdparty */,
+			);
+			path = ZipArchive;
+			sourceTree = "<group>";
+		};
+		6FDEF7F421863B6100D8FBF6 /* 3rdparty */ = {
+			isa = PBXGroup;
+			children = (
+				6FDEF7F521863B6100D8FBF6 /* minizip */,
+			);
+			path = 3rdparty;
+			sourceTree = "<group>";
+		};
+		6FDEF7F521863B6100D8FBF6 /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				6FDEF7FF21863C0100D8FBF6 /* ioapi.c */,
+				6FDEF7FE21863C0100D8FBF6 /* ioapi.h */,
+				6FDEF7F621863B6100D8FBF6 /* unzip.c */,
+				6FDEF7FA21863B6100D8FBF6 /* unzip.h */,
+				6FDEF7F721863B6100D8FBF6 /* zip.c */,
+				6FDEF7F921863B6100D8FBF6 /* zip.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
 		6FF4AC0B211EC46F002C96EB = {
 			isa = PBXGroup;
 			children = (
@@ -232,6 +270,7 @@
 				6F7774E6217201E0006A79B3 /* Model */,
 				6F7774DD217181B1006A79B3 /* UI */,
 				6F7774ED21722D0C006A79B3 /* VPN */,
+				6FDEF7E72186320E00D8FBF6 /* ZipArchive */,
 				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
 				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
 				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
@@ -399,10 +438,13 @@
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
+				6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */,
+				6FDEF7FC21863B6100D8FBF6 /* zip.c in Sources */,
 				6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */,
 				6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */,
 				6F7774EA217229DB006A79B3 /* IPAddressRange.swift in Sources */,
 				6F7774E82172020C006A79B3 /* Configuration.swift in Sources */,
+				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
 				6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */,
 				6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */,
 				6F6899B02181B07B0012E523 /* FilePicker.swift in Sources */,
