@@ -118,6 +118,51 @@ class TunnelsListTableViewController: UITableViewController {
 
         self.present(alert, animated: true, completion: nil)
     }
+
+    func importFromFile(url: URL) {
+        // Import configurations from a .conf or a .zip file
+        if (url.pathExtension == "conf") {
+            let fileBaseName = url.deletingPathExtension().lastPathComponent
+            if let fileContents = try? String(contentsOf: url),
+                let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
+                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                    if (error != nil) {
+                        print("Error adding configuration: \(tunnelConfiguration.interface.name)")
+                    }
+                }
+            } else {
+                showErrorAlert(title: "Could not import", message: "The config file contained errors")
+            }
+        } else if (url.pathExtension == "zip") {
+            var unarchivedFiles: [(fileName: String, contents: Data)] = []
+            do {
+                unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
+            } catch ZipArchiveError.cantOpenInputZipFile {
+                showErrorAlert(title: "Cannot read zip archive", message: "The zip file couldn't be read")
+            } catch ZipArchiveError.badArchive {
+                showErrorAlert(title: "Cannot read zip archive", message: "Bad archive")
+            } catch (let error) {
+                print("Error opening zip archive: \(error)")
+            }
+            var numberOfConfigFilesWithErrors = 0
+            for unarchivedFile in unarchivedFiles {
+                if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
+                    let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
+                    let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
+                    tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                        if (error != nil) {
+                            print("Error adding configuration: \(tunnelConfiguration.interface.name)")
+                        }
+                    }
+                } else {
+                    numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
+                }
+            }
+            if (numberOfConfigFilesWithErrors > 0) {
+                showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors) files", message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
+            }
+        }
+    }
 }
 
 // MARK: TunnelEditTableViewControllerDelegate
@@ -140,47 +185,7 @@ extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let url = urls.first {
-            if (url.pathExtension == "conf") {
-                let fileBaseName = url.deletingPathExtension().lastPathComponent
-                if let fileContents = try? String(contentsOf: url),
-                    let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                    tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
-                        if (error != nil) {
-                            print("Error adding configuration: \(tunnelConfiguration.interface.name)")
-                        }
-                    }
-                } else {
-                    showErrorAlert(title: "Could not import", message: "The config file contained errors")
-                }
-            } else if (url.pathExtension == "zip") {
-                var unarchivedFiles: [(fileName: String, contents: Data)] = []
-                do {
-                    unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
-                } catch ZipArchiveError.cantOpenInputZipFile {
-                    showErrorAlert(title: "Cannot read zip archive", message: "The zip file couldn't be read")
-                } catch ZipArchiveError.badArchive {
-                    showErrorAlert(title: "Cannot read zip archive", message: "Bad archive")
-                } catch (let error) {
-                    print("Error opening zip archive: \(error)")
-                }
-                var numberOfConfigFilesWithErrors = 0
-                for unarchivedFile in unarchivedFiles {
-                    if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
-                        let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
-                        let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
-                            if (error != nil) {
-                                print("Error adding configuration: \(tunnelConfiguration.interface.name)")
-                            }
-                        }
-                    } else {
-                        numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
-                    }
-                }
-                if (numberOfConfigFilesWithErrors > 0) {
-                    showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors) files", message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
-                }
-            }
+            importFromFile(url: url)
         }
     }
 }
