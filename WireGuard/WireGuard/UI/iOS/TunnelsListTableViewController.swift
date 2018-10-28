@@ -147,7 +147,12 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
 
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func scannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController) {
-        print("Scanned QR code") // TODO
+        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (tunnel, error) in
+            if let error = error {
+                print("Could not add tunnel: \(error)")
+                self?.showErrorAlert(title: "Could not save scanned config", message: "Internal error")
+            }
+        }
     }
 }
 
