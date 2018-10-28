@@ -60,9 +60,9 @@ class TunnelEditTableViewController: UITableViewController {
         self.tableView.rowHeight = 44
         self.tableView.allowsSelection = false
 
-        self.tableView.register(TunnelsEditTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelsEditTableViewKeyValueCell.id)
-        self.tableView.register(TunnelsEditTableViewButtonCell.self, forCellReuseIdentifier: TunnelsEditTableViewButtonCell.id)
-        self.tableView.register(TunnelsEditTableViewSwitchCell.self, forCellReuseIdentifier: TunnelsEditTableViewSwitchCell.id)
+        self.tableView.register(TunnelEditTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelEditTableViewKeyValueCell.id)
+        self.tableView.register(TunnelEditTableViewButtonCell.self, forCellReuseIdentifier: TunnelEditTableViewButtonCell.id)
+        self.tableView.register(TunnelEditTableViewSwitchCell.self, forCellReuseIdentifier: TunnelEditTableViewSwitchCell.id)
     }
 
     @objc func saveTapped() {
@@ -175,7 +175,7 @@ extension TunnelEditTableViewController {
             let interfaceData = tunnelViewModel.interfaceData
             let field = interfaceFieldsBySection[section][row]
             if (field == .generateKeyPair) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
                 cell.buttonText = field.rawValue
                 cell.onTapped = { [weak self, weak interfaceData] in
                     if let interfaceData = interfaceData, let s = self {
@@ -190,7 +190,7 @@ extension TunnelEditTableViewController {
                 }
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewKeyValueCell.id, for: indexPath) as! TunnelsEditTableViewKeyValueCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewKeyValueCell.id, for: indexPath) as! TunnelEditTableViewKeyValueCell
                 // Set key
                 cell.key = field.rawValue
                 // Set placeholder text
@@ -228,7 +228,7 @@ extension TunnelEditTableViewController {
             let peerData = tunnelViewModel.peersData[peerIndex]
             let field = peerFieldsBySection[peerSectionIndex][row]
             if (field == .deletePeer) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
                 cell.buttonText = field.rawValue
                 cell.onTapped = { [weak self, weak peerData] in
                     guard let peerData = peerData else { return }
@@ -243,11 +243,11 @@ extension TunnelEditTableViewController {
                 }
                 return cell
             } else if (field == .excludePrivateIPs) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewSwitchCell.id, for: indexPath) as! TunnelsEditTableViewSwitchCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewSwitchCell.id, for: indexPath) as! TunnelEditTableViewSwitchCell
                 cell.message = field.rawValue
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewKeyValueCell.id, for: indexPath) as! TunnelsEditTableViewKeyValueCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewKeyValueCell.id, for: indexPath) as! TunnelEditTableViewKeyValueCell
                 // Set key
                 cell.key = field.rawValue
                 // Set placeholder text
@@ -264,7 +264,7 @@ extension TunnelEditTableViewController {
         } else {
             assert(section == (numberOfInterfaceSections + numberOfPeers * numberOfPeerSections))
             // Add peer
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsEditTableViewButtonCell.id, for: indexPath) as! TunnelsEditTableViewButtonCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
             cell.buttonText = "Add peer"
             cell.onTapped = { [weak self] in
                 guard let s = self else { return }
@@ -316,8 +316,8 @@ extension TunnelEditTableViewController {
     }
 }
 
-class TunnelsEditTableViewKeyValueCell: UITableViewCell {
-    static let id: String = "TunnelsEditTableViewKeyValueCell"
+class TunnelEditTableViewKeyValueCell: UITableViewCell {
+    static let id: String = "TunnelEditTableViewKeyValueCell"
     var key: String {
         get { return keyLabel.text ?? "" }
         set(value) {keyLabel.text = value }
@@ -401,7 +401,7 @@ class TunnelsEditTableViewKeyValueCell: UITableViewCell {
     }
 }
 
-extension TunnelsEditTableViewKeyValueCell: UITextFieldDelegate {
+extension TunnelEditTableViewKeyValueCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldValueOnBeginEditing = textField.text ?? ""
         isValueValid = true
@@ -422,8 +422,8 @@ extension TunnelsEditTableViewKeyValueCell: UITextFieldDelegate {
     }
 }
 
-class TunnelsEditTableViewButtonCell: UITableViewCell {
-    static let id: String = "TunnelsEditTableViewButtonCell"
+class TunnelEditTableViewButtonCell: UITableViewCell {
+    static let id: String = "TunnelEditTableViewButtonCell"
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
@@ -458,8 +458,8 @@ class TunnelsEditTableViewButtonCell: UITableViewCell {
     }
 }
 
-class TunnelsEditTableViewSwitchCell: UITableViewCell {
-    static let id: String = "TunnelsEditTableViewSwitchCell"
+class TunnelEditTableViewSwitchCell: UITableViewCell {
+    static let id: String = "TunnelEditTableViewSwitchCell"
     var message: String {
         get { return textLabel?.text ?? "" }
         set(value) { textLabel!.text = value }
