@@ -96,13 +96,13 @@ class QRScanViewController: UIViewController {
     }
 
     func scanDidComplete(withCode code: String) {
-        do {
-            let tunnelConfiguration = try WgQuickConfigFileParser.parse(code, name: "Scanned")
-            delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self)
-            dismiss(animated: true, completion: nil)
-        } catch {
+        let scannedTunnelConfiguration = try? WgQuickConfigFileParser.parse(code, name: "Scanned")
+        guard let tunnelConfiguration = scannedTunnelConfiguration else {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
+            return
         }
+        delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self)
+        dismiss(animated: true, completion: nil)
     }
 
     func scanDidEncounterError(title: String, message: String) {
