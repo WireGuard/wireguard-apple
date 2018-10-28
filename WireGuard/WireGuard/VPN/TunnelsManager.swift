@@ -13,7 +13,6 @@ protocol TunnelsManagerDelegate: class {
 
 enum TunnelsManagerError: Error {
     case dnsResolutionFailed
-    case dnsResolutionCancelled
     case tunnelOperationFailed
     case attemptingActivationWhenAnotherTunnelIsActive
     case attemptingActivationWhenTunnelIsNotInactive
@@ -252,16 +251,13 @@ class TunnelContainer: NSObject {
         status = .resolvingEndpointDomains
         dnsResolver.resolve { [weak self] endpoints in
             guard let s = self else { return }
-            if (s.dnsResolver == nil) {
-                s.status = .inactive
-                completionHandler(TunnelsManagerError.dnsResolutionCancelled)
-                return
-            }
+            assert(s.status == .resolvingEndpointDomains)
+            s.dnsResolver = nil
             guard let endpoints = endpoints else {
                 completionHandler(TunnelsManagerError.dnsResolutionFailed)
+                s.status = .inactive
                 return
             }
-            s.dnsResolver = nil
             s.startObservingTunnelStatus()
             let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
             do {
@@ -276,12 +272,10 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startDeactivation() {
-        if (status != .inactive) {
-            dnsResolver = nil
-            assert(statusObservationToken != nil)
-            let session = (tunnelProvider.connection as! NETunnelProviderSession)
-            session.stopTunnel()
-        }
+        assert(status == .active)
+        assert(statusObservationToken != nil)
+        let session = (tunnelProvider.connection as! NETunnelProviderSession)
+        session.stopTunnel()
     }
 
     private func startObservingTunnelStatus() {
