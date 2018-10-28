@@ -149,6 +149,8 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
                             print("Error adding configuration: \(tunnelConfiguration.interface.name)")
                         }
                     }
+                } else {
+                    showErrorAlert(title: "Could not import", message: "The config file contained errors")
                 }
             } else if (url.pathExtension == "zip") {
                 var unarchivedFiles: [(fileName: String, contents: Data)] = []
@@ -161,6 +163,7 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
                 } catch (let error) {
                     print("Error opening zip archive: \(error)")
                 }
+                var numberOfConfigFilesWithErrors = 0
                 for unarchivedFile in unarchivedFiles {
                     if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
                         let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
@@ -170,7 +173,12 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
                                 print("Error adding configuration: \(tunnelConfiguration.interface.name)")
                             }
                         }
+                    } else {
+                        numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
                     }
+                }
+                if (numberOfConfigFilesWithErrors > 0) {
+                    showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors) files", message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
                 }
             }
         }
