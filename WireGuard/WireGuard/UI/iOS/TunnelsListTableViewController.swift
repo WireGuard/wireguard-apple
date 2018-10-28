@@ -141,7 +141,15 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let url = urls.first {
             if (url.pathExtension == "conf") {
-                openForEditing(configFileURL: url)
+                let fileBaseName = url.deletingPathExtension().lastPathComponent
+                if let fileContents = try? String(contentsOf: url),
+                    let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
+                    tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                        if (error != nil) {
+                            print("Error adding configuration: \(tunnelConfiguration.interface.name)")
+                        }
+                    }
+                }
             } else if (url.pathExtension == "zip") {
                 var unarchivedFiles: [(fileName: String, contents: Data)] = []
                 do {
