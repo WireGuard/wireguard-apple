@@ -297,6 +297,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         reset()
     }
 }
@@ -358,6 +359,7 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         buttonText = ""
         onTapped = nil
     }
