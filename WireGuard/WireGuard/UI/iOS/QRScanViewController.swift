@@ -11,24 +11,20 @@ import CoreData
 import UIKit
 
 protocol QRScanViewControllerDelegate: class {
-    func didSave(tunnel: Tunnel, qrScanViewController: QRScanViewController)
+    func scannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController)
 }
 
 class QRScanViewController: UIViewController {
-
-    private var viewContext: NSManagedObjectContext!
-    private weak var delegate: QRScanViewControllerDelegate?
+    weak var delegate: QRScanViewControllerDelegate?
     var captureSession: AVCaptureSession? = AVCaptureSession()
     let metadataOutput = AVCaptureMetadataOutput()
     var previewLayer: AVCaptureVideoPreviewLayer!
 
-    func configure(context: NSManagedObjectContext, delegate: QRScanViewControllerDelegate? = nil) {
-        viewContext = context
-        self.delegate = delegate
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.title = "Scan QR code"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video),
             let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice),
@@ -69,8 +65,9 @@ class QRScanViewController: UIViewController {
 
     func scanDidComplete(withCode code: String) {
         do {
-            let tunnel = try Tunnel.fromConfig(code, context: viewContext)
-            delegate?.didSave(tunnel: tunnel, qrScanViewController: self)
+            let tunnelConfiguration = try WgQuickConfigFileParser.parse(code, name: "Scanned")
+            delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self)
+            dismiss(animated: true, completion: nil)
         } catch {
             scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
         }
@@ -85,6 +82,9 @@ class QRScanViewController: UIViewController {
         captureSession = nil
     }
 
+    @objc func cancelTapped() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension QRScanViewController: AVCaptureMetadataOutputObjectsDelegate {
@@ -101,7 +101,4 @@ extension QRScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
         scanDidComplete(withCode: stringValue)
     }
-
 }
-
-extension QRScanViewController: Identifyable {}
