@@ -67,7 +67,7 @@ class TunnelsListTableViewController: UITableViewController {
         let name = configFileURL.deletingPathExtension().lastPathComponent
         do {
             let fileContents = try String(contentsOf: configFileURL)
-            try tunnelConfiguration = WgQuickConfigFileParser.parse(fileContents)
+            try tunnelConfiguration = WgQuickConfigFileParser.parse(fileContents, name: name)
         } catch {
             showErrorAlert(title: "Could not import config", message: "There was an error importing the config file")
             return
