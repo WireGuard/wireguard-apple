@@ -67,6 +67,7 @@ class TunnelDetailTableViewController: UITableViewController {
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
+        self.title = tunnel.name
         self.tableView.reloadData()
     }
     func tunnelEditingCancelled() {
