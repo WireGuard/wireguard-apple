@@ -34,10 +34,18 @@ class TunnelsManager {
     init(tunnelProviders: [NETunnelProviderManager]) {
         var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0, index: 0) }
         tunnels.sort { $0.name < $1.name }
+        var currentTunnel: TunnelContainer? = nil
         for i in 0 ..< tunnels.count {
-            tunnels[i].index = i
+            let tunnel = tunnels[i]
+            tunnel.index = i
+            if (tunnel.status != .inactive) {
+                currentTunnel = tunnel
+            }
         }
         self.tunnels = tunnels
+        if let currentTunnel = currentTunnel {
+            setCurrentTunnel(tunnel: currentTunnel)
+        }
     }
 
     static func create(completionHandler: @escaping (TunnelsManager?) -> Void) {
@@ -169,14 +177,7 @@ class TunnelsManager {
             return
         }
         tunnel.startActivation(completionHandler: completionHandler)
-        currentTunnel = tunnel
-        currentTunnelStatusObservationToken = tunnel.observe(\.status) { [weak self] (tunnel, change) in
-            guard let s = self else { return }
-            if (tunnel.status == .inactive) {
-                s.currentTunnel = nil
-                s.currentTunnelStatusObservationToken = nil
-            }
-        }
+        setCurrentTunnel(tunnel: tunnel)
     }
 
     func startDeactivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
@@ -187,6 +188,17 @@ class TunnelsManager {
         assert(tunnel.index == currentTunnel!.index)
 
         tunnel.startDeactivation()
+    }
+
+    private func setCurrentTunnel(tunnel: TunnelContainer) {
+        currentTunnel = tunnel
+        currentTunnelStatusObservationToken = tunnel.observe(\.status) { [weak self] (tunnel, change) in
+            guard let s = self else { return }
+            if (tunnel.status == .inactive) {
+                s.currentTunnel = nil
+                s.currentTunnelStatusObservationToken = nil
+            }
+        }
     }
 }
 
