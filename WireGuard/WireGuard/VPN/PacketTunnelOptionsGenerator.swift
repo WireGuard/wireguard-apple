@@ -155,21 +155,15 @@ class PacketTunnelOptionsGenerator {
     }
 
     static func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
-        var n: UInt8 = addressRange.networkPrefixLength
+        let n: UInt8 = addressRange.networkPrefixLength
         assert(n <= 32)
-        var components: [UInt8] = []
-        while (n >= 8) {
-            components.append(255)
-            n = n - 8
-        }
-        if (n > 0) {
-            components.append(((1 << n) - 1) << (8 - n))
-        }
-        while (components.count < 4) {
-            components.append(0)
-        }
-        assert(components.count == 4)
-        return components.map { String($0) }.joined(separator: ".")
+        var octets: [UInt8] = [0, 0, 0, 0]
+        let subnetMask: UInt32 = n > 0 ? ~UInt32(0) << (32 - n) : UInt32(0)
+        octets[0] = UInt8(truncatingIfNeeded: subnetMask >> 24)
+        octets[1] = UInt8(truncatingIfNeeded: subnetMask >> 16)
+        octets[2] = UInt8(truncatingIfNeeded: subnetMask >> 8)
+        octets[3] = UInt8(truncatingIfNeeded: subnetMask)
+        return octets.map { String($0) }.joined(separator: ".")
     }
 }
 
