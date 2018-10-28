@@ -263,6 +263,10 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelsChanged() {
         tableView.reloadData()
     }
+
+    func tunnelRemoved(at index: Int) {
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
 }
 
 class TunnelsListTableViewCell: UITableViewCell {

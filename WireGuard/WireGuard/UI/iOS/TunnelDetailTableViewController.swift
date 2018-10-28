@@ -60,6 +60,22 @@ class TunnelDetailTableViewController: UITableViewController {
 
         self.present(alert, animated: true, completion: nil)
     }
+
+    func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView,
+                               onConfirmed: @escaping (() -> Void)) {
+        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (action) in
+            onConfirmed()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
+        alert.addAction(destroyAction)
+        alert.addAction(cancelAction)
+
+        // popoverPresentationController will be nil on iPhone and non-nil on iPad
+        alert.popoverPresentationController?.sourceView = sourceView
+
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 // MARK: TunnelEditTableViewControllerDelegate
@@ -213,8 +229,17 @@ extension TunnelDetailTableViewController {
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
-            cell.onTapped = {
-                print("Delete peer unimplemented")
+            cell.onTapped = { [weak self] in
+                guard let s = self else { return }
+                s.tunnelsManager.remove(tunnel: s.tunnel) { (error) in
+                    if (error != nil) {
+                        print("Error removing tunnel: \(String(describing: error))")
+                        return
+                    }
+                    s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
+                        s?.navigationController?.navigationController?.popToRootViewController(animated: true)
+                    }
+                }
             }
             return cell
         }
