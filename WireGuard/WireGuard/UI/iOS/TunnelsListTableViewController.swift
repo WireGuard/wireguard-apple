@@ -2,6 +2,7 @@
 // Copyright © 2018 WireGuard LLC. All rights reserved.
 
 import UIKit
+import MobileCoreServices
 
 class TunnelsListTableViewController: UITableViewController {
 
@@ -42,7 +43,7 @@ class TunnelsListTableViewController: UITableViewController {
         let alert = UIAlertController(title: "",
                                       message: "Add a tunnel",
                                       preferredStyle: .actionSheet)
-        let importFileAction = UIAlertAction(title: "Import wg-quick config (.conf)", style: .default) { [weak self] (action) in
+        let importFileAction = UIAlertAction(title: "Import file or archive", style: .default) { [weak self] (action) in
             self?.presentViewControllerForFileImport()
         }
         alert.addAction(importFileAction)
@@ -96,7 +97,8 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     func presentViewControllerForFileImport() {
-        let filePicker = FileImportViewController(documentTypes: [.wgQuickConfigFile])
+        let documentTypes = ["com.wireguard.config.quick", String(kUTTypeZipArchive)]
+        let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
         filePicker.delegate = self
         self.present(filePicker, animated: true)
     }
@@ -138,7 +140,31 @@ extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let url = urls.first {
-            openForEditing(configFileURL: url)
+            if (url.pathExtension == "conf") {
+                openForEditing(configFileURL: url)
+            } else if (url.pathExtension == "zip") {
+                var unarchivedFiles: [(fileName: String, contents: Data)] = []
+                do {
+                    unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
+                } catch ZipArchiveError.cantOpenInputZipFile {
+                    showErrorAlert(title: "Cannot read zip archive", message: "The zip file couldn't be read")
+                } catch ZipArchiveError.badArchive {
+                    showErrorAlert(title: "Cannot read zip archive", message: "Bad archive")
+                } catch (let error) {
+                    print("Error opening zip archive: \(error)")
+                }
+                for unarchivedFile in unarchivedFiles {
+                    if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
+                        let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
+                        let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
+                        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                            if (error != nil) {
+                                print("Error adding configuration: \(tunnelConfiguration.interface.name)")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
