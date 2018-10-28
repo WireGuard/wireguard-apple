@@ -272,15 +272,18 @@ class TunnelContainer: NSObject {
                 s.status = .inactive
                 return
             }
-            s.startObservingTunnelStatus()
-            let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
-            do {
-                let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
-                    from: tunnelConfiguration, withResolvedEndpoints: endpoints)
-                try session.startTunnel(options: tunnelOptions)
-            } catch (let error) {
-                os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                completionHandler(error)
+            s.tunnelProvider.loadFromPreferences { [weak s] (error) in
+                guard let s = s else { return }
+                s.startObservingTunnelStatus()
+                let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
+                do {
+                    let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
+                        from: tunnelConfiguration, withResolvedEndpoints: endpoints)
+                    try session.startTunnel(options: tunnelOptions)
+                } catch (let error) {
+                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                    completionHandler(error)
+                }
             }
         }
     }
