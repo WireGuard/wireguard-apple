@@ -47,6 +47,11 @@ class TunnelsListTableViewController: UITableViewController {
         }
         alert.addAction(importFileAction)
 
+        let scanQRCodeAction = UIAlertAction(title: "Scan QR code", style: .default) { [weak self] (action) in
+            self?.presentViewControllerForScanningQRCode()
+        }
+        alert.addAction(scanQRCodeAction)
+
         let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
             if let s = self, let tunnelsManager = s.tunnelsManager {
                 s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
@@ -96,6 +101,14 @@ class TunnelsListTableViewController: UITableViewController {
         self.present(filePicker, animated: true)
     }
 
+    func presentViewControllerForScanningQRCode() {
+        let scanQRCodeVC = QRScanViewController()
+        scanQRCodeVC.delegate = self
+        let scanQRCodeNC = UINavigationController(rootViewController: scanQRCodeVC)
+        scanQRCodeNC.modalPresentationStyle = .fullScreen
+        self.present(scanQRCodeNC, animated: true)
+    }
+
     func showErrorAlert(title: String, message: String) {
         let okAction = UIAlertAction(title: "Ok", style: .default)
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -127,6 +140,14 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
         if let url = urls.first {
             openForEditing(configFileURL: url)
         }
+    }
+}
+
+// MARK: QRScanViewControllerDelegate
+
+extension TunnelsListTableViewController: QRScanViewControllerDelegate {
+    func scannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController) {
+        print("Scanned QR code") // TODO
     }
 }
 
