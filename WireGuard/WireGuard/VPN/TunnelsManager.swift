@@ -9,6 +9,7 @@ protocol TunnelsManagerDelegate: class {
     func tunnelAdded(at: Int)
     func tunnelModified(at: Int)
     func tunnelsChanged()
+    func tunnelRemoved(at: Int)
 }
 
 enum TunnelsManagerError: Error {
@@ -145,7 +146,7 @@ class TunnelsManager {
 
         tunnelProviderManager.removeFromPreferences { [weak self] (error) in
             defer { self?.isDeletingTunnel = false }
-            guard (error != nil) else {
+            guard (error == nil) else {
                 completionHandler(error)
                 return
             }
@@ -154,6 +155,7 @@ class TunnelsManager {
                     s.tunnels[i].index = s.tunnels[i].index + 1
                 }
                 s.tunnels.remove(at: tunnelIndex)
+                s.delegate?.tunnelRemoved(at: tunnelIndex)
             }
             completionHandler(nil)
         }
