@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 os_log("Failed to remove item from Inbox: %{public}@", log: OSLog.default, type: .debug, url.absoluteString)
             }
         }
-        mainVC?.openForEditing(configFileURL: url)
+        mainVC?.tunnelsListVC?.importFromFile(url: url)
         return true
     }
 }
