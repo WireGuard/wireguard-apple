@@ -8,6 +8,7 @@ class DNSResolver {
     let endpoints: [Endpoint?]
     let dispatchGroup: DispatchGroup
     var dispatchWorkItems: [DispatchWorkItem]
+    static var cache = NSCache<NSString, NSString>()
 
     init(endpoints: [Endpoint?]) {
         self.endpoints = endpoints
@@ -20,16 +21,31 @@ class DNSResolver {
         let dispatchGroup = self.dispatchGroup
         dispatchWorkItems = []
         var resolvedEndpoints: [Endpoint?] = Array<Endpoint?>(repeating: nil, count: endpoints.count)
-        let numberOfEndpointsToResolve = endpoints.compactMap { $0 }.count
+        var isResolvedByDNSRequest: [Bool] = Array<Bool>(repeating: false, count: endpoints.count)
         for (i, endpoint) in self.endpoints.enumerated() {
-            guard let endpoint = endpoint else { return }
-            let workItem = DispatchWorkItem {
-                resolvedEndpoints[i] = DNSResolver.resolveSync(endpoint: endpoint)
+            guard let endpoint = endpoint else { continue }
+            if let resolvedEndpointStringInCache = DNSResolver.cache.object(forKey: endpoint.stringRepresentation() as NSString),
+                let resolvedEndpointInCache = Endpoint(from: resolvedEndpointStringInCache as String) {
+                resolvedEndpoints[i] = resolvedEndpointInCache
+            } else {
+                let workItem = DispatchWorkItem {
+                    resolvedEndpoints[i] = DNSResolver.resolveSync(endpoint: endpoint)
+                    isResolvedByDNSRequest[i] = true
+                }
+                dispatchWorkItems.append(workItem)
+                DispatchQueue.global(qos: .userInitiated).async(group: dispatchGroup, execute: workItem)
             }
-            dispatchWorkItems.append(workItem)
-            DispatchQueue.global(qos: .userInitiated).async(group: dispatchGroup, execute: workItem)
         }
         dispatchGroup.notify(queue: .main) {
+            assert(endpoints.count == resolvedEndpoints.count)
+            for (i, endpoint) in endpoints.enumerated() {
+                guard let endpoint = endpoint, let resolvedEndpoint = resolvedEndpoints[i] else { return }
+                if (isResolvedByDNSRequest[i]) {
+                    DNSResolver.cache.setObject(resolvedEndpoint.stringRepresentation() as NSString,
+                                                forKey: endpoint.stringRepresentation() as NSString)
+                }
+            }
+            let numberOfEndpointsToResolve = endpoints.compactMap { $0 }.count
             let numberOfResolvedEndpoints = resolvedEndpoints.compactMap { $0 }.count
             if (numberOfResolvedEndpoints < numberOfEndpointsToResolve) {
                 completionHandler(nil)
