@@ -22,6 +22,8 @@ class TunnelsListTableViewController: UITableViewController {
         self.title = "WireGuard"
         let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
         self.navigationItem.rightBarButtonItem = addButtonItem
+        let settingsButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
+        self.navigationItem.leftBarButtonItem = settingsButtonItem
 
         self.tableView.rowHeight = 60
 
@@ -66,6 +68,13 @@ class TunnelsListTableViewController: UITableViewController {
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
         self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
+        let settingsVC = SettingsTableViewController()
+        let settingsNC = UINavigationController(rootViewController: settingsVC)
+        settingsNC.modalPresentationStyle = .formSheet
+        self.present(settingsNC, animated: true)
     }
 
     func openForEditing(configFileURL: URL) {
