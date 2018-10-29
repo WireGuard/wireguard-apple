@@ -28,7 +28,13 @@ extension IPAddressRange {
         }
         let networkPrefixLengthSubstring = string[indexOfNetworkPrefixLength ..< string.endIndex]
         if let npl = UInt8(networkPrefixLengthSubstring) {
-            networkPrefixLength = npl
+            if (address is IPv4Address) {
+                networkPrefixLength = min(npl, 32)
+            } else if (address is IPv6Address) {
+                networkPrefixLength = min(npl, 128)
+            } else {
+                fatalError()
+            }
         } else {
             return nil
         }
