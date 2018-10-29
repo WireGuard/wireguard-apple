@@ -203,6 +203,12 @@ extension TunnelEditTableViewController {
                 if (field == .publicKey) {
                     cell.isValueEditable = false
                 }
+                // Set keyboardType
+                if (field == .mtu || field == .listenPort) {
+                    cell.keyboardType = .numberPad
+                } else if (field == .addresses || field == .dns) {
+                    cell.keyboardType = .numbersAndPunctuation
+                }
                 // Bind values to view model
                 cell.value = interfaceData[field]
                 cell.onValueChanged = { [weak interfaceData] value in
@@ -253,6 +259,11 @@ extension TunnelEditTableViewController {
                 // Set placeholder text
                 if (field == .publicKey) {
                     cell.placeholderText = "Required"
+                }
+                if (field == .persistentKeepAlive) {
+                    cell.keyboardType = .numberPad
+                } else if (field == .allowedIPs) {
+                    cell.keyboardType = .numbersAndPunctuation
                 }
                 // Bind values to view model
                 cell.value = peerData[field]
@@ -347,6 +358,10 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
             }
         }
     }
+    var keyboardType: UIKeyboardType {
+        get { return valueTextField.keyboardType }
+        set(value) { valueTextField.keyboardType = value }
+    }
 
     var onValueChanged: ((String) -> Void)? = nil
     var onValueBeingEdited: ((String) -> Void)? = nil
@@ -384,6 +399,10 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
             valueTextField.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
             ])
         valueTextField.delegate = self
+
+        valueTextField.autocapitalizationType = .none
+        valueTextField.autocorrectionType = .no
+        valueTextField.spellCheckingType = .no
     }
 
     required init?(coder aDecoder: NSCoder) {
