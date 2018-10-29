@@ -16,6 +16,20 @@ class DNSResolver {
         self.dispatchGroup = DispatchGroup()
     }
 
+    func resolveWithoutNetworkRequests() -> [Endpoint?]? {
+        var resolvedEndpoints: [Endpoint?] = Array<Endpoint?>(repeating: nil, count: endpoints.count)
+        for (i, endpoint) in self.endpoints.enumerated() {
+            guard let endpoint = endpoint else { continue }
+            if let resolvedEndpointStringInCache = DNSResolver.cache.object(forKey: endpoint.stringRepresentation() as NSString),
+                let resolvedEndpointInCache = Endpoint(from: resolvedEndpointStringInCache as String) {
+                resolvedEndpoints[i] = resolvedEndpointInCache
+            } else {
+                return nil
+            }
+        }
+        return resolvedEndpoints
+    }
+
     func resolve(completionHandler: @escaping ([Endpoint?]?) -> Void) {
         let endpoints = self.endpoints
         let dispatchGroup = self.dispatchGroup
