@@ -13,6 +13,7 @@ protocol TunnelsManagerDelegate: class {
 }
 
 enum TunnelsManagerError: Error {
+    case noEndpoint
     case dnsResolutionFailed
     case tunnelOperationFailed
     case attemptingActivationWhenAnotherTunnelIsActive
@@ -262,6 +263,10 @@ class TunnelContainer: NSObject {
         let dnsResolver = DNSResolver(endpoints: endpoints)
         assert(self.dnsResolver == nil)
         if let endpoints = dnsResolver.resolveWithoutNetworkRequests() {
+            guard (endpoints.contains(where: { $0 != nil })) else {
+                completionHandler(TunnelsManagerError.noEndpoint)
+                return
+            }
             self.tunnelProvider.loadFromPreferences { [weak self] (error) in
                 guard let s = self else { return }
                 s.startObservingTunnelStatus()
