@@ -22,7 +22,7 @@ class TunnelEditTableViewController: UITableViewController {
 
     let peerFields: [TunnelViewModel.PeerField] = [
         .publicKey, .preSharedKey, .endpoint,
-        .allowedIPs, .persistentKeepAlive,
+        .allowedIPs, .excludePrivateIPs, .persistentKeepAlive,
         .deletePeer
     ]
 
@@ -205,8 +205,14 @@ extension TunnelEditTableViewController {
                 }
                 // Bind values to view model
                 cell.value = interfaceData[field]
-                cell.onValueChanged = { [weak interfaceData] value in
-                    interfaceData?[field] = value
+                if (field == .dns) { // While editing DNS, you might directly set exclude private IPs
+                    cell.onValueBeingEdited = { [weak interfaceData] value in
+                        interfaceData?[field] = value
+                    }
+                } else {
+                    cell.onValueChanged = { [weak interfaceData] value in
+                        interfaceData?[field] = value
+                    }
                 }
                 // Compute public key live
                 if (field == .privateKey) {
@@ -238,12 +244,27 @@ extension TunnelEditTableViewController {
                                                 guard let s = s else { return }
                                                 let removedSectionIndices = s.deletePeer(peer: peerData)
                                                 s.tableView.deleteSections(removedSectionIndices, with: .automatic)
+                                                if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                                                    let excludePrivateIPsIndexPaths = (0 ..< s.tunnelViewModel.peersData.count).map {
+                                                        IndexPath(row: row, section: numberOfInterfaceSections + $0)
+                                                    }
+                                                    s.tableView.reloadRows(at: excludePrivateIPsIndexPaths, with: .none)
+                                                }
                     })
                 }
                 return cell
             } else if (field == .excludePrivateIPs) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewSwitchCell.id, for: indexPath) as! TunnelEditTableViewSwitchCell
                 cell.message = field.rawValue
+                cell.isEnabled = peerData.shouldAllowExcludePrivateIPsControl
+                cell.isOn = peerData.excludePrivateIPsValue
+                cell.onSwitchToggled = { [weak self] (isOn) in
+                    guard let s = self else { return }
+                    peerData.excludePrivateIPsValueChanged(isOn: isOn, dnsServers: s.tunnelViewModel.interfaceData[.dns])
+                    if let row = s.peerFields.firstIndex(of: .allowedIPs) {
+                        s.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
+                    }
+                }
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewKeyValueCell.id, for: indexPath) as! TunnelEditTableViewKeyValueCell
@@ -260,8 +281,21 @@ extension TunnelEditTableViewController {
                 }
                 // Bind values to view model
                 cell.value = peerData[field]
-                cell.onValueChanged = { [weak peerData] value in
-                    peerData?[field] = value
+                if (field != .allowedIPs) {
+                    cell.onValueChanged = { [weak peerData] value in
+                        peerData?[field] = value
+                    }
+                }
+                // Compute state of exclude private IPs live
+                if (field == .allowedIPs) {
+                    cell.onValueBeingEdited = { [weak self, weak peerData] value in
+                        if let peerData = peerData, let s = self {
+                            peerData[.allowedIPs] = value
+                            if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                                s.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
+                            }
+                        }
+                    }
                 }
                 return cell
             }
@@ -274,6 +308,12 @@ extension TunnelEditTableViewController {
                 guard let s = self else { return }
                 let addedSectionIndices = s.appendEmptyPeer()
                 tableView.insertSections(addedSectionIndices, with: .automatic)
+                if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                    let excludePrivateIPsIndexPaths = (0 ..< s.tunnelViewModel.peersData.count).map {
+                        IndexPath(row: row, section: numberOfInterfaceSections + $0)
+                    }
+                    s.tableView.reloadRows(at: excludePrivateIPsIndexPaths, with: .none)
+                }
             }
             return cell
         }
@@ -478,6 +518,15 @@ class TunnelEditTableViewSwitchCell: UITableViewCell {
         get { return switchView.isOn }
         set(value) { switchView.isOn = value }
     }
+    var isEnabled: Bool {
+        get { return switchView.isEnabled }
+        set(value) {
+            switchView.isEnabled = value
+            textLabel?.textColor = value ? UIColor.black : UIColor.gray
+        }
+    }
+
+    var onSwitchToggled: ((Bool) -> Void)? = nil
 
     let switchView: UISwitch
 
@@ -485,6 +534,12 @@ class TunnelEditTableViewSwitchCell: UITableViewCell {
         switchView = UISwitch()
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         accessoryView = switchView
+
+        switchView.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
+    }
+
+    @objc func switchToggled() {
+        onSwitchToggled?(switchView.isOn)
     }
 
     required init?(coder aDecoder: NSCoder) {
