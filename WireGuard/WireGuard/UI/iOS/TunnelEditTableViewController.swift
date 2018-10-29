@@ -405,6 +405,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         placeholderText = ""
         isValueEditable = true
         isValueValid = true
+        keyboardType = .default
         onValueChanged = nil
     }
 }
