@@ -5,10 +5,28 @@ import Foundation
 
 enum ZipArchiveError: Error {
     case cantOpenInputZipFile
+    case cantOpenOutputZipFileForWriting
     case badArchive
 }
 
 class ZipArchive {
+
+    static func archive(inputs: [(fileName: String, contents: Data)], to destinationURL: URL) throws {
+        let destinationPath = destinationURL.path
+        guard let zipFile = zipOpen(destinationPath, APPEND_STATUS_CREATE) else {
+            throw ZipArchiveError.cantOpenOutputZipFileForWriting
+        }
+        for input in inputs {
+            let fileName = input.fileName
+            let contents = input.contents
+            zipOpenNewFileInZip(zipFile, fileName.cString(using: .utf8), nil, nil, 0, nil, 0, nil, Z_DEFLATED, Z_DEFAULT_COMPRESSION)
+            contents.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> Void in
+                zipWriteInFileInZip(zipFile, UnsafeRawPointer(ptr), UInt32(contents.count))
+            }
+            zipCloseFileInZip(zipFile)
+        }
+        zipClose(zipFile, nil)
+    }
 
     static func unarchive(url: URL, requiredFileExtensions: [String]) throws -> [(fileName: String, contents: Data)] {
 

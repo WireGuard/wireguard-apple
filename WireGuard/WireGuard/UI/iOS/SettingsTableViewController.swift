@@ -2,6 +2,7 @@
 // Copyright © 2018 WireGuard LLC. All rights reserved.
 
 import UIKit
+import os.log
 
 class SettingsTableViewController: UITableViewController {
 
@@ -16,7 +17,10 @@ class SettingsTableViewController: UITableViewController {
         [.exportZipArchive]
     ]
 
-    init() {
+    let tunnelsManager: TunnelsManager?
+
+    init(tunnelsManager: TunnelsManager?) {
+        self.tunnelsManager = tunnelsManager
         super.init(style: .grouped)
     }
 
@@ -38,6 +42,65 @@ class SettingsTableViewController: UITableViewController {
 
     @objc func doneTapped() {
         dismiss(animated: true, completion: nil)
+    }
+
+    func exportConfigurationsAsZipFile(sourceView: UIView) {
+        guard let tunnelsManager = tunnelsManager, tunnelsManager.numberOfTunnels() > 0 else {
+            showErrorAlert(title: "Nothing to export", message: "There are no tunnel configurations to export")
+            return
+        }
+        var inputsToArchiver: [(fileName: String, contents: Data)] = []
+        var usedNames: Set<String> = []
+        for i in 0 ..< tunnelsManager.numberOfTunnels() {
+            guard let tunnelConfiguration = tunnelsManager.tunnel(at: i).tunnelConfiguration() else { continue }
+            if let contents = WgQuickConfigFileWriter.writeConfigFile(from: tunnelConfiguration) {
+                let name = tunnelConfiguration.interface.name
+                var nameToCheck = name
+                var i = 0
+                while (usedNames.contains(nameToCheck)) {
+                    i = i + 1
+                    nameToCheck = "\(name)\(i)"
+                }
+                usedNames.insert(nameToCheck)
+                inputsToArchiver.append((fileName: "\(nameToCheck).conf", contents: contents))
+            }
+        }
+
+        // Based on file export code by Jeroen Leenarts <jeroen.leenarts@gmail.com> in commit ca35168
+        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
+        do {
+            try FileManager.default.removeItem(at: destinationURL)
+        } catch {
+            os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
+        }
+
+        var ok = false
+        do {
+            try ZipArchive.archive(inputs: inputsToArchiver, to: destinationURL)
+            ok = true
+        } catch {
+            os_log("Failed to create archive: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString)
+        }
+
+        if (ok) {
+            let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
+            // popoverPresentationController shall be non-nil on the iPad
+            activityVC.popoverPresentationController?.sourceView = sourceView
+            present(activityVC, animated: true)
+        } else {
+            showErrorAlert(title: "Could not export", message: "There was an error creating the tunnel configuration archive")
+        }
+    }
+
+    func showErrorAlert(title: String, message: String) {
+        let okAction = UIAlertAction(title: "Ok", style: .default)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(okAction)
+
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -79,6 +142,9 @@ extension SettingsTableViewController {
             assert(field == .exportZipArchive)
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.id, for: indexPath) as! TunnelSettingsTableViewButtonCell
             cell.buttonText = field.rawValue
+            cell.onTapped = { [weak self] in
+                self?.exportConfigurationsAsZipFile(sourceView: cell.button)
+            }
             return cell
         }
     }

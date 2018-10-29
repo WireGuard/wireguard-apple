@@ -71,7 +71,7 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
-        let settingsVC = SettingsTableViewController()
+        let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
         settingsNC.modalPresentationStyle = .formSheet
         self.present(settingsNC, animated: true)
