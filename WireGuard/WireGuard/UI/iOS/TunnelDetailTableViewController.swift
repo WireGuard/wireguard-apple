@@ -165,11 +165,19 @@ extension TunnelDetailTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewStatusCell.id, for: indexPath) as! TunnelDetailTableViewStatusCell
             cell.tunnel = self.tunnel
             cell.onSwitchToggled = { [weak self] isOn in
-                cell.isSwitchInteractionEnabled = false
                 guard let s = self else { return }
                 if (isOn) {
-                    s.tunnelsManager.startActivation(of: s.tunnel) { error in
-                        print("Error while activating: \(String(describing: error))")
+                    s.tunnelsManager.startActivation(of: s.tunnel) { [weak self] error in
+                        if let error = error {
+                            switch (error) {
+                            case TunnelsManagerError.noEndpoint:
+                                self?.showErrorAlert(title: "Endpoint missing", message: "There must be atleast one peer with an endpoint")
+                            case TunnelsManagerError.dnsResolutionFailed:
+                                self?.showErrorAlert(title: "DNS Failure", message: "One or more endpoint domains could not be resolved")
+                            default:
+                                self?.showErrorAlert(title: "Internal error", message: "The tunnel could not be activated")
+                            }
+                        }
                     }
                 } else {
                     s.tunnelsManager.startDeactivation(of: s.tunnel) { error in
