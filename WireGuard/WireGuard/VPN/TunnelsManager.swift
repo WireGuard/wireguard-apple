@@ -265,6 +265,7 @@ class TunnelContainer: NSObject {
         if let endpoints = dnsResolver.resolveWithoutNetworkRequests() {
             guard (endpoints.contains(where: { $0 != nil })) else {
                 completionHandler(TunnelsManagerError.noEndpoint)
+                status = .inactive
                 return
             }
             self.tunnelProvider.loadFromPreferences { [weak self] (error) in
@@ -278,7 +279,10 @@ class TunnelContainer: NSObject {
                 } catch (let error) {
                     os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                     completionHandler(error)
+                    s.status = .inactive
+                    return
                 }
+                completionHandler(nil)
             }
         } else {
             self.dnsResolver = dnsResolver
@@ -302,7 +306,8 @@ class TunnelContainer: NSObject {
                         try session.startTunnel(options: tunnelOptions)
                     } catch (let error) {
                         os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                        completionHandler(error)
+                        s.status = .inactive
+                        return
                     }
                 }
             }
