@@ -179,6 +179,13 @@ class TunnelViewModel {
         var fieldsWithError: Set<PeerField> = []
         var validatedConfiguration: PeerConfiguration? = nil
 
+        // For exclude private IPs
+        var shouldAllowExcludePrivateIPsControl: Bool = false
+        var excludePrivateIPsValue: Bool = false
+        var numberOfPeers: Int = 0 {
+            didSet { updateExcludePrivateIPsFieldState() }
+        }
+
         init(index: Int) {
             self.index = index
         }
@@ -204,6 +211,9 @@ class TunnelViewModel {
                 } else {
                     scratchpad[field] = stringValue
                 }
+                if (field == .allowedIPs) {
+                    updateExcludePrivateIPsFieldState()
+                }
             }
         }
 
@@ -223,6 +233,7 @@ class TunnelViewModel {
             if let persistentKeepAlive = config.persistentKeepAlive {
                 scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
             }
+            updateExcludePrivateIPsFieldState()
         }
 
         func save() -> SaveResult<PeerConfiguration> {
@@ -291,6 +302,59 @@ class TunnelViewModel {
             }
             // TODO: Cache this to avoid recomputing
         }
+
+        static let ipv4DefaultRouteString = "0.0.0.0/0"
+        static let ipv4DefaultRouteModRFC1918String = [ // Set of all non-private IPv4 IPs
+            "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3",
+            "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12",
+            "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
+            "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16",
+            "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10",
+            "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
+        ]
+
+        func updateExcludePrivateIPsFieldState() {
+            guard (numberOfPeers == 1) else {
+                shouldAllowExcludePrivateIPsControl = false
+                excludePrivateIPsValue = false
+                return
+            }
+            let allowedIPStrings = Set<String>(
+                (scratchpad[.allowedIPs] ?? "")
+                    .split(separator: ",")
+                    .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+            )
+            if (allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString)) {
+                shouldAllowExcludePrivateIPsControl = true
+                excludePrivateIPsValue = false
+            } else if (allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String)) {
+                shouldAllowExcludePrivateIPsControl = true
+                excludePrivateIPsValue = true
+            } else {
+                shouldAllowExcludePrivateIPsControl = false
+                excludePrivateIPsValue = false
+            }
+        }
+
+        func excludePrivateIPsValueChanged(isOn: Bool, dnsServers: String) {
+            let allowedIPStrings = (scratchpad[.allowedIPs] ?? "")
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+            let dnsServerStrings = dnsServers
+                .split(separator: ",")
+                .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+            let ipv6Addresses = allowedIPStrings.filter { $0.contains(":") }
+            let modifiedAllowedIPStrings: [String]
+            if (isOn) {
+                modifiedAllowedIPStrings = ipv6Addresses +
+                    TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServerStrings
+            } else {
+                modifiedAllowedIPStrings = ipv6Addresses +
+                    [TunnelViewModel.PeerData.ipv4DefaultRouteString]
+            }
+            scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
+            excludePrivateIPsValue = isOn
+        }
     }
 
     enum SaveResult<Configuration> {
@@ -317,6 +381,9 @@ class TunnelViewModel {
     func appendEmptyPeer() {
         let peer = PeerData(index: peersData.count)
         peersData.append(peer)
+        for p in peersData {
+            p.numberOfPeers = peersData.count
+        }
     }
 
     func deletePeer(peer: PeerData) {
@@ -325,6 +392,9 @@ class TunnelViewModel {
         for p in peersData[peer.index ..< peersData.count] {
             assert(p.index > 0)
             p.index = p.index - 1
+        }
+        for p in peersData {
+            p.numberOfPeers = peersData.count
         }
     }
 
