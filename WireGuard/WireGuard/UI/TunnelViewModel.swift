@@ -120,7 +120,7 @@ class TunnelViewModel {
                         addresses.append(address)
                     } else {
                         fieldsWithError.insert(.addresses)
-                        errorMessages.append("Interface addresses should be a list of comma-separated IP addresses in CIDR notation")
+                        errorMessages.append("Interface addresses should be a list of comma-separated IP addresses")
                     }
                 }
                 config.addresses = addresses
