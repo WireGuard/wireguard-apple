@@ -27,6 +27,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         os_log("Starting tunnel", log: OSLog.default, type: .info)
 
         guard let options = options else {
+            os_log("Starting tunnel failed: No options passed", log: OSLog.default, type: .error)
             startTunnelCompletionHandler(PacketTunnelProviderError.invalidOptions)
             return
         }
@@ -54,6 +55,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             let ipv6ExcludedRouteNetworkPrefixLengths = options[.ipv6ExcludedRouteNetworkPrefixLengths] as? [NSNumber]
 
             else {
+                os_log("Starting tunnel failed: Invalid options passed", log: OSLog.default, type: .error)
                 startTunnelCompletionHandler(PacketTunnelProviderError.invalidOptions)
                 return
         }
@@ -64,6 +66,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let handle = connect(interfaceName: interfaceName, settings: wireguardSettings, mtu: mtu.uint16Value)
 
         if handle < 0 {
+            os_log("Starting tunnel failed: Could not start WireGuard", log: OSLog.default, type: .error)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
         }
@@ -111,7 +114,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         setTunnelNetworkSettings(networkSettings) { (error) in
             if let error = error {
-                os_log("Error setting network settings: %s", log: OSLog.default, type: .error, error.localizedDescription)
+                os_log("Starting tunnel failed: Error setting network settings: %s", log: OSLog.default, type: .error, error.localizedDescription)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
                 startTunnelCompletionHandler(nil /* No errors */)
