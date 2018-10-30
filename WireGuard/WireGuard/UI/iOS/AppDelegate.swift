@@ -27,7 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        // Based on importing code by Jeroen Leenarts <jeroen.leenarts@gmail.com> in commit 815f12c
         defer {
             do {
                 try FileManager.default.removeItem(at: url)

@@ -66,7 +66,6 @@ class SettingsTableViewController: UITableViewController {
             }
         }
 
-        // Based on file export code by Jeroen Leenarts <jeroen.leenarts@gmail.com> in commit ca35168
         guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
