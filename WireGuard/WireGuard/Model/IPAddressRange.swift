@@ -15,29 +15,29 @@ struct IPAddressRange {
 
 extension IPAddressRange {
     init?(from string: String) {
-        guard let indexOfSlash = string.lastIndex(of: "/") else { return nil }
-        let indexOfNetworkPrefixLength = string.index(after: indexOfSlash)
-        guard (indexOfNetworkPrefixLength < string.endIndex) else { return nil }
-        let addressString = String(string[string.startIndex ..< indexOfSlash])
+        let endOfIPAddress = string.lastIndex(of: "/") ?? string.endIndex
+        let addressString = String(string[string.startIndex ..< endOfIPAddress])
+        let address: IPAddress
         if let addr = IPv4Address(addressString) {
-            address = addr
+           address = addr
         } else if let addr = IPv6Address(addressString) {
             address = addr
         } else {
             return nil
         }
-        let networkPrefixLengthSubstring = string[indexOfNetworkPrefixLength ..< string.endIndex]
-        if let npl = UInt8(networkPrefixLengthSubstring) {
-            if (address is IPv4Address) {
-                networkPrefixLength = min(npl, 32)
-            } else if (address is IPv6Address) {
-                networkPrefixLength = min(npl, 128)
-            } else {
-                fatalError()
-            }
+        let maxNetworkPrefixLength: UInt8 = (address is IPv4Address) ? 32 : 128
+        var networkPrefixLength: UInt8
+        if (endOfIPAddress < string.endIndex) { // "/" was located
+            let indexOfNetworkPrefixLength = string.index(after: endOfIPAddress)
+            guard (indexOfNetworkPrefixLength < string.endIndex) else { return nil }
+            let networkPrefixLengthSubstring = string[indexOfNetworkPrefixLength ..< string.endIndex]
+            guard let npl = UInt8(networkPrefixLengthSubstring) else { return nil }
+            networkPrefixLength = min(npl, maxNetworkPrefixLength)
         } else {
-            return nil
+            networkPrefixLength = maxNetworkPrefixLength
         }
+        self.address = address
+        self.networkPrefixLength = networkPrefixLength
     }
     func stringRepresentation() -> String {
         return "\(address)/\(networkPrefixLength)"
