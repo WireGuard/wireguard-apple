@@ -1,5 +1,5 @@
 //
-//  Copyright © 2018 WireGuard LLC. All rights reserved.
+//  Copyright © 2018 WireGuard LLC. All Rights Reserved.
 //
 
 import os.log
