@@ -21,6 +21,20 @@ class QRScanViewController: UIViewController {
         self.title = "Scan QR code"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 
+        let tipLabel = UILabel()
+        tipLabel.text = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`"
+        tipLabel.adjustsFontSizeToFitWidth = true
+        tipLabel.textColor = UIColor.lightGray
+        tipLabel.textAlignment = .center
+
+        view.addSubview(tipLabel)
+        tipLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tipLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
+            tipLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
+            tipLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
+            ])
+
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video),
             let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice),
             let captureSession = captureSession,
