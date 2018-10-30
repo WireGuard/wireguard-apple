@@ -258,58 +258,74 @@ class TunnelContainer: NSObject {
 
     fileprivate func startActivation(completionHandler: @escaping (Error?) -> Void) {
         assert(status == .inactive)
+        assert(self.dnsResolver == nil)
+
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        let dnsResolver = DNSResolver(endpoints: endpoints)
-        assert(self.dnsResolver == nil)
-        if let endpoints = dnsResolver.resolveWithoutNetworkRequests() {
-            guard (endpoints.contains(where: { $0 != nil })) else {
+
+        // Ensure there's a tunner server address we can give to iOS
+        guard (endpoints.contains(where: { $0 != nil })) else {
+            DispatchQueue.main.async { [weak self] in
+                self?.status = .inactive
                 completionHandler(TunnelsManagerError.noEndpoint)
-                status = .inactive
-                return
             }
-            self.tunnelProvider.loadFromPreferences { [weak self] (error) in
-                guard let s = self else { return }
-                s.startObservingTunnelStatus()
-                let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
-                do {
-                    let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
-                        from: tunnelConfiguration, withResolvedEndpoints: endpoints)
-                    try session.startTunnel(options: tunnelOptions)
-                } catch (let error) {
-                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                    completionHandler(error)
-                    s.status = .inactive
-                    return
-                }
-                completionHandler(nil)
-            }
+            return
+        }
+
+        // Resolve DNS and start the tunnel
+        let dnsResolver = DNSResolver(endpoints: endpoints)
+        let resolvedEndpoints = dnsResolver.resolveWithoutNetworkRequests()
+        if let resolvedEndpoints = resolvedEndpoints {
+            // If we don't have to make a DNS network request, we never
+            // change the status to .resolvingEndpointDomains
+            startActivation(tunnelConfiguration: tunnelConfiguration,
+                            resolvedEndpoints: resolvedEndpoints,
+                            completionHandler: completionHandler)
         } else {
-            self.dnsResolver = dnsResolver
             status = .resolvingEndpointDomains
-            dnsResolver.resolve { [weak self] endpoints in
+            self.dnsResolver = dnsResolver
+            dnsResolver.resolve { [weak self] resolvedEndpoints in
                 guard let s = self else { return }
                 assert(s.status == .resolvingEndpointDomains)
                 s.dnsResolver = nil
-                guard let endpoints = endpoints else {
-                    completionHandler(TunnelsManagerError.dnsResolutionFailed)
+                guard let resolvedEndpoints = resolvedEndpoints else {
                     s.status = .inactive
+                    completionHandler(TunnelsManagerError.dnsResolutionFailed)
                     return
                 }
-                s.tunnelProvider.loadFromPreferences { [weak s] (error) in
-                    guard let s = s else { return }
-                    s.startObservingTunnelStatus()
-                    let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
-                    do {
-                        let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
-                            from: tunnelConfiguration, withResolvedEndpoints: endpoints)
-                        try session.startTunnel(options: tunnelOptions)
-                    } catch (let error) {
-                        os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                        s.status = .inactive
-                        return
-                    }
-                }
+                s.startActivation(tunnelConfiguration: tunnelConfiguration,
+                                resolvedEndpoints: resolvedEndpoints,
+                                completionHandler: completionHandler)
+            }
+        }
+    }
+
+    fileprivate func startActivation(tunnelConfiguration: TunnelConfiguration,
+                                     resolvedEndpoints: [Endpoint?],
+                                     completionHandler: @escaping (Error?) -> Void) {
+        // resolvedEndpoints should contain only IP addresses, not any named endpoints
+        assert(resolvedEndpoints.allSatisfy { (resolvedEndpoint) in
+            guard let resolvedEndpoint = resolvedEndpoint else { return true }
+            switch (resolvedEndpoint.host) {
+            case .ipv4(_): return true
+            case .ipv6(_): return true
+            case .name(_, _): return false
+            }
+        })
+        // Start the tunnel
+        self.tunnelProvider.loadFromPreferences { [weak self] (error) in
+            guard let s = self else { return }
+            s.startObservingTunnelStatus()
+            let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
+            do {
+                let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
+                    from: tunnelConfiguration, withResolvedEndpoints: resolvedEndpoints)
+                try session.startTunnel(options: tunnelOptions)
+                completionHandler(nil)
+            } catch (let error) {
+                os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                s.status = .inactive
+                completionHandler(error)
             }
         }
     }
