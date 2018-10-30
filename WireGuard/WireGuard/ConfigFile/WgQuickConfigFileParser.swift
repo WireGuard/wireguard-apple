@@ -19,8 +19,6 @@ class WgQuickConfigFileParser {
         case invalidPeer
     }
 
-    // Based on the parser written by Eric Kuck <eric@bluelinelabs.com> in commit 5ef1656
-
     static func parse(_ text: String, name: String) throws -> TunnelConfiguration {
 
         assert(!name.isEmpty)
