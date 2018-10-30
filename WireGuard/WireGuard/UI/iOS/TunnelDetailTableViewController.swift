@@ -171,7 +171,7 @@ extension TunnelDetailTableViewController {
                         if let error = error {
                             switch (error) {
                             case TunnelsManagerError.noEndpoint:
-                                self?.showErrorAlert(title: "Endpoint missing", message: "There must be atleast one peer with an endpoint")
+                                self?.showErrorAlert(title: "Endpoint missing", message: "There must be at least one peer with an endpoint")
                             case TunnelsManagerError.dnsResolutionFailed:
                                 self?.showErrorAlert(title: "DNS Failure", message: "One or more endpoint domains could not be resolved")
                             default:
