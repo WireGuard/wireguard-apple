@@ -190,7 +190,7 @@ extension TunnelEditTableViewController {
                 // Set placeholder text
                 if (field == .name || field == .privateKey) {
                     cell.placeholderText = "Required"
-                } else if (field == .mtu) {
+                } else if (field == .mtu || field == .listenPort) {
                     cell.placeholderText = "Automatic"
                 }
                 // Set editable
@@ -273,7 +273,12 @@ extension TunnelEditTableViewController {
                 // Set placeholder text
                 if (field == .publicKey) {
                     cell.placeholderText = "Required"
+                } else if (field == .preSharedKey) {
+                    cell.placeholderText = "Optional"
+                } else if (field == .persistentKeepAlive) {
+                    cell.placeholderText = "Off"
                 }
+                // Set keyboardType
                 if (field == .persistentKeepAlive) {
                     cell.keyboardType = .numberPad
                 } else if (field == .allowedIPs) {
