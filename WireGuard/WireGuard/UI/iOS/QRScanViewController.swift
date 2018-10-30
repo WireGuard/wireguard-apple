@@ -1,10 +1,5 @@
-//
-//  QRScanViewController.swift
-//  WireGuard
-//
-//  Created by Eric Kuck on 8/20/18.
-//  Copyright © 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All rights reserved.
-//
+// SPDX-License-Identifier: MIT
+// Copyright © 2018 WireGuard LLC. All rights reserved.
 
 import AVFoundation
 import CoreData
