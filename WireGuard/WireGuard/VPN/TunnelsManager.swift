@@ -97,6 +97,27 @@ class TunnelsManager {
         }
     }
 
+    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (Int, Error?) -> Void) {
+        addMultiple(tunnelConfigurations: tunnelConfigurations[0...], completionHandler: completionHandler)
+    }
+
+    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, completionHandler: @escaping (Int, Error?) -> Void) {
+        assert(!tunnelConfigurations.isEmpty)
+        let head = tunnelConfigurations.first!
+        let tail = tunnelConfigurations[1 ..< tunnelConfigurations.count]
+        self.add(tunnelConfiguration: head) { [weak self] (tunnel, error) in
+            if (error != nil) {
+                completionHandler(tail.count, error)
+            } else if (tail.isEmpty) {
+                completionHandler(0, nil)
+            } else {
+                DispatchQueue.main.async {
+                    self?.addMultiple(tunnelConfigurations: tail, completionHandler: completionHandler)
+                }
+            }
+        }
+    }
+
     func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (Error?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         assert(!tunnelName.isEmpty)
