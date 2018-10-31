@@ -234,8 +234,8 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsActive)
             return
         }
-        tunnel.startActivation(completionHandler: completionHandler)
         setCurrentTunnel(tunnel: tunnel)
+        tunnel.startActivation(completionHandler: completionHandler)
     }
 
     func startDeactivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
