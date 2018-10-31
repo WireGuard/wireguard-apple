@@ -133,7 +133,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func configureLogger() {
-        wgSetLogger { (level, tagCStr, msgCStr) in
+        wgSetLogger { (level, msgCStr) in
             let logType: OSLogType
             switch level {
             case 0:
@@ -145,9 +145,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             default:
                 logType = .default
             }
-            let tag = (tagCStr != nil) ? String(cString: tagCStr!) : ""
             let msg = (msgCStr != nil) ? String(cString: msgCStr!) : ""
-            os_log("wg log: %{public}s: %{public}s", log: OSLog.default, type: logType, tag, msg)
+            os_log("%{public}s", log: OSLog.default, type: logType, msg)
         }
     }
 
