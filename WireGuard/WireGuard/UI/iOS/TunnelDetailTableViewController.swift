@@ -152,9 +152,9 @@ extension TunnelDetailTableViewController {
                     s.tunnelsManager.startActivation(of: s.tunnel) { [weak self] error in
                         if let error = error {
                             switch (error) {
-                            case TunnelsManagerError.noEndpoint:
+                            case TunnelActivationError.noEndpoint:
                                 self?.showErrorAlert(title: "Endpoint missing", message: "There must be at least one peer with an endpoint")
-                            case TunnelsManagerError.dnsResolutionFailed:
+                            case TunnelActivationError.dnsResolutionFailed:
                                 self?.showErrorAlert(title: "DNS Failure", message: "One or more endpoint domains could not be resolved")
                             default:
                                 self?.showErrorAlert(title: "Internal error", message: "The tunnel could not be activated")

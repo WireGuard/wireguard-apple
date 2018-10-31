@@ -12,7 +12,7 @@ protocol TunnelsManagerDelegate: class {
     func tunnelRemoved(at: Int)
 }
 
-enum TunnelsManagerError: Error {
+enum TunnelActivationError: Error {
     case noEndpoint
     case dnsResolutionFailed
     case tunnelOperationFailed
@@ -210,11 +210,11 @@ class TunnelsManager {
 
     func startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
         guard (tunnel.status == .inactive) else {
-            completionHandler(TunnelsManagerError.attemptingActivationWhenTunnelIsNotInactive)
+            completionHandler(TunnelActivationError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
         guard (currentTunnel == nil) else {
-            completionHandler(TunnelsManagerError.attemptingActivationWhenAnotherTunnelIsActive)
+            completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsActive)
             return
         }
         tunnel.startActivation(completionHandler: completionHandler)
@@ -223,7 +223,7 @@ class TunnelsManager {
 
     func startDeactivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
         if (tunnel.status == .inactive) {
-            completionHandler(TunnelsManagerError.attemptingDeactivationWhenTunnelIsInactive)
+            completionHandler(TunnelActivationError.attemptingDeactivationWhenTunnelIsInactive)
             return
         }
         assert(tunnel.index == currentTunnel!.index)
@@ -305,7 +305,7 @@ class TunnelContainer: NSObject {
         guard (endpoints.contains(where: { $0 != nil })) else {
             DispatchQueue.main.async { [weak self] in
                 self?.status = .inactive
-                completionHandler(TunnelsManagerError.noEndpoint)
+                completionHandler(TunnelActivationError.noEndpoint)
             }
             return
         }
@@ -328,7 +328,7 @@ class TunnelContainer: NSObject {
                 s.dnsResolver = nil
                 guard let resolvedEndpoints = resolvedEndpoints else {
                     s.status = .inactive
-                    completionHandler(TunnelsManagerError.dnsResolutionFailed)
+                    completionHandler(TunnelActivationError.dnsResolutionFailed)
                     return
                 }
                 s.startActivation(tunnelConfiguration: tunnelConfiguration,
