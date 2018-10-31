@@ -134,7 +134,7 @@ extension SettingsTableViewController {
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
                 cell.value = appVersion
             } else if (field == .goBackendVersion) {
-                cell.value = "TODO"
+                cell.value = WIREGUARD_GO_VERSION
             }
             return cell
         } else {

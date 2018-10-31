@@ -24,6 +24,7 @@ export GOOS := darwin
 export CGO_ENABLED := 1
 
 build: $(DESTDIR)/libwg-go.a
+version-header: $(DESTDIR)/wireguard-go-version.h
 
 define copy-src-to-build
 $(subst $(1),$(BUILDDIR)/,$(2)): $(2)
@@ -55,6 +56,9 @@ $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
 endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
+$(DESTDIR)/wireguard-go-version.h: ../wireguard-go/version.go
+	sed -n 's/.*WireGuardGoVersion = "\(.*\)"/#define WIREGUARD_GO_VERSION "\1"/p' "$^" > "$@"
+
 $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
 	@mkdir -vp "$(DESTDIR)"
 	xcrun --sdk iphoneos lipo -create -output "$@" $^
@@ -62,7 +66,9 @@ $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
 $(DESTDIR)/example: example.c $(DESTDIR)/libwg-go.a
 	xcrun --sdk iphoneos clang -framework CoreFoundation -isysroot "$(shell xcrun --sdk iphoneos --show-sdk-path)" -arch arm64 -arch armv7 -L"$(DESTDIR)" -lwg-go -o "$@" "$<"
 
-clean:
-	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/example"
+example: $(DESTDIR)/example
 
-.PHONY: clean build
+clean:
+	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/example" "$(DESTDIR)/wireguard-go-version.h"
+
+.PHONY: clean build example version-header
