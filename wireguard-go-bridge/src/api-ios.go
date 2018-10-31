@@ -7,9 +7,9 @@ package main
 
 // #include <stdlib.h>
 // #include <sys/types.h>
-// static void callLogger(void *func, int level, const char *tag, const char *msg)
+// static void callLogger(void *func, int level, const char *msg)
 // {
-// 	((void(*)(int, const char *, const char *))func)(level, tag, msg);
+// 	((void(*)(int, const char *))func)(level, msg);
 // }
 import "C"
 
@@ -40,10 +40,8 @@ func (l *CLogger) Write(p []byte) (int, error) {
 	if uintptr(loggerFunc) == 0 {
 		return 0, errors.New("No logger initialized")
 	}
-	tag := C.CString("WireGuard/GoBackend/"+l.interfaceName)
-	message := C.CString(string(p))
-	C.callLogger(loggerFunc, l.level, tag, message)
-	C.free(unsafe.Pointer(tag))
+	message := C.CString(l.interfaceName + ": " + string(p))
+	C.callLogger(loggerFunc, l.level, message)
 	C.free(unsafe.Pointer(message))
 	return len(p), nil
 }
@@ -64,9 +62,7 @@ func init() {
 				n := runtime.Stack(buf, true)
 				buf[n] = 0
 				if uintptr(loggerFunc) != 0 {
-					tag := C.CString("WireGuard/GoBackend/Stacktrace")
-					C.callLogger(loggerFunc, 0, tag, (*_Ctype_char)(unsafe.Pointer(&buf[0])))
-					C.free(unsafe.Pointer(tag))
+					C.callLogger(loggerFunc, 0, (*_Ctype_char)(unsafe.Pointer(&buf[0])))
 				}
 			}
 		}

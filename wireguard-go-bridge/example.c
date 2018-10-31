@@ -27,9 +27,9 @@ ssize_t do_write(void *ctx, unsigned char *buf, size_t len)
 	return len;
 }
 
-void do_log(int level, const char *tag, const char *msg)
+void do_log(int level, const char *msg)
 {
-	printf("Log level %d for %s: %s", level, tag, msg);
+	printf("Log level %d: %s", level, msg);
 }
 
 int main(int argc, char *argv[])
