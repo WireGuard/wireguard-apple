@@ -321,9 +321,17 @@ class TunnelContainer: NSObject {
         }
     }
 
-    fileprivate func startActivation(tunnelConfiguration: TunnelConfiguration,
+    fileprivate func startActivation(recursionCount: UInt = 0,
+                                     lastError: Error? = nil,
+                                     tunnelConfiguration: TunnelConfiguration,
                                      resolvedEndpoints: [Endpoint?],
                                      completionHandler: @escaping (Error?) -> Void) {
+        if (recursionCount >= 8) {
+            os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@.", log: OSLog.default, type: .error, "\(lastError!)")
+            completionHandler(lastError)
+            return
+        }
+
         // resolvedEndpoints should contain only IP addresses, not any named endpoints
         assert(resolvedEndpoints.allSatisfy { (resolvedEndpoint) in
             guard let resolvedEndpoint = resolvedEndpoint else { return true }
@@ -349,7 +357,7 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel saved after re-enabling.", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
             }
             return
         }
@@ -392,7 +400,7 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel reloaded.", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
             }
         }
     }
