@@ -6,7 +6,7 @@ import CoreData
 import UIKit
 
 protocol QRScanViewControllerDelegate: class {
-    func scannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController)
+    func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController, completionHandler: (() ->Void)?)
 }
 
 class QRScanViewController: UIViewController {
@@ -119,8 +119,9 @@ class QRScanViewController: UIViewController {
             if (title.isEmpty) { return }
             tunnelConfiguration.interface.name = title
             if let s = self {
-                s.delegate?.scannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: s)
-                s.dismiss(animated: true, completion: nil)
+                s.delegate?.addScannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: s) {
+                    s.dismiss(animated: true, completion: nil)
+                }
             }
         }))
         present(alert, animated: true)
