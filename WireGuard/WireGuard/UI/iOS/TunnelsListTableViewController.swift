@@ -160,21 +160,27 @@ class TunnelsListTableViewController: UITableViewController {
                 print("Error opening zip archive: \(error)")
             }
             var numberOfConfigFilesWithErrors = 0
+            var tunnelConfigurationsToAdd: [TunnelConfiguration] = []
             for unarchivedFile in unarchivedFiles {
                 if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
                     let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
                     let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                    tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
-                        if (error != nil) {
-                            print("Error adding configuration: \(tunnelConfiguration.interface.name)")
-                        }
-                    }
+                    tunnelConfigurationsToAdd.append(tunnelConfiguration)
                 } else {
                     numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
                 }
             }
+            var numberOfTunnelsRemainingAfterError = 0
+            tunnelsManager?.addMultiple(tunnelConfigurations: tunnelConfigurationsToAdd) { (numberOfTunnelsRemaining, error) in
+                if (error != nil) {
+                    numberOfTunnelsRemainingAfterError = numberOfTunnelsRemaining
+                } else {
+                    assert(numberOfTunnelsRemaining == 0)
+                }
+            }
             if (numberOfConfigFilesWithErrors > 0) {
-                showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors) files", message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
+                showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors + numberOfTunnelsRemainingAfterError) files",
+                    message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
             }
         }
     }
