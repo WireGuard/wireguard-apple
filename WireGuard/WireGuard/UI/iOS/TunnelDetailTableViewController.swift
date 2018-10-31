@@ -311,6 +311,10 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
         set(value) { detailTextLabel?.text = value }
     }
 
+    override var textToCopy: String? {
+        return self.detailTextLabel?.text
+    }
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
     }
