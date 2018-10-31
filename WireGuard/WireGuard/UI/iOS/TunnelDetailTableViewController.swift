@@ -7,10 +7,9 @@ import UIKit
 
 class TunnelDetailTableViewController: UITableViewController {
 
-    let interfaceFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
-        [.name],
-        [.publicKey, .copyPublicKey],
-        [.addresses, .listenPort, .mtu, .dns]
+    let interfaceFields: [TunnelViewModel.InterfaceField] = [
+        .name, .publicKey, .addresses,
+	.listenPort, .mtu, .dns
     ]
 
     let peerFields: [TunnelViewModel.PeerField] = [
@@ -95,32 +94,22 @@ extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate
 
 extension TunnelDetailTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        let interfaceData = tunnelViewModel.interfaceData
-        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
-            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
-        }.count
-        let numberOfPeerSections = tunnelViewModel.peersData.count
-
-        return 1 + numberOfInterfaceSections + numberOfPeerSections + 1
+        return 3 + tunnelViewModel.peersData.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let interfaceData = tunnelViewModel.interfaceData
-        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
-            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
-            }.count
         let numberOfPeerSections = tunnelViewModel.peersData.count
 
         if (section == 0) {
             // Status
             return 1
-        } else if (section < (1 + numberOfInterfaceSections)) {
+        } else if (section == 1) {
             // Interface
-            return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section - 1]).count
-        } else if ((numberOfPeerSections > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeerSections))) {
+            return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields).count
+        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
-            let peerIndex = (section - numberOfInterfaceSections - 1)
-            let peerData = tunnelViewModel.peersData[peerIndex]
+            let peerData = tunnelViewModel.peersData[section - 2]
             return peerData.filterFieldsWithValueOrControl(peerFields: peerFields).count
         } else {
             // Delete tunnel
@@ -129,32 +118,25 @@ extension TunnelDetailTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let interfaceData = tunnelViewModel.interfaceData
-        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
-            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
-            }.count
         let numberOfPeerSections = tunnelViewModel.peersData.count
 
         if (section == 0) {
             // Status
             return "Status"
-        } else if (section < 1 + numberOfInterfaceSections) {
+        } else if (section == 1) {
             // Interface
-            return (section == 1) ? "Interface" : nil
-        } else if ((numberOfPeerSections > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeerSections))) {
+	    return "Interface"
+        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
             return "Peer"
         } else {
-            // Add peer
+            // Delete tunnel
             return nil
         }
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let interfaceData = tunnelViewModel.interfaceData
-        let numberOfInterfaceSections = (0 ..< interfaceFieldsBySection.count).filter { section in
-            (!interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section]).isEmpty)
-            }.count
         let numberOfPeerSections = tunnelViewModel.peersData.count
 
         let section = indexPath.section
@@ -186,32 +168,22 @@ extension TunnelDetailTableViewController {
                 }
             }
             return cell
-        } else if (section < 1 + numberOfInterfaceSections) {
+        } else if (section == 1) {
             // Interface
-            let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFieldsBySection[section - 1])[row]
-            if (field == .copyPublicKey) {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
-                cell.buttonText = field.rawValue
-                cell.onTapped = {
-                    UIPasteboard.general.string = interfaceData[.publicKey]
-                }
-                return cell
-            } else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
-                // Set key and value
-                cell.key = field.rawValue
-                cell.value = interfaceData[field]
-                if (field != .publicKey) {
-                    cell.detailTextLabel?.allowsDefaultTighteningForTruncation = true
-                    cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
-                    cell.detailTextLabel?.minimumScaleFactor = 0.85
-                }
-                return cell
+            let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)[row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
+            // Set key and value
+            cell.key = field.rawValue
+            cell.value = interfaceData[field]
+            if (field != .publicKey) {
+                cell.detailTextLabel?.allowsDefaultTighteningForTruncation = true
+                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+                cell.detailTextLabel?.minimumScaleFactor = 0.85
             }
-        } else if ((numberOfPeerSections > 0) && (section < (1 + numberOfInterfaceSections + numberOfPeerSections))) {
+            return cell
+        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
-            let peerIndex = (section - numberOfInterfaceSections - 1)
-            let peerData = tunnelViewModel.peersData[peerIndex]
+            let peerData = tunnelViewModel.peersData[section - 2]
             let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[row]
 
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
@@ -226,7 +198,7 @@ extension TunnelDetailTableViewController {
 
             return cell
         } else {
-            assert(section == (1 + numberOfInterfaceSections + numberOfPeerSections))
+            assert(section == (2 + numberOfPeerSections))
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
@@ -328,7 +300,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
     }
 }
 
-class TunnelDetailTableViewKeyValueCell: UITableViewCell {
+class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
     static let id: String = "TunnelDetailTableViewKeyValueCell"
     var key: String {
         get { return textLabel?.text ?? "" }
@@ -355,7 +327,7 @@ class TunnelDetailTableViewKeyValueCell: UITableViewCell {
 }
 
 class TunnelDetailTableViewButtonCell: UITableViewCell {
-    static let id: String = "TunnelsEditTableViewButtonCell"
+    static let id: String = "TunnelDetailTableViewButtonCell"
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }

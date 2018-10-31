@@ -361,7 +361,7 @@ extension TunnelEditTableViewController {
     }
 }
 
-class TunnelEditTableViewKeyValueCell: UITableViewCell {
+class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
     static let id: String = "TunnelEditTableViewKeyValueCell"
     var key: String {
         get { return keyLabel.text ?? "" }
@@ -378,6 +378,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
     var isValueEditable: Bool {
         get { return valueTextField.isEnabled }
         set(value) {
+            super.copyableGesture = !value
             valueTextField.isEnabled = value
             keyLabel.textColor = value ? UIColor.black : UIColor.gray
             valueTextField.textColor = value ? UIColor.black : UIColor.gray
@@ -409,6 +410,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         keyLabel = UILabel()
         valueTextField = UITextField()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        isValueEditable = true
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
         keyLabel.textAlignment = .right
