@@ -333,20 +333,66 @@ class TunnelContainer: NSObject {
             case .name(_, _): return false
             }
         })
+
+        os_log("startActivation: Entering", log: OSLog.default, type: .debug)
+
+        guard (tunnelProvider.isEnabled) else {
+            // In case the tunnel had gotten disabled, re-enable and save it,
+            // then call this function again.
+            os_log("startActivation: Tunnel is disabled. Re-enabling and saving.", log: OSLog.default, type: .info)
+            tunnelProvider.isEnabled = true
+            tunnelProvider.saveToPreferences { [weak self] (error) in
+                if (error != nil) {
+                    os_log("Error saving tunnel after re-enabling: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                    completionHandler(error)
+                    return
+                }
+                os_log("startActivation: Tunnel saved after re-enabling.", log: OSLog.default, type: .info)
+                os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
+                self?.startActivation(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+            }
+            return
+        }
+
         // Start the tunnel
-        self.tunnelProvider.loadFromPreferences { [weak self] (error) in
-            guard let s = self else { return }
-            s.startObservingTunnelStatus()
-            let session = (s.tunnelProvider.connection as! NETunnelProviderSession)
-            do {
-                let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
-                    from: tunnelConfiguration, withResolvedEndpoints: resolvedEndpoints)
-                try session.startTunnel(options: tunnelOptions)
-                completionHandler(nil)
-            } catch (let error) {
+        startObservingTunnelStatus()
+        let session = (tunnelProvider.connection as! NETunnelProviderSession)
+        do {
+            os_log("startActivation: Generating options", log: OSLog.default, type: .debug)
+            let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
+                from: tunnelConfiguration, withResolvedEndpoints: resolvedEndpoints)
+            os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
+            try session.startTunnel(options: tunnelOptions)
+            os_log("startActivation: Success", log: OSLog.default, type: .debug)
+            completionHandler(nil)
+        } catch (let error) {
+            os_log("startActivation: Error starting tunnel. Examining error.", log: OSLog.default, type: .debug)
+            guard let vpnError = error as? NEVPNError else {
                 os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                s.status = .inactive
+                status = .inactive
                 completionHandler(error)
+                return
+            }
+            guard (vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale) else {
+                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                    status = .inactive
+                    completionHandler(error)
+                    return
+            }
+            assert(vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale)
+            os_log("startActivation: Error says: %{public}@", log: OSLog.default, type: .debug,
+                   vpnError.code == NEVPNError.configurationInvalid ? "Configuration invalid" : "Configuration stale")
+            os_log("startActivation: Will reload tunnel and then try to start it. ", log: OSLog.default, type: .info)
+            tunnelProvider.loadFromPreferences { [weak self] (error) in
+                if (error != nil) {
+                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error!)")
+                    self?.status = .inactive
+                    completionHandler(error)
+                    return
+                }
+                os_log("startActivation: Tunnel reloaded.", log: OSLog.default, type: .info)
+                os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
+                self?.startActivation(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
             }
         }
     }
@@ -359,6 +405,7 @@ class TunnelContainer: NSObject {
     }
 
     private func startObservingTunnelStatus() {
+        if (statusObservationToken != nil) { return }
         let connection = tunnelProvider.connection
         statusObservationToken = NotificationCenter.default.addObserver(
             forName: .NEVPNStatusDidChange,
