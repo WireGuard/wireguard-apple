@@ -6,6 +6,10 @@ import UIKit
 class CopyableLabelTableViewCell: UITableViewCell {
     var copyableGesture = true
 
+    var textToCopy: String? {
+        fatalError("textToCopy must be implemented by subclass")
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -41,7 +45,7 @@ class CopyableLabelTableViewCell: UITableViewCell {
     }
 
     override func copy(_ sender: Any?) {
-        UIPasteboard.general.string = self.detailTextLabel?.text
+        UIPasteboard.general.string = textToCopy
     }
 
     override func prepareForReuse() {
