@@ -40,21 +40,18 @@ $(BUILDDIR)/.prepared:
 
 define libwg-go-a
 $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
-	cd "$(BUILDDIR)" && \
+	cd "$(BUILDDIR)" || exit $$$$?; \
 	export CC="$(CC_$(1))" \
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
 	GOARCH="$(GOARCH_$(1))" \
 	GOPATH="$(BUILDDIR)/gopath"; \
-	if ! go get -tags ios; then \
-		ret=$$$$?; \
-		chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; \
-		rm -rf "$(BUILDDIR)/gopath/pkg/mod"; \
-		exit $$$$ret; \
-	fi; \
+	go get -tags ios || { ret=$$$$?; chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; rm -rf "$(BUILDDIR)/gopath/pkg/mod"; exit $$$$ret; }; \
 	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; \
 	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive; \
-	rm -f "$(BUILDDIR)/libwg-go-$(1).h"
+	ret=$$$$?; \
+	rm -f "$(BUILDDIR)/libwg-go-$(1).h"; \
+	exit $$$$ret
 endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
