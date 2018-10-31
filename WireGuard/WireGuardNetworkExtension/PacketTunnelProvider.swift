@@ -125,10 +125,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Begin the process of stopping the tunnel.
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         os_log("Stopping tunnel", log: OSLog.default, type: .info)
+        wgContext?.closeTunnel()
         if let handle = wgHandle {
             wgTurnOff(handle)
         }
-        wgContext?.closeTunnel()
         completionHandler()
     }
 
