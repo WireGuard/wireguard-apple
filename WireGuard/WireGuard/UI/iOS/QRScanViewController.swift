@@ -13,7 +13,7 @@ class QRScanViewController: UIViewController {
     weak var delegate: QRScanViewControllerDelegate?
     var captureSession: AVCaptureSession? = AVCaptureSession()
     let metadataOutput = AVCaptureMetadataOutput()
-    var previewLayer: AVCaptureVideoPreviewLayer!
+    var previewLayer: AVCaptureVideoPreviewLayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,10 +50,11 @@ class QRScanViewController: UIViewController {
         metadataOutput.setMetadataObjectsDelegate(self, queue: .main)
         metadataOutput.metadataObjectTypes = [.qr]
 
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame = view.layer.bounds
         previewLayer.videoGravity = .resizeAspectFill
         view.layer.insertSublayer(previewLayer, at: 0)
+        self.previewLayer = previewLayer
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -75,7 +76,7 @@ class QRScanViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        if let connection = previewLayer.connection {
+        if let connection = previewLayer?.connection {
 
             let currentDevice: UIDevice = UIDevice.current
 
@@ -100,8 +101,8 @@ class QRScanViewController: UIViewController {
                 }
             }
         }
-        
-        previewLayer.frame = self.view.bounds
+
+        previewLayer?.frame = self.view.bounds
     }
 
     func scanDidComplete(withCode code: String) {
