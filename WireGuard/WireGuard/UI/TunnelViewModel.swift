@@ -10,7 +10,6 @@ class TunnelViewModel {
         case privateKey = "Private key"
         case publicKey = "Public key"
         case generateKeyPair = "Generate keypair"
-        case copyPublicKey = "Copy public key"
         case addresses = "Addresses"
         case listenPort = "Listen port"
         case mtu = "MTU"
@@ -18,7 +17,7 @@ class TunnelViewModel {
     }
 
     static let interfaceFieldsWithControl: Set<InterfaceField> = [
-        .generateKeyPair, .copyPublicKey
+        .generateKeyPair
     ]
 
     enum PeerField: String {

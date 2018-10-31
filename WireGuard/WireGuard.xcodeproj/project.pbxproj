@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6BB8400421892C920003598F /* CopyableLabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */; };
 		6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1421832391000F85AD /* DNSResolver.swift */; };
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
 		6F5D0C22218352EF000F85AD /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -72,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyableLabelTableViewCell.swift; sourceTree = "<group>"; };
 		6F5D0C1421832391000F85AD /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardNetworkExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 		6F7774DE217181B1006A79B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */,
 				6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */,
 				6F7774E0217181B1006A79B3 /* AppDelegate.swift */,
 				6F7774DF217181B1006A79B3 /* MainViewController.swift */,
@@ -439,6 +442,7 @@
 				6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */,
 				6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */,
 				6F5D0C482183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift in Sources */,
+				6BB8400421892C920003598F /* CopyableLabelTableViewCell.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
