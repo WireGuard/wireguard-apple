@@ -141,8 +141,8 @@ class TunnelsListTableViewController: UITableViewController {
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
                 tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
-                    if (error != nil) {
-                        print("Error adding configuration: \(tunnelConfiguration.interface.name)")
+                    if let error = error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
                     }
                 }
             } else {
@@ -162,7 +162,9 @@ class TunnelsListTableViewController: UITableViewController {
             var numberOfConfigFilesWithErrors = 0
             var tunnelConfigurationsToAdd: [TunnelConfiguration] = []
             for unarchivedFile in unarchivedFiles {
+                guard let tunnelsManager = tunnelsManager else { return }
                 if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
+                    (!tunnelsManager.containsTunnel(named: fileBaseName)),
                     let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
                     let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
                     tunnelConfigurationsToAdd.append(tunnelConfiguration)
@@ -180,7 +182,7 @@ class TunnelsListTableViewController: UITableViewController {
             }
             if (numberOfConfigFilesWithErrors > 0) {
                 showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors + numberOfTunnelsRemainingAfterError) files",
-                    message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors and were not imported")
+                    message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors or duplicate names and were not imported")
             }
         }
     }
