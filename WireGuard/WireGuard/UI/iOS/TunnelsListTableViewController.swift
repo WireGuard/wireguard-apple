@@ -113,17 +113,11 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     func presentViewControllerForScanningQRCode() {
-        #if targetEnvironment(simulator)
-        print("Scanning QR code is unavailable in the simulator")
-        #else
-
         let scanQRCodeVC = QRScanViewController()
         scanQRCodeVC.delegate = self
         let scanQRCodeNC = UINavigationController(rootViewController: scanQRCodeVC)
         scanQRCodeNC.modalPresentationStyle = .fullScreen
         self.present(scanQRCodeNC, animated: true)
-
-        #endif
     }
 
     func showErrorAlert(title: String, message: String) {
