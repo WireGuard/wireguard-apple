@@ -131,7 +131,7 @@ class QRScanViewController: UIViewController {
     func scanDidEncounterError(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
-            self?.navigationController?.popViewController(animated: true)
+            self?.dismiss(animated: true, completion: nil)
         }))
         present(alertController, animated: true)
         captureSession = nil
