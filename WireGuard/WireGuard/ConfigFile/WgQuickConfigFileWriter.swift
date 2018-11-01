@@ -25,7 +25,7 @@ class WgQuickConfigFileWriter {
         output.append("\n")
 
         for peer in tc.peers {
-            output.append("[Peers]\n")
+            output.append("[Peer]\n")
             output.append("PublicKey=\(peer.publicKey.base64EncodedString())\n")
             if let preSharedKey = peer.preSharedKey {
                 output.append("PresharedKey=\(preSharedKey.base64EncodedString())\n")
