@@ -204,14 +204,15 @@ extension TunnelDetailTableViewController {
             cell.buttonText = "Delete tunnel"
             cell.onTapped = { [weak self] in
                 guard let s = self else { return }
-                s.tunnelsManager.remove(tunnel: s.tunnel) { (error) in
-                    if (error != nil) {
-                        print("Error removing tunnel: \(String(describing: error))")
-                        return
+                s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
+                    guard let tunnelsManager = s?.tunnelsManager, let tunnel = s?.tunnel else { return }
+                    tunnelsManager.remove(tunnel: tunnel) { (error) in
+                        if (error != nil) {
+                            print("Error removing tunnel: \(String(describing: error))")
+                            return
+                        }
                     }
-                    s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
-                        s?.navigationController?.navigationController?.popToRootViewController(animated: true)
-                    }
+                    s?.navigationController?.navigationController?.popToRootViewController(animated: true)
                 }
             }
             return cell
