@@ -236,6 +236,7 @@ extension TunnelEditTableViewController {
             if (field == .deletePeer) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
                 cell.buttonText = field.rawValue
+                cell.button.tintColor = UIColor.red
                 cell.onTapped = { [weak self, weak peerData] in
                     guard let peerData = peerData else { return }
                     guard let s = self else { return }
