@@ -40,7 +40,7 @@ class QRScanViewController: UIViewController {
             let captureSession = captureSession,
             captureSession.canAddInput(videoInput),
             captureSession.canAddOutput(metadataOutput) else {
-                scanDidEncounterError(title: "Scanning Not Supported", message: "This device does not have the ability to scan QR codes.")
+                scanDidEncounterError(title: "Camera Unsupported", message: "This device is not able to scan QR codes.")
                 return
         }
 
@@ -108,11 +108,11 @@ class QRScanViewController: UIViewController {
     func scanDidComplete(withCode code: String) {
         let scannedTunnelConfiguration = try? WgQuickConfigFileParser.parse(code, name: "Scanned")
         guard let tunnelConfiguration = scannedTunnelConfiguration else {
-            scanDidEncounterError(title: "Invalid Code", message: "The scanned code is not a valid WireGuard config file.")
+            scanDidEncounterError(title: "Invalid QR Code", message: "The scanned QR code is not a valid WireGuard configuration.")
             return
         }
 
-        let alert = UIAlertController(title: NSLocalizedString("Enter a title for new tunnel", comment: ""), message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: NSLocalizedString("Please name the scanned tunnel", comment: ""), message: nil, preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in

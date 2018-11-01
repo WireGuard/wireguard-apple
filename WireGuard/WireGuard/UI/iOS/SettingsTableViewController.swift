@@ -46,7 +46,7 @@ class SettingsTableViewController: UITableViewController {
 
     func exportConfigurationsAsZipFile(sourceView: UIView) {
         guard let tunnelsManager = tunnelsManager, tunnelsManager.numberOfTunnels() > 0 else {
-            showErrorAlert(title: "Nothing to export", message: "There are no tunnel configurations to export")
+            showErrorAlert(title: "Nothing to export", message: "There are no tunnels to export")
             return
         }
         var inputsToArchiver: [(fileName: String, contents: Data)] = []
@@ -76,21 +76,15 @@ class SettingsTableViewController: UITableViewController {
             os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
         }
 
-        var ok = false
         do {
             try ZipArchive.archive(inputs: inputsToArchiver, to: destinationURL)
-            ok = true
-        } catch {
-            os_log("Failed to create archive: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString)
-        }
-
-        if (ok) {
             let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
             // popoverPresentationController shall be non-nil on the iPad
             activityVC.popoverPresentationController?.sourceView = sourceView
             present(activityVC, animated: true)
-        } else {
-            showErrorAlert(title: "Could not export", message: "There was an error creating the tunnel configuration archive")
+            
+        } catch (let error) {
+            showErrorAlert(title: "Unable to export", message: "There was an error exporting the tunnel configuration archive: \(String(describing: error))")
         }
     }
 
