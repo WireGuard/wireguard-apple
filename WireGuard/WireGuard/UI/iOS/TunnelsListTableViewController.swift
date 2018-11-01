@@ -153,10 +153,6 @@ class TunnelsListTableViewController: UITableViewController {
             } catch (let error) {
                 print("Error opening zip archive: \(error)")
             }
-            guard (unarchivedFiles.count > 0) else {
-                showErrorAlert(title: "No configurations found", message: "Zip archive doesn't contain any .conf files")
-                return
-            }
             var numberOfConfigFilesWithErrors = 0
             var tunnelConfigurationsToAdd: [TunnelConfiguration] = []
             for unarchivedFile in unarchivedFiles {
@@ -169,6 +165,10 @@ class TunnelsListTableViewController: UITableViewController {
                 } else {
                     numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
                 }
+            }
+            guard (tunnelConfigurationsToAdd.count > 0) else {
+                showErrorAlert(title: "No configurations found", message: "Zip archive doesn't contain any valid .conf files")
+                return
             }
             var numberOfTunnelsRemainingAfterError = 0
             tunnelsManager?.addMultiple(tunnelConfigurations: tunnelConfigurationsToAdd) { (numberOfTunnelsRemaining, error) in
