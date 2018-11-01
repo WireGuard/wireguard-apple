@@ -1,0 +1,60 @@
+diff -r -u go/src/runtime/sys_darwin_386.s go-modified/src/runtime/sys_darwin_386.s
+--- go/src/runtime/sys_darwin_386.s	2018-10-01 23:02:54.000000000 +0200
++++ go-modified/src/runtime/sys_darwin_386.s	2018-11-01 23:18:04.383055355 +0100
+@@ -184,7 +184,7 @@
+ 	PUSHL	BP
+ 	MOVL	SP, BP
+ 	SUBL	$8+(machTimebaseInfo__size+15)/16*16, SP
+-	CALL	libc_mach_absolute_time(SB)
++	CALL	libc_mach_continuous_time(SB)
+ 	MOVL	16+(machTimebaseInfo__size+15)/16*16(SP), CX
+ 	MOVL	AX, 0(CX)
+ 	MOVL	DX, 4(CX)
+diff -r -u go/src/runtime/sys_darwin_amd64.s go-modified/src/runtime/sys_darwin_amd64.s
+--- go/src/runtime/sys_darwin_amd64.s	2018-10-01 23:02:54.000000000 +0200
++++ go-modified/src/runtime/sys_darwin_amd64.s	2018-11-01 23:18:04.382055360 +0100
+@@ -85,7 +85,7 @@
+ 	PUSHQ	BP
+ 	MOVQ	SP, BP
+ 	MOVQ	DI, BX
+-	CALL	libc_mach_absolute_time(SB)
++	CALL	libc_mach_continuous_time(SB)
+ 	MOVQ	AX, 0(BX)
+ 	MOVL	timebase<>+machTimebaseInfo_numer(SB), SI
+ 	MOVL	timebase<>+machTimebaseInfo_denom(SB), DI // atomic read
+diff -r -u go/src/runtime/sys_darwin_arm64.s go-modified/src/runtime/sys_darwin_arm64.s
+--- go/src/runtime/sys_darwin_arm64.s	2018-10-01 23:02:54.000000000 +0200
++++ go-modified/src/runtime/sys_darwin_arm64.s	2018-11-01 23:18:04.380055369 +0100
+@@ -110,7 +110,7 @@
+ 
+ TEXT runtime·nanotime_trampoline(SB),NOSPLIT,$40
+ 	MOVD	R0, R19
+-	BL	libc_mach_absolute_time(SB)
++	BL	libc_mach_continuous_time(SB)
+ 	MOVD	R0, 0(R19)
+ 	MOVW	timebase<>+machTimebaseInfo_numer(SB), R20
+ 	MOVD	$timebase<>+machTimebaseInfo_denom(SB), R21
+diff -r -u go/src/runtime/sys_darwin_arm.s go-modified/src/runtime/sys_darwin_arm.s
+--- go/src/runtime/sys_darwin_arm.s	2018-10-01 23:02:54.000000000 +0200
++++ go-modified/src/runtime/sys_darwin_arm.s	2018-11-01 23:18:04.381055364 +0100
+@@ -118,7 +118,7 @@
+ 
+ TEXT runtime·nanotime_trampoline(SB),NOSPLIT,$0
+ 	MOVW	R0, R8
+-	BL	libc_mach_absolute_time(SB)
++	BL	libc_mach_continuous_time(SB)
+ 	MOVW	R0, 0(R8)
+ 	MOVW	R1, 4(R8)
+ 	MOVW	timebase<>+machTimebaseInfo_numer(SB), R6
+diff -r -u go/src/runtime/sys_darwin.go go-modified/src/runtime/sys_darwin.go
+--- go/src/runtime/sys_darwin.go	2018-10-01 23:02:54.000000000 +0200
++++ go-modified/src/runtime/sys_darwin.go	2018-11-01 23:18:04.384055350 +0100
+@@ -348,7 +348,7 @@
+ //go:cgo_import_dynamic libc_usleep usleep "/usr/lib/libSystem.B.dylib"
+ 
+ //go:cgo_import_dynamic libc_mach_timebase_info mach_timebase_info "/usr/lib/libSystem.B.dylib"
+-//go:cgo_import_dynamic libc_mach_absolute_time mach_absolute_time "/usr/lib/libSystem.B.dylib"
++//go:cgo_import_dynamic libc_mach_continuous_time mach_continuous_time "/usr/lib/libSystem.B.dylib"
+ //go:cgo_import_dynamic libc_gettimeofday gettimeofday "/usr/lib/libSystem.B.dylib"
+ //go:cgo_import_dynamic libc_sigaction sigaction "/usr/lib/libSystem.B.dylib"
+ //go:cgo_import_dynamic libc_pthread_sigmask pthread_sigmask "/usr/lib/libSystem.B.dylib"

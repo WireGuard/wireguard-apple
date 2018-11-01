@@ -26,6 +26,26 @@ export CGO_ENABLED := 1
 build: $(DESTDIR)/libwg-go.a
 version-header: $(DESTDIR)/wireguard-go-version.h
 
+GOBUILDARCH := $(GOARCH_$(shell uname -m))
+GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
+GOBUILDVERSION := 1.11.1
+GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
+GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
+export GOROOT := $(BUILDDIR)/goroot
+export GOPATH := $(BUILDDIR)/gopath
+export PATH := $(GOROOT)/bin:$(PATH)
+GOBUILDVERSION_CURRENT := $(shell $(GOROOT)/bin/go version 2>/dev/null)
+ifneq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
+$(shell rm -f $(GOROOT)/bin/go)
+endif
+$(GOROOT)/bin/go:
+	rm -rf "$(GOROOT)"
+	mkdir -p "$(GOROOT)"
+	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
+	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
+
+$(shell test "$$(cat "$(BUILDDIR)/.gobuildversion" 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.a")
+
 define copy-src-to-build
 $(subst $(1),$(BUILDDIR)/,$(2)): $(2)
 	@mkdir -vp "$$(dir $$@)"
@@ -36,20 +56,19 @@ endef
 $(foreach FILE,$(UPSTREAM_FILES),$(eval $(call copy-src-to-build,../wireguard-go/,$(FILE))))
 $(foreach FILE,$(DOWNSTREAM_FILES),$(eval $(call copy-src-to-build,src/,$(FILE))))
 
-$(BUILDDIR)/.prepared:
-	@touch "$@"
+$(BUILDDIR)/.prepared: $(GOROOT)/bin/go
+	cd "$(BUILDDIR)" || exit $$?; $(foreach ARCH,$(ARCHS),CC="$(CC_$(ARCH))" CGO_CFLAGS="$(CGO_FLAGS_$(ARCH))" CGO_LDFLAGS="$(CGO_FLAGS_$(ARCH))" GOARCH="$(GOARCH_$(ARCH))" go get -tags ios || { ret=$$?; chmod -fR +w "$(GOPATH)/pkg/mod"; rm -rf "$(GOPATH)/pkg/mod"; exit $$ret; };)
+	chmod -fR +w "$(GOPATH)/pkg/mod"
+	touch "$@"
 
 define libwg-go-a
 $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
 	cd "$(BUILDDIR)" || exit $$$$?; \
-	export CC="$(CC_$(1))" \
+	CC="$(CC_$(1))" \
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
 	GOARCH="$(GOARCH_$(1))" \
-	GOPATH="$(BUILDDIR)/gopath"; \
-	go get -tags ios || { ret=$$$$?; chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; rm -rf "$(BUILDDIR)/gopath/pkg/mod"; exit $$$$ret; }; \
-	chmod -fR +w "$(BUILDDIR)/gopath/pkg/mod"; \
-	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive; \
+	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive && go version > "$(BUILDDIR)/.gobuildversion"; \
 	ret=$$$$?; \
 	rm -f "$(BUILDDIR)/libwg-go-$(1).h"; \
 	exit $$$$ret
