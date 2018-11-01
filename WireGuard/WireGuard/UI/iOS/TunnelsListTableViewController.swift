@@ -119,7 +119,7 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     func showErrorAlert(title: String, message: String) {
-        let okAction = UIAlertAction(title: "Ok", style: .default)
+        let okAction = UIAlertAction(title: "OK", style: .default)
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(okAction)
 
