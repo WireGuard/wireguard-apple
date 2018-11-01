@@ -213,7 +213,7 @@ class TunnelsManager {
             }
             if let s = self {
                 for i in ((tunnelIndex + 1) ..< s.tunnels.count) {
-                    s.tunnels[i].index = s.tunnels[i].index + 1
+                    s.tunnels[i].index = s.tunnels[i].index - 1
                 }
                 s.tunnels.remove(at: tunnelIndex)
                 s.tunnelNames.remove(tunnelName)
