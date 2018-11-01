@@ -21,6 +21,13 @@ enum TunnelActivationError: Error {
     case attemptingDeactivationWhenTunnelIsInactive
 }
 
+enum TunnelManagementError: Error {
+    case tunnelAlreadyExistsWithThatName
+    case vpnSystemErrorOnAddTunnel
+    case vpnSystemErrorOnModifyTunnel
+    case vpnSystemErrorOnRemoveTunnel
+}
+
 class TunnelsManager {
 
     var tunnels: [TunnelContainer]
@@ -76,10 +83,14 @@ class TunnelsManager {
         return tunnels.count
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, Error?) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         assert(!tunnelName.isEmpty)
-        assert(!containsTunnel(named: tunnelName))
+
+        guard (!containsTunnel(named: tunnelName)) else {
+            completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
+            return
+        }
 
         isAddingTunnel = true
         let tunnelProviderManager = NETunnelProviderManager()
@@ -90,7 +101,8 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isAddingTunnel = false }
             guard (error == nil) else {
-                completionHandler(nil, error)
+                os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                completionHandler(nil, TunnelManagementError.vpnSystemErrorOnAddTunnel)
                 return
             }
             if let s = self {
@@ -107,11 +119,11 @@ class TunnelsManager {
         }
     }
 
-    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (Int, Error?) -> Void) {
+    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (Int, TunnelManagementError?) -> Void) {
         addMultiple(tunnelConfigurations: tunnelConfigurations[0...], completionHandler: completionHandler)
     }
 
-    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, completionHandler: @escaping (Int, Error?) -> Void) {
+    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, completionHandler: @escaping (Int, TunnelManagementError?) -> Void) {
         assert(!tunnelConfigurations.isEmpty)
         let head = tunnelConfigurations.first!
         let tail = tunnelConfigurations[1 ..< tunnelConfigurations.count]
@@ -128,7 +140,7 @@ class TunnelsManager {
         }
     }
 
-    func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (Error?) -> Void) {
+    func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         assert(!tunnelName.isEmpty)
 
@@ -138,7 +150,10 @@ class TunnelsManager {
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
         var oldName: String? = nil
         if (isNameChanged) {
-            assert(!containsTunnel(named: tunnelName))
+            guard (!containsTunnel(named: tunnelName)) else {
+                completionHandler(TunnelManagementError.tunnelAlreadyExistsWithThatName)
+                return
+            }
             oldName = tunnel.name
             tunnel.name = tunnelName
         }
@@ -148,8 +163,9 @@ class TunnelsManager {
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isModifyingTunnel = false }
-            guard (error != nil) else {
-                completionHandler(error)
+            guard (error == nil) else {
+                os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                completionHandler(TunnelManagementError.vpnSystemErrorOnModifyTunnel)
                 return
             }
             if let s = self {
@@ -175,7 +191,7 @@ class TunnelsManager {
         }
     }
 
-    func remove(tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
+    func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelManagementError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
         let tunnelIndex = tunnel.index
         let tunnelName = tunnel.name
@@ -185,7 +201,8 @@ class TunnelsManager {
         tunnelProviderManager.removeFromPreferences { [weak self] (error) in
             defer { self?.isDeletingTunnel = false }
             guard (error == nil) else {
-                completionHandler(error)
+                os_log("Remove: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                completionHandler(TunnelManagementError.vpnSystemErrorOnRemoveTunnel)
                 return
             }
             if let s = self {
