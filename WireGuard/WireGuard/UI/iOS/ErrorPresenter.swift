@@ -10,21 +10,21 @@ class ErrorPresenter {
 
         // TunnelManagementError
         case TunnelManagementError.tunnelAlreadyExistsWithThatName:
-            return ("Name already in use", "A tunnel with that name already exists. Please pick a different name.")
+            return ("Name already exists", "A tunnel with that name already exists. Please choose a different name.")
         case TunnelManagementError.vpnSystemErrorOnAddTunnel:
-            return ("Could not create tunnel", "Internal error")
+            return ("Unable to create tunnel", "Internal error")
         case TunnelManagementError.vpnSystemErrorOnModifyTunnel:
-            return ("Could not modify tunnel", "Internal error")
+            return ("Unable to modify tunnel", "Internal error")
         case TunnelManagementError.vpnSystemErrorOnRemoveTunnel:
-            return ("Could not remove tunnel", "Internal error")
+            return ("Unable to remove tunnel", "Internal error")
 
         // TunnelActivationError
         case TunnelActivationError.noEndpoint:
             return ("Endpoint missing", "There must be at least one peer with an endpoint")
         case TunnelActivationError.dnsResolutionFailed:
-            return ("DNS Failure", "One or more endpoint domains could not be resolved")
+            return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
         case TunnelActivationError.tunnelActivationFailed:
-            return ("Activation failed", "The tunnel could not be activated because of an internal error")
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
         case TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(let otherTunnelStatus):
             let statusString: String = {
                 switch (otherTunnelStatus) {
@@ -41,7 +41,7 @@ class ErrorPresenter {
                     fatalError()
                 }
             }()
-            return ("Activation failed", "Another tunnel is currently \(statusString). Only one tunnel can be in operation at a time.")
+            return ("Activation failure", "Another tunnel is currently \(statusString). Only one tunnel may be in operation at a time.")
 
         default:
             os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")

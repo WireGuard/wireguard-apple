@@ -39,7 +39,7 @@ struct PeerConfiguration: Codable {
     var preSharedKey: Data? {
         didSet(value) {
             if let value = value {
-                if (value.count != 32) { fatalError("Invalid pre-shared key") }
+                if (value.count != 32) { fatalError("Invalid preshared key") }
             }
         }
     }

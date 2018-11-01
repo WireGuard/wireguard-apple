@@ -42,15 +42,13 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     @objc func addButtonTapped(sender: UIBarButtonItem!) {
-        let alert = UIAlertController(title: "",
-                                      message: "Add a tunnel",
-                                      preferredStyle: .actionSheet)
-        let importFileAction = UIAlertAction(title: "Import file or archive", style: .default) { [weak self] (action) in
+        let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
+        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (action) in
             self?.presentViewControllerForFileImport()
         }
         alert.addAction(importFileAction)
 
-        let scanQRCodeAction = UIAlertAction(title: "Scan QR code", style: .default) { [weak self] (action) in
+        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] (action) in
             self?.presentViewControllerForScanningQRCode()
         }
         alert.addAction(scanQRCodeAction)
@@ -83,8 +81,8 @@ class TunnelsListTableViewController: UITableViewController {
         do {
             let fileContents = try String(contentsOf: configFileURL)
             try tunnelConfiguration = WgQuickConfigFileParser.parse(fileContents, name: name)
-        } catch {
-            showErrorAlert(title: "Could not import config", message: "There was an error importing the config file")
+        } catch (let error) {
+            showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration: \(String(describing: error))")
             return
         }
         tunnelConfiguration?.interface.name = name
@@ -140,18 +138,18 @@ class TunnelsListTableViewController: UITableViewController {
                     }
                 }
             } else {
-                showErrorAlert(title: "Could not import", message: "The config file contained errors")
+                showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration.")
             }
         } else if (url.pathExtension == "zip") {
             var unarchivedFiles: [(fileName: String, contents: Data)] = []
             do {
                 unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
             } catch ZipArchiveError.cantOpenInputZipFile {
-                showErrorAlert(title: "Cannot read zip archive", message: "The zip file couldn't be read")
+                showErrorAlert(title: "Unable to read zip archive", message: "The zip archive could not be read")
             } catch ZipArchiveError.badArchive {
-                showErrorAlert(title: "Cannot read zip archive", message: "Bad archive")
+                showErrorAlert(title: "Unable to read zip archive", message: "Bad or corrupt zip archive")
             } catch (let error) {
-                print("Error opening zip archive: \(error)")
+                showErrorAlert(title: "Unable to read zip archive", message: "Unexpected error: \(String(describing: error))")
             }
             var numberOfConfigFilesWithErrors = 0
             var tunnelConfigurationsToAdd: [TunnelConfiguration] = []
@@ -167,7 +165,7 @@ class TunnelsListTableViewController: UITableViewController {
                 }
             }
             guard (tunnelConfigurationsToAdd.count > 0) else {
-                showErrorAlert(title: "No configurations found", message: "Zip archive doesn't contain any valid .conf files")
+                showErrorAlert(title: "No configurations found", message: "Zip archive does not contain any valid .conf files")
                 return
             }
             var numberOfTunnelsRemainingAfterError = 0
@@ -179,8 +177,8 @@ class TunnelsListTableViewController: UITableViewController {
                 }
             }
             if (numberOfConfigFilesWithErrors > 0) {
-                showErrorAlert(title: "Could not import \(numberOfConfigFilesWithErrors + numberOfTunnelsRemainingAfterError) files",
-                    message: "\(numberOfConfigFilesWithErrors) of \(unarchivedFiles.count) files contained errors or duplicate names and were not imported")
+                showErrorAlert(title: "Created \(unarchivedFiles.count) tunnels",
+                    message: "Created \(numberOfTunnelsRemainingAfterError) of \(unarchivedFiles.count) tunnels from files in zip archive")
             }
         }
     }
@@ -254,8 +252,8 @@ extension TunnelsListTableViewController {
                         }
                     }
                 } else {
-                    tunnelsManager.startDeactivation(of: tunnel) { error in
-                        print("Error while deactivating: \(String(describing: error))")
+                    tunnelsManager.startDeactivation(of: tunnel) { [weak s] error in
+                        s?.showErrorAlert(title: "Deactivation error", message: "Error while bringing down tunnel: \(String(describing: error))")
                     }
                 }
             }

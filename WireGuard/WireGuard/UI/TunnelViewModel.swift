@@ -22,9 +22,9 @@ class TunnelViewModel {
 
     enum PeerField: String {
         case publicKey = "Public key"
-        case preSharedKey = "Pre-shared key"
+        case preSharedKey = "Preshared key"
         case endpoint = "Endpoint"
-        case persistentKeepAlive = "Persistent Keepalive"
+        case persistentKeepAlive = "Persistent keepalive"
         case allowedIPs = "Allowed IPs"
         case excludePrivateIPs = "Exclude private IPs"
         case deletePeer = "Delete peer"
@@ -107,7 +107,7 @@ class TunnelViewModel {
             }
             guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else {
                 fieldsWithError.insert(.privateKey)
-                return .error("Interface's private key should be a 32-byte key in base64 encoding")
+                return .error("Interface's private key must be a 32-byte key in base64 encoding")
             }
             var config = InterfaceConfiguration(name: name, privateKey: privateKey)
             var errorMessages: [String] = []
@@ -119,7 +119,7 @@ class TunnelViewModel {
                         addresses.append(address)
                     } else {
                         fieldsWithError.insert(.addresses)
-                        errorMessages.append("Interface addresses should be a list of comma-separated IP addresses")
+                        errorMessages.append("Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation")
                     }
                 }
                 config.addresses = addresses
@@ -129,15 +129,15 @@ class TunnelViewModel {
                     config.listenPort = listenPort
                 } else {
                     fieldsWithError.insert(.listenPort)
-                    errorMessages.append("Interface's listen port should be a 16-bit integer (0 to 65535)")
+                    errorMessages.append("Interface's listen port must be between 0 and 65535, or unspecified")
                 }
             }
             if let mtuString = scratchpad[.mtu] {
-                if let mtu = UInt16(mtuString) {
+                if let mtu = UInt16(mtuString), mtu >= 576 {
                     config.mtu = mtu
                 } else {
                     fieldsWithError.insert(.mtu)
-                    errorMessages.append("Interface's MTU should be a 16-bit integer (0 to 65535)")
+                    errorMessages.append("Interface's MTU must be between 576 and 65535, or unspecified")
                 }
             }
             if let dnsString = scratchpad[.dns] {
@@ -148,7 +148,7 @@ class TunnelViewModel {
                         dnsServers.append(dnsServer)
                     } else {
                         fieldsWithError.insert(.dns)
-                        errorMessages.append("Interface's DNS should be a list of comma-separated IP addresses")
+                        errorMessages.append("Interface's DNS servers must be a list of comma-separated IP addresses")
                     }
                 }
                 config.dns = dnsServers
@@ -243,7 +243,7 @@ class TunnelViewModel {
             }
             guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else {
                 fieldsWithError.insert(.publicKey)
-                return .error("Peer's public key should be a 32-byte key in base64 encoding")
+                return .error("Peer's public key must be a 32-byte key in base64 encoding")
             }
             var config = PeerConfiguration(publicKey: publicKey)
             var errorMessages: [String] = []
@@ -252,7 +252,7 @@ class TunnelViewModel {
                     config.preSharedKey = preSharedKey
                 } else {
                     fieldsWithError.insert(.preSharedKey)
-                    errorMessages.append("Peer's pre-shared key should be a 32-byte key in base64 encoding")
+                    errorMessages.append("Peer's preshared key must be a 32-byte key in base64 encoding")
                 }
             }
             if let allowedIPsString = scratchpad[.allowedIPs] {
@@ -263,7 +263,7 @@ class TunnelViewModel {
                         allowedIPs.append(allowedIP)
                     } else {
                         fieldsWithError.insert(.allowedIPs)
-                        errorMessages.append("Peer's allowedIPs should be a list of comma-separated IP addresses in CIDR notation")
+                        errorMessages.append("Peer's allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation")
                     }
                 }
                 config.allowedIPs = allowedIPs
@@ -273,7 +273,7 @@ class TunnelViewModel {
                     config.endpoint = endpoint
                 } else {
                     fieldsWithError.insert(.endpoint)
-                    errorMessages.append("Peer's endpoint should be of the form 'host:port' or '[host]:port'")
+                    errorMessages.append("Peer's endpoint must be of the form 'host:port' or '[host]:port'")
                 }
             }
             if let persistentKeepAliveString = scratchpad[.persistentKeepAlive] {
@@ -281,7 +281,7 @@ class TunnelViewModel {
                     config.persistentKeepAlive = persistentKeepAlive
                 } else {
                     fieldsWithError.insert(.persistentKeepAlive)
-                    errorMessages.append("Peer's persistent keepalive should be a 16-bit integer (0 to 65535)")
+                    errorMessages.append("Peer's persistent keepalive must be between 0 to 65535, or unspecified")
                 }
             }
 

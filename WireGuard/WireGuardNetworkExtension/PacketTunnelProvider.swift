@@ -29,7 +29,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         guard let options = options else {
             os_log("Starting tunnel failed: No options passed. Possible connection request from preferences.", log: OSLog.default, type: .error)
             // displayMessage is deprecated API
-            displayMessage("Please use the WireGuard app to start up WireGuard VPN configurations.") { (_) in
+            displayMessage("Please use the WireGuard app to start WireGuard tunnels.") { (_) in
                 startTunnelCompletionHandler(PacketTunnelProviderError.invalidOptions)
             }
             return
