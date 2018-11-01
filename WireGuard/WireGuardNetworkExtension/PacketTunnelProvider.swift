@@ -163,9 +163,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                         guard let buf = buf else { return 0 }
                         let wgContext = wgCtxPtr.bindMemory(to: WireGuardContext.self, capacity: 1).pointee
                         var isTunnelClosed = false
-                        guard let packet = wgContext.readPacket(isTunnelClosed: &isTunnelClosed) else { return 0 }
+                        let packet = wgContext.readPacket(isTunnelClosed: &isTunnelClosed)
                         if isTunnelClosed { return -1 }
-                        let packetData = packet.data
+                        guard let packetData = packet?.data else { return 0 }
                         if packetData.count <= len {
                             packetData.copyBytes(to: buf, count: packetData.count)
                             return packetData.count
