@@ -273,6 +273,23 @@ extension TunnelsListTableViewController {
         let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
         showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
     }
+
+    override func tableView(_ tableView: UITableView,
+                            trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (_, _, completionHandler) in
+            guard let tunnelsManager = self?.tunnelsManager else { return }
+            let tunnel = tunnelsManager.tunnel(at: indexPath.row)
+            tunnelsManager.remove(tunnel: tunnel, completionHandler: { (error) in
+                if (error != nil) {
+                    ErrorPresenter.showErrorAlert(error: error!, from: self)
+                    completionHandler(false)
+                } else {
+                    completionHandler(true)
+                }
+            })
+        })
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 }
 
 // MARK: TunnelsManagerDelegate
