@@ -15,8 +15,8 @@ protocol TunnelsManagerDelegate: class {
 enum TunnelActivationError: Error {
     case noEndpoint
     case dnsResolutionFailed
-    case tunnelOperationFailed
-    case attemptingActivationWhenAnotherTunnelIsActive
+    case tunnelActivationFailed
+    case attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: TunnelStatus)
     case attemptingActivationWhenTunnelIsNotInactive
     case attemptingDeactivationWhenTunnelIsInactive
 }
@@ -237,7 +237,7 @@ class TunnelsManager {
             return
         }
         guard (currentTunnel == nil) else {
-            completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsActive)
+            completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: currentTunnel!.status))
             return
         }
         setCurrentTunnel(tunnel: tunnel)
@@ -368,7 +368,7 @@ class TunnelContainer: NSObject {
                                      completionHandler: @escaping (Error?) -> Void) {
         if (recursionCount >= 8) {
             os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@.", log: OSLog.default, type: .error, "\(lastError!)")
-            completionHandler(lastError)
+            completionHandler(TunnelActivationError.tunnelActivationFailed)
             return
         }
 
