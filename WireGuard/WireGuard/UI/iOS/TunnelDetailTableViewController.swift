@@ -198,6 +198,7 @@ extension TunnelDetailTableViewController {
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
+            cell.button.tintColor = UIColor.red
             cell.onTapped = { [weak self] in
                 guard let s = self else { return }
                 s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
