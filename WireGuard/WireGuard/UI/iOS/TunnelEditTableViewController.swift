@@ -72,6 +72,7 @@ class TunnelEditTableViewController: UITableViewController {
         case .error(let errorMessage):
             let erroringConfiguration = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ? "Interface" : "Peer"
             ErrorPresenter.showErrorAlert(title: "Invalid \(erroringConfiguration)", message: errorMessage, from: self)
+            self.tableView.reloadData() // Highlight erroring fields
         case .saved(let tunnelConfiguration):
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
@@ -201,6 +202,8 @@ extension TunnelEditTableViewController {
                 } else if (field == .addresses || field == .dns) {
                     cell.keyboardType = .numbersAndPunctuation
                 }
+                // Show erroring fields
+                cell.isValueValid = (!interfaceData.fieldsWithError.contains(field))
                 // Bind values to view model
                 cell.value = interfaceData[field]
                 if (field == .dns) { // While editing DNS, you might directly set exclude private IPs
@@ -282,6 +285,8 @@ extension TunnelEditTableViewController {
                 } else if (field == .allowedIPs) {
                     cell.keyboardType = .numbersAndPunctuation
                 }
+                // Show erroring fields
+                cell.isValueValid = (!peerData.fieldsWithError.contains(field))
                 // Bind values to view model
                 cell.value = peerData[field]
                 if (field != .allowedIPs) {
@@ -383,8 +388,8 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         }
     }
     var isValueValid: Bool = true {
-        didSet(value) {
-            if (value) {
+        didSet {
+            if (isValueValid) {
                 keyLabel.textColor = isValueEditable ? UIColor.black : UIColor.gray
             } else {
                 keyLabel.textColor = UIColor.red
