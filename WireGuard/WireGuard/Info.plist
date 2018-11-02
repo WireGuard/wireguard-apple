@@ -89,9 +89,14 @@
 				<string>public.text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>WireGuard wg-quick configuration file (.conf)</string>
+			<string>WireGuard wg-quick configuration file</string>
 			<key>UTTypeIconFiles</key>
-			<array/>
+			<array>
+				<string>wireguard_doc_logo_22x29.png</string>
+				<string>wireguard_doc_logo_44x58.png</string>
+				<string>wireguard_doc_logo_64x64.png</string>
+				<string>wireguard_doc_logo_320x320.png</string>
+			</array>
 			<key>UTTypeIdentifier</key>
 			<string>com.wireguard.config.quick</string>
 			<key>UTTypeTagSpecification</key>
