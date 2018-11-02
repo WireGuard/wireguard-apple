@@ -198,7 +198,7 @@ extension TunnelDetailTableViewController {
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
-            cell.button.tintColor = UIColor.red
+            cell.hasDestructiveAction = true
             cell.onTapped = { [weak self] in
                 guard let s = self else { return }
                 s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
@@ -336,12 +336,18 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
     }
+    var hasDestructiveAction: Bool {
+        get { return button.tintColor == UIColor.red }
+        set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
+    }
     var onTapped: (() -> Void)? = nil
 
     let button: UIButton
+    var buttonStandardTintColor: UIColor
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
+        buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -364,5 +370,6 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
         super.prepareForReuse()
         buttonText = ""
         onTapped = nil
+        hasDestructiveAction = false
     }
 }

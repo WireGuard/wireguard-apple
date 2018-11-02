@@ -240,7 +240,7 @@ extension TunnelEditTableViewController {
             if (field == .deletePeer) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
                 cell.buttonText = field.rawValue
-                cell.button.tintColor = UIColor.red
+                cell.hasDestructiveAction = true
                 cell.onTapped = { [weak self, weak peerData] in
                     guard let peerData = peerData else { return }
                     guard let s = self else { return }
@@ -512,12 +512,18 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
     }
+    var hasDestructiveAction: Bool {
+        get { return button.tintColor == UIColor.red }
+        set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
+    }
     var onTapped: (() -> Void)? = nil
 
     let button: UIButton
+    var buttonStandardTintColor: UIColor
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
+        buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -540,6 +546,7 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
         super.prepareForReuse()
         buttonText = ""
         onTapped = nil
+        hasDestructiveAction = false
     }
 }
 
