@@ -171,11 +171,6 @@ extension TunnelDetailTableViewController {
             // Set key and value
             cell.key = field.rawValue
             cell.value = interfaceData[field]
-            if (field != .publicKey) {
-                cell.detailTextLabel?.allowsDefaultTighteningForTruncation = true
-                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
-                cell.detailTextLabel?.minimumScaleFactor = 0.85
-            }
             return cell
         } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
@@ -186,12 +181,6 @@ extension TunnelDetailTableViewController {
             // Set key and value
             cell.key = field.rawValue
             cell.value = peerData[field]
-            if (field != .publicKey && field != .preSharedKey) {
-                cell.detailTextLabel?.allowsDefaultTighteningForTruncation = true
-                cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
-                cell.detailTextLabel?.minimumScaleFactor = 0.85
-            }
-
             return cell
         } else {
             assert(section == (2 + numberOfPeerSections))
@@ -303,20 +292,73 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
 class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
     static let id: String = "TunnelDetailTableViewKeyValueCell"
     var key: String {
-        get { return textLabel?.text ?? "" }
-        set(value) { textLabel?.text = value }
+        get { return keyLabel.text ?? "" }
+        set(value) { keyLabel.text = value }
     }
     var value: String {
-        get { return detailTextLabel?.text ?? "" }
-        set(value) { detailTextLabel?.text = value }
+        get { return valueLabel.text ?? "" }
+        set(value) { valueLabel.text = value }
     }
 
     override var textToCopy: String? {
-        return self.detailTextLabel?.text
+        return self.valueLabel.text
     }
 
+    let keyLabel: UILabel
+    let valueLabel: UILabel
+    let valueScroller: UIScrollView
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .value1, reuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
+        keyLabel = UILabel()
+        valueLabel = UILabel()
+        valueScroller = UIScrollView()
+
+        keyLabel.textColor = UIColor.black
+        valueLabel.textColor = UIColor.gray
+        valueScroller.isDirectionalLockEnabled = true
+        valueScroller.showsHorizontalScrollIndicator = false
+        valueScroller.showsVerticalScrollIndicator = false
+
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        valueScroller.addSubview(valueLabel)
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        valueLabel.textAlignment = .right
+        NSLayoutConstraint.activate([
+            valueLabel.leftAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.leftAnchor),
+            valueLabel.topAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.topAnchor),
+            valueLabel.bottomAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.bottomAnchor),
+            valueLabel.rightAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.rightAnchor),
+            valueLabel.heightAnchor.constraint(equalTo: valueScroller.heightAnchor),
+            ])
+
+        // Value label should expand to fit the scrollView, so that the right-alignment works
+        let expandToFitValueLabelConstraint = NSLayoutConstraint(item: valueLabel, attribute: .width, relatedBy: .equal,
+                                                                 toItem: valueScroller, attribute: .width, multiplier: 1, constant: 0)
+        expandToFitValueLabelConstraint.priority = .defaultLow + 1
+        expandToFitValueLabelConstraint.isActive = true
+
+        contentView.addSubview(keyLabel)
+        keyLabel.translatesAutoresizingMaskIntoConstraints = false
+        keyLabel.textAlignment = .left
+        NSLayoutConstraint.activate([
+            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+            keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            ])
+
+        contentView.addSubview(valueScroller)
+        valueScroller.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            valueScroller.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
+            valueScroller.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            valueScroller.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 8)
+            ])
+
+        // Key label should never appear truncated
+        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
+        // Key label should hug it's content; value label should not.
+        keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        valueScroller.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
 
     required init?(coder aDecoder: NSCoder) {
