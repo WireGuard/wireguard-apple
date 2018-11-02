@@ -190,10 +190,21 @@ extension TunnelEditTableViewController {
                 // Set key
                 cell.key = field.rawValue
                 // Set placeholder text
-                if (field == .name || field == .privateKey) {
+                switch (field) {
+                case .name:
                     cell.placeholderText = "Required"
-                } else if (field == .mtu || field == .listenPort) {
+                case .privateKey:
+                    cell.placeholderText = "Required"
+                case .addresses:
+                    cell.placeholderText = "Optional"
+                case .listenPort:
                     cell.placeholderText = "Automatic"
+                case .mtu:
+                    cell.placeholderText = "Automatic"
+                case .dns:
+                    cell.placeholderText = "Optional"
+                case .publicKey: break
+                case .generateKeyPair: break
                 }
                 // Set editable
                 if (field == .publicKey) {
@@ -282,12 +293,19 @@ extension TunnelEditTableViewController {
                 // Set key
                 cell.key = field.rawValue
                 // Set placeholder text
-                if (field == .publicKey) {
+                switch (field) {
+                case .publicKey:
                     cell.placeholderText = "Required"
-                } else if (field == .preSharedKey) {
+                case .preSharedKey:
                     cell.placeholderText = "Optional"
-                } else if (field == .persistentKeepAlive) {
+                case .endpoint:
+                    cell.placeholderText = "Optional"
+                case .allowedIPs:
+                    cell.placeholderText = "Optional"
+                case .persistentKeepAlive:
                     cell.placeholderText = "Off"
+                case .excludePrivateIPs: break
+                case .deletePeer: break
                 }
                 // Set keyboardType
                 if (field == .persistentKeepAlive) {
