@@ -111,18 +111,20 @@ extension DNSResolver {
                 while (resultPointer != nil) {
                     let result = resultPointer!.pointee
                     resultPointer = result.ai_next
-                    if (result.ai_family == AF_INET && result.ai_addrlen == INET_ADDRSTRLEN) {
-                        if (inet_ntop(result.ai_family, result.ai_addr, ipv4Buffer, result.ai_addrlen) != nil) {
+                    if (result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size) {
+                        var sa4 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in.self).pointee
+                        if (inet_ntop(result.ai_family, &sa4.sin_addr, ipv4Buffer, socklen_t(INET_ADDRSTRLEN)) != nil) {
                             ipv4AddressString = String(cString: ipv4Buffer)
                             // If we found an IPv4 address, we can stop
                             break
                         }
-                    } else if (result.ai_family == AF_INET6 && result.ai_addrlen == INET6_ADDRSTRLEN) {
+                    } else if (result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size) {
                         if (ipv6AddressString != nil) {
                             // If we already have an IPv6 address, we can skip this one
                             continue
                         }
-                        if (inet_ntop(result.ai_family, result.ai_addr, ipv6Buffer, result.ai_addrlen) != nil) {
+                        var sa6 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in6.self).pointee
+                        if (inet_ntop(result.ai_family, &sa6.sin6_addr, ipv6Buffer, socklen_t(INET6_ADDRSTRLEN)) != nil) {
                             ipv6AddressString = String(cString: ipv6Buffer)
                         }
                     }
