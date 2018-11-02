@@ -375,6 +375,10 @@ class TunnelViewModel {
                 peersData.append(peerData)
             }
         }
+        let numberOfPeers = peersData.count
+        for peerData in peersData {
+            peerData.numberOfPeers = numberOfPeers
+        }
     }
 
     func appendEmptyPeer() {
