@@ -7,6 +7,10 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>conf</string>
+			</array>
 			<key>CFBundleTypeIconFiles</key>
 			<array>
 				<string>wireguard_doc_logo_22x29.png</string>
