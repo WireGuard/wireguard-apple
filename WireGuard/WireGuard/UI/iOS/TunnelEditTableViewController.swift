@@ -133,7 +133,10 @@ extension TunnelEditTableViewController {
             return interfaceFieldsBySection[section].count
         } else if ((numberOfPeerSections > 0) && (section < (numberOfInterfaceSections + numberOfPeerSections))) {
             // Peer
-            return peerFields.count
+            let peerIndex = (section - numberOfInterfaceSections)
+            let peerData = tunnelViewModel.peersData[peerIndex]
+            let peerFieldsToShow = peerData.shouldAllowExcludePrivateIPsControl ? peerFields : peerFields.filter { $0 != .excludePrivateIPs }
+            return peerFieldsToShow.count
         } else {
             // Add peer
             return 1
@@ -232,7 +235,8 @@ extension TunnelEditTableViewController {
             // Peer
             let peerIndex = (section - numberOfInterfaceSections)
             let peerData = tunnelViewModel.peersData[peerIndex]
-            let field = peerFields[row]
+            let peerFieldsToShow = peerData.shouldAllowExcludePrivateIPsControl ? peerFields : peerFields.filter { $0 != .excludePrivateIPs }
+            let field = peerFieldsToShow[row]
             if (field == .deletePeer) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.id, for: indexPath) as! TunnelEditTableViewButtonCell
                 cell.buttonText = field.rawValue
@@ -245,13 +249,18 @@ extension TunnelEditTableViewController {
                                             onConfirmed: { [weak s] in
                                                 guard let s = s else { return }
                                                 let removedSectionIndices = s.deletePeer(peer: peerData)
-                                                s.tableView.deleteSections(removedSectionIndices, with: .automatic)
-                                                if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
-                                                    let excludePrivateIPsIndexPaths = (0 ..< s.tunnelViewModel.peersData.count).map {
-                                                        IndexPath(row: row, section: numberOfInterfaceSections + $0)
+                                                let shouldShowExcludePrivateIPs = (s.tunnelViewModel.peersData.count == 1 &&
+                                                    s.tunnelViewModel.peersData[0].shouldAllowExcludePrivateIPsControl)
+                                                tableView.performBatchUpdates({
+                                                    s.tableView.deleteSections(removedSectionIndices, with: .automatic)
+                                                    if (shouldShowExcludePrivateIPs) {
+                                                        if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                                                            let rowIndexPath = IndexPath(row: row, section: numberOfInterfaceSections /* First peer section */)
+                                                            s.tableView.insertRows(at: [rowIndexPath], with: .automatic)
+                                                        }
+
                                                     }
-                                                    s.tableView.reloadRows(at: excludePrivateIPsIndexPaths, with: .none)
-                                                }
+                                                })
                     })
                 }
                 return cell
@@ -299,9 +308,16 @@ extension TunnelEditTableViewController {
                 if (field == .allowedIPs) {
                     cell.onValueBeingEdited = { [weak self, weak peerData] value in
                         if let peerData = peerData, let s = self {
+                            let oldValue = peerData.shouldAllowExcludePrivateIPsControl
                             peerData[.allowedIPs] = value
-                            if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
-                                s.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
+                            if (oldValue != peerData.shouldAllowExcludePrivateIPsControl) {
+                                if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                                    if (peerData.shouldAllowExcludePrivateIPsControl) {
+                                        s.tableView.insertRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+                                    } else {
+                                        s.tableView.deleteRows(at: [IndexPath(row: row, section: section)], with: .automatic)
+                                    }
+                                }
                             }
                         }
                     }
@@ -315,14 +331,18 @@ extension TunnelEditTableViewController {
             cell.buttonText = "Add peer"
             cell.onTapped = { [weak self] in
                 guard let s = self else { return }
+                let shouldHideExcludePrivateIPs = (s.tunnelViewModel.peersData.count == 1 &&
+                    s.tunnelViewModel.peersData[0].shouldAllowExcludePrivateIPsControl)
                 let addedSectionIndices = s.appendEmptyPeer()
-                tableView.insertSections(addedSectionIndices, with: .automatic)
-                if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
-                    let excludePrivateIPsIndexPaths = (0 ..< s.tunnelViewModel.peersData.count).map {
-                        IndexPath(row: row, section: numberOfInterfaceSections + $0)
+                tableView.performBatchUpdates({
+                    tableView.insertSections(addedSectionIndices, with: .automatic)
+                    if (shouldHideExcludePrivateIPs) {
+                        if let row = s.peerFields.firstIndex(of: .excludePrivateIPs) {
+                            let rowIndexPath = IndexPath(row: row, section: numberOfInterfaceSections /* First peer section */)
+                            s.tableView.deleteRows(at: [rowIndexPath], with: .automatic)
+                        }
                     }
-                    s.tableView.reloadRows(at: excludePrivateIPsIndexPaths, with: .none)
-                }
+                }, completion: nil)
             }
             return cell
         }
