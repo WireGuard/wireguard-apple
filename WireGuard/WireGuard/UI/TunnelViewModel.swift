@@ -179,11 +179,9 @@ class TunnelViewModel {
         var validatedConfiguration: PeerConfiguration? = nil
 
         // For exclude private IPs
-        var shouldAllowExcludePrivateIPsControl: Bool = false
-        var excludePrivateIPsValue: Bool = false
-        var numberOfPeers: Int = 0 {
-            didSet { updateExcludePrivateIPsFieldState() }
-        }
+        var shouldAllowExcludePrivateIPsControl: Bool = false /* Read-only from the VC's point of view */
+        var excludePrivateIPsValue: Bool = false /* Read-only from the VC's point of view */
+        fileprivate var numberOfPeers: Int = 0
 
         init(index: Int) {
             self.index = index
@@ -318,6 +316,9 @@ class TunnelViewModel {
                 excludePrivateIPsValue = false
                 return
             }
+            if (scratchpad.isEmpty) {
+                populateScratchpad()
+            }
             let allowedIPStrings = Set<String>(
                 (scratchpad[.allowedIPs] ?? "")
                     .split(separator: ",")
@@ -365,8 +366,8 @@ class TunnelViewModel {
     var peersData: [PeerData]
 
     init(tunnelConfiguration: TunnelConfiguration?) {
-        interfaceData = InterfaceData()
-        peersData = []
+        let interfaceData: InterfaceData = InterfaceData()
+        var peersData: [PeerData] = []
         if let tunnelConfiguration = tunnelConfiguration {
             interfaceData.validatedConfiguration = tunnelConfiguration.interface
             for (i, peerConfiguration) in tunnelConfiguration.peers.enumerated() {
@@ -378,7 +379,10 @@ class TunnelViewModel {
         let numberOfPeers = peersData.count
         for peerData in peersData {
             peerData.numberOfPeers = numberOfPeers
+            peerData.updateExcludePrivateIPsFieldState()
         }
+        self.interfaceData = interfaceData
+        self.peersData = peersData
     }
 
     func appendEmptyPeer() {
@@ -386,6 +390,7 @@ class TunnelViewModel {
         peersData.append(peer)
         for p in peersData {
             p.numberOfPeers = peersData.count
+            p.updateExcludePrivateIPsFieldState()
         }
     }
 
@@ -398,6 +403,7 @@ class TunnelViewModel {
         }
         for p in peersData {
             p.numberOfPeers = peersData.count
+            p.updateExcludePrivateIPsFieldState()
         }
     }
 
