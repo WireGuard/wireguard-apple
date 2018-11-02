@@ -53,7 +53,10 @@ class DNSResolver {
         dispatchGroup.notify(queue: .main) {
             assert(endpoints.count == resolvedEndpoints.count)
             for (i, endpoint) in endpoints.enumerated() {
-                guard let endpoint = endpoint, let resolvedEndpoint = resolvedEndpoints[i] else { return }
+                guard let endpoint = endpoint, let resolvedEndpoint = resolvedEndpoints[i] else {
+                    completionHandler(nil)
+                    return
+                }
                 if (isResolvedByDNSRequest[i]) {
                     DNSResolver.cache.setObject(resolvedEndpoint.stringRepresentation() as NSString,
                                                 forKey: endpoint.stringRepresentation() as NSString)
