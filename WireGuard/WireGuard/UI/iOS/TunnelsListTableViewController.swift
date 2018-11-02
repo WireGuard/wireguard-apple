@@ -42,6 +42,7 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     @objc func addButtonTapped(sender: UIBarButtonItem!) {
+        if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
         let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (action) in
             self?.presentViewControllerForFileImport()
@@ -69,6 +70,7 @@ class TunnelsListTableViewController: UITableViewController {
     }
 
     @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
+        if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
         settingsNC.modalPresentationStyle = .formSheet
