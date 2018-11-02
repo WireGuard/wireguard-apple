@@ -466,7 +466,7 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
         NSLayoutConstraint.activate([
             keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            keyLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
             widthRatioConstraint
             ])
         contentView.addSubview(valueTextField)
@@ -474,7 +474,7 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         NSLayoutConstraint.activate([
             valueTextField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             valueTextField.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 16),
-            valueTextField.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            valueTextField.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
             ])
         valueTextField.delegate = self
 
