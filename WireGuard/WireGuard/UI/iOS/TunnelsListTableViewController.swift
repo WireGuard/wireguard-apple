@@ -290,10 +290,11 @@ extension TunnelsListTableViewController: UITableViewDataSource {
                 if (isOn) {
                     tunnelsManager.startActivation(of: tunnel) { [weak s] error in
                         if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: s)
-                            DispatchQueue.main.async {
-                                cell.statusSwitch.isOn = false
-                            }
+                            ErrorPresenter.showErrorAlert(error: error, from: s, onPresented: {
+                                DispatchQueue.main.async {
+                                    cell.statusSwitch.isOn = false
+                                }
+                            })
                         }
                     }
                 } else {
