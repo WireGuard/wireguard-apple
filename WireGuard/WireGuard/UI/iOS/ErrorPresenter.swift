@@ -10,7 +10,7 @@ class ErrorPresenter {
 
         // TunnelManagementError
         case TunnelManagementError.tunnelAlreadyExistsWithThatName:
-            return ("Name already exists", "A tunnel with that name already exists. Please choose a different name.")
+            return ("Name already exists", "A tunnel with that name already exists")
         case TunnelManagementError.vpnSystemErrorOnAddTunnel:
             return ("Unable to create tunnel", "Internal error")
         case TunnelManagementError.vpnSystemErrorOnModifyTunnel:
@@ -41,7 +41,7 @@ class ErrorPresenter {
                     fatalError()
                 }
             }()
-            return ("Activation failure", "Another tunnel is currently \(statusString). Only one tunnel may be in operation at a time.")
+            return ("Activation failure", "Another tunnel is currently \(statusString)")
 
         default:
             os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")

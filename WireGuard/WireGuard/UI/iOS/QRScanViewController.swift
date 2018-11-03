@@ -40,7 +40,7 @@ class QRScanViewController: UIViewController {
             let captureSession = captureSession,
             captureSession.canAddInput(videoInput),
             captureSession.canAddOutput(metadataOutput) else {
-                scanDidEncounterError(title: "Camera Unsupported", message: "This device is not able to scan QR codes.")
+                scanDidEncounterError(title: "Camera Unsupported", message: "This device is not able to scan QR codes")
                 return
         }
 
@@ -108,7 +108,7 @@ class QRScanViewController: UIViewController {
     func scanDidComplete(withCode code: String) {
         let scannedTunnelConfiguration = try? WgQuickConfigFileParser.parse(code, name: "Scanned")
         guard let tunnelConfiguration = scannedTunnelConfiguration else {
-            scanDidEncounterError(title: "Invalid QR Code", message: "The scanned QR code is not a valid WireGuard configuration.")
+            scanDidEncounterError(title: "Invalid QR Code", message: "The scanned QR code is not a valid WireGuard configuration")
             return
         }
 
@@ -149,7 +149,7 @@ extension QRScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         guard let metadataObject = metadataObjects.first,
             let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
             let stringValue = readableObject.stringValue else {
-                scanDidEncounterError(title: "Invalid Code", message: "The scanned code could not be read.")
+                scanDidEncounterError(title: "Invalid Code", message: "The scanned code could not be read")
                 return
         }
 
