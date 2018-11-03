@@ -5,16 +5,36 @@
 
 # [WireGuard](https://www.wireguard.com/) for iOS
 
-## To get started...
+## Building
 
-Make sure you have Go available. A homebrew install will do. `brew install go`
+- Clone this repo:
 
-- Clone this repo.
-  - `git clone https://git.zx2c4.com/wireguard-ios`
-  - Init and update submodule: `git submodule init && git submodule update`
-- Prepare Xcode project
-  - Run `pod install`
-  - Open `WireGuard.xcworkspace`
+```
+$ git clone https://git.zx2c4.com/wireguard-ios
+$ cd wireguard-ios
+```
+
+- Init and update submodule:
+
+```
+$ git submodule init
+$ git submodule update
+```
+
+- Rename and populate developer team ID file:
+
+```
+$ cp WireGuard/WireGuard/Config/Developer.xcconfig.template WireGuard/WireGuard/Config/Developer.xcconfig
+$ vim WireGuard/WireGuard/Config/Developer.xcconfig
+```
+
+- Open project in XCode:
+
+```
+$ open ./WireGuard/WireGuard.xcodeproj
+```
+
+- Flip switches, press buttons, and make whirling noises until XCode builds it.
 
 ## MIT License
 
