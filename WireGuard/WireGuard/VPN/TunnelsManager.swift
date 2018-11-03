@@ -341,7 +341,6 @@ class TunnelContainer: NSObject {
         }
 
         // Start the tunnel
-        startObservingTunnelStatus()
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
         do {
             os_log("startActivation: Generating options", log: OSLog.default, type: .debug)
@@ -350,6 +349,7 @@ class TunnelContainer: NSObject {
             os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
             try session.startTunnel(options: tunnelOptions)
             os_log("startActivation: Success", log: OSLog.default, type: .debug)
+            startObservingTunnelStatus()
             completionHandler(nil)
         } catch (let error) {
             os_log("startActivation: Error starting tunnel. Examining error", log: OSLog.default, type: .debug)
