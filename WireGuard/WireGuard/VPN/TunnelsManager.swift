@@ -399,13 +399,14 @@ class TunnelContainer: NSObject {
     }
 
     private func startObservingTunnelStatus() {
-        if (statusObservationToken != nil) { return }
-        let connection = tunnelProvider.connection
-        statusObservationToken = NotificationCenter.default.addObserver(
+        DispatchQueue.main.async { [weak self] in
+        guard let s = self else { return }
+        if (s.statusObservationToken != nil) { return }
+        let connection = s.tunnelProvider.connection
+        s.statusObservationToken = NotificationCenter.default.addObserver(
             forName: .NEVPNStatusDidChange,
             object: connection,
-            queue: nil) { [weak self] (_) in
-                guard let s = self else { return }
+            queue: nil) { (_) in
                 if ((s.status == .restarting) && (connection.status == .disconnected || connection.status == .disconnecting)) {
                     // Don't change s.status when disconnecting for a restart
                     if (connection.status == .disconnected) {
@@ -421,6 +422,7 @@ class TunnelContainer: NSObject {
                 if (s.status == .inactive) {
                     s.stopObservingTunnelStatus()
                 }
+            }
         }
     }
 
