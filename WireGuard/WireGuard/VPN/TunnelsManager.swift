@@ -8,7 +8,7 @@ import os.log
 protocol TunnelsManagerDelegate: class {
     func tunnelAdded(at: Int)
     func tunnelModified(at: Int)
-    func tunnelsChanged()
+    func tunnelMoved(at oldIndex: Int, to newIndex: Int)
     func tunnelRemoved(at: Int)
 }
 
@@ -23,6 +23,7 @@ enum TunnelActivationError: Error {
 
 enum TunnelManagementError: Error {
     case tunnelAlreadyExistsWithThatName
+    case tunnelInvalidName
     case vpnSystemErrorOnAddTunnel
     case vpnSystemErrorOnModifyTunnel
     case vpnSystemErrorOnRemoveTunnel
@@ -43,12 +44,10 @@ class TunnelsManager {
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         var tunnelNames: Set<String> = []
-        var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0, index: 0) }
+        var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }
         tunnels.sort { $0.name < $1.name }
         var currentTunnel: TunnelContainer? = nil
-        for i in 0 ..< tunnels.count {
-            let tunnel = tunnels[i]
-            tunnel.index = i
+        for tunnel in tunnels {
             tunnelNames.insert(tunnel.name)
             if (tunnel.status != .inactive) {
                 currentTunnel = tunnel
@@ -75,17 +74,12 @@ class TunnelsManager {
         return tunnelNames.contains(name)
     }
 
-    private func insertionIndexFor(tunnelName: String) -> Int {
-        // Wishlist: Use binary search instead
-        for i in 0 ..< tunnels.count {
-            if (tunnelName.lexicographicallyPrecedes(tunnels[i].name)) { return i }
-        }
-        return tunnels.count
-    }
-
     func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
-        assert(!tunnelName.isEmpty)
+        if tunnelName.isEmpty {
+            completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
+            return
+        }
 
         guard (!containsTunnel(named: tunnelName)) else {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
@@ -106,14 +100,11 @@ class TunnelsManager {
                 return
             }
             if let s = self {
-                let index = s.insertionIndexFor(tunnelName: tunnelName)
-                let tunnel = TunnelContainer(tunnel: tunnelProviderManager, index: index)
-                for i in index ..< s.tunnels.count {
-                    s.tunnels[i].index = s.tunnels[i].index + 1
-                }
-                s.tunnels.insert(tunnel, at: index)
+                let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
+                s.tunnels.append(tunnel)
+                s.tunnels.sort { $0.name < $1.name }
                 s.tunnelNames.insert(tunnel.name)
-                s.delegate?.tunnelAdded(at: index)
+                s.delegate?.tunnelAdded(at: s.tunnels.firstIndex(of: tunnel)!)
                 completionHandler(tunnel, nil)
             }
         }
@@ -139,7 +130,10 @@ class TunnelsManager {
 
     func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
-        assert(!tunnelName.isEmpty)
+        if tunnelName.isEmpty {
+            completionHandler(TunnelManagementError.tunnelAlreadyExistsWithThatName)
+            return
+        }
 
         isModifyingTunnel = true
 
@@ -167,22 +161,14 @@ class TunnelsManager {
             }
             if let s = self {
                 if (isNameChanged) {
-                    s.tunnels.remove(at: tunnel.index)
+                    let oldIndex = s.tunnels.firstIndex(of: tunnel)!
                     s.tunnelNames.remove(oldName!)
-                    for i in tunnel.index ..< s.tunnels.count {
-                        s.tunnels[i].index = s.tunnels[i].index - 1
-                    }
-                    let index = s.insertionIndexFor(tunnelName: tunnelName)
-                    tunnel.index = index
-                    for i in index ..< s.tunnels.count {
-                        s.tunnels[i].index = s.tunnels[i].index + 1
-                    }
-                    s.tunnels.insert(tunnel, at: index)
                     s.tunnelNames.insert(tunnel.name)
-                    s.delegate?.tunnelsChanged()
-                } else {
-                    s.delegate?.tunnelModified(at: tunnel.index)
+                    s.tunnels.sort { $0.name < $1.name }
+                    let newIndex = s.tunnels.firstIndex(of: tunnel)!
+                    s.delegate?.tunnelMoved(at: oldIndex, to: newIndex)
                 }
+                s.delegate?.tunnelModified(at: s.tunnels.firstIndex(of: tunnel)!)
 
                 if (tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting) {
                     // Turn off the tunnel, and then turn it back on, so the changes are made effective
@@ -196,8 +182,6 @@ class TunnelsManager {
 
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelManagementError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
-        let tunnelIndex = tunnel.index
-        let tunnelName = tunnel.name
 
         isDeletingTunnel = true
 
@@ -209,12 +193,10 @@ class TunnelsManager {
                 return
             }
             if let s = self {
-                for i in ((tunnelIndex + 1) ..< s.tunnels.count) {
-                    s.tunnels[i].index = s.tunnels[i].index - 1
-                }
-                s.tunnels.remove(at: tunnelIndex)
-                s.tunnelNames.remove(tunnelName)
-                s.delegate?.tunnelRemoved(at: tunnelIndex)
+                let index = s.tunnels.firstIndex(of: tunnel)!
+                s.tunnels.remove(at: index)
+                s.tunnelNames.remove(tunnel.name)
+                s.delegate?.tunnelRemoved(at: index)
             }
             completionHandler(nil)
         }
@@ -246,7 +228,7 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingDeactivationWhenTunnelIsInactive)
             return
         }
-        assert(tunnel.index == currentTunnel!.index)
+        assert(tunnel == currentTunnel!)
 
         tunnel.startDeactivation()
     }
@@ -293,17 +275,15 @@ class TunnelContainer: NSObject {
     @objc dynamic var status: TunnelStatus
 
     fileprivate let tunnelProvider: NETunnelProviderManager
-    fileprivate var index: Int
     fileprivate var statusObservationToken: AnyObject?
 
     private var dnsResolver: DNSResolver? = nil
 
-    init(tunnel: NETunnelProviderManager, index: Int) {
+    init(tunnel: NETunnelProviderManager) {
         self.name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
         self.status = status
         self.tunnelProvider = tunnel
-        self.index = index
         super.init()
         if (status != .inactive) {
             startObservingTunnelStatus()

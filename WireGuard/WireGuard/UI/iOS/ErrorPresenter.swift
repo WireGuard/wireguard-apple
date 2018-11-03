@@ -11,6 +11,8 @@ class ErrorPresenter {
         // TunnelManagementError
         case TunnelManagementError.tunnelAlreadyExistsWithThatName:
             return ("Name already exists", "A tunnel with that name already exists")
+        case TunnelManagementError.tunnelInvalidName:
+            return ("Name already exists", "The tunnel name is invalid")
         case TunnelManagementError.vpnSystemErrorOnAddTunnel:
             return ("Unable to create tunnel", "Internal error")
         case TunnelManagementError.vpnSystemErrorOnModifyTunnel:
