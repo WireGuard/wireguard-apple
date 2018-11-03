@@ -97,7 +97,7 @@ class TunnelViewModel {
 
         func save() -> SaveResult<InterfaceConfiguration> {
             fieldsWithError.removeAll()
-            guard let name = scratchpad[.name], (!name.isEmpty) else {
+            guard let name = scratchpad[.name]?.trimmingCharacters(in: .whitespacesAndNewlines), (!name.isEmpty) else {
                 fieldsWithError.insert(.name)
                 return .error("Interface name is required")
             }
