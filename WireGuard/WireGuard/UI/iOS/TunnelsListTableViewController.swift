@@ -10,6 +10,7 @@ class TunnelsListTableViewController: UIViewController {
     var onTunnelsManagerReady: ((TunnelsManager) -> Void)? = nil
 
     var busyIndicator: UIActivityIndicatorView? = nil
+    var centeredAddButton: BorderedTextButton? = nil
     var tableView: UITableView? = nil
 
     override func viewDidLoad() {
@@ -58,6 +59,22 @@ class TunnelsListTableViewController: UIViewController {
             tableView.delegate = s
             s.tableView = tableView
 
+            // Add an add button, centered
+            let centeredAddButton = BorderedTextButton()
+            centeredAddButton.title = "Add a tunnel"
+            centeredAddButton.isHidden = true
+            s.view.addSubview(centeredAddButton)
+            centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                centeredAddButton.centerXAnchor.constraint(equalTo: s.view.centerXAnchor),
+                centeredAddButton.centerYAnchor.constraint(equalTo: s.view.centerYAnchor)
+                ])
+            centeredAddButton.onTapped = { [weak self] in
+                self?.addButtonTapped(sender: centeredAddButton)
+            }
+            s.centeredAddButton = centeredAddButton
+
+            centeredAddButton.isHidden = (tunnelsManager.numberOfTunnels() > 0)
             busyIndicator.stopAnimating()
 
             tunnelsManager.delegate = s
@@ -67,7 +84,7 @@ class TunnelsListTableViewController: UIViewController {
         }
     }
 
-    @objc func addButtonTapped(sender: UIBarButtonItem!) {
+    @objc func addButtonTapped(sender: AnyObject) {
         if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
         let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (action) in
@@ -91,7 +108,11 @@ class TunnelsListTableViewController: UIViewController {
         alert.addAction(cancelAction)
 
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
-        alert.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        if let sender = sender as? UIBarButtonItem {
+            alert.popoverPresentationController?.barButtonItem = sender
+        } else if let sender = sender as? UIView {
+            alert.popoverPresentationController?.sourceView = sender
+        }
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -335,6 +356,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
 extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelAdded(at index: Int) {
         tableView?.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
     }
 
     func tunnelModified(at index: Int) {
@@ -347,6 +369,7 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     
     func tunnelRemoved(at index: Int) {
         tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
     }
 }
 
@@ -441,3 +464,43 @@ class TunnelsListTableViewCell: UITableViewCell {
         reset()
     }
 }
+
+class BorderedTextButton: UIView {
+    let button: UIButton
+
+    override var intrinsicContentSize: CGSize {
+        let buttonSize = button.intrinsicContentSize
+        return CGSize(width: buttonSize.width + 32, height: buttonSize.height + 16)
+    }
+
+    var title: String {
+        get { return button.title(for: .normal) ?? "" }
+        set(value) { button.setTitle(value, for: .normal) }
+    }
+
+    var onTapped: (() -> Void)? = nil
+
+    init() {
+        button = UIButton(type: .system)
+        super.init(frame: CGRect.zero)
+        addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            ])
+        layer.borderWidth = 1
+        layer.cornerRadius = 5
+        layer.borderColor = button.tintColor.cgColor
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+    }
+
+    @objc func buttonTapped() {
+        onTapped?()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
