@@ -165,7 +165,7 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         guard (section == 1) else { return 0 }
         guard let imageSize = self.wireguardCaptionedImage?.size else { return 0 }
-        return (min(tableView.bounds.width, 480) / imageSize.width) * imageSize.height
+        return min(tableView.rowHeight * 1.5, (tableView.bounds.width / imageSize.width) * imageSize.height)
     }
 }
 
