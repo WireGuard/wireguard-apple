@@ -31,30 +31,26 @@ enum TunnelManagementError: Error {
 
 class TunnelsManager {
 
-    var tunnels: [TunnelContainer]
+    private var tunnels: [TunnelContainer]
     weak var delegate: TunnelsManagerDelegate? = nil
 
     private var isAddingTunnel: Bool = false
     private var isModifyingTunnel: Bool = false
     private var isDeletingTunnel: Bool = false
 
-    private var tunnelNames: Set<String>
     private var currentTunnel: TunnelContainer?
     private var currentTunnelStatusObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
-        var tunnelNames: Set<String> = []
         var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }
         tunnels.sort { $0.name < $1.name }
         var currentTunnel: TunnelContainer? = nil
         for tunnel in tunnels {
-            tunnelNames.insert(tunnel.name)
             if (tunnel.status != .inactive) {
                 currentTunnel = tunnel
             }
         }
         self.tunnels = tunnels
-        self.tunnelNames = tunnelNames
         if let currentTunnel = currentTunnel {
             setCurrentTunnel(tunnel: currentTunnel)
         }
@@ -70,18 +66,14 @@ class TunnelsManager {
         }
     }
 
-    func containsTunnel(named name: String) -> Bool {
-        return tunnelNames.contains(name)
-    }
-
     func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
             return
         }
-
-        guard (!containsTunnel(named: tunnelName)) else {
+        
+        if self.tunnels.contains(where: { $0.name == tunnelName }) {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
             return
         }
@@ -103,7 +95,6 @@ class TunnelsManager {
                 let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
                 s.tunnels.append(tunnel)
                 s.tunnels.sort { $0.name < $1.name }
-                s.tunnelNames.insert(tunnel.name)
                 s.delegate?.tunnelAdded(at: s.tunnels.firstIndex(of: tunnel)!)
                 completionHandler(tunnel, nil)
             }
@@ -141,7 +132,7 @@ class TunnelsManager {
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
         var oldName: String? = nil
         if (isNameChanged) {
-            guard (!containsTunnel(named: tunnelName)) else {
+            if self.tunnels.contains(where: { $0.name == tunnelName }) {
                 completionHandler(TunnelManagementError.tunnelAlreadyExistsWithThatName)
                 return
             }
@@ -162,8 +153,6 @@ class TunnelsManager {
             if let s = self {
                 if (isNameChanged) {
                     let oldIndex = s.tunnels.firstIndex(of: tunnel)!
-                    s.tunnelNames.remove(oldName!)
-                    s.tunnelNames.insert(tunnel.name)
                     s.tunnels.sort { $0.name < $1.name }
                     let newIndex = s.tunnels.firstIndex(of: tunnel)!
                     s.delegate?.tunnelMoved(at: oldIndex, to: newIndex)
@@ -195,7 +184,6 @@ class TunnelsManager {
             if let s = self {
                 let index = s.tunnels.firstIndex(of: tunnel)!
                 s.tunnels.remove(at: index)
-                s.tunnelNames.remove(tunnel.name)
                 s.delegate?.tunnelRemoved(at: index)
             }
             completionHandler(nil)
