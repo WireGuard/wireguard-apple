@@ -48,7 +48,9 @@ class TunnelsManager {
                 os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 return
             }
-            completionHandler(TunnelsManager(tunnelProviders: managers ?? []))
+            DispatchQueue.main.async {
+                completionHandler(TunnelsManager(tunnelProviders: managers ?? []))
+            }
         }
     }
 
@@ -74,10 +76,13 @@ class TunnelsManager {
             defer { self?.isAddingTunnel = false }
             guard (error == nil) else {
                 os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                completionHandler(nil, TunnelManagementError.vpnSystemErrorOnAddTunnel)
+                DispatchQueue.main.async {
+                    completionHandler(nil, TunnelManagementError.vpnSystemErrorOnAddTunnel)
+                }
                 return
             }
-            if let s = self {
+            DispatchQueue.main.async { [weak self] in
+                guard let s = self else { return }
                 let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
                 s.tunnels.append(tunnel)
                 s.tunnels.sort { $0.name < $1.name }
@@ -132,10 +137,13 @@ class TunnelsManager {
             defer { self?.isModifyingTunnel = false }
             guard (error == nil) else {
                 os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                completionHandler(TunnelManagementError.vpnSystemErrorOnModifyTunnel)
+                DispatchQueue.main.async {
+                    completionHandler(TunnelManagementError.vpnSystemErrorOnModifyTunnel)
+                }
                 return
             }
-            if let s = self {
+            DispatchQueue.main.async { [weak self] in
+                guard let s = self else { return }
                 if (isNameChanged) {
                     let oldIndex = s.tunnels.firstIndex(of: tunnel)!
                     s.tunnels.sort { $0.name < $1.name }
@@ -166,12 +174,13 @@ class TunnelsManager {
                 completionHandler(TunnelManagementError.vpnSystemErrorOnRemoveTunnel)
                 return
             }
-            if let s = self {
+            DispatchQueue.main.async { [weak self] in
+                guard let s = self else { return }
                 let index = s.tunnels.firstIndex(of: tunnel)!
                 s.tunnels.remove(at: index)
                 s.delegate?.tunnelRemoved(at: index)
+                completionHandler(nil)
             }
-            completionHandler(nil)
         }
     }
 
@@ -330,12 +339,16 @@ class TunnelContainer: NSObject {
             tunnelProvider.saveToPreferences { [weak self] (error) in
                 if (error != nil) {
                     os_log("Error saving tunnel after re-enabling: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                    completionHandler(error)
+                    DispatchQueue.main.async {
+                        completionHandler(error)
+                    }
                     return
                 }
                 os_log("startActivation: Tunnel saved after re-enabling", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                DispatchQueue.main.async { [weak self] in
+                    self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                }
             }
             return
         }
@@ -355,15 +368,17 @@ class TunnelContainer: NSObject {
             os_log("startActivation: Error starting tunnel. Examining error", log: OSLog.default, type: .debug)
             guard let vpnError = error as? NEVPNError else {
                 os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                status = .inactive
-                completionHandler(error)
+                DispatchQueue.main.async {
+                    completionHandler(error)
+                }
                 return
             }
             guard (vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale) else {
-                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                    status = .inactive
+                os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                DispatchQueue.main.async {
                     completionHandler(error)
-                    return
+                }
+                return
             }
             assert(vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale)
             os_log("startActivation: Error says: %{public}@", log: OSLog.default, type: .debug,
@@ -372,13 +387,16 @@ class TunnelContainer: NSObject {
             tunnelProvider.loadFromPreferences { [weak self] (error) in
                 if (error != nil) {
                     os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error!)")
-                    self?.status = .inactive
-                    completionHandler(error)
+                    DispatchQueue.main.async {
+                        completionHandler(error)
+                    }
                     return
                 }
                 os_log("startActivation: Tunnel reloaded", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                DispatchQueue.main.async { [weak self] in
+                    self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                }
             }
         }
     }
