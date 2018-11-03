@@ -102,17 +102,16 @@ class TunnelsManager {
     }
 
     func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (UInt) -> Void) {
-        addMultiple(tunnelConfigurations: tunnelConfigurations[0...], numberSuccessful: 0, completionHandler: completionHandler)
+        addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, completionHandler: completionHandler)
     }
 
     private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt, completionHandler: @escaping (UInt) -> Void) {
-        if tunnelConfigurations.isEmpty {
+        guard let head = tunnelConfigurations.first else {
             completionHandler(numberSuccessful)
             return
         }
-        let head = tunnelConfigurations.first!
-        let tail = tunnelConfigurations[1...]
-        self.add(tunnelConfiguration: head) { [weak self] (tunnel, error) in
+        let tail = tunnelConfigurations.dropFirst()
+        self.add(tunnelConfiguration: head) { [weak self, tail] (tunnel, error) in
             DispatchQueue.main.async {
                 self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful + (error == nil ? 1 : 0), completionHandler: completionHandler)
             }
