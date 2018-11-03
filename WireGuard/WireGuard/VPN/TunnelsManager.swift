@@ -48,6 +48,7 @@ class TunnelsManager {
         for tunnel in tunnels {
             if (tunnel.status != .inactive) {
                 currentTunnel = tunnel
+                break
             }
         }
         self.tunnels = tunnels
@@ -437,6 +438,10 @@ class TunnelContainer: NSObject {
                     if (connection.status == .disconnected) {
                         self?.startActivation(completionHandler: { _ in })
                     }
+                    return
+                }
+                if (s.status == .resolvingEndpointDomains && connection.status == .disconnected) {
+                    // Don't change to .inactive if we're still resolving endpoints
                     return
                 }
                 s.status = TunnelStatus(from: connection.status)
