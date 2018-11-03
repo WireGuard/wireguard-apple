@@ -38,23 +38,8 @@ class TunnelsManager {
     private var isModifyingTunnel: Bool = false
     private var isDeletingTunnel: Bool = false
 
-    private var currentTunnel: TunnelContainer?
-    private var currentTunnelStatusObservationToken: AnyObject?
-
     init(tunnelProviders: [NETunnelProviderManager]) {
-        var tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }
-        tunnels.sort { $0.name < $1.name }
-        var currentTunnel: TunnelContainer? = nil
-        for tunnel in tunnels {
-            if (tunnel.status != .inactive) {
-                currentTunnel = tunnel
-                break
-            }
-        }
-        self.tunnels = tunnels
-        if let currentTunnel = currentTunnel {
-            setCurrentTunnel(tunnel: currentTunnel)
-        }
+        self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
     }
 
     static func create(completionHandler: @escaping (TunnelsManager?) -> Void) {
@@ -203,11 +188,12 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
-        guard (currentTunnel == nil) else {
-            completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: currentTunnel!.status))
-            return
+        for t in tunnels {
+            if t.status != .inactive {
+                completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: t.status))
+                return
+            }
         }
-        setCurrentTunnel(tunnel: tunnel)
         tunnel.startActivation(completionHandler: completionHandler)
     }
 
@@ -216,20 +202,7 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingDeactivationWhenTunnelIsInactive)
             return
         }
-        assert(tunnel == currentTunnel!)
-
         tunnel.startDeactivation()
-    }
-
-    private func setCurrentTunnel(tunnel: TunnelContainer) {
-        currentTunnel = tunnel
-        currentTunnelStatusObservationToken = tunnel.observe(\.status) { [weak self] (tunnel, change) in
-            guard let s = self else { return }
-            if (tunnel.status == .inactive) {
-                s.currentTunnel = nil
-                s.currentTunnelStatusObservationToken = nil
-            }
-        }
     }
 }
 
