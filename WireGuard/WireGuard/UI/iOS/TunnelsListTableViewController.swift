@@ -45,6 +45,7 @@ class TunnelsListTableViewController: UIViewController {
 
             let tableView = UITableView(frame: CGRect.zero, style: .plain)
             tableView.rowHeight = 60
+            tableView.separatorStyle = .none
             tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
 
             s.view.addSubview(tableView)
