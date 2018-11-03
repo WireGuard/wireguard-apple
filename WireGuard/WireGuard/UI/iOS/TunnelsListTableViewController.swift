@@ -4,40 +4,66 @@
 import UIKit
 import MobileCoreServices
 
-class TunnelsListTableViewController: UITableViewController {
+class TunnelsListTableViewController: UIViewController {
 
     var tunnelsManager: TunnelsManager? = nil
     var onTunnelsManagerReady: ((TunnelsManager) -> Void)? = nil
 
-    init() {
-        super.init(style: .plain)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var busyIndicator: UIActivityIndicatorView? = nil
+    var tableView: UITableView? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
+
+        // Set up the navigation bar
         self.title = "WireGuard"
         let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
         self.navigationItem.rightBarButtonItem = addButtonItem
         let settingsButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
         self.navigationItem.leftBarButtonItem = settingsButtonItem
 
-        self.tableView.rowHeight = 60
+        // Set up the busy indicator
+        let busyIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        busyIndicator.hidesWhenStopped = true
 
-        self.tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
+        // Add the busyIndicator, centered
+        view.addSubview(busyIndicator)
+        busyIndicator.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            busyIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            busyIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        busyIndicator.startAnimating()
+        self.busyIndicator = busyIndicator
 
+        // Create the tunnels manager, and when it's ready, create the tableView
         TunnelsManager.create { [weak self] tunnelsManager in
             guard let tunnelsManager = tunnelsManager else { return }
-            if let s = self {
-                tunnelsManager.delegate = s
-                s.tunnelsManager = tunnelsManager
-                s.onTunnelsManagerReady?(tunnelsManager)
-                s.onTunnelsManagerReady = nil
-                s.tableView.reloadData()
-            }
+            guard let s = self else { return }
+
+            let tableView = UITableView(frame: CGRect.zero, style: .plain)
+            tableView.rowHeight = 60
+            tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
+
+            s.view.addSubview(tableView)
+            tableView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                tableView.leftAnchor.constraint(equalTo: s.view.leftAnchor),
+                tableView.rightAnchor.constraint(equalTo: s.view.rightAnchor),
+                tableView.topAnchor.constraint(equalTo: s.view.topAnchor),
+                tableView.bottomAnchor.constraint(equalTo: s.view.bottomAnchor)
+                ])
+            tableView.dataSource = s
+            tableView.delegate = s
+            s.tableView = tableView
+
+            busyIndicator.stopAnimating()
+
+            tunnelsManager.delegate = s
+            s.tunnelsManager = tunnelsManager
+            s.onTunnelsManagerReady?(tunnelsManager)
+            s.onTunnelsManagerReady = nil
         }
     }
 
@@ -238,16 +264,16 @@ extension TunnelsListTableViewController: QRScanViewControllerDelegate {
 
 // MARK: UITableViewDataSource
 
-extension TunnelsListTableViewController {
-    override func numberOfSections(in tableView: UITableView) -> Int {
+extension TunnelsListTableViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (tunnelsManager?.numberOfTunnels() ?? 0)
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsListTableViewCell.id, for: indexPath) as! TunnelsListTableViewCell
         if let tunnelsManager = tunnelsManager {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
@@ -276,8 +302,8 @@ extension TunnelsListTableViewController {
 
 // MARK: UITableViewDelegate
 
-extension TunnelsListTableViewController {
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+extension TunnelsListTableViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
@@ -286,7 +312,7 @@ extension TunnelsListTableViewController {
         showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
     }
 
-    override func tableView(_ tableView: UITableView,
+    func tableView(_ tableView: UITableView,
                             trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (_, _, completionHandler) in
             guard let tunnelsManager = self?.tunnelsManager else { return }
@@ -308,19 +334,19 @@ extension TunnelsListTableViewController {
 
 extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelAdded(at index: Int) {
-        tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView?.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 
     func tunnelModified(at index: Int) {
-        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView?.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
-    
+
     func tunnelMoved(at oldIndex: Int, to newIndex: Int) {
-        tableView.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
+        tableView?.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
     
     func tunnelRemoved(at index: Int) {
-        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 }
 
