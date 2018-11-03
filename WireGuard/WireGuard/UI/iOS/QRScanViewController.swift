@@ -6,7 +6,7 @@ import CoreData
 import UIKit
 
 protocol QRScanViewControllerDelegate: class {
-    func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController, completionHandler: (() ->Void)?)
+    func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController, completionHandler: (() -> Void)?)
 }
 
 class QRScanViewController: UIViewController {

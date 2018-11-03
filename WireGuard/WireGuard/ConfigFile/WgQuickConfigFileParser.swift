@@ -23,7 +23,7 @@ class WgQuickConfigFileParser {
 
         assert(!name.isEmpty)
 
-        func collate(interfaceAttributes attributes: [String:String]) -> InterfaceConfiguration? {
+        func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
             // required wg fields
             guard let privateKeyString = attributes["PrivateKey"] else { return nil }
             guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else { return nil }
@@ -59,7 +59,7 @@ class WgQuickConfigFileParser {
             return interface
         }
 
-        func collate(peerAttributes attributes: [String:String]) -> PeerConfiguration? {
+        func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
             // required wg fields
             guard let publicKeyString = attributes["PublicKey"] else { return nil }
             guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else { return nil }
@@ -89,13 +89,13 @@ class WgQuickConfigFileParser {
             return peer
         }
 
-        var interfaceConfiguration: InterfaceConfiguration? = nil
+        var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations: [PeerConfiguration] = []
 
         let lines = text.split(separator: "\n")
 
         var parserState: ParserState = .notInASection
-        var attributes: [String:String] = [:]
+        var attributes: [String: String] = [:]
 
         for (lineIndex, line) in lines.enumerated() {
             var trimmedLine: String
