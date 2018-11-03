@@ -145,40 +145,50 @@ class TunnelsListTableViewController: UITableViewController {
             do {
                 unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
             } catch ZipArchiveError.cantOpenInputZipFile {
-                showErrorAlert(title: "Unable to read zip archive", message: "The zip archive could not be read")
+                showErrorAlert(title: "Unable to read zip archive", message: "The zip archive could not be read.")
+                return
             } catch ZipArchiveError.badArchive {
-                showErrorAlert(title: "Unable to read zip archive", message: "Bad or corrupt zip archive")
+                showErrorAlert(title: "Unable to read zip archive", message: "Bad or corrupt zip archive.")
+                return
             } catch (let error) {
                 showErrorAlert(title: "Unable to read zip archive", message: "Unexpected error: \(String(describing: error))")
-            }
-            var numberOfConfigFilesWithErrors = 0
-            var tunnelConfigurationsToAdd: [TunnelConfiguration] = []
-            for unarchivedFile in unarchivedFiles {
-                guard let tunnelsManager = tunnelsManager else { return }
-                if let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent,
-                    (!tunnelsManager.containsTunnel(named: fileBaseName)),
-                    let fileContents = String(data: unarchivedFile.contents, encoding: .utf8),
-                    let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                    tunnelConfigurationsToAdd.append(tunnelConfiguration)
-                } else {
-                    numberOfConfigFilesWithErrors = numberOfConfigFilesWithErrors + 1
-                }
-            }
-            guard (tunnelConfigurationsToAdd.count > 0) else {
-                showErrorAlert(title: "No configurations found", message: "Zip archive does not contain any valid .conf files")
                 return
             }
-            var numberOfTunnelsRemainingAfterError = 0
-            tunnelsManager?.addMultiple(tunnelConfigurations: tunnelConfigurationsToAdd) { (numberOfTunnelsRemaining, error) in
-                if (error != nil) {
-                    numberOfTunnelsRemainingAfterError = numberOfTunnelsRemaining
+            
+            for (i, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
+                if let trimmedName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent, !trimmedName.isEmpty {
+                    unarchivedFiles[i].fileName = trimmedName
                 } else {
-                    assert(numberOfTunnelsRemaining == 0)
+                    unarchivedFiles.remove(at: i)
                 }
             }
-            if (numberOfConfigFilesWithErrors > 0) {
-                showErrorAlert(title: "Created \(unarchivedFiles.count) tunnels",
-                    message: "Created \(numberOfTunnelsRemainingAfterError) of \(unarchivedFiles.count) tunnels from files in zip archive")
+            if (unarchivedFiles.isEmpty) {
+                showErrorAlert(title: "No tunnels in zip archive", message: "No .conf tunnel files were found inside the zip archive.")
+                return
+            }
+            guard let tunnelsManager = tunnelsManager else { return }
+            unarchivedFiles.sort { $0.fileName < $1.fileName }
+            var lastFileName : String?
+            var configs: [TunnelConfiguration] = []
+            for file in unarchivedFiles {
+                if file.fileName == lastFileName {
+                    continue
+                }
+                lastFileName = file.fileName
+                guard let fileContents = String(data: file.contents, encoding: .utf8) else {
+                    continue
+                }
+                guard let tunnelConfig = try? WgQuickConfigFileParser.parse(fileContents, name: file.fileName) else {
+                    continue
+                }
+                configs.append(tunnelConfig)
+            }
+            tunnelsManager.addMultiple(tunnelConfigurations: configs) { [weak self] (numberSuccessful) in
+                if numberSuccessful == unarchivedFiles.count {
+                    return
+                }
+                self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
+                    message: "Created \(numberSuccessful) of \(unarchivedFiles.count) tunnels from zip archive")
             }
         }
     }
