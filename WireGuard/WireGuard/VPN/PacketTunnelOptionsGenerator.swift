@@ -6,8 +6,8 @@ import Network
 
 class PacketTunnelOptionsGenerator {
     static func generateOptions(from tc: TunnelConfiguration,
-                                withResolvedEndpoints resolvedEndpoints: [Endpoint?]) -> [String:NSObject] {
-        var options: [String:NSObject] = [:]
+                                withResolvedEndpoints resolvedEndpoints: [Endpoint?]) -> [String: NSObject] {
+        var options: [String: NSObject] = [:]
 
         // Interface name
 

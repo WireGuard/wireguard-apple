@@ -17,8 +17,8 @@ struct InterfaceConfiguration: Codable {
     var name: String
     var privateKey: Data
     var addresses: [IPAddressRange] = []
-    var listenPort: UInt16? = nil
-    var mtu: UInt16? = nil
+    var listenPort: UInt16?
+    var mtu: UInt16?
     var dns: [DNSServer] = []
 
     var publicKey: Data {

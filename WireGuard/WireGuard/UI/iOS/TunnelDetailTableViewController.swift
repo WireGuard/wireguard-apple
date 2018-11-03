@@ -62,7 +62,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
     func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView,
                                onConfirmed: @escaping (() -> Void)) {
-        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (action) in
+        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (_) in
             onConfirmed()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -221,11 +221,11 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
         get { return statusSwitch.isUserInteractionEnabled }
         set(value) { statusSwitch.isUserInteractionEnabled = value }
     }
-    var onSwitchToggled: ((Bool) -> Void)? = nil
+    var onSwitchToggled: ((Bool) -> Void)?
     private var isOnSwitchToggledHandlerEnabled: Bool = true
 
     let statusSwitch: UISwitch
-    private var statusObservervationToken: AnyObject? = nil
+    private var statusObservervationToken: AnyObject?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         statusSwitch = UISwitch()
@@ -382,7 +382,7 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
         get { return button.tintColor == UIColor.red }
         set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
     }
-    var onTapped: (() -> Void)? = nil
+    var onTapped: (() -> Void)?
 
     let button: UIButton
     var buttonStandardTintColor: UIColor

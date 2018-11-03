@@ -32,7 +32,7 @@ enum TunnelManagementError: Error {
 class TunnelsManager {
 
     private var tunnels: [TunnelContainer]
-    weak var delegate: TunnelsManagerDelegate? = nil
+    weak var delegate: TunnelsManagerDelegate?
 
     private var isAddingTunnel: Bool = false
     private var isModifyingTunnel: Bool = false
@@ -58,7 +58,7 @@ class TunnelsManager {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
             return
         }
-        
+
         if self.tunnels.contains(where: { $0.name == tunnelName }) {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
             return
@@ -97,7 +97,7 @@ class TunnelsManager {
             return
         }
         let tail = tunnelConfigurations.dropFirst()
-        self.add(tunnelConfiguration: head) { [weak self, tail] (tunnel, error) in
+        self.add(tunnelConfiguration: head) { [weak self, tail] (_, error) in
             DispatchQueue.main.async {
                 self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful + (error == nil ? 1 : 0), completionHandler: completionHandler)
             }
@@ -115,7 +115,7 @@ class TunnelsManager {
 
         let tunnelProviderManager = tunnel.tunnelProvider
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
-        var oldName: String? = nil
+        var oldName: String?
         if (isNameChanged) {
             if self.tunnels.contains(where: { $0.name == tunnelName }) {
                 completionHandler(TunnelManagementError.tunnelAlreadyExistsWithThatName)
@@ -238,7 +238,7 @@ class TunnelContainer: NSObject {
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var statusObservationToken: AnyObject?
 
-    private var dnsResolver: DNSResolver? = nil
+    private var dnsResolver: DNSResolver?
 
     init(tunnel: NETunnelProviderManager) {
         self.name = tunnel.localizedDescription ?? "Unnamed"
@@ -314,9 +314,9 @@ class TunnelContainer: NSObject {
         assert(resolvedEndpoints.allSatisfy { (resolvedEndpoint) in
             guard let resolvedEndpoint = resolvedEndpoint else { return true }
             switch (resolvedEndpoint.host) {
-            case .ipv4(_): return true
-            case .ipv6(_): return true
-            case .name(_, _): return false
+            case .ipv4: return true
+            case .ipv6: return true
+            case .name: return false
             }
         })
 

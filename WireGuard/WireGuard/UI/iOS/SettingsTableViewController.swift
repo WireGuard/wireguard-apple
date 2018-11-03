@@ -12,13 +12,13 @@ class SettingsTableViewController: UITableViewController {
         case exportZipArchive = "Export zip archive"
     }
 
-    let settingsFieldsBySection : [[SettingsFields]] = [
+    let settingsFieldsBySection: [[SettingsFields]] = [
         [.exportZipArchive],
         [.iosAppVersion, .goBackendVersion]
     ]
 
     let tunnelsManager: TunnelsManager?
-    var wireguardCaptionedImage: (view: UIView, size: CGSize)? = nil
+    var wireguardCaptionedImage: (view: UIView, size: CGSize)?
 
     init(tunnelsManager: TunnelsManager?) {
         self.tunnelsManager = tunnelsManager
@@ -97,7 +97,7 @@ class SettingsTableViewController: UITableViewController {
             // popoverPresentationController shall be non-nil on the iPad
             activityVC.popoverPresentationController?.sourceView = sourceView
             present(activityVC, animated: true)
-            
+
         } catch (let error) {
             showErrorAlert(title: "Unable to export", message: "There was an error exporting the tunnel configuration archive: \(String(describing: error))")
         }
@@ -201,7 +201,7 @@ class TunnelSettingsTableViewButtonCell: UITableViewCell {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
     }
-    var onTapped: (() -> Void)? = nil
+    var onTapped: (() -> Void)?
 
     let button: UIButton
 

@@ -12,7 +12,7 @@ protocol TunnelEditTableViewControllerDelegate: class {
 
 class TunnelEditTableViewController: UITableViewController {
 
-    weak var delegate: TunnelEditTableViewControllerDelegate? = nil
+    weak var delegate: TunnelEditTableViewControllerDelegate?
 
     let interfaceFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
         [.name],
@@ -388,7 +388,7 @@ extension TunnelEditTableViewController {
 
     func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView,
                                onConfirmed: @escaping (() -> Void)) {
-        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (action) in
+        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (_) in
             onConfirmed()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -440,8 +440,8 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         set(value) { valueTextField.keyboardType = value }
     }
 
-    var onValueChanged: ((String) -> Void)? = nil
-    var onValueBeingEdited: ((String) -> Void)? = nil
+    var onValueChanged: ((String) -> Void)?
+    var onValueBeingEdited: ((String) -> Void)?
 
     let keyLabel: UILabel
     let valueTextField: UITextField
@@ -534,7 +534,7 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
         get { return button.tintColor == UIColor.red }
         set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
     }
-    var onTapped: (() -> Void)? = nil
+    var onTapped: (() -> Void)?
 
     let button: UIButton
     var buttonStandardTintColor: UIColor
@@ -586,7 +586,7 @@ class TunnelEditTableViewSwitchCell: UITableViewCell {
         }
     }
 
-    var onSwitchToggled: ((Bool) -> Void)? = nil
+    var onSwitchToggled: ((Bool) -> Void)?
 
     let switchView: UISwitch
 

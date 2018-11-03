@@ -109,8 +109,8 @@ extension DNSResolver {
                 // getaddrinfo succeeded
                 let ipv4Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET_ADDRSTRLEN))
                 let ipv6Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET6_ADDRSTRLEN))
-                var ipv4AddressString: String? = nil
-                var ipv6AddressString: String? = nil
+                var ipv4AddressString: String?
+                var ipv6AddressString: String?
                 while (resultPointer != nil) {
                     let result = resultPointer!.pointee
                     resultPointer = result.ai_next

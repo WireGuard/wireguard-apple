@@ -6,12 +6,12 @@ import MobileCoreServices
 
 class TunnelsListTableViewController: UIViewController {
 
-    var tunnelsManager: TunnelsManager? = nil
-    var onTunnelsManagerReady: ((TunnelsManager) -> Void)? = nil
+    var tunnelsManager: TunnelsManager?
+    var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
 
-    var busyIndicator: UIActivityIndicatorView? = nil
-    var centeredAddButton: BorderedTextButton? = nil
-    var tableView: UITableView? = nil
+    var busyIndicator: UIActivityIndicatorView?
+    var centeredAddButton: BorderedTextButton?
+    var tableView: UITableView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,17 +88,17 @@ class TunnelsListTableViewController: UIViewController {
     @objc func addButtonTapped(sender: AnyObject) {
         if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
-        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (action) in
+        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (_) in
             self?.presentViewControllerForFileImport()
         }
         alert.addAction(importFileAction)
 
-        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] (action) in
+        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] (_) in
             self?.presentViewControllerForScanningQRCode()
         }
         alert.addAction(scanQRCodeAction)
 
-        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (action) in
+        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (_) in
             if let s = self, let tunnelsManager = s.tunnelsManager {
                 s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
             }
@@ -181,7 +181,7 @@ class TunnelsListTableViewController: UIViewController {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     }
@@ -203,7 +203,7 @@ class TunnelsListTableViewController: UIViewController {
                 showErrorAlert(title: "Unable to read zip archive", message: "Unexpected error: \(String(describing: error))")
                 return
             }
-            
+
             for (i, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
                 let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent
                 if let trimmedName = fileBaseName?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmedName.isEmpty {
@@ -218,7 +218,7 @@ class TunnelsListTableViewController: UIViewController {
             }
             guard let tunnelsManager = tunnelsManager else { return }
             unarchivedFiles.sort { $0.fileName < $1.fileName }
-            var lastFileName : String?
+            var lastFileName: String?
             var configs: [TunnelConfiguration] = []
             for file in unarchivedFiles {
                 if file.fileName == lastFileName {
@@ -258,8 +258,8 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
 
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
-                       completionHandler: (() ->Void)?) {
-        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
+                       completionHandler: (() -> Void)?) {
+        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
             if let error = error {
                 ErrorPresenter.showErrorAlert(error: error, from: qrScanViewController, onDismissal: completionHandler)
             } else {
@@ -354,7 +354,7 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelMoved(at oldIndex: Int, to newIndex: Int) {
         tableView?.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
-    
+
     func tunnelRemoved(at index: Int) {
         tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
@@ -377,14 +377,14 @@ class TunnelsListTableViewCell: UITableViewCell {
             }
         }
     }
-    var onSwitchToggled: ((Bool) -> Void)? = nil
+    var onSwitchToggled: ((Bool) -> Void)?
 
     let nameLabel: UILabel
     let busyIndicator: UIActivityIndicatorView
     let statusSwitch: UISwitch
 
-    private var statusObservervationToken: AnyObject? = nil
-    private var nameObservervationToken: AnyObject? = nil
+    private var statusObservervationToken: AnyObject?
+    private var nameObservervationToken: AnyObject?
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         nameLabel = UILabel()
@@ -466,7 +466,7 @@ class BorderedTextButton: UIView {
         set(value) { button.setTitle(value, for: .normal) }
     }
 
-    var onTapped: (() -> Void)? = nil
+    var onTapped: (() -> Void)?
 
     init() {
         button = UIButton(type: .system)
@@ -491,4 +491,3 @@ class BorderedTextButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

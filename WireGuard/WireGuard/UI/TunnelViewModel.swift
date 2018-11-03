@@ -39,7 +39,7 @@ class TunnelViewModel {
     class InterfaceData {
         var scratchpad: [InterfaceField: String] = [:]
         var fieldsWithError: Set<InterfaceField> = []
-        var validatedConfiguration: InterfaceConfiguration? = nil
+        var validatedConfiguration: InterfaceConfiguration?
 
         subscript(field: InterfaceField) -> String {
             get {
@@ -176,7 +176,7 @@ class TunnelViewModel {
         var index: Int
         var scratchpad: [PeerField: String] = [:]
         var fieldsWithError: Set<PeerField> = []
-        var validatedConfiguration: PeerConfiguration? = nil
+        var validatedConfiguration: PeerConfiguration?
 
         // For exclude private IPs
         var shouldAllowExcludePrivateIPsControl: Bool = false /* Read-only from the VC's point of view */
