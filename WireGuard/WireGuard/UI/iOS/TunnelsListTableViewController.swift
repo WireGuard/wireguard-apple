@@ -179,7 +179,7 @@ class TunnelsListTableViewController: UIViewController {
     func importFromFile(url: URL) {
         // Import configurations from a .conf or a .zip file
         if (url.pathExtension == "conf") {
-            let fileBaseName = url.deletingPathExtension().lastPathComponent
+            let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
                 tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (tunnel, error) in
@@ -206,7 +206,8 @@ class TunnelsListTableViewController: UIViewController {
             }
             
             for (i, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
-                if let trimmedName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent, !trimmedName.isEmpty {
+                let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent
+                if let trimmedName = fileBaseName?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmedName.isEmpty {
                     unarchivedFiles[i].fileName = trimmedName
                 } else {
                     unarchivedFiles.remove(at: i)

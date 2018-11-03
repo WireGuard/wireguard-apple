@@ -116,7 +116,7 @@ class QRScanViewController: UIViewController {
         alert.addTextField(configurationHandler: nil)
         alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
-            let title = alert.textFields?[0].text ?? ""
+            let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
             if (title.isEmpty) { return }
             tunnelConfiguration.interface.name = title
             if let s = self {
