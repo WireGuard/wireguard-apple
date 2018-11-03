@@ -311,6 +311,7 @@ extension TunnelsListTableViewController: UITableViewDataSource {
 
 extension TunnelsListTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
