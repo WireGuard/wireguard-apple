@@ -40,19 +40,11 @@ class SettingsTableViewController: UITableViewController {
         self.tableView.register(TunnelSettingsTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelSettingsTableViewKeyValueCell.id)
         self.tableView.register(TunnelSettingsTableViewButtonCell.self, forCellReuseIdentifier: TunnelSettingsTableViewButtonCell.id)
 
-        let wireguardCaptionedImage = UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!
-        let wireguardCaptionedImageView = UIImageView(image: wireguardCaptionedImage)
-        wireguardCaptionedImageView.contentMode = .scaleAspectFit
-        let wireguardCaptionedImageContainerView = UIView()
-        wireguardCaptionedImageContainerView.addSubview(wireguardCaptionedImageView)
-        wireguardCaptionedImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            wireguardCaptionedImageView.topAnchor.constraint(equalTo: wireguardCaptionedImageContainerView.layoutMarginsGuide.topAnchor),
-            wireguardCaptionedImageView.bottomAnchor.constraint(equalTo: wireguardCaptionedImageContainerView.layoutMarginsGuide.bottomAnchor),
-            wireguardCaptionedImageView.leftAnchor.constraint(equalTo: wireguardCaptionedImageContainerView.layoutMarginsGuide.leftAnchor),
-            wireguardCaptionedImageView.rightAnchor.constraint(equalTo: wireguardCaptionedImageContainerView.layoutMarginsGuide.rightAnchor),
-            ])
-        self.wireguardCaptionedImage = (view: wireguardCaptionedImageContainerView, size: wireguardCaptionedImage.size)
+        let logo = UIImageView(image: UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!)
+        logo.contentMode = .scaleAspectFit
+        //TODO(roopesh): limit size to 1.5 * rowheight, and anchor to bottom
+        self.tableView.tableFooterView = logo
+
     }
 
     @objc func doneTapped() {
@@ -155,17 +147,6 @@ extension SettingsTableViewController {
             }
             return cell
         }
-    }
-
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard (section == 1) else { return nil }
-        return self.wireguardCaptionedImage?.view
-    }
-
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        guard (section == 1) else { return 0 }
-        guard let imageSize = self.wireguardCaptionedImage?.size else { return 0 }
-        return min(tableView.rowHeight * 1.5, (tableView.bounds.width / imageSize.width) * imageSize.height)
     }
 }
 
