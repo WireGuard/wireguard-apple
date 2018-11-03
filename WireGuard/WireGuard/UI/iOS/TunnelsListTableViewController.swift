@@ -312,11 +312,11 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelModified(at index: Int) {
         tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
-
-    func tunnelsChanged() {
-        tableView.reloadData()
+    
+    func tunnelMoved(at oldIndex: Int, to newIndex: Int) {
+        tableView.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
-
+    
     func tunnelRemoved(at index: Int) {
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
