@@ -12,9 +12,9 @@ class SettingsTableViewController: UITableViewController {
         case exportZipArchive = "Export zip archive"
     }
 
-    let settingsFieldsBySection: [[SettingsFields]] = [
-        [.exportZipArchive],
-        [.iosAppVersion, .goBackendVersion]
+    let settingsFieldsBySection : [[SettingsFields]] = [
+        [.iosAppVersion, .goBackendVersion],
+        [.exportZipArchive]
     ]
 
     let tunnelsManager: TunnelsManager?
@@ -118,9 +118,9 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch (section) {
         case 0:
-            return "Export configurations"
-        case 1:
             return "About"
+        case 1:
+            return "Export configurations"
         default:
             return nil
         }
