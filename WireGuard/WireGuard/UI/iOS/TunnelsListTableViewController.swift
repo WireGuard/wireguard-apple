@@ -147,7 +147,6 @@ class TunnelsListTableViewController: UIViewController {
 
     func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
         let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
-        editVC.delegate = self
         let editNC = UINavigationController(rootViewController: editVC)
         editNC.modalPresentationStyle = .formSheet
         self.present(editNC, animated: true)
@@ -242,21 +241,6 @@ class TunnelsListTableViewController: UIViewController {
                     message: "Created \(numberSuccessful) of \(unarchivedFiles.count) tunnels from zip archive")
             }
         }
-    }
-}
-
-// MARK: TunnelEditTableViewControllerDelegate
-
-extension TunnelsListTableViewController: TunnelEditTableViewControllerDelegate {
-    func tunnelSaved(tunnel: TunnelContainer) {
-        guard let tunnelsManager = tunnelsManager else { return }
-        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
-                                                             tunnel: tunnel)
-        let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
-        showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
-    }
-    func tunnelEditingCancelled() {
-        // Nothing to do here
     }
 }
 
