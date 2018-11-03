@@ -364,7 +364,7 @@ class TunnelContainer: NSObject {
                                      resolvedEndpoints: [Endpoint?],
                                      completionHandler: @escaping (Error?) -> Void) {
         if (recursionCount >= 8) {
-            os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@.", log: OSLog.default, type: .error, "\(lastError!)")
+            os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@", log: OSLog.default, type: .error, "\(lastError!)")
             completionHandler(TunnelActivationError.tunnelActivationFailed)
             return
         }
@@ -384,7 +384,7 @@ class TunnelContainer: NSObject {
         guard (tunnelProvider.isEnabled) else {
             // In case the tunnel had gotten disabled, re-enable and save it,
             // then call this function again.
-            os_log("startActivation: Tunnel is disabled. Re-enabling and saving.", log: OSLog.default, type: .info)
+            os_log("startActivation: Tunnel is disabled. Re-enabling and saving", log: OSLog.default, type: .info)
             tunnelProvider.isEnabled = true
             tunnelProvider.saveToPreferences { [weak self] (error) in
                 if (error != nil) {
@@ -392,7 +392,7 @@ class TunnelContainer: NSObject {
                     completionHandler(error)
                     return
                 }
-                os_log("startActivation: Tunnel saved after re-enabling.", log: OSLog.default, type: .info)
+                os_log("startActivation: Tunnel saved after re-enabling", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
                 self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
             }
@@ -411,7 +411,7 @@ class TunnelContainer: NSObject {
             os_log("startActivation: Success", log: OSLog.default, type: .debug)
             completionHandler(nil)
         } catch (let error) {
-            os_log("startActivation: Error starting tunnel. Examining error.", log: OSLog.default, type: .debug)
+            os_log("startActivation: Error starting tunnel. Examining error", log: OSLog.default, type: .debug)
             guard let vpnError = error as? NEVPNError else {
                 os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 status = .inactive
@@ -435,7 +435,7 @@ class TunnelContainer: NSObject {
                     completionHandler(error)
                     return
                 }
-                os_log("startActivation: Tunnel reloaded.", log: OSLog.default, type: .info)
+                os_log("startActivation: Tunnel reloaded", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
                 self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
             }
