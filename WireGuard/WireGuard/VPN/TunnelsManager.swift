@@ -415,6 +415,7 @@ class TunnelContainer: NSObject {
                 }
                 if (s.status == .resolvingEndpointDomains && connection.status == .disconnected) {
                     // Don't change to .inactive if we're still resolving endpoints
+                    assert(false)
                     return
                 }
                 s.status = TunnelStatus(from: connection.status)
