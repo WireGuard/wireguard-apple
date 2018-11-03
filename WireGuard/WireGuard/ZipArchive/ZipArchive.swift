@@ -61,10 +61,10 @@ class ZipArchive {
                 throw ZipArchiveError.badArchive
             }
 
-            let fileName = String(cString: fileNameBuffer)
-            let fileExtension = URL(string: fileName)?.pathExtension ?? ""
+            if let fileURL = URL(string: String(cString: fileNameBuffer)),
+                !fileURL.hasDirectoryPath,
+                requiredFileExtensions.contains(fileURL.pathExtension) {
 
-            if (requiredFileExtensions.contains(fileExtension)) {
                 var unzippedData = Data()
                 var bytesRead: Int32 = 0
                 repeat {
@@ -77,7 +77,7 @@ class ZipArchive {
                         unzippedData.append(dataRead)
                     }
                 } while (bytesRead > 0)
-                results.append((fileName: fileName, contents: unzippedData))
+                results.append((fileName: fileURL.lastPathComponent, contents: unzippedData))
             }
 
             guard (unzCloseCurrentFile(zipFile) == UNZ_OK) else {
