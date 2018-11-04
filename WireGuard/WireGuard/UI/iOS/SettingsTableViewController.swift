@@ -42,9 +42,20 @@ class SettingsTableViewController: UITableViewController {
 
         let logo = UIImageView(image: UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!)
         logo.contentMode = .scaleAspectFit
-        //TODO(roopesh): limit size to 1.5 * rowheight, and anchor to bottom
+        let height = self.tableView.rowHeight * 1.5
+        let width = height * logo.image!.size.width / logo.image!.size.height
+        logo.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        logo.bounds = logo.frame.insetBy(dx: 2, dy: 2)
         self.tableView.tableFooterView = logo
 
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        guard let logo = self.tableView.tableFooterView else { return }
+        let fullHeight = max(self.tableView.contentSize.height, self.tableView.bounds.size.height - self.tableView.layoutMargins.top)
+        let e = logo.frame
+        let padding = CGFloat(10)
+        logo.frame = CGRect(x: e.minX, y: fullHeight - e.height - padding, width: e.width, height: e.height)
     }
 
     @objc func doneTapped() {
