@@ -216,7 +216,7 @@ extension NETunnelProviderProtocol {
         let appId = Bundle.main.bundleIdentifier!
         let firstValidEndpoint = tunnelConfiguration.peers.first(where: { $0.endpoint != nil })?.endpoint
 
-        providerBundleIdentifier = "\(appId).WireGuardNetworkExtension"
+        providerBundleIdentifier = "\(appId).network-extension"
         providerConfiguration = [
             "tunnelConfiguration": serializedTunnelConfiguration,
             "tunnelConfigurationVersion": 1
