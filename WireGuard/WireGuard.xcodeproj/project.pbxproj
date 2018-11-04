@@ -122,7 +122,7 @@
 		6FF4AC1E211EC472002C96EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6FF4AC21211EC472002C96EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6FF4AC23211EC472002C96EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6FF4AC2B211EC776002C96EB /* Developer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Developer.xcconfig; path = Config/Developer.xcconfig; sourceTree = "<group>"; };
+		6FF4AC2B211EC776002C96EB /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Config/Config.xcconfig; sourceTree = "<group>"; };
 		6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -313,7 +313,7 @@
 				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
 				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
 				6FF4AC23211EC472002C96EB /* Info.plist */,
-				6FF4AC2B211EC776002C96EB /* Developer.xcconfig */,
+				6FF4AC2B211EC776002C96EB /* Config.xcconfig */,
 				6F689999218043390012E523 /* WireGuard-Bridging-Header.h */,
 			);
 			path = WireGuard;
@@ -621,7 +621,7 @@
 		};
 		6FF4AC24211EC472002C96EB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FF4AC2B211EC776002C96EB /* Developer.xcconfig */;
+			baseConfigurationReference = 6FF4AC2B211EC776002C96EB /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -681,7 +681,7 @@
 		};
 		6FF4AC25211EC472002C96EB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6FF4AC2B211EC776002C96EB /* Developer.xcconfig */;
+			baseConfigurationReference = 6FF4AC2B211EC776002C96EB /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
