@@ -90,4 +90,6 @@ example: $(DESTDIR)/example
 clean:
 	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/example" "$(DESTDIR)/wireguard-go-version.h"
 
-.PHONY: clean build example version-header
+install: build
+
+.PHONY: clean build example version-header install
