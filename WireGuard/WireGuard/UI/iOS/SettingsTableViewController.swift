@@ -172,7 +172,7 @@ class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
         set(value) { detailTextLabel?.text = value }
     }
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: TunnelSettingsTableViewKeyValueCell.id)
     }
 
@@ -197,7 +197,7 @@ class TunnelSettingsTableViewButtonCell: UITableViewCell {
 
     let button: UIButton
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
