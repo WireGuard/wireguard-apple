@@ -28,7 +28,7 @@ version-header: $(DESTDIR)/wireguard-go-version.h
 
 GOBUILDARCH := $(GOARCH_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOBUILDVERSION := 1.11.1
+GOBUILDVERSION := 1.11.2
 GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
 GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
 export GOROOT := $(BUILDDIR)/goroot
@@ -68,7 +68,7 @@ $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
 	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
 	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
 	GOARCH="$(GOARCH_$(1))" \
-	go build -tags ios -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive && go version > "$(BUILDDIR)/.gobuildversion"; \
+	go build -tags ios -ldflags=-w -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive && go version > "$(BUILDDIR)/.gobuildversion"; \
 	ret=$$$$?; \
 	rm -f "$(BUILDDIR)/libwg-go-$(1).h"; \
 	exit $$$$ret
