@@ -96,6 +96,10 @@ class TunnelViewModel {
         }
 
         func save() -> SaveResult<InterfaceConfiguration> {
+            if let validatedConfiguration = validatedConfiguration {
+                // It's already validated and saved
+                return .saved(validatedConfiguration)
+            }
             fieldsWithError.removeAll()
             guard let name = scratchpad[.name]?.trimmingCharacters(in: .whitespacesAndNewlines), (!name.isEmpty) else {
                 fieldsWithError.insert(.name)
@@ -234,6 +238,10 @@ class TunnelViewModel {
         }
 
         func save() -> SaveResult<PeerConfiguration> {
+            if let validatedConfiguration = validatedConfiguration {
+                // It's already validated and saved
+                return .saved(validatedConfiguration)
+            }
             fieldsWithError.removeAll()
             guard let publicKeyString = scratchpad[.publicKey] else {
                 fieldsWithError.insert(.publicKey)
