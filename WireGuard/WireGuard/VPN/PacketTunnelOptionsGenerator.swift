@@ -48,19 +48,23 @@ class PacketTunnelOptionsGenerator {
 
         // Remote address
 
-        let remoteAddress: String
-        if let firstEndpoint = resolvedEndpoints.compactMap({ $0 }).first {
-            switch (firstEndpoint.host) {
+        /* iOS requires a tunnel endpoint, whereas in WireGuard it's valid for
+         * a tunnel to have no endpoint, or for there to be many endpoints, in
+         * which case, displaying a single one in settings doesn't really
+         * make sense. So, we fill it in with this placeholder, which is not
+         * a valid IP address that will actually route over the Internet.
+         */
+        var remoteAddress: String = "0.0.0.0"
+        let endpointsCompact = resolvedEndpoints.compactMap({ $0 })
+        if endpointsCompact.count == 1 {
+            switch (endpointsCompact.first!.host) {
             case .ipv4(let address):
                 remoteAddress = "\(address)"
             case .ipv6(let address):
                 remoteAddress = "\(address)"
             default:
-                fatalError("Endpoint must be resolved")
+                break
             }
-        } else {
-            // We don't have any peer with an endpoint
-            remoteAddress = ""
         }
 
         options[.remoteAddress] = remoteAddress as NSObject

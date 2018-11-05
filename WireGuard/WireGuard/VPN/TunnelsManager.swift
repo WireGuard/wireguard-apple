@@ -13,7 +13,6 @@ protocol TunnelsManagerDelegate: class {
 }
 
 enum TunnelActivationError: Error {
-    case noEndpoint
     case dnsResolutionFailed
     case tunnelActivationFailed
     case attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: TunnelStatus)
@@ -214,14 +213,20 @@ extension NETunnelProviderProtocol {
         self.init()
 
         let appId = Bundle.main.bundleIdentifier!
-        let firstValidEndpoint = tunnelConfiguration.peers.first(where: { $0.endpoint != nil })?.endpoint
-
         providerBundleIdentifier = "\(appId).network-extension"
         providerConfiguration = [
             "tunnelConfiguration": serializedTunnelConfiguration,
             "tunnelConfigurationVersion": 1
         ]
-        serverAddress = firstValidEndpoint?.stringRepresentation() ?? "Unspecified"
+
+        let endpoints = tunnelConfiguration.peers.compactMap({$0.endpoint})
+        if endpoints.count == 1 {
+            serverAddress = endpoints.first!.stringRepresentation()
+        } else if endpoints.isEmpty {
+            serverAddress = "Unspecified"
+        } else {
+            serverAddress = "Multiple endpoints"
+        }
         username = tunnelConfiguration.interface.name
     }
 
@@ -261,15 +266,6 @@ class TunnelContainer: NSObject {
 
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-
-        // Ensure there's a tunner server address we can give to iOS
-        guard (endpoints.contains(where: { $0 != nil })) else {
-            DispatchQueue.main.async { [weak self] in
-                self?.status = .inactive
-                completionHandler(TunnelActivationError.noEndpoint)
-            }
-            return
-        }
 
         // Resolve DNS and start the tunnel
         let dnsResolver = DNSResolver(endpoints: endpoints)
