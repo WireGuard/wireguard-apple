@@ -47,15 +47,15 @@ class SettingsTableViewController: UITableViewController {
         logo.frame = CGRect(x: 0, y: 0, width: width, height: height)
         logo.bounds = logo.frame.insetBy(dx: 2, dy: 2)
         self.tableView.tableFooterView = logo
-
     }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard let logo = self.tableView.tableFooterView else { return }
-        let fullHeight = max(self.tableView.contentSize.height, self.tableView.bounds.size.height - self.tableView.layoutMargins.top)
+        let bottomPadding = max(self.tableView.layoutMargins.bottom, CGFloat(10))
+        let fullHeight = max(self.tableView.contentSize.height, self.tableView.bounds.size.height - self.tableView.layoutMargins.top - bottomPadding)
         let e = logo.frame
-        let padding = CGFloat(10)
-        logo.frame = CGRect(x: e.minX, y: fullHeight - e.height - padding, width: e.width, height: e.height)
+        logo.frame = CGRect(x: e.minX, y: fullHeight - e.height, width: e.width, height: e.height)
     }
 
     @objc func doneTapped() {
