@@ -92,7 +92,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkSettings.ipv4Settings = ipv4Settings
 
         // IPv6 settings
-        let ipv6Settings = NEIPv6Settings(addresses: ipv6Addresses, networkPrefixLengths: ipv6NetworkPrefixLengths)
+
+        /* Big fat ugly hack for broken iOS networking stack: the smallest prefix that will have
+         * any effect on iOS is a /120, so we clamp everything above to /120. This is potentially
+         * very bad, if various network parameters were actually relying on that subnet being
+         * intentionally small. TODO: talk about this with upstream iOS devs.
+         */
+        let ipv6Settings = NEIPv6Settings(addresses: ipv6Addresses, networkPrefixLengths: ipv6NetworkPrefixLengths.map { NSNumber(value: min(120, $0.intValue)) })
         assert(ipv6IncludedRouteAddresses.count == ipv6IncludedRouteNetworkPrefixLengths.count)
         ipv6Settings.includedRoutes = zip(ipv6IncludedRouteAddresses, ipv6IncludedRouteNetworkPrefixLengths).map {
             NEIPv6Route(destinationAddress: $0.0, networkPrefixLength: $0.1)
