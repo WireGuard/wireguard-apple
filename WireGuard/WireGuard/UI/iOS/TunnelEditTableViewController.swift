@@ -448,7 +448,7 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
 
     private var textFieldValueOnBeginEditing: String = ""
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
         valueTextField = UITextField()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -539,7 +539,7 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
     let button: UIButton
     var buttonStandardTintColor: UIColor
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
         buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -590,7 +590,7 @@ class TunnelEditTableViewSwitchCell: UITableViewCell {
 
     let switchView: UISwitch
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         switchView = UISwitch()
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
         accessoryView = switchView

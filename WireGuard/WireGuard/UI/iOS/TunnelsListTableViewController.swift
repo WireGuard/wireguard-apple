@@ -25,7 +25,7 @@ class TunnelsListTableViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = settingsButtonItem
 
         // Set up the busy indicator
-        let busyIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        let busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
 
         // Add the busyIndicator, centered
@@ -386,9 +386,9 @@ class TunnelsListTableViewCell: UITableViewCell {
     private var statusObservervationToken: AnyObject?
     private var nameObservervationToken: AnyObject?
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         nameLabel = UILabel()
-        busyIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+        busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
         statusSwitch = UISwitch()
         super.init(style: style, reuseIdentifier: reuseIdentifier)

@@ -227,7 +227,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
     let statusSwitch: UISwitch
     private var statusObservervationToken: AnyObject?
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         statusSwitch = UISwitch()
         super.init(style: .default, reuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
         accessoryView = statusSwitch
@@ -308,7 +308,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
     let valueLabel: UILabel
     let valueScroller: UIScrollView
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
         valueLabel = UILabel()
         valueScroller = UIScrollView()
@@ -387,7 +387,7 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
     let button: UIButton
     var buttonStandardTintColor: UIColor
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
         buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
