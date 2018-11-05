@@ -114,7 +114,12 @@ class WgQuickConfigFileParser {
                 // Line contains an attribute
                 let key = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
                 let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
-                attributes[key] = value
+                let keysWithMultipleEntriesAllowed: Set<String> = ["Address", "AllowedIPs", "DNS"]
+                if let presentValue = attributes[key], keysWithMultipleEntriesAllowed.contains(key) {
+                    attributes[key] = presentValue + "," + value
+                } else {
+                    attributes[key] = value
+                }
             } else {
                 if (lowercasedLine != "[interface]" && lowercasedLine != "[peer]") {
                     throw ParseError.invalidLine(line)
