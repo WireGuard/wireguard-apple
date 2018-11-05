@@ -21,8 +21,6 @@ class ErrorPresenter {
             return ("Unable to remove tunnel", "Internal error")
 
         // TunnelActivationError
-        case TunnelActivationError.noEndpoint:
-            return ("Endpoint missing", "There must be at least one peer with an endpoint")
         case TunnelActivationError.dnsResolutionFailed:
             return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
         case TunnelActivationError.tunnelActivationFailed:
