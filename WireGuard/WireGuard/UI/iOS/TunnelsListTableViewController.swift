@@ -175,21 +175,8 @@ class TunnelsListTableViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func importFromFile(url: URL, shouldConsiderAsConfigEvenWithoutExtensionMatch: Bool = false) {
-        // Import configurations from a .conf or a .zip file
-        if (url.pathExtension == "conf" || shouldConsiderAsConfigEvenWithoutExtensionMatch) {
-            let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let fileContents = try? String(contentsOf: url),
-                let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
-                    if let error = error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self)
-                    }
-                }
-            } else {
-                showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration.")
-            }
-        } else if (url.pathExtension == "zip") {
+    func importFromFile(url: URL) {
+        if (url.pathExtension == "zip") {
             var unarchivedFiles: [(fileName: String, contents: Data)] = []
             do {
                 unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
@@ -240,8 +227,18 @@ class TunnelsListTableViewController: UIViewController {
                 self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
                     message: "Created \(numberSuccessful) of \(unarchivedFiles.count) tunnels from zip archive")
             }
-        } else {
-            fatalError("Unsupported file extension")
+        } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
+            let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let fileContents = try? String(contentsOf: url),
+                let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
+                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
+                    if let error = error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                    }
+                }
+            } else {
+                showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration.")
+            }
         }
     }
 }
@@ -250,15 +247,7 @@ class TunnelsListTableViewController: UIViewController {
 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        if let url = urls.first {
-            if (url.pathExtension == "conf" || url.pathExtension == "zip") {
-                importFromFile(url: url)
-            } else {
-                // In case a file provider extension didn't respect our 'documentTypes' parameter,
-                // we'll still assume it's a config file.
-                importFromFile(url: url, shouldConsiderAsConfigEvenWithoutExtensionMatch: true)
-            }
-        }
+        urls.forEach(importFromFile)
     }
 }
 
