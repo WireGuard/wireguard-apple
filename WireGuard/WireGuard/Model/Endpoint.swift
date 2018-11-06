@@ -75,3 +75,16 @@ extension Endpoint: Codable {
         case invalidData
     }
 }
+
+extension Endpoint {
+    func hasHostAsIPAddress() -> Bool {
+        switch (host) {
+        case .name(_, _):
+            return false
+        case .ipv4(_):
+            return true
+        case .ipv6(_):
+            return true
+        }
+    }
+}
