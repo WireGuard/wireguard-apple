@@ -61,6 +61,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tableView.allowsSelection = false
 
         self.tableView.register(TunnelEditTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelEditTableViewKeyValueCell.id)
+        self.tableView.register(TunnelEditTableViewReadOnlyKeyValueCell.self, forCellReuseIdentifier: TunnelEditTableViewReadOnlyKeyValueCell.id)
         self.tableView.register(TunnelEditTableViewButtonCell.self, forCellReuseIdentifier: TunnelEditTableViewButtonCell.id)
         self.tableView.register(TunnelEditTableViewSwitchCell.self, forCellReuseIdentifier: TunnelEditTableViewSwitchCell.id)
     }
@@ -184,6 +185,11 @@ extension TunnelEditTableViewController {
                         }
                     }
                 }
+                return cell
+            } else if (field == .publicKey) {
+                let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewReadOnlyKeyValueCell.id, for: indexPath) as! TunnelEditTableViewReadOnlyKeyValueCell
+                cell.key = field.rawValue
+                cell.value = interfaceData[field]
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewKeyValueCell.id, for: indexPath) as! TunnelEditTableViewKeyValueCell
@@ -521,6 +527,70 @@ extension TunnelEditTableViewKeyValueCell: UITextFieldDelegate {
             onValueBeingEdited(modifiedText)
         }
         return true
+    }
+}
+
+class TunnelEditTableViewReadOnlyKeyValueCell: CopyableLabelTableViewCell {
+    static let id: String = "TunnelEditTableViewReadOnlyKeyValueCell"
+    var key: String {
+        get { return keyLabel.text ?? "" }
+        set(value) {keyLabel.text = value }
+    }
+    var value: String {
+        get { return valueLabel.text }
+        set(value) { valueLabel.text = value }
+    }
+
+    let keyLabel: UILabel
+    let valueLabel: ScrollableLabel
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        keyLabel = UILabel()
+        valueLabel = ScrollableLabel()
+
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        keyLabel.textColor = UIColor.gray
+        valueLabel.textColor = UIColor.gray
+
+        contentView.addSubview(keyLabel)
+        keyLabel.translatesAutoresizingMaskIntoConstraints = false
+        keyLabel.textAlignment = .right
+        let widthRatioConstraint = NSLayoutConstraint(item: keyLabel, attribute: .width,
+                                                      relatedBy: .equal,
+                                                      toItem: self, attribute: .width,
+                                                      multiplier: 0.4, constant: 0)
+        // In case the key doesn't fit into 0.4 * width,
+        // so set a CR priority > the 0.4-constraint's priority.
+        widthRatioConstraint.priority = .defaultHigh + 1
+        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
+        NSLayoutConstraint.activate([
+            keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+            widthRatioConstraint
+            ])
+
+        contentView.addSubview(valueLabel)
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            valueLabel.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 16),
+            valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
+            ])
+    }
+
+    override var textToCopy: String? {
+        return self.valueLabel.text
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        key = ""
+        value = ""
     }
 }
 
