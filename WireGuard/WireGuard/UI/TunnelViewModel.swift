@@ -434,6 +434,13 @@ class TunnelViewModel {
                     peerConfigurations.append(peerConfiguration)
                 }
             }
+
+            let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
+            let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+            if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+                return .error("Two or more peers cannot have the same public key")
+            }
+
             let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration)
             tunnelConfiguration.peers = peerConfigurations
             return .saved(tunnelConfiguration)
