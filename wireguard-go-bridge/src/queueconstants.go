@@ -8,9 +8,9 @@ package main
 /* Fit within memory limits for iOS */
 
 const (
-        QueueOutboundSize          = 1024
-        QueueInboundSize           = 1024
-        QueueHandshakeSize         = 1024
-        MaxSegmentSize             = 1700
-        PreallocatedBuffersPerPool = 1024
+	QueueOutboundSize          = 1024
+	QueueInboundSize           = 1024
+	QueueHandshakeSize         = 1024
+	MaxSegmentSize             = 1700
+	PreallocatedBuffersPerPool = 1024
 )
