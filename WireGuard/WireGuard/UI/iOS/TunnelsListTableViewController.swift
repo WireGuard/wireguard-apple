@@ -240,6 +240,8 @@ class TunnelsListTableViewController: UIViewController {
                 self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
                     message: "Created \(numberSuccessful) of \(unarchivedFiles.count) tunnels from zip archive")
             }
+        } else {
+            fatalError("Unsupported file extension")
         }
     }
 }
@@ -249,7 +251,13 @@ class TunnelsListTableViewController: UIViewController {
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         if let url = urls.first {
-            importFromFile(url: url)
+            if (url.pathExtension == "conf" || url.pathExtension == "zip") {
+                importFromFile(url: url)
+            } else {
+                // What if a file provider extension didn't respect our 'documentTypes' parameter
+                self.showErrorAlert(title: "Invalid file extension",
+                    message: "Please select a WireGuard configuration file (.conf) or a zip archive (.zip) for importing")
+            }
         }
     }
 }
