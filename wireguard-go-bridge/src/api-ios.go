@@ -15,6 +15,7 @@ import "C"
 
 import (
 	"bufio"
+	"errors"
 	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
 	"io/ioutil"
@@ -25,7 +26,6 @@ import (
 	"runtime"
 	"strings"
 	"unsafe"
-	"errors"
 )
 
 var loggerFunc unsafe.Pointer
@@ -75,7 +75,7 @@ func wgSetLogger(loggerFn uintptr) {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, settings string, mtu uint16, readFn uintptr, writeFn uintptr, ctx uintptr) int32 {
+func wgTurnOn(ifnameRef string, settings string, tunFd int32) int32 {
 	interfaceName := string([]byte(ifnameRef))
 
 	logger := &Logger{
@@ -86,11 +86,13 @@ func wgTurnOn(ifnameRef string, settings string, mtu uint16, readFn uintptr, wri
 
 	logger.Debug.Println("Debug log enabled")
 
-	tun := tun.CreateTUN(mtu, unsafe.Pointer(readFn), unsafe.Pointer(writeFn), unsafe.Pointer(ctx))
+	tun, _, err := tun.CreateTUNFromFD(int(tunFd))
+	if err != nil {
+		logger.Error.Println(err)
+		return -1
+	}
 	logger.Info.Println("Attaching to interface")
 	device := NewDevice(tun, logger)
-
-	logger.Debug.Println("Interface has MTU", device.tun.mtu)
 
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	setError := ipcSetOperation(device, bufferedSettings)
