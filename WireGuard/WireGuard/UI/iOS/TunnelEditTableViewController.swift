@@ -449,9 +449,9 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
         keyLabel.textAlignment = .right
         let widthRatioConstraint = NSLayoutConstraint(item: keyLabel, attribute: .width,
-                                                  relatedBy: .equal,
-                                                  toItem: self, attribute: .width,
-                                                  multiplier: 0.4, constant: 0)
+                                                      relatedBy: .equal,
+                                                      toItem: self, attribute: .width,
+                                                      multiplier: 0.4, constant: 0)
         // The "Persistent Keepalive" key doesn't fit into 0.4 * width on the iPhone SE,
         // so set a CR priority > the 0.4-constraint's priority.
         widthRatioConstraint.priority = .defaultHigh + 1

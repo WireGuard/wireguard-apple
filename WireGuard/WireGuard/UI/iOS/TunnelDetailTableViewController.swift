@@ -9,7 +9,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
     let interfaceFields: [TunnelViewModel.InterfaceField] = [
         .name, .publicKey, .addresses,
-	.listenPort, .mtu, .dns
+        .listenPort, .mtu, .dns
     ]
 
     let peerFields: [TunnelViewModel.PeerField] = [
@@ -125,7 +125,7 @@ extension TunnelDetailTableViewController {
             return "Status"
         } else if (section == 1) {
             // Interface
-	    return "Interface"
+            return "Interface"
         } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
             return "Peer"

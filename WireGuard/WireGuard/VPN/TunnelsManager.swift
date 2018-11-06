@@ -289,8 +289,8 @@ class TunnelContainer: NSObject {
                     return
                 }
                 s.startActivation(tunnelConfiguration: tunnelConfiguration,
-                                resolvedEndpoints: resolvedEndpoints,
-                                completionHandler: completionHandler)
+                                  resolvedEndpoints: resolvedEndpoints,
+                                  completionHandler: completionHandler)
             }
         }
     }
@@ -356,10 +356,10 @@ class TunnelContainer: NSObject {
                 return
             }
             guard (vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale) else {
-                    os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                    status = .inactive
-                    completionHandler(error)
-                    return
+                os_log("Failed to activate tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                status = .inactive
+                completionHandler(error)
+                return
             }
             assert(vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale)
             os_log("startActivation: Error says: %{public}@", log: OSLog.default, type: .debug,
