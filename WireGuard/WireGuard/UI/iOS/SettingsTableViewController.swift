@@ -12,7 +12,7 @@ class SettingsTableViewController: UITableViewController {
         case exportZipArchive = "Export zip archive"
     }
 
-    let settingsFieldsBySection : [[SettingsFields]] = [
+    let settingsFieldsBySection: [[SettingsFields]] = [
         [.iosAppVersion, .goBackendVersion],
         [.exportZipArchive]
     ]
