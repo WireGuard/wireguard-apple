@@ -256,7 +256,7 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
             } else {
                 // What if a file provider extension didn't respect our 'documentTypes' parameter
                 self.showErrorAlert(title: "Invalid file extension",
-                    message: "Please select a WireGuard configuration file (.conf) or a zip archive (.zip) for importing")
+                                    message: "Please select a WireGuard configuration file (.conf) or a zip archive (.zip) for importing")
             }
         }
     }
@@ -266,7 +266,7 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
 
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
-                       completionHandler: (() -> Void)?) {
+                          completionHandler: (() -> Void)?) {
         tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
             if let error = error {
                 ErrorPresenter.showErrorAlert(error: error, from: qrScanViewController, onDismissal: completionHandler)
@@ -330,7 +330,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView,
-                            trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (_, _, completionHandler) in
             guard let tunnelsManager = self?.tunnelsManager else { return }
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)

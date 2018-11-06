@@ -19,7 +19,7 @@ extension IPAddressRange {
         let addressString = String(string[string.startIndex ..< endOfIPAddress])
         let address: IPAddress
         if let addr = IPv4Address(addressString) {
-           address = addr
+            address = addr
         } else if let addr = IPv6Address(addressString) {
             address = addr
         } else {
