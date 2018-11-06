@@ -1,8 +1,3 @@
-
-# ***DO NOT USE: CODEBASE HORRIBLY BROKEN***
-
-----
-
 # [WireGuard](https://www.wireguard.com/) for iOS
 
 ## Building
