@@ -212,10 +212,6 @@ extension TunnelEditTableViewController {
                 case .publicKey: break
                 case .generateKeyPair: break
                 }
-                // Set editable
-                if (field == .publicKey) {
-                    cell.isValueEditable = false
-                }
                 // Set keyboardType
                 if (field == .mtu || field == .listenPort) {
                     cell.keyboardType = .numberPad
@@ -409,7 +405,7 @@ extension TunnelEditTableViewController {
     }
 }
 
-class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
+class TunnelEditTableViewKeyValueCell: UITableViewCell {
     static let id: String = "TunnelEditTableViewKeyValueCell"
     var key: String {
         get { return keyLabel.text ?? "" }
@@ -423,19 +419,10 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         get { return valueTextField.placeholder ?? "" }
         set(value) { valueTextField.placeholder = value }
     }
-    var isValueEditable: Bool {
-        get { return valueTextField.isEnabled }
-        set(value) {
-            super.copyableGesture = !value
-            valueTextField.isEnabled = value
-            keyLabel.textColor = value ? UIColor.black : UIColor.gray
-            valueTextField.textColor = value ? UIColor.black : UIColor.gray
-        }
-    }
     var isValueValid: Bool = true {
         didSet {
             if (isValueValid) {
-                keyLabel.textColor = isValueEditable ? UIColor.black : UIColor.gray
+                keyLabel.textColor = UIColor.black
             } else {
                 keyLabel.textColor = UIColor.red
             }
@@ -458,7 +445,6 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         keyLabel = UILabel()
         valueTextField = UITextField()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        isValueEditable = true
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
         keyLabel.textAlignment = .right
@@ -489,10 +475,6 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         valueTextField.spellCheckingType = .no
     }
 
-    override var textToCopy: String? {
-        return self.valueTextField.text
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -502,7 +484,6 @@ class TunnelEditTableViewKeyValueCell: CopyableLabelTableViewCell {
         key = ""
         value = ""
         placeholderText = ""
-        isValueEditable = true
         isValueValid = true
         keyboardType = .default
         onValueChanged = nil
