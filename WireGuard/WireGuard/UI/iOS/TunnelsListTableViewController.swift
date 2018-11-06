@@ -175,9 +175,9 @@ class TunnelsListTableViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 
-    func importFromFile(url: URL) {
+    func importFromFile(url: URL, shouldConsiderAsConfigEvenWithoutExtensionMatch: Bool = false) {
         // Import configurations from a .conf or a .zip file
-        if (url.pathExtension == "conf") {
+        if (url.pathExtension == "conf" || shouldConsiderAsConfigEvenWithoutExtensionMatch) {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
@@ -254,9 +254,9 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
             if (url.pathExtension == "conf" || url.pathExtension == "zip") {
                 importFromFile(url: url)
             } else {
-                // What if a file provider extension didn't respect our 'documentTypes' parameter
-                self.showErrorAlert(title: "Invalid file extension",
-                                    message: "Please select a WireGuard configuration file (.conf) or a zip archive (.zip) for importing")
+                // In case a file provider extension didn't respect our 'documentTypes' parameter,
+                // we'll still assume it's a config file.
+                importFromFile(url: url, shouldConsiderAsConfigEvenWithoutExtensionMatch: true)
             }
         }
     }
