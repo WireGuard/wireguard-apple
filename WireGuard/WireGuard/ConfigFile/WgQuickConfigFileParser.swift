@@ -16,6 +16,7 @@ class WgQuickConfigFileParser {
         case noInterface
         case invalidInterface
         case multipleInterfaces
+        case multiplePeersWithSamePublicKey
         case invalidPeer
     }
 
@@ -147,6 +148,12 @@ class WgQuickConfigFileParser {
                 parserState = .inPeerSection
                 attributes.removeAll()
             }
+        }
+
+        let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
+        let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+        if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+            throw ParseError.multiplePeersWithSamePublicKey
         }
 
         if let interfaceConfiguration = interfaceConfiguration {
