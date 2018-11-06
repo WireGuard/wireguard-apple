@@ -296,7 +296,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
         set(value) { keyLabel.text = value }
     }
     var value: String {
-        get { return valueLabel.text ?? "" }
+        get { return valueLabel.text }
         set(value) { valueLabel.text = value }
     }
 
@@ -305,38 +305,16 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
     }
 
     let keyLabel: UILabel
-    let valueLabel: UILabel
-    let valueScroller: UIScrollView
+    let valueLabel: ScrollableLabel
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
-        valueLabel = UILabel()
-        valueScroller = UIScrollView()
+        valueLabel = ScrollableLabel()
 
         keyLabel.textColor = UIColor.black
         valueLabel.textColor = UIColor.gray
-        valueScroller.isDirectionalLockEnabled = true
-        valueScroller.showsHorizontalScrollIndicator = false
-        valueScroller.showsVerticalScrollIndicator = false
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        valueScroller.addSubview(valueLabel)
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.textAlignment = .right
-        NSLayoutConstraint.activate([
-            valueLabel.leftAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.leftAnchor),
-            valueLabel.topAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.topAnchor),
-            valueLabel.bottomAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.bottomAnchor),
-            valueLabel.rightAnchor.constraint(equalTo: valueScroller.contentLayoutGuide.rightAnchor),
-            valueLabel.heightAnchor.constraint(equalTo: valueScroller.heightAnchor),
-            ])
-
-        // Value label should expand to fit the scrollView, so that the right-alignment works
-        let expandToFitValueLabelConstraint = NSLayoutConstraint(item: valueLabel, attribute: .width, relatedBy: .equal,
-                                                                 toItem: valueScroller, attribute: .width, multiplier: 1, constant: 0)
-        expandToFitValueLabelConstraint.priority = .defaultLow + 1
-        expandToFitValueLabelConstraint.isActive = true
 
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -346,19 +324,19 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
             keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
             ])
 
-        contentView.addSubview(valueScroller)
-        valueScroller.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(valueLabel)
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            valueScroller.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
-            valueScroller.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueScroller.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 8)
+            valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
+            valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            valueLabel.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 8)
             ])
 
         // Key label should never appear truncated
         keyLabel.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
         // Key label should hug it's content; value label should not.
         keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        valueScroller.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        valueLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
 
     required init?(coder aDecoder: NSCoder) {
