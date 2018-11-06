@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6BB8400421892C920003598F /* CopyableLabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */; };
+		6F0068572191AFD200419BE9 /* ScrollableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0068562191AFD200419BE9 /* ScrollableLabel.swift */; };
 		6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1421832391000F85AD /* DNSResolver.swift */; };
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
 		6F5D0C22218352EF000F85AD /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -78,6 +79,7 @@
 
 /* Begin PBXFileReference section */
 		6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyableLabelTableViewCell.swift; sourceTree = "<group>"; };
+		6F0068562191AFD200419BE9 /* ScrollableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableLabel.swift; sourceTree = "<group>"; };
 		6F5D0C1421832391000F85AD /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardNetworkExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 				6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */,
 				6FDEF805218725D200D8FBF6 /* SettingsTableViewController.swift */,
 				6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */,
+				6F0068562191AFD200419BE9 /* ScrollableLabel.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				6F5D0C482183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift in Sources */,
 				6BB8400421892C920003598F /* CopyableLabelTableViewCell.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
+				6F0068572191AFD200419BE9 /* ScrollableLabel.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */,
