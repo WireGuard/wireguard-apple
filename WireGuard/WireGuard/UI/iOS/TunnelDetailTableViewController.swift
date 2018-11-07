@@ -72,6 +72,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
         // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.sourceView = sourceView
+        alert.popoverPresentationController?.sourceRect = sourceView.bounds
 
         self.present(alert, animated: true, completion: nil)
     }
