@@ -42,6 +42,10 @@ class TunnelsManager {
     }
 
     static func create(completionHandler: @escaping (TunnelsManager?) -> Void) {
+        #if targetEnvironment(simulator)
+        // NETunnelProviderManager APIs don't work on the simulator
+        completionHandler(TunnelsManager(tunnelProviders: []))
+        #else
         NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
             if let error = error {
                 os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
@@ -49,6 +53,7 @@ class TunnelsManager {
             }
             completionHandler(TunnelsManager(tunnelProviders: managers ?? []))
         }
+        #endif
     }
 
     func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
