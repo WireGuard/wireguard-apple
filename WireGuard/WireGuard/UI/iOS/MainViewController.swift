@@ -6,18 +6,23 @@ import UIKit
 class MainViewController: UISplitViewController {
     var tunnelsListVC: TunnelsListTableViewController?
 
-    override func loadView() {
+    init() {
         let detailVC = UIViewController()
+        detailVC.view.backgroundColor = UIColor.white
         let detailNC = UINavigationController(rootViewController: detailVC)
 
         let masterVC = TunnelsListTableViewController()
         let masterNC = UINavigationController(rootViewController: masterVC)
 
+        self.tunnelsListVC = masterVC
+
+        super.init(nibName: nil, bundle: nil)
+
         self.viewControllers = [ masterNC, detailNC ]
+    }
 
-        super.loadView()
-
-        tunnelsListVC = masterVC
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
