@@ -99,8 +99,8 @@ class SettingsTableViewController: UITableViewController {
             let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
             // popoverPresentationController shall be non-nil on the iPad
             activityVC.popoverPresentationController?.sourceView = sourceView
+            activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
             present(activityVC, animated: true)
-
         } catch (let error) {
             showErrorAlert(title: "Unable to export", message: "There was an error exporting the tunnel configuration archive: \(String(describing: error))")
         }
