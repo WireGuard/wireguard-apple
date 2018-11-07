@@ -143,7 +143,10 @@ extension SettingsTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewKeyValueCell.id, for: indexPath) as! TunnelSettingsTableViewKeyValueCell
             cell.key = field.rawValue
             if (field == .iosAppVersion) {
-                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
+                var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
+                if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                    appVersion += " (\(appBuild))"
+                }
                 cell.value = appVersion
             } else if (field == .goBackendVersion) {
                 cell.value = WIREGUARD_GO_VERSION
