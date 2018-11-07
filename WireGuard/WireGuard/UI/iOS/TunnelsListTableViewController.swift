@@ -154,7 +154,7 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     func presentViewControllerForFileImport() {
-        let documentTypes = ["com.wireguard.config.quick", String(kUTTypeZipArchive)]
+        let documentTypes = ["com.wireguard.config.quick", String(kUTTypeText), String(kUTTypeZipArchive)]
         let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
         filePicker.delegate = self
         self.present(filePicker, animated: true)
