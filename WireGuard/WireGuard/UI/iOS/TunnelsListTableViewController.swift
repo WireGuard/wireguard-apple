@@ -113,6 +113,7 @@ class TunnelsListTableViewController: UIViewController {
             alert.popoverPresentationController?.barButtonItem = sender
         } else if let sender = sender as? UIView {
             alert.popoverPresentationController?.sourceView = sender
+            alert.popoverPresentationController?.sourceRect = sender.bounds
         }
         self.present(alert, animated: true, completion: nil)
     }
