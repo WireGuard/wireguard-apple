@@ -25,3 +25,9 @@ struct Curve25519 {
         return publicKey
     }
 }
+
+extension InterfaceConfiguration {
+    var publicKey: Data {
+        return Curve25519.generatePublicKey(fromPrivateKey: privateKey)
+    }
+}

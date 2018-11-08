@@ -21,10 +21,6 @@ struct InterfaceConfiguration: Codable {
     var mtu: UInt16?
     var dns: [DNSServer] = []
 
-    var publicKey: Data {
-        return Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-    }
-
     init(name: String, privateKey: Data) {
         self.name = name
         self.privateKey = privateKey
