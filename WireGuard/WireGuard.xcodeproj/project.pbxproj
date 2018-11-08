@@ -14,7 +14,6 @@
 		6F5D0C22218352EF000F85AD /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */; };
 		6F5D0C462183C0B4000F85AD /* PacketTunnelOptionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */; };
-		6F5D0C482183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C472183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift */; };
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
@@ -44,6 +43,7 @@
 		6FDEF8082187442100D8FBF6 /* WgQuickConfigFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF8072187442100D8FBF6 /* WgQuickConfigFileWriter.swift */; };
 		6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC1E211EC472002C96EB /* Assets.xcassets */; };
 		6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */; };
+		6FFA5D8921942F320001E2F7 /* PacketTunnelOptionsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C472183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */,
+				6F5D0C472183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift */,
 				6F5D0C1E218352EF000F85AD /* Info.plist */,
 				6F5D0C1F218352EF000F85AD /* WireGuardNetworkExtension.entitlements */,
 				6F5D0C3421839E37000F85AD /* WireGuardNetworkExtension-Bridging-Header.h */,
@@ -229,7 +230,6 @@
 			children = (
 				6F7774EE21722D97006A79B3 /* TunnelsManager.swift */,
 				6F5D0C1421832391000F85AD /* DNSResolver.swift */,
-				6F5D0C472183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift */,
 			);
 			path = VPN;
 			sourceTree = "<group>";
@@ -488,6 +488,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F5D0C462183C0B4000F85AD /* PacketTunnelOptionKey.swift in Sources */,
+				6FFA5D8921942F320001E2F7 /* PacketTunnelOptionsGenerator.swift in Sources */,
 				6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -500,7 +501,6 @@
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */,
 				6F5D0C1521832391000F85AD /* DNSResolver.swift in Sources */,
-				6F5D0C482183C6A3000F85AD /* PacketTunnelOptionsGenerator.swift in Sources */,
 				6BB8400421892C920003598F /* CopyableLabelTableViewCell.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6F0068572191AFD200419BE9 /* ScrollableLabel.swift in Sources */,
