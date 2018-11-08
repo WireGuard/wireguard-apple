@@ -488,6 +488,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         isValueValid = true
         keyboardType = .default
         onValueChanged = nil
+        onValueBeingEdited = nil
     }
 }
 
