@@ -248,8 +248,6 @@ class TunnelContainer: NSObject {
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var statusObservationToken: AnyObject?
 
-    private var dnsResolver: DNSResolver?
-
     init(tunnel: NETunnelProviderManager) {
         self.name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
@@ -267,59 +265,22 @@ class TunnelContainer: NSObject {
 
     fileprivate func startActivation(completionHandler: @escaping (Error?) -> Void) {
         assert(status == .inactive || status == .restarting)
-        assert(self.dnsResolver == nil)
 
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
-        let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
 
-        // Resolve DNS and start the tunnel
-        let dnsResolver = DNSResolver(endpoints: endpoints)
-        let resolvedEndpoints = dnsResolver.resolveWithoutNetworkRequests()
-        if let resolvedEndpoints = resolvedEndpoints {
-            // If we don't have to make a DNS network request, we never
-            // change the status to .resolvingEndpointDomains
-            startActivation(tunnelConfiguration: tunnelConfiguration,
-                            resolvedEndpoints: resolvedEndpoints,
-                            completionHandler: completionHandler)
-        } else {
-            status = .resolvingEndpointDomains
-            self.dnsResolver = dnsResolver
-            dnsResolver.resolve { [weak self] resolvedEndpoints in
-                guard let s = self else { return }
-                assert(s.status == .resolvingEndpointDomains)
-                s.dnsResolver = nil
-                guard let resolvedEndpoints = resolvedEndpoints else {
-                    s.status = .inactive
-                    completionHandler(TunnelActivationError.dnsResolutionFailed)
-                    return
-                }
-                s.startActivation(tunnelConfiguration: tunnelConfiguration,
-                                  resolvedEndpoints: resolvedEndpoints,
-                                  completionHandler: completionHandler)
-            }
-        }
+        startActivation(tunnelConfiguration: tunnelConfiguration,
+                        completionHandler: completionHandler)
     }
 
     fileprivate func startActivation(recursionCount: UInt = 0,
                                      lastError: Error? = nil,
                                      tunnelConfiguration: TunnelConfiguration,
-                                     resolvedEndpoints: [Endpoint?],
                                      completionHandler: @escaping (Error?) -> Void) {
         if (recursionCount >= 8) {
             os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@", log: OSLog.default, type: .error, "\(lastError!)")
             completionHandler(TunnelActivationError.tunnelActivationFailed)
             return
         }
-
-        // resolvedEndpoints should contain only IP addresses, not any named endpoints
-        assert(resolvedEndpoints.allSatisfy { (resolvedEndpoint) in
-            guard let resolvedEndpoint = resolvedEndpoint else { return true }
-            switch (resolvedEndpoint.host) {
-            case .ipv4: return true
-            case .ipv6: return true
-            case .name: return false
-            }
-        })
 
         os_log("startActivation: Entering", log: OSLog.default, type: .debug)
 
@@ -336,7 +297,7 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel saved after re-enabling", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
             return
         }
@@ -376,7 +337,7 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel reloaded", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
         }
     }
