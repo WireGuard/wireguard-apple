@@ -11,8 +11,6 @@
 		6F0068572191AFD200419BE9 /* ScrollableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0068562191AFD200419BE9 /* ScrollableLabel.swift */; };
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
 		6F5D0C22218352EF000F85AD /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */; };
-		6F5D0C462183C0B4000F85AD /* PacketTunnelOptionKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */; };
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
@@ -92,7 +90,6 @@
 		6F5D0C1E218352EF000F85AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F5D0C1F218352EF000F85AD /* WireGuardNetworkExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardNetworkExtension.entitlements; sourceTree = "<group>"; };
 		6F5D0C3421839E37000F85AD /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
-		6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelOptionKey.swift; sourceTree = "<group>"; };
 		6F5D0C472183C6A3000F85AD /* PacketTunnelSettingsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelSettingsGenerator.swift; sourceTree = "<group>"; };
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
@@ -172,7 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				6F7774E6217201E0006A79B3 /* Model */,
-				6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */,
 				6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */,
 			);
 			path = Shared;
@@ -501,7 +497,6 @@
 				6FFA5D902194370D0001E2F7 /* Endpoint.swift in Sources */,
 				6FFA5D9321943BC90001E2F7 /* DNSResolver.swift in Sources */,
 				6FFA5D912194370D0001E2F7 /* DNSServer.swift in Sources */,
-				6F5D0C462183C0B4000F85AD /* PacketTunnelOptionKey.swift in Sources */,
 				6FFA5D8921942F320001E2F7 /* PacketTunnelSettingsGenerator.swift in Sources */,
 				6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */,
 			);
@@ -520,7 +515,6 @@
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
 				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
-				6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
 				6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */,
 				6FDEF7FC21863B6100D8FBF6 /* zip.c in Sources */,
