@@ -33,8 +33,6 @@ class ErrorPresenter {
                 case .restarting:
                     return "active"
                 case .activating: fallthrough
-                case .resolvingEndpointDomains:
-                    return "being activated"
                 case .deactivating:
                     return "being deactivated"
                 case .inactive:

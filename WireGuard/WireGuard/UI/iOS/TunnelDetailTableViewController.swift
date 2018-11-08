@@ -259,8 +259,6 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
             text = "Deactivating"
         case .reasserting:
             text = "Reactivating"
-        case .resolvingEndpointDomains:
-            text = "Resolving domains"
         case .restarting:
             text = "Restarting"
         }

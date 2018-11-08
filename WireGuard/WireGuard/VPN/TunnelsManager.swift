@@ -372,10 +372,6 @@ class TunnelContainer: NSObject {
                     }
                     return
                 }
-                if (s.status == .resolvingEndpointDomains && connection.status == .disconnected) {
-                    // Don't change to .inactive if we're still resolving endpoints
-                    return
-                }
                 s.status = TunnelStatus(from: connection.status)
                 if (s.status == .inactive) {
                     s.statusObservationToken = nil
@@ -392,7 +388,6 @@ class TunnelContainer: NSObject {
     case reasserting // Not a possible state at present
 
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
-    case resolvingEndpointDomains // DNS resolution in progress
 
     init(from vpnStatus: NEVPNStatus) {
         switch (vpnStatus) {
