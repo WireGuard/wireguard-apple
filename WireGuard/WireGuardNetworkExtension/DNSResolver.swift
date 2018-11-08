@@ -9,18 +9,9 @@ enum DNSResolverError: Error {
 }
 
 class DNSResolver {
-    let endpoints: [Endpoint?]
-    let dispatchGroup: DispatchGroup
-    var dispatchWorkItems: [DispatchWorkItem]
 
-    init(endpoints: [Endpoint?]) {
-        self.endpoints = endpoints
-        self.dispatchWorkItems = []
-        self.dispatchGroup = DispatchGroup()
-    }
-
-    func isAllEndpointsAlreadyResolved() -> Bool {
-        for endpoint in self.endpoints {
+    static func isAllEndpointsAlreadyResolved(endpoints: [Endpoint?]) -> Bool {
+        for endpoint in endpoints {
             guard let endpoint = endpoint else { continue }
             if (!endpoint.hasHostAsIPAddress()) {
                 return false
@@ -29,17 +20,15 @@ class DNSResolver {
         return true
     }
 
-    func resolveSync() throws -> [Endpoint?] {
-        let endpoints = self.endpoints
-        let dispatchGroup = self.dispatchGroup
-        dispatchWorkItems = []
+    static func resolveSync(endpoints: [Endpoint?]) throws -> [Endpoint?] {
+        let dispatchGroup: DispatchGroup = DispatchGroup()
 
-        if (isAllEndpointsAlreadyResolved()) {
+        if (isAllEndpointsAlreadyResolved(endpoints: endpoints)) {
             return endpoints
         }
 
         var resolvedEndpoints: [Endpoint?] = Array<Endpoint?>(repeating: nil, count: endpoints.count)
-        for (i, endpoint) in self.endpoints.enumerated() {
+        for (i, endpoint) in endpoints.enumerated() {
             guard let endpoint = endpoint else { continue }
             if (endpoint.hasHostAsIPAddress()) {
                 resolvedEndpoints[i] = endpoint
@@ -47,7 +36,6 @@ class DNSResolver {
                 let workItem = DispatchWorkItem {
                     resolvedEndpoints[i] = DNSResolver.resolveSync(endpoint: endpoint)
                 }
-                dispatchWorkItems.append(workItem)
                 DispatchQueue.global(qos: .userInitiated).async(group: dispatchGroup, execute: workItem)
             }
         }
@@ -71,16 +59,6 @@ class DNSResolver {
             throw DNSResolverError.dnsResolutionFailed(hostnames: hostnamesWithDnsResolutionFailure)
         }
         return resolvedEndpoints
-    }
-
-    func cancel() {
-        for workItem in dispatchWorkItems {
-            workItem.cancel()
-        }
-    }
-
-    deinit {
-        cancel()
     }
 }
 
