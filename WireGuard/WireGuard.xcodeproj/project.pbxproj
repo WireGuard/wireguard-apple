@@ -48,6 +48,8 @@
 		6FFA5D902194370D0001E2F7 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
 		6FFA5D912194370D0001E2F7 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6FFA5D9321943BC90001E2F7 /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1421832391000F85AD /* DNSResolver.swift */; };
+		6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
+		6FFA5D96219446380001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +133,7 @@
 		6FF4AC2B211EC776002C96EB /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = Config/Config.xcconfig; sourceTree = "<group>"; };
 		6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
+		6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NETunnelProviderProtocol+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +173,7 @@
 			children = (
 				6F7774E6217201E0006A79B3 /* Model */,
 				6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */,
+				6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -491,6 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FFA5D96219446380001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6FFA5D8E2194370D0001E2F7 /* Configuration.swift in Sources */,
 				6FFA5D8F2194370D0001E2F7 /* IPAddressRange.swift in Sources */,
 				6FFA5D902194370D0001E2F7 /* Endpoint.swift in Sources */,
@@ -513,6 +518,7 @@
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6F0068572191AFD200419BE9 /* ScrollableLabel.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
+				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F5D0C452183BCDA000F85AD /* PacketTunnelOptionKey.swift in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
