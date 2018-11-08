@@ -345,11 +345,8 @@ class TunnelContainer: NSObject {
         startObservingTunnelStatus()
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
         do {
-            os_log("startActivation: Generating options", log: OSLog.default, type: .debug)
-            let tunnelOptions = PacketTunnelOptionsGenerator.generateOptions(
-                from: tunnelConfiguration, withResolvedEndpoints: resolvedEndpoints)
             os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
-            try session.startTunnel(options: tunnelOptions)
+            try session.startTunnel()
             os_log("startActivation: Success", log: OSLog.default, type: .debug)
             completionHandler(nil)
         } catch (let error) {
