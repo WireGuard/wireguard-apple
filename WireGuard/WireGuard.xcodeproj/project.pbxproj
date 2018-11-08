@@ -162,6 +162,7 @@
 		6F5D0C432183B4A4000F85AD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				6F7774E6217201E0006A79B3 /* Model */,
 				6F5D0C442183BCDA000F85AD /* PacketTunnelOptionKey.swift */,
 			);
 			path = Shared;
@@ -308,7 +309,6 @@
 				6F919ED3218C65C50023B400 /* Resources */,
 				6F6899A32180445A0012E523 /* Crypto */,
 				6F6899AA218099D00012E523 /* ConfigFile */,
-				6F7774E6217201E0006A79B3 /* Model */,
 				6F7774DD217181B1006A79B3 /* UI */,
 				6F7774ED21722D0C006A79B3 /* VPN */,
 				6FDEF7E72186320E00D8FBF6 /* ZipArchive */,
