@@ -31,10 +31,6 @@ class MainViewController: UISplitViewController {
         // On iPad, always show both masterVC and detailVC, even in portrait mode, like the Settings app
         self.preferredDisplayMode = .allVisible
     }
-
-    func openForEditing(configFileURL: URL) {
-        tunnelsListVC?.openForEditing(configFileURL: configFileURL)
-    }
 }
 
 extension MainViewController: UISplitViewControllerDelegate {
