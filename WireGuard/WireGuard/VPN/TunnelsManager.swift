@@ -208,6 +208,12 @@ class TunnelsManager {
         }
         tunnel.startDeactivation()
     }
+
+    func refreshConnectionStatuses() {
+        for t in tunnels {
+            t.refreshConnectionStatus()
+        }
+    }
 }
 
 class TunnelContainer: NSObject {
@@ -230,6 +236,14 @@ class TunnelContainer: NSObject {
 
     func tunnelConfiguration() -> TunnelConfiguration? {
         return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
+    }
+
+    func refreshConnectionStatus() {
+        let status = TunnelStatus(from: self.tunnelProvider.connection.status)
+        self.status = status
+        if (status != .inactive) {
+            startObservingTunnelStatus()
+        }
     }
 
     fileprivate func startActivation(completionHandler: @escaping (Error?) -> Void) {
