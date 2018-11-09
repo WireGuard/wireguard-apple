@@ -37,4 +37,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         mainVC?.tunnelsListVC?.importFromFile(url: url)
         return true
     }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        mainVC?.tunnelsListVC?.refreshTunnelConnectionStatuses()
+    }
 }
