@@ -5,7 +5,6 @@ import NetworkExtension
 import os.log
 
 enum PacketTunnelProviderError: Error {
-    case invalidOptions
     case savedProtocolConfigurationIsInvalid
     case dnsResolutionFailure(hostnames: [String])
     case couldNotStartWireGuard
@@ -28,6 +27,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
+                ErrorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid, from: self)
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 return
         }
@@ -41,6 +41,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
             os_log("Starting tunnel failed: DNS resolution failure for %{public}d hostnames (%{public}s)", log: OSLog.default,
                    type: .error, hostnames.count, hostnames.joined(separator: ", "))
+            ErrorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames), from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
             return
         } catch {
@@ -61,6 +62,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let fd = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32
         if fd < 0 {
             os_log("Starting tunnel failed: Could not determine file descriptor", log: OSLog.default, type: .error)
+            ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
         }
@@ -70,6 +72,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         if handle < 0 {
             os_log("Starting tunnel failed: Could not start WireGuard", log: OSLog.default, type: .error)
+            ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
         }
@@ -82,6 +85,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         setTunnelNetworkSettings(networkSettings) { (error) in
             if let error = error {
                 os_log("Starting tunnel failed: Error setting network settings: %s", log: OSLog.default, type: .error, error.localizedDescription)
+                ErrorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings, from: self)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
                 startTunnelCompletionHandler(nil /* No errors */)
