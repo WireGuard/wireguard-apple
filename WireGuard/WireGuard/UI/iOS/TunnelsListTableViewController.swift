@@ -223,6 +223,16 @@ class TunnelsListTableViewController: UIViewController {
             }
         }
     }
+
+    func refreshTunnelConnectionStatuses() {
+        if let tunnelsManager = tunnelsManager {
+            tunnelsManager.refreshConnectionStatuses()
+        } else {
+            onTunnelsManagerReady = { tunnelsManager in
+                tunnelsManager.refreshConnectionStatuses()
+            }
+        }
+    }
 }
 
 // MARK: UIDocumentPickerDelegate
