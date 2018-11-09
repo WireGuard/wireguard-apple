@@ -23,7 +23,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?,
                               completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
-        os_log("Starting tunnel", log: OSLog.default, type: .info)
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
@@ -31,6 +30,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 return
         }
+
+        startTunnel(with: tunnelConfiguration, completionHandler: startTunnelCompletionHandler)
+    }
+
+    func startTunnel(with tunnelConfiguration: TunnelConfiguration, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
+        os_log("Starting tunnel", log: OSLog.default, type: .info)
 
         // Resolve endpoint domains
 
