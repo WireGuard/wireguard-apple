@@ -3,6 +3,7 @@
 
 import UIKit
 import MobileCoreServices
+import UserNotifications
 
 class TunnelsListTableViewController: UIViewController {
 
