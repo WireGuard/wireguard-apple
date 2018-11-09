@@ -127,26 +127,6 @@ class TunnelsListTableViewController: UIViewController {
         self.present(settingsNC, animated: true)
     }
 
-    func openForEditing(configFileURL: URL) {
-        let tunnelConfiguration: TunnelConfiguration?
-        let name = configFileURL.deletingPathExtension().lastPathComponent
-        do {
-            let fileContents = try String(contentsOf: configFileURL)
-            try tunnelConfiguration = WgQuickConfigFileParser.parse(fileContents, name: name)
-        } catch (let error) {
-            showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration: \(String(describing: error))")
-            return
-        }
-        tunnelConfiguration?.interface.name = name
-        if let tunnelsManager = tunnelsManager {
-            presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
-        } else {
-            onTunnelsManagerReady = { [weak self] tunnelsManager in
-                self?.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
-            }
-        }
-    }
-
     func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
         let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
         let editNC = UINavigationController(rootViewController: editVC)
