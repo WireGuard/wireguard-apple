@@ -157,8 +157,7 @@ class WgQuickConfigFileParser {
         }
 
         if let interfaceConfiguration = interfaceConfiguration {
-            let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration)
-            tunnelConfiguration.peers = peerConfigurations
+            let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration, peers: peerConfigurations)
             return tunnelConfiguration
         } else {
             throw ParseError.noInterface
