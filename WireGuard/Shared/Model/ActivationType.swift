@@ -3,18 +3,18 @@
 
 enum ActivationType {
     case activateManually
-    case useOnDemandForAnyInternetActivity
-    case useOnDemandOnlyOverWifi
-    case useOnDemandOnlyOverCellular
+    case useOnDemandOverWifiAndCellular
+    case useOnDemandOverWifiOnly
+    case useOnDemandOverCellularOnly
 }
 
 extension ActivationType: Codable {
     // We use separate coding keys in case we might have a enum with associated values in the future
     enum CodingKeys: CodingKey {
         case activateManually
-        case useOnDemandForAnyInternetActivity
-        case useOnDemandOnlyOverWifi
-        case useOnDemandOnlyOverCellular
+        case useOnDemandOverWifiAndCellular
+        case useOnDemandOverWifiOnly
+        case useOnDemandOverCellularOnly
     }
 
     // Decoding error
@@ -28,12 +28,12 @@ extension ActivationType: Codable {
         switch self {
         case .activateManually:
             try container.encode(true, forKey: CodingKeys.activateManually)
-        case .useOnDemandForAnyInternetActivity:
-            try container.encode(true, forKey: CodingKeys.useOnDemandForAnyInternetActivity)
-        case .useOnDemandOnlyOverWifi:
-            try container.encode(true, forKey: CodingKeys.useOnDemandOnlyOverWifi)
-        case .useOnDemandOnlyOverCellular:
-            try container.encode(true, forKey: CodingKeys.useOnDemandOnlyOverCellular)
+        case .useOnDemandOverWifiAndCellular:
+            try container.encode(true, forKey: CodingKeys.useOnDemandOverWifiAndCellular)
+        case .useOnDemandOverWifiOnly:
+            try container.encode(true, forKey: CodingKeys.useOnDemandOverWifiOnly)
+        case .useOnDemandOverCellularOnly:
+            try container.encode(true, forKey: CodingKeys.useOnDemandOverCellularOnly)
         }
     }
 
@@ -46,18 +46,18 @@ extension ActivationType: Codable {
             return
         }
 
-        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandForAnyInternetActivity), isValid {
-            self = .useOnDemandForAnyInternetActivity
+        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandOverWifiAndCellular), isValid {
+            self = .useOnDemandOverWifiAndCellular
             return
         }
 
-        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandOnlyOverWifi), isValid {
-            self = .useOnDemandOnlyOverWifi
+        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandOverWifiOnly), isValid {
+            self = .useOnDemandOverWifiOnly
             return
         }
 
-        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandOnlyOverCellular), isValid {
-            self = .useOnDemandOnlyOverCellular
+        if let isValid = try? container.decode(Bool.self, forKey: CodingKeys.useOnDemandOverCellularOnly), isValid {
+            self = .useOnDemandOverCellularOnly
             return
         }
 
