@@ -4,7 +4,7 @@
 import Foundation
 
 @available(OSX 10.14, iOS 12.0, *)
-class TunnelConfiguration: Codable {
+final class TunnelConfiguration {
     var interface: InterfaceConfiguration
     let peers: [PeerConfiguration]
     init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
@@ -53,5 +53,19 @@ struct PeerConfiguration: Codable {
     init(publicKey: Data) {
         self.publicKey = publicKey
         if (publicKey.count != 32) { fatalError("Invalid public key") }
+    }
+}
+
+extension TunnelConfiguration: Encodable { }
+extension TunnelConfiguration: Decodable {
+    enum CodingKeys: CodingKey {
+        case interface
+        case peers
+    }
+    convenience init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        let interface = try values.decode(InterfaceConfiguration.self, forKey: .interface)
+        let peers = try values.decode([PeerConfiguration].self, forKey: .peers)
+        self.init(interface: interface, peers: peers)
     }
 }
