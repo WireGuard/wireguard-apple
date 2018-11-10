@@ -23,21 +23,6 @@ class ErrorPresenter {
         // TunnelActivationError
         case TunnelActivationError.tunnelActivationFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
-        case TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(let otherTunnelStatus):
-            let statusString: String = {
-                switch (otherTunnelStatus) {
-                case .active: fallthrough
-                case .reasserting: fallthrough
-                case .restarting:
-                    return "active"
-                case .activating: fallthrough
-                case .deactivating:
-                    return "being deactivated"
-                case .inactive:
-                    fatalError()
-                }
-            }()
-            return ("Activation failure", "Another tunnel is currently \(statusString)")
 
         default:
             os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")
