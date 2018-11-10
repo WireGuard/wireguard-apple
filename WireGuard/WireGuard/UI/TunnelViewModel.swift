@@ -372,6 +372,7 @@ class TunnelViewModel {
 
     var interfaceData: InterfaceData
     var peersData: [PeerData]
+    var activationType: ActivationType
 
     init(tunnelConfiguration: TunnelConfiguration?) {
         let interfaceData: InterfaceData = InterfaceData()
@@ -391,6 +392,20 @@ class TunnelViewModel {
         }
         self.interfaceData = interfaceData
         self.peersData = peersData
+        self.activationType = tunnelConfiguration?.activationType ?? .activateManually
+    }
+
+    func activateOnDemandOptionText(for activationType: ActivationType) -> String {
+        switch (activationType) {
+        case .activateManually:
+            return ""
+        case .useOnDemandOverWifiAndCellular:
+            return "Over wifi and cellular"
+        case .useOnDemandOverWifiOnly:
+            return "Over wifi only"
+        case .useOnDemandOverCellularOnly:
+            return "Over cellular only"
+        }
     }
 
     func appendEmptyPeer() {
@@ -442,6 +457,7 @@ class TunnelViewModel {
             }
 
             let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration, peers: peerConfigurations)
+            tunnelConfiguration.activationType = self.activationType
             return .saved(tunnelConfiguration)
         }
     }
