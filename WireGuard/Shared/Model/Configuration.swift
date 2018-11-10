@@ -7,9 +7,11 @@ import Foundation
 final class TunnelConfiguration {
     var interface: InterfaceConfiguration
     let peers: [PeerConfiguration]
+    var activationType: ActivationType
     init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
+        self.activationType = .activateManually
 
         let peerPublicKeysArray = peers.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
@@ -61,11 +63,15 @@ extension TunnelConfiguration: Decodable {
     enum CodingKeys: CodingKey {
         case interface
         case peers
+        case activationType
     }
     convenience init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let interface = try values.decode(InterfaceConfiguration.self, forKey: .interface)
         let peers = try values.decode([PeerConfiguration].self, forKey: .peers)
+        let activationType = (try? values.decode(ActivationType.self, forKey: .activationType)) ?? .activateManually
+
         self.init(interface: interface, peers: peers)
+        self.activationType = activationType
     }
 }
