@@ -13,7 +13,6 @@ protocol TunnelsManagerDelegate: class {
 }
 
 enum TunnelActivationError: Error {
-    case dnsResolutionFailed
     case tunnelActivationFailed
     case attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: TunnelStatus)
     case attemptingActivationWhenTunnelIsNotInactive
