@@ -21,8 +21,6 @@ class ErrorPresenter {
             return ("Unable to remove tunnel", "Internal error")
 
         // TunnelActivationError
-        case TunnelActivationError.dnsResolutionFailed:
-            return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
         case TunnelActivationError.tunnelActivationFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
         case TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(let otherTunnelStatus):
