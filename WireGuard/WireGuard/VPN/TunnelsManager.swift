@@ -14,7 +14,6 @@ protocol TunnelsManagerDelegate: class {
 
 enum TunnelActivationError: Error {
     case tunnelActivationFailed
-    case attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: TunnelStatus)
     case attemptingActivationWhenTunnelIsNotInactive
     case attemptingDeactivationWhenTunnelIsInactive
 }
@@ -191,13 +190,15 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
-        for t in tunnels {
-            if t.status != .inactive {
-                completionHandler(TunnelActivationError.attemptingActivationWhenAnotherTunnelIsBusy(otherTunnelStatus: t.status))
-                return
+        if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
+            tunnel.status = .waiting
+            tunnelInOperation.onDeactivationComplete = {
+                tunnel.startActivation(completionHandler: completionHandler)
             }
+            startDeactivation(of: tunnelInOperation)
+        } else {
+            tunnel.startActivation(completionHandler: completionHandler)
         }
-        tunnel.startActivation(completionHandler: completionHandler)
     }
 
     func startDeactivation(of tunnel: TunnelContainer) {
@@ -217,6 +218,8 @@ class TunnelsManager {
 class TunnelContainer: NSObject {
     @objc dynamic var name: String
     @objc dynamic var status: TunnelStatus
+
+    var onDeactivationComplete: (() -> Void)?
 
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var statusObservationToken: AnyObject?
@@ -245,10 +248,11 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startActivation(completionHandler: @escaping (Error?) -> Void) {
-        assert(status == .inactive || status == .restarting)
+        assert(status == .inactive || status == .restarting || status == .waiting)
 
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
 
+        onDeactivationComplete = nil
         startActivation(tunnelConfiguration: tunnelConfiguration,
                         completionHandler: completionHandler)
     }
@@ -356,6 +360,8 @@ class TunnelContainer: NSObject {
                 s.status = TunnelStatus(from: connection.status)
                 if (s.status == .inactive) {
                     s.statusObservationToken = nil
+                    s.onDeactivationComplete?()
+                    s.onDeactivationComplete = nil
                 }
         }
     }
@@ -369,6 +375,7 @@ class TunnelContainer: NSObject {
     case reasserting // Not a possible state at present
 
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
+    case waiting    // Waiting for another tunnel to be brought down
 
     init(from vpnStatus: NEVPNStatus) {
         switch (vpnStatus) {
