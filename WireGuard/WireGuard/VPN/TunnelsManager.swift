@@ -72,6 +72,14 @@ class TunnelsManager {
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
+        if (tunnelConfiguration.activationType == .activateManually) {
+            tunnelProviderManager.onDemandRules = []
+            tunnelProviderManager.isOnDemandEnabled = false
+        } else {
+            tunnelProviderManager.onDemandRules = onDemandRules(for: tunnelConfiguration.activationType)
+            tunnelProviderManager.isOnDemandEnabled = true
+        }
+
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isAddingTunnel = false }
             guard (error == nil) else {
@@ -129,6 +137,14 @@ class TunnelsManager {
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
+
+        if (tunnelConfiguration.activationType == .activateManually) {
+            tunnelProviderManager.onDemandRules = []
+            tunnelProviderManager.isOnDemandEnabled = false
+        } else {
+            tunnelProviderManager.onDemandRules = onDemandRules(for: tunnelConfiguration.activationType)
+            tunnelProviderManager.isOnDemandEnabled = true
+        }
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isModifyingTunnel = false }
@@ -211,6 +227,26 @@ class TunnelsManager {
     func refreshConnectionStatuses() {
         for t in tunnels {
             t.refreshConnectionStatus()
+        }
+    }
+
+    func onDemandRules(for activationType: ActivationType) -> [NEOnDemandRule] {
+        switch (activationType) {
+        case .activateManually: return []
+        case .useOnDemandOverWifiAndCellular:
+            return [NEOnDemandRuleConnect()]
+        case .useOnDemandOverWifiOnly:
+            let connectOnWifiRule = NEOnDemandRuleConnect()
+            connectOnWifiRule.interfaceTypeMatch = .wiFi
+            let disconnectOnCellularRule = NEOnDemandRuleDisconnect()
+            disconnectOnCellularRule.interfaceTypeMatch = .cellular
+            return [connectOnWifiRule, disconnectOnCellularRule]
+        case .useOnDemandOverCellularOnly:
+            let connectOnCellularRule = NEOnDemandRuleConnect()
+            connectOnCellularRule.interfaceTypeMatch = .cellular
+            let disconnectOnWifiRule = NEOnDemandRuleDisconnect()
+            disconnectOnWifiRule.interfaceTypeMatch = .wiFi
+            return [connectOnCellularRule, disconnectOnWifiRule]
         }
     }
 }
