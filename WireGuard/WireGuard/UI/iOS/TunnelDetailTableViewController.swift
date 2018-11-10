@@ -159,9 +159,7 @@ extension TunnelDetailTableViewController {
                         }
                     }
                 } else {
-                    s.tunnelsManager.startDeactivation(of: s.tunnel) { error in
-                        print("Error while deactivating: \(String(describing: error))")
-                    }
+                    s.tunnelsManager.startDeactivation(of: s.tunnel)
                 }
             }
             return cell

@@ -287,9 +287,7 @@ extension TunnelsListTableViewController: UITableViewDataSource {
                         }
                     }
                 } else {
-                    tunnelsManager.startDeactivation(of: tunnel) { [weak s] error in
-                        s?.showErrorAlert(title: "Deactivation error", message: "Error while bringing down tunnel: \(String(describing: error))")
-                    }
+                    tunnelsManager.startDeactivation(of: tunnel)
                 }
             }
         }
