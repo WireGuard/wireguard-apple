@@ -441,8 +441,7 @@ class TunnelViewModel {
                 return .error("Two or more peers cannot have the same public key")
             }
 
-            let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration)
-            tunnelConfiguration.peers = peerConfigurations
+            let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration, peers: peerConfigurations)
             return .saved(tunnelConfiguration)
         }
     }

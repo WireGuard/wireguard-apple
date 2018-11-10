@@ -6,9 +6,16 @@ import Foundation
 @available(OSX 10.14, iOS 12.0, *)
 class TunnelConfiguration: Codable {
     var interface: InterfaceConfiguration
-    var peers: [PeerConfiguration] = []
-    init(interface: InterfaceConfiguration) {
+    let peers: [PeerConfiguration]
+    init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
+        self.peers = peers
+
+        let peerPublicKeysArray = peers.map { $0.publicKey }
+        let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+        if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+            fatalError("Two or more peers cannot have the same public key")
+        }
     }
 }
 
