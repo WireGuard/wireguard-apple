@@ -200,9 +200,8 @@ class TunnelsManager {
         tunnel.startActivation(completionHandler: completionHandler)
     }
 
-    func startDeactivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
+    func startDeactivation(of tunnel: TunnelContainer) {
         if (tunnel.status == .inactive) {
-            completionHandler(TunnelActivationError.attemptingDeactivationWhenTunnelIsInactive)
             return
         }
         tunnel.startDeactivation()
