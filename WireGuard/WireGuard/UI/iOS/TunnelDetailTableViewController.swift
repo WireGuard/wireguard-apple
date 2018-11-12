@@ -42,6 +42,7 @@ class TunnelDetailTableViewController: UITableViewController {
         self.tableView.register(TunnelDetailTableViewStatusCell.self, forCellReuseIdentifier: TunnelDetailTableViewStatusCell.id)
         self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
         self.tableView.register(TunnelDetailTableViewButtonCell.self, forCellReuseIdentifier: TunnelDetailTableViewButtonCell.id)
+        self.tableView.register(TunnelDetailTableViewActivateOnDemandCell.self, forCellReuseIdentifier: TunnelDetailTableViewActivateOnDemandCell.id)
     }
 
     @objc func editTapped() {
@@ -95,7 +96,7 @@ extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate
 
 extension TunnelDetailTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3 + tunnelViewModel.peersData.count
+        return 4 + tunnelViewModel.peersData.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -112,7 +113,11 @@ extension TunnelDetailTableViewController {
             // Peer
             let peerData = tunnelViewModel.peersData[section - 2]
             return peerData.filterFieldsWithValueOrControl(peerFields: peerFields).count
+        } else if (section < (3 + numberOfPeerSections)) {
+            // Activate on demand
+            return 1
         } else {
+            assert(section == (3 + numberOfPeerSections))
             // Delete tunnel
             return 1
         }
@@ -130,6 +135,9 @@ extension TunnelDetailTableViewController {
         } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
             // Peer
             return "Peer"
+        } else if (section < (3 + numberOfPeerSections)) {
+            // On-Demand Activation
+            return "On-Demand Activation"
         } else {
             // Delete tunnel
             return nil
@@ -181,8 +189,13 @@ extension TunnelDetailTableViewController {
             cell.key = field.rawValue
             cell.value = peerData[field]
             return cell
+        } else if (section < (3 + numberOfPeerSections)) {
+            // On-Demand Activation
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewActivateOnDemandCell.id, for: indexPath) as! TunnelDetailTableViewActivateOnDemandCell
+            cell.tunnel = self.tunnel
+            return cell
         } else {
-            assert(section == (2 + numberOfPeerSections))
+            assert(section == (3 + numberOfPeerSections))
             // Delete configuration
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
@@ -390,5 +403,57 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
         buttonText = ""
         onTapped = nil
         hasDestructiveAction = false
+    }
+}
+
+class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
+    static let id: String = "TunnelDetailTableViewActivateOnDemandCell"
+
+    var tunnel: TunnelContainer? {
+        didSet(value) {
+            update(from: tunnel?.activateOnDemandSetting())
+            onDemandStatusObservervationToken = tunnel?.observe(\.isActivateOnDemandEnabled) { [weak self] (tunnel, _) in
+                self?.update(from: tunnel.activateOnDemandSetting())
+            }
+        }
+    }
+
+    var onDemandStatusObservervationToken: AnyObject?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+        textLabel?.text = "Activate on demand"
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func update(from activateOnDemandSetting: ActivateOnDemandSetting?) {
+        let detailText: String
+        if let activateOnDemandSetting = activateOnDemandSetting {
+            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
+                switch (activateOnDemandSetting.activateOnDemandOption) {
+                case .none:
+                    detailText = "Off"
+                case .useOnDemandOverWifiOrCellular:
+                    detailText = "Wifi or cellular"
+                case .useOnDemandOverWifiOnly:
+                    detailText = "Wifi only"
+                case .useOnDemandOverCellularOnly:
+                    detailText = "Cellular only"
+                }
+            } else {
+                detailText = "Off"
+            }
+        } else {
+            detailText = "Off"
+        }
+        detailTextLabel?.text = detailText
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        detailTextLabel?.text = ""
     }
 }
