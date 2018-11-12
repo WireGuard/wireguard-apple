@@ -158,6 +158,8 @@ class TunnelsManager {
                     tunnel.beginRestart()
                 }
 
+                tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+
                 completionHandler(nil)
             }
         }
@@ -215,9 +217,9 @@ class TunnelsManager {
         tunnel.startDeactivation()
     }
 
-    func refreshConnectionStatuses() {
+    func refreshStatuses() {
         for t in tunnels {
-            t.refreshConnectionStatus()
+            t.refreshStatus()
         }
     }
 }
@@ -225,6 +227,7 @@ class TunnelsManager {
 class TunnelContainer: NSObject {
     @objc dynamic var name: String
     @objc dynamic var status: TunnelStatus
+    @objc dynamic var isActivateOnDemandEnabled: Bool
 
     var onDeactivationComplete: (() -> Void)?
 
@@ -235,6 +238,7 @@ class TunnelContainer: NSObject {
         self.name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
         self.status = status
+        self.isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
         self.tunnelProvider = tunnel
         super.init()
         if (status != .inactive) {
@@ -250,9 +254,10 @@ class TunnelContainer: NSObject {
         return ActivateOnDemandSetting(from: tunnelProvider)
     }
 
-    func refreshConnectionStatus() {
+    func refreshStatus() {
         let status = TunnelStatus(from: self.tunnelProvider.connection.status)
         self.status = status
+        self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
         if (status != .inactive) {
             startObservingTunnelStatus()
         }

@@ -226,10 +226,10 @@ class TunnelsListTableViewController: UIViewController {
 
     func refreshTunnelConnectionStatuses() {
         if let tunnelsManager = tunnelsManager {
-            tunnelsManager.refreshConnectionStatuses()
+            tunnelsManager.refreshStatuses()
         } else {
             onTunnelsManagerReady = { tunnelsManager in
-                tunnelsManager.refreshConnectionStatuses()
+                tunnelsManager.refreshStatuses()
             }
         }
     }
