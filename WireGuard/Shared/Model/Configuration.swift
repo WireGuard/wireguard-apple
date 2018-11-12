@@ -4,14 +4,12 @@
 import Foundation
 
 @available(OSX 10.14, iOS 12.0, *)
-final class TunnelConfiguration {
+final class TunnelConfiguration: Codable {
     var interface: InterfaceConfiguration
     let peers: [PeerConfiguration]
-    var activationType: ActivationType
     init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
-        self.activationType = .activateManually
 
         let peerPublicKeysArray = peers.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
@@ -55,23 +53,5 @@ struct PeerConfiguration: Codable {
     init(publicKey: Data) {
         self.publicKey = publicKey
         if (publicKey.count != 32) { fatalError("Invalid public key") }
-    }
-}
-
-extension TunnelConfiguration: Encodable { }
-extension TunnelConfiguration: Decodable {
-    enum CodingKeys: CodingKey {
-        case interface
-        case peers
-        case activationType
-    }
-    convenience init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        let interface = try values.decode(InterfaceConfiguration.self, forKey: .interface)
-        let peers = try values.decode([PeerConfiguration].self, forKey: .peers)
-        let activationType = (try? values.decode(ActivationType.self, forKey: .activationType)) ?? .activateManually
-
-        self.init(interface: interface, peers: peers)
-        self.activationType = activationType
     }
 }
