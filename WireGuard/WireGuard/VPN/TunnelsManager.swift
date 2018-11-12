@@ -54,7 +54,9 @@ class TunnelsManager {
         #endif
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration,
+             activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting,
+             completionHandler: @escaping (TunnelContainer?, TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(nil, TunnelManagementError.tunnelAlreadyExistsWithThatName)
@@ -72,13 +74,7 @@ class TunnelsManager {
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
-        if (tunnelConfiguration.activationType == .activateManually) {
-            tunnelProviderManager.onDemandRules = []
-            tunnelProviderManager.isOnDemandEnabled = false
-        } else {
-            tunnelProviderManager.onDemandRules = onDemandRules(for: tunnelConfiguration.activationType)
-            tunnelProviderManager.isOnDemandEnabled = true
-        }
+        activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isAddingTunnel = false }
@@ -114,7 +110,8 @@ class TunnelsManager {
         }
     }
 
-    func modify(tunnel: TunnelContainer, with tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (TunnelManagementError?) -> Void) {
+    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
+                activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelManagementError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(TunnelManagementError.tunnelAlreadyExistsWithThatName)
@@ -138,13 +135,7 @@ class TunnelsManager {
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
-        if (tunnelConfiguration.activationType == .activateManually) {
-            tunnelProviderManager.onDemandRules = []
-            tunnelProviderManager.isOnDemandEnabled = false
-        } else {
-            tunnelProviderManager.onDemandRules = onDemandRules(for: tunnelConfiguration.activationType)
-            tunnelProviderManager.isOnDemandEnabled = true
-        }
+        activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
             defer { self?.isModifyingTunnel = false }
@@ -229,26 +220,6 @@ class TunnelsManager {
             t.refreshConnectionStatus()
         }
     }
-
-    func onDemandRules(for activationType: ActivationType) -> [NEOnDemandRule] {
-        switch (activationType) {
-        case .activateManually: return []
-        case .useOnDemandOverWifiAndCellular:
-            return [NEOnDemandRuleConnect()]
-        case .useOnDemandOverWifiOnly:
-            let connectOnWifiRule = NEOnDemandRuleConnect()
-            connectOnWifiRule.interfaceTypeMatch = .wiFi
-            let disconnectOnCellularRule = NEOnDemandRuleDisconnect()
-            disconnectOnCellularRule.interfaceTypeMatch = .cellular
-            return [connectOnWifiRule, disconnectOnCellularRule]
-        case .useOnDemandOverCellularOnly:
-            let connectOnCellularRule = NEOnDemandRuleConnect()
-            connectOnCellularRule.interfaceTypeMatch = .cellular
-            let disconnectOnWifiRule = NEOnDemandRuleDisconnect()
-            disconnectOnWifiRule.interfaceTypeMatch = .wiFi
-            return [connectOnCellularRule, disconnectOnWifiRule]
-        }
-    }
 }
 
 class TunnelContainer: NSObject {
@@ -273,6 +244,10 @@ class TunnelContainer: NSObject {
 
     func tunnelConfiguration() -> TunnelConfiguration? {
         return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
+    }
+
+    func activateOnDemandSetting() -> ActivateOnDemandSetting {
+        return ActivateOnDemandSetting(from: tunnelProvider)
     }
 
     func refreshConnectionStatus() {

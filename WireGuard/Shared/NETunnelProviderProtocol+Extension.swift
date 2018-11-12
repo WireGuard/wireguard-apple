@@ -14,7 +14,7 @@ extension NETunnelProviderProtocol {
         providerBundleIdentifier = "\(appId).network-extension"
         providerConfiguration = [
             "tunnelConfiguration": serializedTunnelConfiguration,
-            "tunnelConfigurationVersion": 2
+            "tunnelConfigurationVersion": 1
         ]
 
         let endpoints = tunnelConfiguration.peers.compactMap({$0.endpoint})
