@@ -26,8 +26,8 @@ class TunnelEditTableViewController: UITableViewController {
         .deletePeer
     ]
 
-    let activateOnDemandOptions: [ActivationType] = [
-        .useOnDemandOverWifiAndCellular,
+    let activateOnDemandOptions: [ActivateOnDemandOption] = [
+        .useOnDemandOverWifiOrCellular,
         .useOnDemandOverWifiOnly,
         .useOnDemandOverCellularOnly
     ]
@@ -35,12 +35,14 @@ class TunnelEditTableViewController: UITableViewController {
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
     let tunnelViewModel: TunnelViewModel
+    var activateOnDemandSetting: ActivateOnDemandSetting
 
     init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
         // Use this initializer to edit an existing tunnel.
         tunnelsManager = tm
         tunnel = t
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration())
+        activateOnDemandSetting = t.activateOnDemandSetting()
         super.init(style: .grouped)
     }
 
@@ -50,6 +52,7 @@ class TunnelEditTableViewController: UITableViewController {
         tunnelsManager = tm
         tunnel = nil
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+        activateOnDemandSetting = ActivateOnDemandSetting.defaultSetting
         super.init(style: .grouped)
     }
 
@@ -83,7 +86,9 @@ class TunnelEditTableViewController: UITableViewController {
         case .saved(let tunnelConfiguration):
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
-                tunnelsManager.modify(tunnel: tunnel, with: tunnelConfiguration) { [weak self] (error) in
+                tunnelsManager.modify(tunnel: tunnel,
+                                      tunnelConfiguration: tunnelConfiguration,
+                                      activateOnDemandSetting: activateOnDemandSetting) { [weak self] (error) in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -93,7 +98,8 @@ class TunnelEditTableViewController: UITableViewController {
                 }
             } else {
                 // We're adding a new tunnel
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] (tunnel, error) in
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration,
+                                   activateOnDemandSetting: activateOnDemandSetting) { [weak self] (tunnel, error) in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -149,10 +155,10 @@ extension TunnelEditTableViewController {
             return 1
         } else {
             // On-Demand Rules
-            if (tunnelViewModel.activationType == .activateManually) {
-                return 1
-            } else {
+            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
                 return 4
+            } else {
+                return 1
             }
         }
     }
@@ -385,15 +391,18 @@ extension TunnelEditTableViewController {
             if (row == 0) {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewSwitchCell.id, for: indexPath) as! TunnelEditTableViewSwitchCell
                 cell.message = "Activate on demand"
-                cell.isOn = (tunnelViewModel.activationType != .activateManually)
+                cell.isOn = activateOnDemandSetting.isActivateOnDemandEnabled
                 cell.onSwitchToggled = { [weak self] (isOn) in
                     guard let s = self else { return }
                     let indexPaths: [IndexPath] = (1 ..< 4).map { IndexPath(row: $0, section: section) }
                     if (isOn) {
-                        s.tunnelViewModel.activationType = .useOnDemandOverWifiAndCellular
+                        s.activateOnDemandSetting.isActivateOnDemandEnabled = true
+                        if (s.activateOnDemandSetting.activateOnDemandOption == .none) {
+                            s.activateOnDemandSetting.activateOnDemandOption = s.tunnelViewModel.defaultActivateOnDemandOption()
+                        }
                         s.tableView.insertRows(at: indexPaths, with: .automatic)
                     } else {
-                        s.tunnelViewModel.activationType = .activateManually
+                        s.activateOnDemandSetting.isActivateOnDemandEnabled = false
                         s.tableView.deleteRows(at: indexPaths, with: .automatic)
                     }
                 }
@@ -401,9 +410,11 @@ extension TunnelEditTableViewController {
             } else {
                 assert(row < 4)
                 let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewSelectionListCell.id, for: indexPath) as! TunnelEditTableViewSelectionListCell
-                let option = activateOnDemandOptions[row - 1]
-                cell.message = tunnelViewModel.activateOnDemandOptionText(for: option)
-                cell.isChecked = (tunnelViewModel.activationType == option)
+                let rowOption = activateOnDemandOptions[row - 1]
+                let selectedOption = activateOnDemandSetting.activateOnDemandOption
+                assert(selectedOption != .none)
+                cell.message = tunnelViewModel.activateOnDemandOptionText(for: rowOption)
+                cell.isChecked = (selectedOption == rowOption)
                 return cell
             }
         }
@@ -475,7 +486,8 @@ extension TunnelEditTableViewController {
         assert(row > 0)
 
         let option = activateOnDemandOptions[row - 1]
-        tunnelViewModel.activationType = option
+        assert(option != .none)
+        activateOnDemandSetting.activateOnDemandOption = option
 
         let indexPaths: [IndexPath] = (1 ..< 4).map { IndexPath(row: $0, section: section) }
         tableView.reloadRows(at: indexPaths, with: .automatic)
