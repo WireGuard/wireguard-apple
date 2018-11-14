@@ -135,6 +135,7 @@ class TunnelsManager {
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
+        let isActivatingOnDemand = (!tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled)
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
@@ -158,9 +159,21 @@ class TunnelsManager {
                     tunnel.beginRestart()
                 }
 
-                tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-
-                completionHandler(nil)
+                if (isActivatingOnDemand) {
+                    // Reload tunnel after saving.
+                    // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
+                    tunnelProviderManager.loadFromPreferences { (error) in
+                        tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+                        guard (error == nil) else {
+                            os_log("Modify: Re-loading after saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                            completionHandler(TunnelManagementError.vpnSystemErrorOnModifyTunnel)
+                            return
+                        }
+                        completionHandler(nil)
+                    }
+                } else {
+                    completionHandler(nil)
+                }
             }
         }
     }
