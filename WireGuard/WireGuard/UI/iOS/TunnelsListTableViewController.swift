@@ -160,20 +160,18 @@ class TunnelsListTableViewController: UIViewController {
     func importFromFile(url: URL) {
         guard let tunnelsManager = tunnelsManager else { return }
         if (url.pathExtension == "zip") {
-            let zipImporter = ZipImporter(url: url)
-            let configs: [TunnelConfiguration?]
-            do {
-                configs = try zipImporter.importConfigFiles()
-            } catch (let error) {
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-                return
-            }
-            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
-                if numberSuccessful == configs.count {
+            ZipImporter.importConfigFiles(from: url) { (configs, error) in
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
-                self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
-                    message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive")
+                tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
+                    if numberSuccessful == configs.count {
+                        return
+                    }
+                    self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
+                        message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive")
+                }
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
