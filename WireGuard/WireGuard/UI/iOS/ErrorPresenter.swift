@@ -24,6 +24,14 @@ class ErrorPresenter {
         case TunnelActivationError.tunnelActivationFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
 
+        // Importing a zip file
+        case ZipArchiveError.cantOpenInputZipFile:
+            return ("Unable to read zip archive", "The zip archive could not be read.")
+        case ZipArchiveError.badArchive:
+            return ("Unable to read zip archive", "Bad or corrupt zip archive.")
+        case ZipImporterError.noTunnelsInZipArchive:
+            return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")
+
         default:
             os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")
             return nil

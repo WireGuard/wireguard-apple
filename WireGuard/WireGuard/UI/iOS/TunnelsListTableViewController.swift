@@ -158,62 +158,28 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     func importFromFile(url: URL) {
+        guard let tunnelsManager = tunnelsManager else { return }
         if (url.pathExtension == "zip") {
-            var unarchivedFiles: [(fileName: String, contents: Data)] = []
+            let zipImporter = ZipImporter(url: url)
+            let configs: [TunnelConfiguration?]
             do {
-                unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
-            } catch ZipArchiveError.cantOpenInputZipFile {
-                showErrorAlert(title: "Unable to read zip archive", message: "The zip archive could not be read.")
-                return
-            } catch ZipArchiveError.badArchive {
-                showErrorAlert(title: "Unable to read zip archive", message: "Bad or corrupt zip archive.")
-                return
+                configs = try zipImporter.importConfigFiles()
             } catch (let error) {
-                showErrorAlert(title: "Unable to read zip archive", message: "Unexpected error: \(String(describing: error))")
+                ErrorPresenter.showErrorAlert(error: error, from: self)
                 return
             }
-
-            for (i, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
-                let fileBaseName = URL(string: unarchivedFile.fileName)?.deletingPathExtension().lastPathComponent
-                if let trimmedName = fileBaseName?.trimmingCharacters(in: .whitespacesAndNewlines), !trimmedName.isEmpty {
-                    unarchivedFiles[i].fileName = trimmedName
-                } else {
-                    unarchivedFiles.remove(at: i)
-                }
-            }
-            if (unarchivedFiles.isEmpty) {
-                showErrorAlert(title: "No tunnels in zip archive", message: "No .conf tunnel files were found inside the zip archive.")
-                return
-            }
-            guard let tunnelsManager = tunnelsManager else { return }
-            unarchivedFiles.sort { $0.fileName < $1.fileName }
-            var lastFileName: String?
-            var configs: [TunnelConfiguration] = []
-            for file in unarchivedFiles {
-                if file.fileName == lastFileName {
-                    continue
-                }
-                lastFileName = file.fileName
-                guard let fileContents = String(data: file.contents, encoding: .utf8) else {
-                    continue
-                }
-                guard let tunnelConfig = try? WgQuickConfigFileParser.parse(fileContents, name: file.fileName) else {
-                    continue
-                }
-                configs.append(tunnelConfig)
-            }
-            tunnelsManager.addMultiple(tunnelConfigurations: configs) { [weak self] (numberSuccessful) in
-                if numberSuccessful == unarchivedFiles.count {
+            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
+                if numberSuccessful == configs.count {
                     return
                 }
                 self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
-                    message: "Created \(numberSuccessful) of \(unarchivedFiles.count) tunnels from zip archive")
+                    message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive")
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     }
