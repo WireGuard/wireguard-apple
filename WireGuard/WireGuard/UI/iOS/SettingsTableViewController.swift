@@ -68,19 +68,12 @@ class SettingsTableViewController: UITableViewController {
             return
         }
         var inputsToArchiver: [(fileName: String, contents: Data)] = []
-        var usedNames: Set<String> = []
         for i in 0 ..< tunnelsManager.numberOfTunnels() {
             guard let tunnelConfiguration = tunnelsManager.tunnel(at: i).tunnelConfiguration() else { continue }
             if let contents = WgQuickConfigFileWriter.writeConfigFile(from: tunnelConfiguration) {
                 let name = tunnelConfiguration.interface.name
-                var nameToCheck = name
-                var i = 0
-                while (usedNames.contains(nameToCheck)) {
-                    i = i + 1
-                    nameToCheck = "\(name)\(i)"
-                }
-                usedNames.insert(nameToCheck)
-                inputsToArchiver.append((fileName: "\(nameToCheck).conf", contents: contents))
+                assert(name != tunnelsManager.tunnel(at: i - 1).name)
+                inputsToArchiver.append((fileName: "\(name).conf", contents: contents))
             }
         }
 
