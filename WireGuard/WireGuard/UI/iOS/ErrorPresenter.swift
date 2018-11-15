@@ -32,6 +32,12 @@ class ErrorPresenter {
         case ZipImporterError.noTunnelsInZipArchive:
             return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")
 
+        // Exporting a zip file
+        case ZipArchiveError.cantOpenOutputZipFileForWriting:
+            return ("Unable to create zip archive", "Could not create a zip file in the app's document directory.")
+        case ZipExporterError.noTunnelsToExport:
+            return ("Nothing to export", "There are no tunnels to export")
+
         default:
             os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")
             return nil
