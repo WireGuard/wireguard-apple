@@ -63,20 +63,7 @@ class SettingsTableViewController: UITableViewController {
     }
 
     func exportConfigurationsAsZipFile(sourceView: UIView) {
-        guard let tunnelsManager = tunnelsManager, tunnelsManager.numberOfTunnels() > 0 else {
-            showErrorAlert(title: "Nothing to export", message: "There are no tunnels to export")
-            return
-        }
-        var inputsToArchiver: [(fileName: String, contents: Data)] = []
-        for i in 0 ..< tunnelsManager.numberOfTunnels() {
-            guard let tunnelConfiguration = tunnelsManager.tunnel(at: i).tunnelConfiguration() else { continue }
-            if let contents = WgQuickConfigFileWriter.writeConfigFile(from: tunnelConfiguration) {
-                let name = tunnelConfiguration.interface.name
-                assert(name != tunnelsManager.tunnel(at: i - 1).name)
-                inputsToArchiver.append((fileName: "\(name).conf", contents: contents))
-            }
-        }
-
+        guard let tunnelsManager = tunnelsManager else { return }
         guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
@@ -87,16 +74,19 @@ class SettingsTableViewController: UITableViewController {
             os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
         }
 
+        let count = tunnelsManager.numberOfTunnels()
+        let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration() }
         do {
-            try ZipArchive.archive(inputs: inputsToArchiver, to: destinationURL)
-            let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-            // popoverPresentationController shall be non-nil on the iPad
-            activityVC.popoverPresentationController?.sourceView = sourceView
-            activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-            present(activityVC, animated: true)
+            try ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL)
         } catch (let error) {
-            showErrorAlert(title: "Unable to export", message: "There was an error exporting the tunnel configuration archive: \(String(describing: error))")
+            ErrorPresenter.showErrorAlert(error: error, from: self)
         }
+
+        let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
+        // popoverPresentationController shall be non-nil on the iPad
+        activityVC.popoverPresentationController?.sourceView = sourceView
+        activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
+        present(activityVC, animated: true)
     }
 
     func showErrorAlert(title: String, message: String) {
