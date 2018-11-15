@@ -76,17 +76,17 @@ class SettingsTableViewController: UITableViewController {
 
         let count = tunnelsManager.numberOfTunnels()
         let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration() }
-        do {
-            try ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL)
-        } catch (let error) {
-            ErrorPresenter.showErrorAlert(error: error, from: self)
+        ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] (error) in
+            if let error = error {
+                ErrorPresenter.showErrorAlert(error: error, from: self)
+                return
+            }
+            let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
+            // popoverPresentationController shall be non-nil on the iPad
+            activityVC.popoverPresentationController?.sourceView = sourceView
+            activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
+            self?.present(activityVC, animated: true)
         }
-
-        let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-        // popoverPresentationController shall be non-nil on the iPad
-        activityVC.popoverPresentationController?.sourceView = sourceView
-        activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-        present(activityVC, animated: true)
     }
 
     func showErrorAlert(title: String, message: String) {
