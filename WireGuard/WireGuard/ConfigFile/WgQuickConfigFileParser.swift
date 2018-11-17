@@ -66,7 +66,7 @@ class WgQuickConfigFileParser {
             guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else { return nil }
             var peer = PeerConfiguration(publicKey: publicKey)
             // wg fields
-            if let preSharedKeyString = attributes["PreSharedKey"] {
+            if let preSharedKeyString = attributes["PresharedKey"] {
                 guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 else { return nil }
                 peer.preSharedKey = preSharedKey
             }
