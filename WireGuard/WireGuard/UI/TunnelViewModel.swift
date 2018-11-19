@@ -361,6 +361,7 @@ class TunnelViewModel {
                     [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
             scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
+            validatedConfiguration = nil // The configuration has been modified, and needs to be saved
             excludePrivateIPsValue = isOn
         }
     }
