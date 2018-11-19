@@ -26,16 +26,16 @@ class WgQuickConfigFileParser {
 
         func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
             // required wg fields
-            guard let privateKeyString = attributes["PrivateKey"] else { return nil }
+            guard let privateKeyString = attributes["privatekey"] else { return nil }
             guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else { return nil }
             var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
             // other wg fields
-            if let listenPortString = attributes["ListenPort"] {
+            if let listenPortString = attributes["listenport"] {
                 guard let listenPort = UInt16(listenPortString) else { return nil }
                 interface.listenPort = listenPort
             }
             // wg-quick fields
-            if let addressesString = attributes["Address"] {
+            if let addressesString = attributes["address"] {
                 var addresses: [IPAddressRange] = []
                 for addressString in addressesString.split(separator: ",") {
                     let trimmedString = addressString.trimmingCharacters(in: .whitespaces)
@@ -44,7 +44,7 @@ class WgQuickConfigFileParser {
                 }
                 interface.addresses = addresses
             }
-            if let dnsString = attributes["DNS"] {
+            if let dnsString = attributes["dns"] {
                 var dnsServers: [DNSServer] = []
                 for dnsServerString in dnsString.split(separator: ",") {
                     let trimmedString = dnsServerString.trimmingCharacters(in: .whitespaces)
@@ -53,7 +53,7 @@ class WgQuickConfigFileParser {
                 }
                 interface.dns = dnsServers
             }
-            if let mtuString = attributes["MTU"] {
+            if let mtuString = attributes["mtu"] {
                 guard let mtu = UInt16(mtuString) else { return nil }
                 interface.mtu = mtu
             }
@@ -62,15 +62,15 @@ class WgQuickConfigFileParser {
 
         func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
             // required wg fields
-            guard let publicKeyString = attributes["PublicKey"] else { return nil }
+            guard let publicKeyString = attributes["publickey"] else { return nil }
             guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else { return nil }
             var peer = PeerConfiguration(publicKey: publicKey)
             // wg fields
-            if let preSharedKeyString = attributes["PresharedKey"] {
+            if let preSharedKeyString = attributes["presharedkey"] {
                 guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 else { return nil }
                 peer.preSharedKey = preSharedKey
             }
-            if let allowedIPsString = attributes["AllowedIPs"] {
+            if let allowedIPsString = attributes["allowedips"] {
                 var allowedIPs: [IPAddressRange] = []
                 for allowedIPString in allowedIPsString.split(separator: ",") {
                     let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
@@ -79,11 +79,11 @@ class WgQuickConfigFileParser {
                 }
                 peer.allowedIPs = allowedIPs
             }
-            if let endpointString = attributes["Endpoint"] {
+            if let endpointString = attributes["endpoint"] {
                 guard let endpoint = Endpoint(from: endpointString) else { return nil }
                 peer.endpoint = endpoint
             }
-            if let persistentKeepAliveString = attributes["PersistentKeepalive"] {
+            if let persistentKeepAliveString = attributes["persistentkeepalive"] {
                 guard let persistentKeepAlive = UInt16(persistentKeepAliveString) else { return nil }
                 peer.persistentKeepAlive = persistentKeepAlive
             }
@@ -113,9 +113,9 @@ class WgQuickConfigFileParser {
 
             if let equalsIndex = line.firstIndex(of: "=") {
                 // Line contains an attribute
-                let key = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
+                let key = line[..<equalsIndex].trimmingCharacters(in: .whitespaces).lowercased()
                 let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
-                let keysWithMultipleEntriesAllowed: Set<String> = ["Address", "AllowedIPs", "DNS"]
+                let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
                 if let presentValue = attributes[key], keysWithMultipleEntriesAllowed.contains(key) {
                     attributes[key] = presentValue + "," + value
                 } else {
