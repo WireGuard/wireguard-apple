@@ -123,6 +123,6 @@
 		</dict>
 	</array>
 	<key>com.wireguard.ios.app_group_id</key>
-    <string>group.$(APP_ID)</string>
+    <string>group.$(APP_ID_IOS)</string>
 </dict>
 </plist>
