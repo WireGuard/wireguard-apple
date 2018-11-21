@@ -8,7 +8,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-         <string>group.$(APP_ID)</string>
+         <string>group.$(APP_ID_IOS)</string>
     </array>
 </dict>
 </plist>
