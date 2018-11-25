@@ -54,7 +54,6 @@
 		6FB1017921C57DE600766195 /* MockTunnels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1017821C57DE600766195 /* MockTunnels.swift */; };
 		6FB1BD6021D2607A00A991BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */; };
 		6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB1BD6121D2607E00A991BF /* Assets.xcassets */; };
-		6FB1BD6521D2607E00A991BF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FB1BD6321D2607E00A991BF /* MainMenu.xib */; };
 		6FB1BD9921D4BFE700A991BF /* WireGuardNetworkExtensionmacOS.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6FB1BD9121D4BFE600A991BF /* WireGuardNetworkExtensionmacOS.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6FB1BDA121D4E00A00A991BF /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB1BDA021D4E00A00A991BF /* libwg-go.a */; };
 		6FB1BDA221D4F53300A991BF /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526C21C23F960008484E /* ringlogger.c */; };
@@ -106,6 +105,7 @@
 		6FB1BDD821D50F5300A991BF /* WireGuardResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1EA21B937EF00483816 /* WireGuardResult.swift */; };
 		6FB1BDD921D50F5300A991BF /* LocalizationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE1765921C90E87002690EA /* LocalizationHelper.swift */; };
 		6FB1BDDA21D5170800A991BF /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB1BDB621D4F8B800A991BF /* NetworkExtension.framework */; };
+		6FBA101521D613F90051C35F /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA101321D613F30051C35F /* Application.swift */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
 		6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */; };
 		6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F621863B6100D8FBF6 /* unzip.c */; };
@@ -241,13 +241,13 @@
 		6FB1BD5D21D2607A00A991BF /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB1BD6121D2607E00A991BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		6FB1BD6421D2607E00A991BF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		6FB1BD6621D2607E00A991BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		6FB1BD9121D4BFE600A991BF /* WireGuardNetworkExtensionmacOS.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardNetworkExtensionmacOS.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB1BD9621D4BFE700A991BF /* WireGuardNetworkExtension_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardNetworkExtension_macOS.entitlements; sourceTree = "<group>"; };
 		6FB1BDA021D4E00A00A991BF /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB1BDB621D4F8B800A991BF /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/System/Library/Frameworks/NetworkExtension.framework; sourceTree = DEVELOPER_DIR; };
+		6FBA101321D613F30051C35F /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
 		6FDEF7F621863B6100D8FBF6 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
@@ -454,9 +454,9 @@
 			children = (
 				6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */,
 				6FB1BD6121D2607E00A991BF /* Assets.xcassets */,
-				6FB1BD6321D2607E00A991BF /* MainMenu.xib */,
 				6FB1BD6621D2607E00A991BF /* Info.plist */,
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
+				6FBA101321D613F30051C35F /* Application.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -758,7 +758,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */,
-				6FB1BD6521D2607E00A991BF /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1001,6 +1000,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FBA101521D613F90051C35F /* Application.swift in Sources */,
 				6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */,
 				6FB1BDCD21D50F5300A991BF /* ActivateOnDemandSetting.swift in Sources */,
 				6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */,
@@ -1138,14 +1138,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		6FB1BD6321D2607E00A991BF /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6FB1BD6421D2607E00A991BF /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		6FE1765421C90BBE002690EA /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
