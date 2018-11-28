@@ -10,8 +10,8 @@ struct ActivateOnDemandSetting {
 
 enum ActivateOnDemandOption {
     case none // Valid only when isActivateOnDemandEnabled is false
-    case useOnDemandOverWifiOrCellular
-    case useOnDemandOverWifiOnly
+    case useOnDemandOverWiFiOrCellular
+    case useOnDemandOverWiFiOnly
     case useOnDemandOverCellularOnly
 }
 
@@ -24,9 +24,9 @@ extension ActivateOnDemandSetting {
         switch (activateOnDemandOption) {
         case .none:
             rules = nil
-        case .useOnDemandOverWifiOrCellular:
+        case .useOnDemandOverWiFiOrCellular:
             rules = [connectRule]
-        case .useOnDemandOverWifiOnly:
+        case .useOnDemandOverWiFiOnly:
             connectRule.interfaceTypeMatch = .wiFi
             disconnectRule.interfaceTypeMatch = .cellular
             rules = [connectRule, disconnectRule]
@@ -47,12 +47,12 @@ extension ActivateOnDemandSetting {
         case 1:
             let rule = rules[0]
             precondition(rule.action == .connect)
-            activateOnDemandOption = .useOnDemandOverWifiOrCellular
+            activateOnDemandOption = .useOnDemandOverWiFiOrCellular
         case 2:
             let connectRule = rules.first(where: { $0.action == .connect })!
             let disconnectRule = rules.first(where: { $0.action == .disconnect })!
             if (connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == .cellular) {
-                activateOnDemandOption = .useOnDemandOverWifiOnly
+                activateOnDemandOption = .useOnDemandOverWiFiOnly
             } else if (connectRule.interfaceTypeMatch == .cellular && disconnectRule.interfaceTypeMatch == .wiFi) {
                 activateOnDemandOption = .useOnDemandOverCellularOnly
             } else {
