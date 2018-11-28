@@ -436,10 +436,10 @@ class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
                 switch (activateOnDemandSetting.activateOnDemandOption) {
                 case .none:
                     detailText = "Off"
-                case .useOnDemandOverWifiOrCellular:
-                    detailText = "Wifi or cellular"
-                case .useOnDemandOverWifiOnly:
-                    detailText = "Wifi only"
+                case .useOnDemandOverWiFiOrCellular:
+                    detailText = "WiFi or cellular"
+                case .useOnDemandOverWiFiOnly:
+                    detailText = "WiFi only"
                 case .useOnDemandOverCellularOnly:
                     detailText = "Cellular only"
                 }

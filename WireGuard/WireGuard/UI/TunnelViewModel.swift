@@ -455,17 +455,17 @@ extension TunnelViewModel {
         switch (activateOnDemandOption) {
         case .none:
             return ""
-        case .useOnDemandOverWifiOrCellular:
-            return "Over wifi or cellular"
-        case .useOnDemandOverWifiOnly:
-            return "Over wifi only"
+        case .useOnDemandOverWiFiOrCellular:
+            return "Over WiFi or cellular"
+        case .useOnDemandOverWiFiOnly:
+            return "Over WiFi only"
         case .useOnDemandOverCellularOnly:
             return "Over cellular only"
         }
     }
 
     func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
-        return .useOnDemandOverWifiOrCellular
+        return .useOnDemandOverWiFiOrCellular
     }
 
 }
