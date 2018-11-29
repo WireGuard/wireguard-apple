@@ -10,11 +10,13 @@ class SettingsTableViewController: UITableViewController {
         case iosAppVersion = "WireGuard for iOS"
         case goBackendVersion = "WireGuard Go Backend"
         case exportZipArchive = "Export zip archive"
+        case exportLogFile = "Export log file"
     }
 
     let settingsFieldsBySection: [[SettingsFields]] = [
         [.iosAppVersion, .goBackendVersion],
-        [.exportZipArchive]
+        [.exportZipArchive],
+        [.exportLogFile]
     ]
 
     let tunnelsManager: TunnelsManager?
@@ -89,6 +91,44 @@ class SettingsTableViewController: UITableViewController {
         }
     }
 
+    func exportLogForLastActivatedTunnel(sourceView: UIView) {
+        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+
+        let destinationURL = destinationDir.appendingPathComponent("WireGuard_iOS_log.txt")
+
+        if (FileManager.default.fileExists(atPath: destinationURL.path)) {
+            do {
+                try FileManager.default.removeItem(at: destinationURL)
+            } catch {
+                os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
+                showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared")
+                return
+            }
+        }
+
+        guard let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL,
+            FileManager.default.fileExists(atPath: networkExtensionLogFileURL.path) else {
+                showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log")
+                return
+        }
+
+        do {
+            try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
+        } catch {
+            os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
+            showErrorAlert(title: "No log available", message: "The log could not be accessed")
+            return
+        }
+
+        let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
+        // popoverPresentationController shall be non-nil on the iPad
+        activityVC.popoverPresentationController?.sourceView = sourceView
+        activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
+        self.present(activityVC, animated: true)
+    }
+
     func showErrorAlert(title: String, message: String) {
         let okAction = UIAlertAction(title: "OK", style: .default)
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -115,6 +155,8 @@ extension SettingsTableViewController {
             return "About"
         case 1:
             return "Export configurations"
+        case 2:
+            return "Tunnel log"
         default:
             return nil
         }
@@ -135,12 +177,19 @@ extension SettingsTableViewController {
                 cell.value = WIREGUARD_GO_VERSION
             }
             return cell
-        } else {
-            assert(field == .exportZipArchive)
+        } else if (field == .exportZipArchive) {
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.id, for: indexPath) as! TunnelSettingsTableViewButtonCell
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
+            }
+            return cell
+        } else {
+            assert(field == .exportLogFile)
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.id, for: indexPath) as! TunnelSettingsTableViewButtonCell
+            cell.buttonText = field.rawValue
+            cell.onTapped = { [weak self] in
+                self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
             }
             return cell
         }
