@@ -27,5 +27,7 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).PacketTunnelProvider</string>
 	</dict>
+	<key>com.wireguard.ios.app_group_id</key>
+    <string>group.$(APP_ID)</string>
 </dict>
 </plist>
