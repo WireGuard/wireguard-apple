@@ -4,6 +4,10 @@
 import UIKit
 
 class MainViewController: UISplitViewController {
+
+    var tunnelsManager: TunnelsManager?
+    var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
+
     var tunnelsListVC: TunnelsListTableViewController?
 
     init() {
@@ -30,6 +34,38 @@ class MainViewController: UISplitViewController {
 
         // On iPad, always show both masterVC and detailVC, even in portrait mode, like the Settings app
         self.preferredDisplayMode = .allVisible
+
+        // Create the tunnels manager, and when it's ready, inform tunnelsListVC
+        TunnelsManager.create { [weak self] tunnelsManager in
+            guard let tunnelsManager = tunnelsManager else { return }
+            guard let s = self else { return }
+
+            s.tunnelsManager = tunnelsManager
+            s.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
+
+            tunnelsManager.activationDelegate = s
+
+            s.onTunnelsManagerReady?(tunnelsManager)
+            s.onTunnelsManagerReady = nil
+        }
+    }
+}
+
+extension MainViewController: TunnelsManagerActivationDelegate {
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError) {
+        ErrorPresenter.showErrorAlert(error: error, from: self)
+    }
+}
+
+extension MainViewController {
+    func refreshTunnelConnectionStatuses() {
+        if let tunnelsManager = tunnelsManager {
+            tunnelsManager.refreshStatuses()
+        } else {
+            onTunnelsManagerReady = { tunnelsManager in
+                tunnelsManager.refreshStatuses()
+            }
+        }
     }
 }
 
