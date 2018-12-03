@@ -5,14 +5,14 @@ import Foundation
 import NetworkExtension
 import os.log
 
-protocol TunnelsManagerDelegate: class {
+protocol TunnelsManagerListDelegate: class {
     func tunnelAdded(at: Int)
     func tunnelModified(at: Int)
     func tunnelMoved(at oldIndex: Int, to newIndex: Int)
     func tunnelRemoved(at: Int)
 }
 
-protocol TunnelActivationDelegate: class {
+protocol TunnelsManagerActivationDelegate: class {
     func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError)
 }
 
@@ -35,8 +35,8 @@ enum TunnelManagementError: Error {
 class TunnelsManager {
 
     private var tunnels: [TunnelContainer]
-    weak var delegate: TunnelsManagerDelegate?
-    weak var activationDelegate: TunnelActivationDelegate?
+    weak var tunnelsListDelegate: TunnelsManagerListDelegate?
+    weak var activationDelegate: TunnelsManagerActivationDelegate?
 
     private var isAddingTunnel: Bool = false
     private var isModifyingTunnel: Bool = false
@@ -94,7 +94,7 @@ class TunnelsManager {
                 let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
                 s.tunnels.append(tunnel)
                 s.tunnels.sort { $0.name < $1.name }
-                s.delegate?.tunnelAdded(at: s.tunnels.firstIndex(of: tunnel)!)
+                s.tunnelsListDelegate?.tunnelAdded(at: s.tunnels.firstIndex(of: tunnel)!)
                 completionHandler(tunnel, nil)
             }
         }
@@ -157,9 +157,9 @@ class TunnelsManager {
                     let oldIndex = s.tunnels.firstIndex(of: tunnel)!
                     s.tunnels.sort { $0.name < $1.name }
                     let newIndex = s.tunnels.firstIndex(of: tunnel)!
-                    s.delegate?.tunnelMoved(at: oldIndex, to: newIndex)
+                    s.tunnelsListDelegate?.tunnelMoved(at: oldIndex, to: newIndex)
                 }
-                s.delegate?.tunnelModified(at: s.tunnels.firstIndex(of: tunnel)!)
+                s.tunnelsListDelegate?.tunnelModified(at: s.tunnels.firstIndex(of: tunnel)!)
 
                 if (tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting) {
                     // Turn off the tunnel, and then turn it back on, so the changes are made effective
@@ -200,7 +200,7 @@ class TunnelsManager {
             if let s = self {
                 let index = s.tunnels.firstIndex(of: tunnel)!
                 s.tunnels.remove(at: index)
-                s.delegate?.tunnelRemoved(at: index)
+                s.tunnelsListDelegate?.tunnelRemoved(at: index)
             }
             completionHandler(nil)
         }

@@ -39,6 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        mainVC?.tunnelsListVC?.refreshTunnelConnectionStatuses()
+        mainVC?.refreshTunnelConnectionStatuses()
     }
 }

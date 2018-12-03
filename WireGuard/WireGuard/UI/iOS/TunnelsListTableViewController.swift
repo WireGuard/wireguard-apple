@@ -8,7 +8,6 @@ import UserNotifications
 class TunnelsListTableViewController: UIViewController {
 
     var tunnelsManager: TunnelsManager?
-    var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
 
     var busyIndicator: UIActivityIndicatorView?
     var centeredAddButton: BorderedTextButton?
@@ -38,53 +37,58 @@ class TunnelsListTableViewController: UIViewController {
             ])
         busyIndicator.startAnimating()
         self.busyIndicator = busyIndicator
+    }
 
-        // Create the tunnels manager, and when it's ready, create the tableView
-        TunnelsManager.create { [weak self] tunnelsManager in
-            guard let tunnelsManager = tunnelsManager else { return }
-            guard let s = self else { return }
-
-            let tableView = UITableView(frame: CGRect.zero, style: .plain)
-            tableView.rowHeight = 60
-            tableView.separatorStyle = .none
-            tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
-
-            s.view.addSubview(tableView)
-            tableView.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                tableView.leftAnchor.constraint(equalTo: s.view.leftAnchor),
-                tableView.rightAnchor.constraint(equalTo: s.view.rightAnchor),
-                tableView.topAnchor.constraint(equalTo: s.view.topAnchor),
-                tableView.bottomAnchor.constraint(equalTo: s.view.bottomAnchor)
-                ])
-            tableView.dataSource = s
-            tableView.delegate = s
-            s.tableView = tableView
-
-            // Add an add button, centered
-            let centeredAddButton = BorderedTextButton()
-            centeredAddButton.title = "Add a tunnel"
-            centeredAddButton.isHidden = true
-            s.view.addSubview(centeredAddButton)
-            centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                centeredAddButton.centerXAnchor.constraint(equalTo: s.view.centerXAnchor),
-                centeredAddButton.centerYAnchor.constraint(equalTo: s.view.centerYAnchor)
-                ])
-            centeredAddButton.onTapped = { [weak self] in
-                self?.addButtonTapped(sender: centeredAddButton)
-            }
-            s.centeredAddButton = centeredAddButton
-
-            centeredAddButton.isHidden = (tunnelsManager.numberOfTunnels() > 0)
-            busyIndicator.stopAnimating()
-
-            tunnelsManager.delegate = s
-            tunnelsManager.activationDelegate = s
-            s.tunnelsManager = tunnelsManager
-            s.onTunnelsManagerReady?(tunnelsManager)
-            s.onTunnelsManagerReady = nil
+    func setTunnelsManager(tunnelsManager: TunnelsManager) {
+        if (self.tunnelsManager != nil) {
+            // If a tunnels manager is already set, do nothing
+            return
         }
+
+        // Create the table view
+
+        let tableView = UITableView(frame: CGRect.zero, style: .plain)
+        tableView.rowHeight = 60
+        tableView.separatorStyle = .none
+        tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
+
+        self.view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+            ])
+        tableView.dataSource = self
+        tableView.delegate = self
+        self.tableView = tableView
+
+        // Add button at the center
+
+        let centeredAddButton = BorderedTextButton()
+        centeredAddButton.title = "Add a tunnel"
+        centeredAddButton.isHidden = true
+        self.view.addSubview(centeredAddButton)
+        centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            centeredAddButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            centeredAddButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
+        centeredAddButton.onTapped = { [weak self] in
+            self?.addButtonTapped(sender: centeredAddButton)
+        }
+        centeredAddButton.isHidden = (tunnelsManager.numberOfTunnels() > 0)
+        self.centeredAddButton = centeredAddButton
+
+        // Hide the busy indicator
+
+        self.busyIndicator?.stopAnimating()
+
+        // Keep track of the tunnels manager
+
+        self.tunnelsManager = tunnelsManager
+        tunnelsManager.tunnelsListDelegate = self
     }
 
     @objc func addButtonTapped(sender: AnyObject) {
@@ -188,16 +192,6 @@ class TunnelsListTableViewController: UIViewController {
             }
         }
     }
-
-    func refreshTunnelConnectionStatuses() {
-        if let tunnelsManager = tunnelsManager {
-            tunnelsManager.refreshStatuses()
-        } else {
-            onTunnelsManagerReady = { tunnelsManager in
-                tunnelsManager.refreshStatuses()
-            }
-        }
-    }
 }
 
 // MARK: UIDocumentPickerDelegate
@@ -293,7 +287,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
 
 // MARK: TunnelsManagerDelegate
 
-extension TunnelsListTableViewController: TunnelsManagerDelegate {
+extension TunnelsListTableViewController: TunnelsManagerListDelegate {
     func tunnelAdded(at index: Int) {
         tableView?.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
@@ -310,14 +304,6 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelRemoved(at index: Int) {
         tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
-    }
-}
-
-// MARK: TunnelActivationDelegate
-
-extension TunnelsListTableViewController: TunnelActivationDelegate {
-    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError) {
-        ErrorPresenter.showErrorAlert(error: error, from: self)
     }
 }
 
