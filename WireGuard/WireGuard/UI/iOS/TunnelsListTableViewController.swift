@@ -80,6 +80,7 @@ class TunnelsListTableViewController: UIViewController {
             busyIndicator.stopAnimating()
 
             tunnelsManager.delegate = s
+            tunnelsManager.activationDelegate = s
             s.tunnelsManager = tunnelsManager
             s.onTunnelsManagerReady?(tunnelsManager)
             s.onTunnelsManagerReady = nil
@@ -309,6 +310,14 @@ extension TunnelsListTableViewController: TunnelsManagerDelegate {
     func tunnelRemoved(at index: Int) {
         tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
+    }
+}
+
+// MARK: TunnelActivationDelegate
+
+extension TunnelsListTableViewController: TunnelActivationDelegate {
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError) {
+        ErrorPresenter.showErrorAlert(error: error, from: self)
     }
 }
 

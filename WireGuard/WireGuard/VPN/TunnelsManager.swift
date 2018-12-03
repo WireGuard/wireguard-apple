@@ -12,8 +12,14 @@ protocol TunnelsManagerDelegate: class {
     func tunnelRemoved(at: Int)
 }
 
+protocol TunnelActivationDelegate: class {
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError)
+}
+
 enum TunnelActivationError: Error {
-    case tunnelActivationFailed
+    case tunnelActivationAttemptFailed // startTunnel() throwed
+    case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
+    case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
     case attemptingActivationWhenTunnelIsNotInactive
     case attemptingDeactivationWhenTunnelIsInactive
 }
@@ -30,6 +36,7 @@ class TunnelsManager {
 
     private var tunnels: [TunnelContainer]
     weak var delegate: TunnelsManagerDelegate?
+    weak var activationDelegate: TunnelActivationDelegate?
 
     private var isAddingTunnel: Bool = false
     private var isModifyingTunnel: Bool = false
@@ -212,14 +219,27 @@ class TunnelsManager {
             completionHandler(TunnelActivationError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
+
+        func _startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (Error?) -> Void) {
+            tunnel.onActivationCommitted = { [weak self] (success) in
+                if (!success) {
+                    let error = (InternetReachability.currentStatus() == .notReachable ?
+                        TunnelActivationError.tunnelActivationFailedNoInternetConnection :
+                        TunnelActivationError.tunnelActivationFailedInternalError)
+                    self?.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
+                }
+            }
+            tunnel.startActivation(completionHandler: completionHandler)
+        }
+
         if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
             tunnel.status = .waiting
             tunnelInOperation.onDeactivationComplete = {
-                tunnel.startActivation(completionHandler: completionHandler)
+                _startActivation(of: tunnel, completionHandler: completionHandler)
             }
             startDeactivation(of: tunnelInOperation)
         } else {
-            tunnel.startActivation(completionHandler: completionHandler)
+            _startActivation(of: tunnel, completionHandler: completionHandler)
         }
     }
 
@@ -249,6 +269,8 @@ class TunnelContainer: NSObject {
         }
     }
 
+    var isAttemptingActivation: Bool = false
+    var onActivationCommitted: ((Bool) -> Void)?
     var onDeactivationComplete: (() -> Void)?
 
     fileprivate let tunnelProvider: NETunnelProviderManager
@@ -289,8 +311,8 @@ class TunnelContainer: NSObject {
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
 
         onDeactivationComplete = nil
-        startActivation(tunnelConfiguration: tunnelConfiguration,
-                        completionHandler: completionHandler)
+        isAttemptingActivation = true
+        startActivation(tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
     }
 
     fileprivate func startActivation(recursionCount: UInt = 0,
@@ -299,7 +321,7 @@ class TunnelContainer: NSObject {
                                      completionHandler: @escaping (Error?) -> Void) {
         if (recursionCount >= 8) {
             os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@", log: OSLog.default, type: .error, "\(lastError!)")
-            completionHandler(TunnelActivationError.tunnelActivationFailed)
+            completionHandler(TunnelActivationError.tunnelActivationAttemptFailed)
             return
         }
 
@@ -386,6 +408,18 @@ class TunnelContainer: NSObject {
             object: connection,
             queue: nil) { [weak self] (_) in
                 guard let s = self else { return }
+                if (s.isAttemptingActivation) {
+                    if (connection.status == .connecting || connection.status == .connected) {
+                        // We tried to start the tunnel, and that attempt is on track to become succeessful
+                        s.onActivationCommitted?(true)
+                        s.onActivationCommitted = nil
+                    } else if (connection.status == .disconnecting || connection.status == .disconnected) {
+                        // We tried to start the tunnel, but that attempt didn't succeed
+                        s.onActivationCommitted?(false)
+                        s.onActivationCommitted = nil
+                    }
+                    s.isAttemptingActivation = false
+                }
                 if ((s.status == .restarting) && (connection.status == .disconnected || connection.status == .disconnecting)) {
                     // Don't change s.status when disconnecting for a restart
                     if (connection.status == .disconnected) {
