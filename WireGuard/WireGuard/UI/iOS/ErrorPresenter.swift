@@ -21,8 +21,12 @@ class ErrorPresenter {
             return ("Unable to remove tunnel", "Internal error")
 
         // TunnelActivationError
-        case TunnelActivationError.tunnelActivationFailed:
+        case TunnelActivationError.tunnelActivationAttemptFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case TunnelActivationError.tunnelActivationFailedInternalError:
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case TunnelActivationError.tunnelActivationFailedNoInternetConnection:
+            return ("Activation failure", "No internet connection")
 
         // Importing a zip file
         case ZipArchiveError.cantOpenInputZipFile:
