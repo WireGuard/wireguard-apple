@@ -378,6 +378,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6F5D0C25218352EF000F85AD /* Build configuration list for PBXNativeTarget "WireGuardNetworkExtension" */;
 			buildPhases = (
+				6F61F1EC21BA4D4700483816 /* Extract wireguard-go Version */,
 				6F5D0C16218352EF000F85AD /* Sources */,
 				6F5D0C17218352EF000F85AD /* Frameworks */,
 				6F5D0C18218352EF000F85AD /* Resources */,
@@ -488,6 +489,25 @@
 
 /* Begin PBXShellScriptBuildPhase section */
 		6B87860E2189532500C099FB /* Extract wireguard-go Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract wireguard-go Version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec make -C \"$PROJECT_DIR/../wireguard-go-bridge\" version-header\n";
+			showEnvVarsInLog = 0;
+		};
+		6F61F1EC21BA4D4700483816 /* Extract wireguard-go Version */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

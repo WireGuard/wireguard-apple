@@ -42,6 +42,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Configure logging
         configureLogger()
 
+        wg_log(.info, message: "WireGuard for iOS version \(appVersion())")
+        wg_log(.info, message: "WireGuard Go backend version \(goBackendVersion())")
+        wg_log(.info, message: "Tunnel interface name: \(tunnelConfiguration.interface.name)")
+
         wg_log(.info, staticMessage: "Starting tunnel")
 
         // Resolve endpoint domains
@@ -157,6 +161,17 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
+    func appVersion() -> String {
+        var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
+        if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            appVersion += " (\(appBuild))"
+        }
+        return appVersion
+    }
+
+    func goBackendVersion() -> String {
+        return WIREGUARD_GO_VERSION
+    }
 }
 
 private func withStringsAsGoStrings<R>(_ str1: String, _ str2: String, closure: (gostring_t, gostring_t) -> R) -> R {
