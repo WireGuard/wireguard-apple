@@ -42,7 +42,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Configure logging
         configureLogger()
 
-        wg_log(.info, "Starting tunnel")
+        wg_log(.info, staticMessage: "Starting tunnel")
 
         // Resolve endpoint domains
 
@@ -51,8 +51,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         do {
             resolvedEndpoints = try DNSResolver.resolveSync(endpoints: endpoints)
         } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
-            wg_log(.error, "Starting tunnel failed: DNS resolution failure")
-            wg_log(.error, "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
+            wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
+            wg_log(.error, message: "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
             ErrorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames), from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
             return
@@ -71,7 +71,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         let fd = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32
         if fd < 0 {
-            wg_log(.error, "Starting tunnel failed: Could not determine file descriptor")
+            wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
             ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
@@ -81,7 +81,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fd: fd)
 
         if handle < 0 {
-            wg_log(.error, "Starting tunnel failed: Could not start WireGuard")
+            wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
             ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
@@ -94,8 +94,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let networkSettings: NEPacketTunnelNetworkSettings = packetTunnelSettingsGenerator.generateNetworkSettings()
         setTunnelNetworkSettings(networkSettings) { (error) in
             if let error = error {
-                wg_log(.error, "Starting tunnel failed: Error setting network settings.")
-                wg_log(.error, "Error from setTunnelNetworkSettings: \(error.localizedDescription)")
+                wg_log(.error, staticMessage: "Starting tunnel failed: Error setting network settings.")
+                wg_log(.error, message: "Error from setTunnelNetworkSettings: \(error.localizedDescription)")
                 ErrorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings, from: self)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
@@ -106,7 +106,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Begin the process of stopping the tunnel.
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        wg_log(.info, "Stopping tunnel")
+        wg_log(.info, staticMessage: "Stopping tunnel")
         if let handle = wgHandle {
             wgTurnOff(handle)
         }
@@ -147,7 +147,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 logType = .default
             }
             let msg = (msgCStr != nil) ? String(cString: msgCStr!) : ""
-            wg_log(logType, msg)
+            wg_log(logType, message: msg)
         }
     }
 
@@ -169,7 +169,7 @@ private func withStringsAsGoStrings<R>(_ str1: String, _ str2: String, closure: 
     }
 }
 
-private func wg_log(_ type: OSLogType, _ msg: StaticString) {
+private func wg_log(_ type: OSLogType, staticMessage msg: StaticString) {
     // Write to os log
     os_log(msg, log: OSLog.default, type: type)
     // Write to file log
@@ -179,7 +179,7 @@ private func wg_log(_ type: OSLogType, _ msg: StaticString) {
     file_log(type: type, message: msgString)
 }
 
-private func wg_log(_ type: OSLogType, _ msg: String) {
+private func wg_log(_ type: OSLogType, message msg: String) {
     // Write to os log
     os_log("%{public}s", log: OSLog.default, type: type, msg)
     // Write to file log
