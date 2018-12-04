@@ -96,7 +96,10 @@ class SettingsTableViewController: UITableViewController {
             return
         }
 
-        let destinationURL = destinationDir.appendingPathComponent("WireGuard_iOS_log.txt")
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
+        let timeStampString = dateFormatter.string(from: Date())
+        let destinationURL = destinationDir.appendingPathComponent("WireGuard_iOS_log_\(timeStampString).txt")
 
         if (FileManager.default.fileExists(atPath: destinationURL.path)) {
             do {
@@ -126,6 +129,10 @@ class SettingsTableViewController: UITableViewController {
         // popoverPresentationController shall be non-nil on the iPad
         activityVC.popoverPresentationController?.sourceView = sourceView
         activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
+        activityVC.completionWithItemsHandler = { (_, _, _, _) in
+            // Remove the exported log file after the activity has completed
+            try? FileManager.default.removeItem(at: destinationURL)
+        }
         self.present(activityVC, animated: true)
     }
 
