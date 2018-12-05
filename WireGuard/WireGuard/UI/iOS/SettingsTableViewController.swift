@@ -69,12 +69,9 @@ class SettingsTableViewController: UITableViewController {
         guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
+
         let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
-        do {
-            try FileManager.default.removeItem(at: destinationURL)
-        } catch {
-            os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
-        }
+        _ = FileManager.deleteFile(at: destinationURL)
 
         let count = tunnelsManager.numberOfTunnels()
         let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration() }
@@ -102,10 +99,8 @@ class SettingsTableViewController: UITableViewController {
         let destinationURL = destinationDir.appendingPathComponent("WireGuard_iOS_log_\(timeStampString).txt")
 
         if (FileManager.default.fileExists(atPath: destinationURL.path)) {
-            do {
-                try FileManager.default.removeItem(at: destinationURL)
-            } catch {
-                os_log("Failed to delete file: %{public}@ : %{public}@", log: OSLog.default, type: .error, destinationURL.absoluteString, error.localizedDescription)
+            let isDeleted = FileManager.deleteFile(at: destinationURL)
+            if (!isDeleted) {
                 showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared")
                 return
             }
@@ -131,7 +126,7 @@ class SettingsTableViewController: UITableViewController {
         activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
         activityVC.completionWithItemsHandler = { (_, _, _, _) in
             // Remove the exported log file after the activity has completed
-            try? FileManager.default.removeItem(at: destinationURL)
+            _ = FileManager.deleteFile(at: destinationURL)
         }
         self.present(activityVC, animated: true)
     }
