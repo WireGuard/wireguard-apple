@@ -27,14 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        defer {
-            do {
-                try FileManager.default.removeItem(at: url)
-            } catch {
-                os_log("Failed to remove item from Inbox: %{public}@", log: OSLog.default, type: .debug, url.absoluteString)
-            }
-        }
         mainVC?.tunnelsListVC?.importFromFile(url: url)
+        _ = FileManager.deleteFile(at: url)
         return true
     }
 
