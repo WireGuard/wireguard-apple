@@ -160,10 +160,11 @@ extension TunnelDetailTableViewController {
                 if (isOn) {
                     s.tunnelsManager.startActivation(of: s.tunnel) { [weak s] error in
                         if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: s)
-                            DispatchQueue.main.async {
-                                cell.statusSwitch.isOn = false
-                            }
+                            ErrorPresenter.showErrorAlert(error: error, from: s, onPresented: {
+                                DispatchQueue.main.async {
+                                    cell.statusSwitch.isOn = false
+                                }
+                            })
                         }
                     }
                 } else {
