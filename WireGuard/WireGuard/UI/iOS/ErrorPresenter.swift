@@ -5,7 +5,7 @@ import UIKit
 import os.log
 
 class ErrorPresenter {
-    static func errorMessage(for error: Error) -> (String, String)? {
+    static func errorMessage(for error: Error) -> (String, String) {
         switch (error) {
 
         // TunnelManagementError
@@ -43,15 +43,14 @@ class ErrorPresenter {
             return ("Nothing to export", "There are no tunnels to export")
 
         default:
-            os_log("ErrorPresenter: Error not presented: %{public}@", log: OSLog.default, type: .error, "\(error)")
-            return nil
+            return ("Error", error.localizedDescription)
         }
     }
 
     static func showErrorAlert(error: Error, from sourceVC: UIViewController?,
                                onDismissal: (() -> Void)? = nil, onPresented: (() -> Void)? = nil) {
         guard let sourceVC = sourceVC else { return }
-        guard let (title, message) = ErrorPresenter.errorMessage(for: error) else { return }
+        let (title, message) = ErrorPresenter.errorMessage(for: error)
         let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
             onDismissal?()
         }
