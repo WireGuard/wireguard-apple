@@ -16,7 +16,8 @@ protocol TunnelsManagerActivationDelegate: class {
     func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerError)
 }
 
-enum TunnelsManagerError: Error {
+enum TunnelsManagerError: WireGuardAppError {
+    // Tunnels list management
     case tunnelNameEmpty
     case tunnelAlreadyExistsWithThatName
     case vpnSystemErrorOnListingTunnels
@@ -24,9 +25,34 @@ enum TunnelsManagerError: Error {
     case vpnSystemErrorOnModifyTunnel
     case vpnSystemErrorOnRemoveTunnel
 
+    // Tunnel activation
     case tunnelActivationAttemptFailed // startTunnel() throwed
     case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
     case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
+
+    func alertText() -> (String, String) {
+        switch (self) {
+        case .tunnelNameEmpty:
+            return ("No name provided", "Can't create tunnel with an empty name")
+        case .tunnelAlreadyExistsWithThatName:
+            return ("Name already exists", "A tunnel with that name already exists")
+        case .vpnSystemErrorOnListingTunnels:
+            return ("Unable to list tunnels", "Internal error")
+        case .vpnSystemErrorOnAddTunnel:
+            return ("Unable to create tunnel", "Internal error")
+        case .vpnSystemErrorOnModifyTunnel:
+            return ("Unable to modify tunnel", "Internal error")
+        case .vpnSystemErrorOnRemoveTunnel:
+            return ("Unable to remove tunnel", "Internal error")
+
+        case .tunnelActivationAttemptFailed:
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case .tunnelActivationFailedInternalError:
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case .tunnelActivationFailedNoInternetConnection:
+            return ("Activation failure", "No internet connection")
+        }
+    }
 }
 
 enum TunnelsManagerResult<T> {
