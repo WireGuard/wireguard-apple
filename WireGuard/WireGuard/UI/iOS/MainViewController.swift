@@ -36,8 +36,12 @@ class MainViewController: UISplitViewController {
         self.preferredDisplayMode = .allVisible
 
         // Create the tunnels manager, and when it's ready, inform tunnelsListVC
-        TunnelsManager.create { [weak self] tunnelsManager in
-            guard let tunnelsManager = tunnelsManager else { return }
+        TunnelsManager.create { [weak self] result in
+            if let error = result.error {
+                ErrorPresenter.showErrorAlert(error: error, from: self)
+                return
+            }
+            let tunnelsManager: TunnelsManager = result.value!
             guard let s = self else { return }
 
             s.tunnelsManager = tunnelsManager
@@ -52,7 +56,7 @@ class MainViewController: UISplitViewController {
 }
 
 extension MainViewController: TunnelsManagerActivationDelegate {
-    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelActivationError) {
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerError) {
         ErrorPresenter.showErrorAlert(error: error, from: self)
     }
 }

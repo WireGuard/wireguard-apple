@@ -6,27 +6,12 @@ import os.log
 
 class ErrorPresenter {
     static func errorMessage(for error: Error) -> (String, String) {
+
+        if let tunnelsManagerError = error as? TunnelsManagerError {
+            return errorMessage(forTunnelsManagerError: tunnelsManagerError)
+        }
+
         switch (error) {
-
-        // TunnelManagementError
-        case TunnelManagementError.tunnelAlreadyExistsWithThatName:
-            return ("Name already exists", "A tunnel with that name already exists")
-        case TunnelManagementError.tunnelInvalidName:
-            return ("Name already exists", "The tunnel name is invalid")
-        case TunnelManagementError.vpnSystemErrorOnAddTunnel:
-            return ("Unable to create tunnel", "Internal error")
-        case TunnelManagementError.vpnSystemErrorOnModifyTunnel:
-            return ("Unable to modify tunnel", "Internal error")
-        case TunnelManagementError.vpnSystemErrorOnRemoveTunnel:
-            return ("Unable to remove tunnel", "Internal error")
-
-        // TunnelActivationError
-        case TunnelActivationError.tunnelActivationAttemptFailed:
-            return ("Activation failure", "The tunnel could not be activated due to an internal error")
-        case TunnelActivationError.tunnelActivationFailedInternalError:
-            return ("Activation failure", "The tunnel could not be activated due to an internal error")
-        case TunnelActivationError.tunnelActivationFailedNoInternetConnection:
-            return ("Activation failure", "No internet connection")
 
         // Importing a zip file
         case ZipArchiveError.cantOpenInputZipFile:
@@ -44,6 +29,32 @@ class ErrorPresenter {
 
         default:
             return ("Error", error.localizedDescription)
+        }
+    }
+
+    private static func errorMessage(forTunnelsManagerError error: TunnelsManagerError) -> (String, String) {
+        switch (error) {
+        // Tunnels list management
+        case TunnelsManagerError.tunnelNameEmpty:
+            return ("No name provided", "Can't create tunnel with an empty name")
+        case TunnelsManagerError.tunnelAlreadyExistsWithThatName:
+            return ("Name already exists", "A tunnel with that name already exists")
+        case TunnelsManagerError.vpnSystemErrorOnListingTunnels:
+            return ("Unable to list tunnels", "Internal error")
+        case TunnelsManagerError.vpnSystemErrorOnAddTunnel:
+            return ("Unable to create tunnel", "Internal error")
+        case TunnelsManagerError.vpnSystemErrorOnModifyTunnel:
+            return ("Unable to modify tunnel", "Internal error")
+        case TunnelsManagerError.vpnSystemErrorOnRemoveTunnel:
+            return ("Unable to remove tunnel", "Internal error")
+
+        // Tunnel activation
+        case TunnelsManagerError.tunnelActivationAttemptFailed:
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case TunnelsManagerError.tunnelActivationFailedInternalError:
+            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+        case TunnelsManagerError.tunnelActivationFailedNoInternetConnection:
+            return ("Activation failure", "No internet connection")
         }
     }
 

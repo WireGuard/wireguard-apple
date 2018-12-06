@@ -99,14 +99,13 @@ class TunnelEditTableViewController: UITableViewController {
             } else {
                 // We're adding a new tunnel
                 tunnelsManager.add(tunnelConfiguration: tunnelConfiguration,
-                                   activateOnDemandSetting: activateOnDemandSetting) { [weak self] (tunnel, error) in
-                    if let error = error {
+                                   activateOnDemandSetting: activateOnDemandSetting) { [weak self] result in
+                    if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
+                        let tunnel: TunnelContainer = result.value!
                         self?.dismiss(animated: true, completion: nil)
-                        if let tunnel = tunnel {
-                            self?.delegate?.tunnelSaved(tunnel: tunnel)
-                        }
+                        self?.delegate?.tunnelSaved(tunnel: tunnel)
                     }
                 }
             }
