@@ -3,12 +3,20 @@
 
 import UIKit
 
-enum ZipExporterError: Error {
+enum ZipExporterError: WireGuardAppError {
     case noTunnelsToExport
+
+    func alertText() -> (String, String) {
+        switch (self) {
+        case .noTunnelsToExport:
+            return ("Nothing to export", "There are no tunnels to export")
+        }
+    }
 }
 
 class ZipExporter {
-    static func exportConfigFiles(tunnelConfigurations: [TunnelConfiguration], to url: URL, completion: @escaping (Error?) -> Void)  {
+    static func exportConfigFiles(tunnelConfigurations: [TunnelConfiguration], to url: URL,
+                                  completion: @escaping (WireGuardAppError?) -> Void)  {
 
         guard (!tunnelConfigurations.isEmpty) else {
             completion(ZipExporterError.noTunnelsToExport)
@@ -27,9 +35,11 @@ class ZipExporter {
             }
             do {
                 try ZipArchive.archive(inputs: inputsToArchiver, to: url)
-            } catch (let e) {
-                DispatchQueue.main.async { completion(e) }
+            } catch (let error as WireGuardAppError) {
+                DispatchQueue.main.async { completion(error) }
                 return
+            } catch {
+                fatalError()
             }
             DispatchQueue.main.async { completion(nil) }
         }
