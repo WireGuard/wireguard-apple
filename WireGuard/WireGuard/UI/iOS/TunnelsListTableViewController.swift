@@ -182,8 +182,8 @@ class TunnelsListTableViewController: UIViewController {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
-                    if let error = error {
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] result in
+                    if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     }
                 }
@@ -207,8 +207,8 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
                           completionHandler: (() -> Void)?) {
-        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { (_, error) in
-            if let error = error {
+        tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { result in
+            if let error = result.error {
                 ErrorPresenter.showErrorAlert(error: error, from: qrScanViewController, onDismissal: completionHandler)
             } else {
                 completionHandler?()
