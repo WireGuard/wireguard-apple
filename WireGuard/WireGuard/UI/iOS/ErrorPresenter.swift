@@ -7,8 +7,8 @@ import os.log
 class ErrorPresenter {
     static func errorMessage(for error: Error) -> (String, String) {
 
-        if let tunnelsManagerError = error as? TunnelsManagerError {
-            return errorMessage(forTunnelsManagerError: tunnelsManagerError)
+        if let error = error as? WireGuardAppError {
+            return error.alertText()
         }
 
         switch (error) {
@@ -29,32 +29,6 @@ class ErrorPresenter {
 
         default:
             return ("Error", error.localizedDescription)
-        }
-    }
-
-    private static func errorMessage(forTunnelsManagerError error: TunnelsManagerError) -> (String, String) {
-        switch (error) {
-        // Tunnels list management
-        case TunnelsManagerError.tunnelNameEmpty:
-            return ("No name provided", "Can't create tunnel with an empty name")
-        case TunnelsManagerError.tunnelAlreadyExistsWithThatName:
-            return ("Name already exists", "A tunnel with that name already exists")
-        case TunnelsManagerError.vpnSystemErrorOnListingTunnels:
-            return ("Unable to list tunnels", "Internal error")
-        case TunnelsManagerError.vpnSystemErrorOnAddTunnel:
-            return ("Unable to create tunnel", "Internal error")
-        case TunnelsManagerError.vpnSystemErrorOnModifyTunnel:
-            return ("Unable to modify tunnel", "Internal error")
-        case TunnelsManagerError.vpnSystemErrorOnRemoveTunnel:
-            return ("Unable to remove tunnel", "Internal error")
-
-        // Tunnel activation
-        case TunnelsManagerError.tunnelActivationAttemptFailed:
-            return ("Activation failure", "The tunnel could not be activated due to an internal error")
-        case TunnelsManagerError.tunnelActivationFailedInternalError:
-            return ("Activation failure", "The tunnel could not be activated due to an internal error")
-        case TunnelsManagerError.tunnelActivationFailedNoInternetConnection:
-            return ("Activation failure", "No internet connection")
         }
     }
 
