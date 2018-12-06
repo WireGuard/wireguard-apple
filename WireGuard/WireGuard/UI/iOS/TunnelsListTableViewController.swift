@@ -154,14 +154,6 @@ class TunnelsListTableViewController: UIViewController {
         self.present(scanQRCodeNC, animated: true)
     }
 
-    func showErrorAlert(title: String, message: String) {
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(okAction)
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
     func importFromFile(url: URL) {
         guard let tunnelsManager = tunnelsManager else { return }
         if (url.pathExtension == "zip") {
@@ -175,8 +167,9 @@ class TunnelsListTableViewController: UIViewController {
                     if numberSuccessful == configs.count {
                         return
                     }
-                    self?.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
-                        message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive")
+                    ErrorPresenter.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
+                        message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive",
+                        from: self)
                 }
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
@@ -189,7 +182,9 @@ class TunnelsListTableViewController: UIViewController {
                     }
                 }
             } else {
-                showErrorAlert(title: "Unable to import tunnel", message: "An error occured when importing the tunnel configuration.")
+                ErrorPresenter.showErrorAlert(title: "Unable to import tunnel",
+                                              message: "An error occured when importing the tunnel configuration.",
+                                              from: self)
             }
         }
     }

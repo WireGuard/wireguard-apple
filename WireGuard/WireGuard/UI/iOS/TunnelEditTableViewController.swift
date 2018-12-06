@@ -116,14 +116,6 @@ class TunnelEditTableViewController: UITableViewController {
         dismiss(animated: true, completion: nil)
         self.delegate?.tunnelEditingCancelled()
     }
-
-    func showErrorAlert(title: String, message: String) {
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(okAction)
-
-        self.present(alert, animated: true, completion: nil)
-    }
 }
 
 // MARK: UITableViewDataSource

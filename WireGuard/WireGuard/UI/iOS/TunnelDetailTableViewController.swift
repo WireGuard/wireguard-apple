@@ -53,14 +53,6 @@ class TunnelDetailTableViewController: UITableViewController {
         present(editNC, animated: true)
     }
 
-    func showErrorAlert(title: String, message: String) {
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(okAction)
-
-        self.present(alert, animated: true, completion: nil)
-    }
-
     func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView,
                                onConfirmed: @escaping (() -> Void)) {
         let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { (_) in
