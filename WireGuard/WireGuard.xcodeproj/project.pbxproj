@@ -14,6 +14,7 @@
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
 		6F5D0C22218352EF000F85AD /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6F61F1E921B932F700483816 /* WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1E821B932F700483816 /* WireGuardAppError.swift */; };
+		6F61F1EB21B937EF00483816 /* WireGuardResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1EA21B937EF00483816 /* WireGuardResult.swift */; };
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
@@ -101,6 +102,7 @@
 		6F5D0C3421839E37000F85AD /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		6F5D0C472183C6A3000F85AD /* PacketTunnelSettingsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelSettingsGenerator.swift; sourceTree = "<group>"; };
 		6F61F1E821B932F700483816 /* WireGuardAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardAppError.swift; sourceTree = "<group>"; };
+		6F61F1EA21B937EF00483816 /* WireGuardResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardResult.swift; sourceTree = "<group>"; };
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
 		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 				6F7774ED21722D0C006A79B3 /* VPN */,
 				6FDEF7E72186320E00D8FBF6 /* ZipArchive */,
 				6F61F1E821B932F700483816 /* WireGuardAppError.swift */,
+				6F61F1EA21B937EF00483816 /* WireGuardResult.swift */,
 				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
 				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
 				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
@@ -578,6 +581,7 @@
 				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
 				6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */,
 				6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */,
+				6F61F1EB21B937EF00483816 /* WireGuardResult.swift in Sources */,
 				6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */,
 				6FDEF802218646BA00D8FBF6 /* ZipArchive.swift in Sources */,
 				6FDEF806218725D200D8FBF6 /* SettingsTableViewController.swift in Sources */,

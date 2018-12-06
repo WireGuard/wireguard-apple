@@ -55,32 +55,6 @@ enum TunnelsManagerError: WireGuardAppError {
     }
 }
 
-enum TunnelsManagerResult<T> {
-    case success(T)
-    case failure(TunnelsManagerError)
-
-    var value: T? {
-        switch (self) {
-        case .success(let v): return v
-        case .failure(_): return nil
-        }
-    }
-
-    var error: TunnelsManagerError? {
-        switch (self) {
-        case .success(_): return nil
-        case .failure(let e): return e
-        }
-    }
-
-    var isSuccess: Bool {
-        switch (self) {
-        case .success(_): return true
-        case .failure(_): return false
-        }
-    }
-}
-
 class TunnelsManager {
 
     private var tunnels: [TunnelContainer]
@@ -95,7 +69,7 @@ class TunnelsManager {
         self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
     }
 
-    static func create(completionHandler: @escaping (TunnelsManagerResult<TunnelsManager>) -> Void) {
+    static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
         #if targetEnvironment(simulator)
         // NETunnelProviderManager APIs don't work on the simulator
         completionHandler(.success(TunnelsManager(tunnelProviders: [])))
@@ -113,7 +87,7 @@ class TunnelsManager {
 
     func add(tunnelConfiguration: TunnelConfiguration,
              activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting,
-             completionHandler: @escaping (TunnelsManagerResult<TunnelContainer>) -> Void) {
+             completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
