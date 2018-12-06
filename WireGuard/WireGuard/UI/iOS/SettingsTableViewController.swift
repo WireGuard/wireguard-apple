@@ -101,14 +101,14 @@ class SettingsTableViewController: UITableViewController {
         if (FileManager.default.fileExists(atPath: destinationURL.path)) {
             let isDeleted = FileManager.deleteFile(at: destinationURL)
             if (!isDeleted) {
-                showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared")
+                ErrorPresenter.showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared", from: self)
                 return
             }
         }
 
         guard let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL,
             FileManager.default.fileExists(atPath: networkExtensionLogFileURL.path) else {
-                showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log")
+                ErrorPresenter.showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log", from: self)
                 return
         }
 
@@ -116,7 +116,7 @@ class SettingsTableViewController: UITableViewController {
             try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
         } catch {
             os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
-            showErrorAlert(title: "No log available", message: "The log could not be accessed")
+            ErrorPresenter.showErrorAlert(title: "No log available", message: "The log could not be accessed", from: self)
             return
         }
 
@@ -129,14 +129,6 @@ class SettingsTableViewController: UITableViewController {
             _ = FileManager.deleteFile(at: destinationURL)
         }
         self.present(activityVC, animated: true)
-    }
-
-    func showErrorAlert(title: String, message: String) {
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(okAction)
-
-        self.present(alert, animated: true, completion: nil)
     }
 }
 
