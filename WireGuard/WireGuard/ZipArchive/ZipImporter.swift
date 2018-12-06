@@ -3,12 +3,19 @@
 
 import UIKit
 
-enum ZipImporterError: Error {
+enum ZipImporterError: WireGuardAppError {
     case noTunnelsInZipArchive
+
+    func alertText() -> (String, String) {
+        switch (self) {
+        case .noTunnelsInZipArchive:
+            return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")
+        }
+    }
 }
 
 class ZipImporter {
-    static func importConfigFiles(from url: URL, completion: @escaping ([TunnelConfiguration?], Error?) -> Void) {
+    static func importConfigFiles(from url: URL, completion: @escaping (WireGuardResult<[TunnelConfiguration?]>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             var unarchivedFiles: [(fileName: String, contents: Data)]
             do {
@@ -26,9 +33,11 @@ class ZipImporter {
                 if (unarchivedFiles.isEmpty) {
                     throw ZipImporterError.noTunnelsInZipArchive
                 }
-            } catch (let error) {
-                DispatchQueue.main.async { completion([], error) }
+            } catch (let error as WireGuardAppError) {
+                DispatchQueue.main.async { completion(.failure(error)) }
                 return
+            } catch {
+                fatalError()
             }
 
             unarchivedFiles.sort { $0.fileName < $1.fileName }
@@ -45,7 +54,7 @@ class ZipImporter {
                 }
                 configs[i] = tunnelConfig
             }
-            DispatchQueue.main.async { completion(configs, nil) }
+            DispatchQueue.main.async { completion(.success(configs)) }
         }
     }
 }

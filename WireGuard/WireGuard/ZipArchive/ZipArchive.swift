@@ -3,10 +3,21 @@
 
 import Foundation
 
-enum ZipArchiveError: Error {
+enum ZipArchiveError: WireGuardAppError {
     case cantOpenInputZipFile
     case cantOpenOutputZipFileForWriting
     case badArchive
+
+    func alertText() -> (String, String) {
+        switch (self) {
+        case .cantOpenInputZipFile:
+            return ("Unable to read zip archive", "The zip archive could not be read.")
+        case .cantOpenOutputZipFileForWriting:
+            return ("Unable to create zip archive", "Could not open zip file for writing.")
+        case .badArchive:
+            return ("Unable to read zip archive", "Bad or corrupt zip archive.")
+        }
+    }
 }
 
 class ZipArchive {

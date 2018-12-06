@@ -165,11 +165,12 @@ class TunnelsListTableViewController: UIViewController {
     func importFromFile(url: URL) {
         guard let tunnelsManager = tunnelsManager else { return }
         if (url.pathExtension == "zip") {
-            ZipImporter.importConfigFiles(from: url) { (configs, error) in
-                if let error = error {
+            ZipImporter.importConfigFiles(from: url) { [weak self] result in
+                if let error = result.error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
+                let configs: [TunnelConfiguration?] = result.value!
                 tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
                     if numberSuccessful == configs.count {
                         return
