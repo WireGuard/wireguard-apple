@@ -451,7 +451,7 @@ class TunnelViewModel {
 // MARK: Activate on demand
 
 extension TunnelViewModel {
-    func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
+    static func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
         switch (activateOnDemandOption) {
         case .none:
             return "Off"
@@ -476,7 +476,7 @@ extension TunnelViewModel {
         }
     }
 
-    func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
+    static func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
         return .useOnDemandOverWiFiOrCellular
     }
 
