@@ -389,7 +389,7 @@ extension TunnelEditTableViewController {
                     if (isOn) {
                         s.activateOnDemandSetting.isActivateOnDemandEnabled = true
                         if (s.activateOnDemandSetting.activateOnDemandOption == .none) {
-                            s.activateOnDemandSetting.activateOnDemandOption = s.tunnelViewModel.defaultActivateOnDemandOption()
+                            s.activateOnDemandSetting.activateOnDemandOption = TunnelViewModel.defaultActivateOnDemandOption()
                         }
                         s.tableView.insertRows(at: indexPaths, with: .automatic)
                     } else {
@@ -404,7 +404,7 @@ extension TunnelEditTableViewController {
                 let rowOption = activateOnDemandOptions[row - 1]
                 let selectedOption = activateOnDemandSetting.activateOnDemandOption
                 assert(selectedOption != .none)
-                cell.message = tunnelViewModel.activateOnDemandOptionText(for: rowOption)
+                cell.message = TunnelViewModel.activateOnDemandOptionText(for: rowOption)
                 cell.isChecked = (selectedOption == rowOption)
                 return cell
             }
