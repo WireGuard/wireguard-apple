@@ -59,7 +59,7 @@ class ZipArchive {
                 throw ZipArchiveError.badArchive
             }
 
-            let bufferSize = 1024
+            let bufferSize = 16384 // 16 kb
             var fileNameBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
             var dataBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
 
