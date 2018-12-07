@@ -11,7 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mainVC: MainViewController?
 
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+                     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = UIColor.white
@@ -34,5 +34,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         mainVC?.refreshTunnelConnectionStatuses()
+    }
+}
+
+// MARK: State restoration
+
+extension AppDelegate {
+    func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+        return true
+    }
+
+    func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        return true
+    }
+
+    func application(_ application: UIApplication,
+                     viewControllerWithRestorationIdentifierPath identifierComponents: [String],
+                     coder: NSCoder) -> UIViewController? {
+        guard let vcIdentifier = identifierComponents.last else { return nil }
+        if (vcIdentifier == "MainVC") {
+            return MainViewController()
+        } else if (vcIdentifier == "TunnelsListVC") {
+            return TunnelsListTableViewController()
+        } else if (vcIdentifier.hasPrefix("TunnelDetailVC:")) {
+            let tunnelName = String(vcIdentifier.suffix(vcIdentifier.count - "TunnelDetailVC:".count))
+            if let tunnelsManager = mainVC?.tunnelsManager {
+                if let tunnel = tunnelsManager.tunnel(named: tunnelName) {
+                    return TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+                }
+            } else {
+                // Show it when tunnelsManager is available
+                mainVC?.showTunnelDetailForTunnel(named: tunnelName, animated: false)
+            }
+
+        }
+        return nil
     }
 }

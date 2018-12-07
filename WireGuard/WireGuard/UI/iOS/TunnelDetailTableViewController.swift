@@ -43,6 +43,9 @@ class TunnelDetailTableViewController: UITableViewController {
         self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
         self.tableView.register(TunnelDetailTableViewButtonCell.self, forCellReuseIdentifier: TunnelDetailTableViewButtonCell.id)
         self.tableView.register(TunnelDetailTableViewActivateOnDemandCell.self, forCellReuseIdentifier: TunnelDetailTableViewActivateOnDemandCell.id)
+
+        // State restoration
+        self.restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
     }
 
     @objc func editTapped() {
