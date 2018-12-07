@@ -80,11 +80,9 @@ class SettingsTableViewController: UITableViewController {
                 ErrorPresenter.showErrorAlert(error: error, from: self)
                 return
             }
-            let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-            // popoverPresentationController shall be non-nil on the iPad
-            activityVC.popoverPresentationController?.sourceView = sourceView
-            activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-            self?.present(activityVC, animated: true)
+
+            let fileExportVC = UIDocumentPickerViewController(url: destinationURL, in: .exportToService)
+            self?.present(fileExportVC, animated: true, completion: nil)
         }
     }
 
