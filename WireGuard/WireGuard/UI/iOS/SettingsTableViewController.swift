@@ -96,37 +96,42 @@ class SettingsTableViewController: UITableViewController {
         let timeStampString = dateFormatter.string(from: Date())
         let destinationURL = destinationDir.appendingPathComponent("wireguard-log-\(timeStampString).txt")
 
-        if (FileManager.default.fileExists(atPath: destinationURL.path)) {
-            let isDeleted = FileManager.deleteFile(at: destinationURL)
-            if (!isDeleted) {
-                ErrorPresenter.showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared", from: self)
+        DispatchQueue.global(qos: .userInitiated).async {
+
+            if (FileManager.default.fileExists(atPath: destinationURL.path)) {
+                let isDeleted = FileManager.deleteFile(at: destinationURL)
+                if (!isDeleted) {
+                    ErrorPresenter.showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared", from: self)
+                    return
+                }
+            }
+
+            guard let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL,
+                FileManager.default.fileExists(atPath: networkExtensionLogFileURL.path) else {
+                    ErrorPresenter.showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log", from: self)
+                    return
+            }
+
+            do {
+                try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
+            } catch {
+                os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
+                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The log could not be copied", from: self)
                 return
             }
-        }
 
-        guard let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL,
-            FileManager.default.fileExists(atPath: networkExtensionLogFileURL.path) else {
-                ErrorPresenter.showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log", from: self)
-                return
+            DispatchQueue.main.async {
+                let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
+                // popoverPresentationController shall be non-nil on the iPad
+                activityVC.popoverPresentationController?.sourceView = sourceView
+                activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
+                activityVC.completionWithItemsHandler = { (_, _, _, _) in
+                    // Remove the exported log file after the activity has completed
+                    _ = FileManager.deleteFile(at: destinationURL)
+                }
+                self.present(activityVC, animated: true)
+            }
         }
-
-        do {
-            try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
-        } catch {
-            os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
-            ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The log could not be copied", from: self)
-            return
-        }
-
-        let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-        // popoverPresentationController shall be non-nil on the iPad
-        activityVC.popoverPresentationController?.sourceView = sourceView
-        activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-        activityVC.completionWithItemsHandler = { (_, _, _, _) in
-            // Remove the exported log file after the activity has completed
-            _ = FileManager.deleteFile(at: destinationURL)
-        }
-        self.present(activityVC, animated: true)
     }
 }
 
