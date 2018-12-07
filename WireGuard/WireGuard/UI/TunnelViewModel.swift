@@ -454,13 +454,13 @@ extension TunnelViewModel {
     func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
         switch (activateOnDemandOption) {
         case .none:
-            return ""
+            return "Off"
         case .useOnDemandOverWiFiOrCellular:
-            return "Over WiFi or cellular"
+            return "Wi-Fi or cellular"
         case .useOnDemandOverWiFiOnly:
-            return "Over WiFi only"
+            return "Wi-Fi only"
         case .useOnDemandOverCellularOnly:
-            return "Over cellular only"
+            return "Cellular only"
         }
     }
 

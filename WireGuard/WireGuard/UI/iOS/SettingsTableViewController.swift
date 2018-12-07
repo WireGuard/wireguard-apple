@@ -94,7 +94,7 @@ class SettingsTableViewController: UITableViewController {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
         let timeStampString = dateFormatter.string(from: Date())
-        let destinationURL = destinationDir.appendingPathComponent("WireGuard_iOS_log_\(timeStampString).txt")
+        let destinationURL = destinationDir.appendingPathComponent("wireguard-log-\(timeStampString).txt")
 
         if (FileManager.default.fileExists(atPath: destinationURL.path)) {
             let isDeleted = FileManager.deleteFile(at: destinationURL)
@@ -114,7 +114,7 @@ class SettingsTableViewController: UITableViewController {
             try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
         } catch {
             os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
-            ErrorPresenter.showErrorAlert(title: "No log available", message: "The log could not be accessed", from: self)
+            ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The log could not be copied", from: self)
             return
         }
 

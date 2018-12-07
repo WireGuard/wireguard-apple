@@ -14,7 +14,7 @@ extension FileManager {
             os_log("Can't obtain shared folder URL", log: OSLog.default, type: .error)
             return nil
         }
-        return sharedFolderURL.appendingPathComponent("lastActivatedTunnelLog.txt")
+        return sharedFolderURL.appendingPathComponent("last-activated-tunnel-log.txt")
     }
 
     static func deleteFile(at url: URL) -> Bool {
