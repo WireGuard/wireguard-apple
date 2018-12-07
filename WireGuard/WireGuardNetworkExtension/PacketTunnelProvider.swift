@@ -202,7 +202,9 @@ private func wg_log(_ type: OSLogType, message msg: String) {
 }
 
 private func file_log(type: OSLogType, message: String) {
-    var msgLine = type.toMessagePrefix() + message
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS: "
+    var msgLine = formatter.string(from: Date()) + message
     if (msgLine.last! != "\n") {
         msgLine.append("\n")
     }
@@ -210,18 +212,5 @@ private func file_log(type: OSLogType, message: String) {
     if let data = data, let logFileHandle = logFileHandle {
         logFileHandle.write(data)
         logFileHandle.synchronizeFile()
-    }
-}
-
-extension OSLogType {
-    func toMessagePrefix() -> String {
-        switch (self) {
-            case .debug: return "Debug: "
-            case .info: return "Info: "
-            case .error: return "Error: "
-            case .fault: return "Fault: "
-        default:
-            return "Unknown: "
-        }
     }
 }
