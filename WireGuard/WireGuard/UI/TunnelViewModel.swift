@@ -464,6 +464,18 @@ extension TunnelViewModel {
         }
     }
 
+    static func activateOnDemandDetailText(for activateOnDemandSetting: ActivateOnDemandSetting?) -> String {
+        if let activateOnDemandSetting = activateOnDemandSetting {
+            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
+                return TunnelViewModel.activateOnDemandOptionText(for: activateOnDemandSetting.activateOnDemandOption)
+            } else {
+                return TunnelViewModel.activateOnDemandOptionText(for: .none)
+            }
+        } else {
+            return TunnelViewModel.activateOnDemandOptionText(for: .none)
+        }
+    }
+
     func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
         return .useOnDemandOverWiFiOrCellular
     }

@@ -426,26 +426,7 @@ class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
     }
 
     func update(from activateOnDemandSetting: ActivateOnDemandSetting?) {
-        let detailText: String
-        if let activateOnDemandSetting = activateOnDemandSetting {
-            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
-                switch (activateOnDemandSetting.activateOnDemandOption) {
-                case .none:
-                    detailText = "Off"
-                case .useOnDemandOverWiFiOrCellular:
-                    detailText = "Wi-Fi or cellular"
-                case .useOnDemandOverWiFiOnly:
-                    detailText = "Wi-Fi only"
-                case .useOnDemandOverCellularOnly:
-                    detailText = "Cellular only"
-                }
-            } else {
-                detailText = "Off"
-            }
-        } else {
-            detailText = "Off"
-        }
-        detailTextLabel?.text = detailText
+        detailTextLabel?.text = TunnelViewModel.activateOnDemandDetailText(for: activateOnDemandSetting)
     }
 
     override func prepareForReuse() {
