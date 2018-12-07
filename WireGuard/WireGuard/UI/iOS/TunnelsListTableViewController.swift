@@ -91,6 +91,13 @@ class TunnelsListTableViewController: UIViewController {
         tunnelsManager.tunnelsListDelegate = self
     }
 
+    override func viewWillAppear(_: Bool) {
+        // Remove selection when getting back to the list view on iPhone
+        if let tableView = self.tableView, let selectedRowIndexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: selectedRowIndexPath, animated: false)
+        }
+    }
+
     @objc func addButtonTapped(sender: AnyObject) {
         if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
@@ -254,7 +261,6 @@ extension TunnelsListTableViewController: UITableViewDataSource {
 
 extension TunnelsListTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
