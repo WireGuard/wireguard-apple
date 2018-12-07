@@ -238,6 +238,10 @@ class TunnelsManager {
         return tunnels[index]
     }
 
+    func tunnel(named tunnelName: String) -> TunnelContainer? {
+        return self.tunnels.first(where: { $0.name == tunnelName })
+    }
+
     func startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         guard (tunnel.status == .inactive) else {
             return

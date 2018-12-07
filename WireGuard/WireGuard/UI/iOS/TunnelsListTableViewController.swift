@@ -37,6 +37,9 @@ class TunnelsListTableViewController: UIViewController {
             ])
         busyIndicator.startAnimating()
         self.busyIndicator = busyIndicator
+
+        // State restoration
+        self.restorationIdentifier = "TunnelsListVC"
     }
 
     func setTunnelsManager(tunnelsManager: TunnelsManager) {
@@ -266,6 +269,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
                                                              tunnel: tunnel)
         let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
+        tunnelDetailNC.restorationIdentifier = "DetailNC"
         showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
     }
 
