@@ -65,10 +65,6 @@ extension MainViewController {
     func refreshTunnelConnectionStatuses() {
         if let tunnelsManager = tunnelsManager {
             tunnelsManager.refreshStatuses()
-        } else {
-            onTunnelsManagerReady = { tunnelsManager in
-                tunnelsManager.refreshStatuses()
-            }
         }
     }
 }
