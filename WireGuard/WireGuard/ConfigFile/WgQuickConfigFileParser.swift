@@ -27,7 +27,7 @@ class WgQuickConfigFileParser {
         func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
             // required wg fields
             guard let privateKeyString = attributes["privatekey"] else { return nil }
-            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else { return nil }
+            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else { return nil }
             var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
             // other wg fields
             if let listenPortString = attributes["listenport"] {
@@ -63,11 +63,11 @@ class WgQuickConfigFileParser {
         func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
             // required wg fields
             guard let publicKeyString = attributes["publickey"] else { return nil }
-            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else { return nil }
+            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else { return nil }
             var peer = PeerConfiguration(publicKey: publicKey)
             // wg fields
             if let preSharedKeyString = attributes["presharedkey"] {
-                guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 else { return nil }
+                guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else { return nil }
                 peer.preSharedKey = preSharedKey
             }
             if let allowedIPsString = attributes["allowedips"] {

@@ -65,7 +65,7 @@ class TunnelViewModel {
                 if (field == .privateKey) {
                     if (stringValue.count == TunnelViewModel.keyLengthInBase64),
                         let privateKey = Data(base64Encoded: stringValue),
-                        privateKey.count == 32 {
+                        privateKey.count == TunnelConfiguration.keyLength {
                         let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
                         scratchpad[.publicKey] = publicKey.base64EncodedString()
                     } else {
@@ -109,7 +109,7 @@ class TunnelViewModel {
                 fieldsWithError.insert(.privateKey)
                 return .error("Interface's private key is required")
             }
-            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == 32 else {
+            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
                 fieldsWithError.insert(.privateKey)
                 return .error("Interface's private key must be a 32-byte key in base64 encoding")
             }
@@ -247,14 +247,14 @@ class TunnelViewModel {
                 fieldsWithError.insert(.publicKey)
                 return .error("Peer's public key is required")
             }
-            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == 32 else {
+            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
                 fieldsWithError.insert(.publicKey)
                 return .error("Peer's public key must be a 32-byte key in base64 encoding")
             }
             var config = PeerConfiguration(publicKey: publicKey)
             var errorMessages: [String] = []
             if let preSharedKeyString = scratchpad[.preSharedKey] {
-                if let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == 32 {
+                if let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength {
                     config.preSharedKey = preSharedKey
                 } else {
                     fieldsWithError.insert(.preSharedKey)
