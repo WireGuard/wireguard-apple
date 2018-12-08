@@ -61,10 +61,6 @@ class TunnelsManager {
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
 
-    private var isAddingTunnel: Bool = false
-    private var isModifyingTunnel: Bool = false
-    private var isDeletingTunnel: Bool = false
-
     init(tunnelProviders: [NETunnelProviderManager]) {
         self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
     }
@@ -99,7 +95,6 @@ class TunnelsManager {
             return
         }
 
-        isAddingTunnel = true
         let tunnelProviderManager = NETunnelProviderManager()
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = tunnelName
@@ -108,7 +103,6 @@ class TunnelsManager {
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
-            defer { self?.isAddingTunnel = false }
             guard (error == nil) else {
                 os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnAddTunnel))
@@ -149,17 +143,13 @@ class TunnelsManager {
             return
         }
 
-        isModifyingTunnel = true
-
         let tunnelProviderManager = tunnel.tunnelProvider
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
-        var oldName: String?
         if (isNameChanged) {
             if self.tunnels.contains(where: { $0.name == tunnelName }) {
                 completionHandler(TunnelsManagerError.tunnelAlreadyExistsWithThatName)
                 return
             }
-            oldName = tunnel.name
             tunnel.name = tunnelName
         }
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
@@ -170,7 +160,6 @@ class TunnelsManager {
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] (error) in
-            defer { self?.isModifyingTunnel = false }
             guard (error == nil) else {
                 os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnModifyTunnel)
@@ -212,10 +201,7 @@ class TunnelsManager {
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
 
-        isDeletingTunnel = true
-
         tunnelProviderManager.removeFromPreferences { [weak self] (error) in
-            defer { self?.isDeletingTunnel = false }
             guard (error == nil) else {
                 os_log("Remove: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnRemoveTunnel)
