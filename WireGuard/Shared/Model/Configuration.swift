@@ -7,6 +7,9 @@ import Foundation
 final class TunnelConfiguration: Codable {
     var interface: InterfaceConfiguration
     let peers: [PeerConfiguration]
+
+    static let keyLength: Int = 32
+
     init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
@@ -32,7 +35,7 @@ struct InterfaceConfiguration: Codable {
         self.name = name
         self.privateKey = privateKey
         if (name.isEmpty) { fatalError("Empty name") }
-        if (privateKey.count != 32) { fatalError("Invalid private key") }
+        if (privateKey.count != TunnelConfiguration.keyLength) { fatalError("Invalid private key") }
     }
 }
 
@@ -42,7 +45,7 @@ struct PeerConfiguration: Codable {
     var preSharedKey: Data? {
         didSet(value) {
             if let value = value {
-                if (value.count != 32) { fatalError("Invalid preshared key") }
+                if (value.count != TunnelConfiguration.keyLength) { fatalError("Invalid preshared key") }
             }
         }
     }
@@ -52,6 +55,6 @@ struct PeerConfiguration: Codable {
 
     init(publicKey: Data) {
         self.publicKey = publicKey
-        if (publicKey.count != 32) { fatalError("Invalid public key") }
+        if (publicKey.count != TunnelConfiguration.keyLength) { fatalError("Invalid public key") }
     }
 }
