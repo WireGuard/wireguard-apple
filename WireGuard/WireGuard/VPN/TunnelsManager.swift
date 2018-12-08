@@ -60,9 +60,11 @@ class TunnelsManager {
     private var tunnels: [TunnelContainer]
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
+    private var statusObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
+        self.startObservingTunnelStatuses()
     }
 
     static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
@@ -268,26 +270,37 @@ class TunnelsManager {
             t.refreshStatus()
         }
     }
+
+    private func startObservingTunnelStatuses() {
+        if (statusObservationToken != nil) { return }
+        statusObservationToken = NotificationCenter.default.addObserver(
+            forName: .NEVPNStatusDidChange,
+            object: nil,
+            queue: nil) { [weak self] (statusChangeNotification) in
+                guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
+                guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
+                if let tunnel = self?.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) {
+                    tunnel.tunnelConnectionStatusDidChange()
+                } else if let tunnelName = tunnelProvider.localizedDescription, let tunnel = self?.tunnel(named: tunnelName) {
+                    tunnel.tunnelConnectionStatusDidChange()
+                }
+        }
+    }
+
 }
 
 class TunnelContainer: NSObject {
     @objc dynamic var name: String
     @objc dynamic var status: TunnelStatus
 
-    @objc dynamic var isActivateOnDemandEnabled: Bool {
-        didSet {
-            if (isActivateOnDemandEnabled) {
-                startObservingTunnelStatus()
-            }
-        }
-    }
+    @objc dynamic var isActivateOnDemandEnabled: Bool
 
     var isAttemptingActivation: Bool = false
     var onActivationCommitted: ((Bool) -> Void)?
     var onDeactivationComplete: (() -> Void)?
 
     fileprivate let tunnelProvider: NETunnelProviderManager
-    private var statusObservationToken: AnyObject?
+    private var lastTunnelConnectionStatus: NEVPNStatus?
 
     init(tunnel: NETunnelProviderManager) {
         self.name = tunnel.localizedDescription ?? "Unnamed"
@@ -296,9 +309,6 @@ class TunnelContainer: NSObject {
         self.isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
         self.tunnelProvider = tunnel
         super.init()
-        if (status != .inactive || isActivateOnDemandEnabled) {
-            startObservingTunnelStatus()
-        }
     }
 
     func tunnelConfiguration() -> TunnelConfiguration? {
@@ -313,9 +323,6 @@ class TunnelContainer: NSObject {
         let status = TunnelStatus(from: self.tunnelProvider.connection.status)
         self.status = status
         self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
-        if (status != .inactive || isActivateOnDemandEnabled) {
-            startObservingTunnelStatus()
-        }
     }
 
     fileprivate func startActivation(completionHandler: @escaping (TunnelsManagerError?) -> Void) {
@@ -359,7 +366,6 @@ class TunnelContainer: NSObject {
         }
 
         // Start the tunnel
-        startObservingTunnelStatus()
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
         do {
             os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
@@ -396,55 +402,51 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startDeactivation() {
-        assert(status == .active)
-        assert(statusObservationToken != nil)
+        assert(status == .active || status == .waiting)
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
         session.stopTunnel()
     }
 
     fileprivate func beginRestart() {
         assert(status == .active || status == .activating || status == .reasserting)
-        assert(statusObservationToken != nil)
         status = .restarting
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
         session.stopTunnel()
     }
 
-    private func startObservingTunnelStatus() {
-        if (statusObservationToken != nil) { return }
+    fileprivate func tunnelConnectionStatusDidChange() {
         let connection = tunnelProvider.connection
-        statusObservationToken = NotificationCenter.default.addObserver(
-            forName: .NEVPNStatusDidChange,
-            object: connection,
-            queue: nil) { [weak self] (_) in
-                guard let s = self else { return }
-                if (s.isAttemptingActivation) {
-                    if (connection.status == .connecting || connection.status == .connected) {
-                        // We tried to start the tunnel, and that attempt is on track to become succeessful
-                        s.onActivationCommitted?(true)
-                        s.onActivationCommitted = nil
-                    } else if (connection.status == .disconnecting || connection.status == .disconnected) {
-                        // We tried to start the tunnel, but that attempt didn't succeed
-                        s.onActivationCommitted?(false)
-                        s.onActivationCommitted = nil
-                    }
-                    s.isAttemptingActivation = false
-                }
-                if ((s.status == .restarting) && (connection.status == .disconnected || connection.status == .disconnecting)) {
-                    // Don't change s.status when disconnecting for a restart
-                    if (connection.status == .disconnected) {
-                        self?.startActivation(completionHandler: { _ in })
-                    }
-                    return
-                }
-                s.status = TunnelStatus(from: connection.status)
-                if (s.status == .inactive) {
-                    s.onDeactivationComplete?()
-                    s.onDeactivationComplete = nil
-                    if (!s.isActivateOnDemandEnabled) {
-                        s.statusObservationToken = nil
-                    }
-                }
+        // Avoid acting on duplicate notifications of status change
+        if let lastTunnelConnectionStatus = self.lastTunnelConnectionStatus {
+            if (lastTunnelConnectionStatus == connection.status) {
+                return
+            }
+        }
+        self.lastTunnelConnectionStatus = connection.status
+        // Act on the status change
+        if (self.isAttemptingActivation) {
+            if (connection.status == .connecting || connection.status == .connected) {
+                // We tried to start the tunnel, and that attempt is on track to become succeessful
+                self.onActivationCommitted?(true)
+                self.onActivationCommitted = nil
+            } else if (connection.status == .disconnecting || connection.status == .disconnected) {
+                // We tried to start the tunnel, but that attempt didn't succeed
+                self.onActivationCommitted?(false)
+                self.onActivationCommitted = nil
+            }
+            self.isAttemptingActivation = false
+        }
+        if ((self.status == .restarting) && (connection.status == .disconnected || connection.status == .disconnecting)) {
+            // Don't change self.status when disconnecting for a restart
+            if (connection.status == .disconnected) {
+                self.startActivation(completionHandler: { _ in })
+            }
+            return
+        }
+        self.status = TunnelStatus(from: connection.status)
+        if (self.status == .inactive) {
+            self.onDeactivationComplete?()
+            self.onDeactivationComplete = nil
         }
     }
 }
