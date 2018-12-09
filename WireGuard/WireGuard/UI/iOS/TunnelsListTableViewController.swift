@@ -428,6 +428,8 @@ class BorderedTextButton: UIView {
 
     init() {
         button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
         super.init(frame: CGRect.zero)
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
