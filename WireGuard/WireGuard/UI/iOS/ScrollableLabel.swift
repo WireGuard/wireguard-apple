@@ -13,7 +13,7 @@ class ScrollableLabel: UIScrollView {
         set(value) { label.textColor = value }
     }
 
-    private let label: UILabel
+    let label: UILabel
 
     init() {
         let label = UILabel()

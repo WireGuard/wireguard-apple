@@ -37,7 +37,8 @@ class TunnelDetailTableViewController: UITableViewController {
         self.title = tunnelViewModel.interfaceData[.name]
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped))
 
-        self.tableView.rowHeight = 44
+        self.tableView.estimatedRowHeight = 44
+        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.allowsSelection = false
         self.tableView.register(TunnelDetailTableViewStatusCell.self, forCellReuseIdentifier: TunnelDetailTableViewStatusCell.id)
         self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
@@ -315,9 +316,17 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
     let keyLabel: UILabel
     let valueLabel: ScrollableLabel
 
+    var isStackedHorizontally: Bool = false
+    var isStackedVertically: Bool = false
+    var contentSizeBasedConstraints: [NSLayoutConstraint] = []
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
+        keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        keyLabel.adjustsFontForContentSizeCategory = true
         valueLabel = ScrollableLabel()
+        valueLabel.label.font = UIFont.preferredFont(forTextStyle: .body)
+        valueLabel.label.adjustsFontForContentSizeCategory = true
 
         keyLabel.textColor = UIColor.black
         valueLabel.textColor = UIColor.gray
@@ -329,15 +338,14 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
         keyLabel.textAlignment = .left
         NSLayoutConstraint.activate([
             keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
-            keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            keyLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
             ])
 
         contentView.addSubview(valueLabel)
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
-            valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 8)
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueLabel.bottomAnchor, multiplier: 0.5)
             ])
 
         // Key label should never appear truncated
@@ -345,6 +353,40 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
         // Key label should hug it's content; value label should not.
         keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         valueLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        configureForContentSize()
+    }
+
+    func configureForContentSize() {
+        var constraints: [NSLayoutConstraint] = []
+        if (self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory) {
+            // Stack vertically
+            if (!isStackedVertically) {
+                constraints = [
+                    valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
+                    valueLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+                    keyLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
+                ]
+                isStackedVertically = true
+                isStackedHorizontally = false
+            }
+        } else {
+            // Stack horizontally
+            if (!isStackedHorizontally) {
+                constraints = [
+                    contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
+                    valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
+                    valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5),
+                ]
+                isStackedHorizontally = true
+                isStackedVertically = false
+            }
+        }
+        if (!constraints.isEmpty) {
+            NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
+            NSLayoutConstraint.activate(constraints)
+            self.contentSizeBasedConstraints = constraints
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -355,6 +397,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
         super.prepareForReuse()
         key = ""
         value = ""
+        configureForContentSize()
     }
 }
 
@@ -375,12 +418,15 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
         buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
             ])
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
@@ -419,6 +465,10 @@ class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
         textLabel?.text = "Activate on demand"
+        textLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        textLabel?.adjustsFontForContentSizeCategory = true
+        detailTextLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        detailTextLabel?.adjustsFontForContentSizeCategory = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -431,6 +481,7 @@ class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        textLabel?.text = "Activate on demand"
         detailTextLabel?.text = ""
     }
 }
