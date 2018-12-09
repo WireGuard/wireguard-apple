@@ -66,7 +66,8 @@ class TunnelEditTableViewController: UITableViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 
-        self.tableView.rowHeight = 44
+        self.tableView.estimatedRowHeight = 44
+        self.tableView.rowHeight = UITableView.automaticDimension
 
         self.tableView.register(TunnelEditTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelEditTableViewKeyValueCell.id)
         self.tableView.register(TunnelEditTableViewReadOnlyKeyValueCell.self, forCellReuseIdentifier: TunnelEditTableViewReadOnlyKeyValueCell.id)
@@ -519,11 +520,19 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
     let keyLabel: UILabel
     let valueTextField: UITextField
 
+    var isStackedHorizontally: Bool = false
+    var isStackedVertically: Bool = false
+    var contentSizeBasedConstraints: [NSLayoutConstraint] = []
+
     private var textFieldValueOnBeginEditing: String = ""
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
+        keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        keyLabel.adjustsFontForContentSizeCategory = true
         valueTextField = UITextField()
+        valueTextField.font = UIFont.preferredFont(forTextStyle: .body)
+        valueTextField.adjustsFontForContentSizeCategory = true
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -537,22 +546,55 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         widthRatioConstraint.priority = .defaultHigh + 1
         keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
         NSLayoutConstraint.activate([
-            keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+            keyLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5),
             widthRatioConstraint
             ])
         contentView.addSubview(valueTextField)
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            valueTextField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueTextField.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 16),
             valueTextField.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueTextField.bottomAnchor, multiplier: 0.5)
             ])
         valueTextField.delegate = self
 
         valueTextField.autocapitalizationType = .none
         valueTextField.autocorrectionType = .no
         valueTextField.spellCheckingType = .no
+
+        configureForContentSize()
+    }
+
+    func configureForContentSize() {
+        var constraints: [NSLayoutConstraint] = []
+        if (self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory) {
+            // Stack vertically
+            if (!isStackedVertically) {
+                constraints = [
+                    valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
+                    valueTextField.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+                    keyLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
+                ]
+                isStackedVertically = true
+                isStackedHorizontally = false
+            }
+        } else {
+            // Stack horizontally
+            if (!isStackedHorizontally) {
+                constraints = [
+                    contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
+                    valueTextField.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
+                    valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5),
+                ]
+                isStackedHorizontally = true
+                isStackedVertically = false
+            }
+        }
+        if (!constraints.isEmpty) {
+            NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
+            NSLayoutConstraint.activate(constraints)
+            self.contentSizeBasedConstraints = constraints
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -568,6 +610,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
         keyboardType = .default
         onValueChanged = nil
         onValueBeingEdited = nil
+        configureForContentSize()
     }
 }
 
@@ -608,7 +651,11 @@ class TunnelEditTableViewReadOnlyKeyValueCell: CopyableLabelTableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
+        keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        keyLabel.adjustsFontForContentSizeCategory = true
         valueLabel = ScrollableLabel()
+        valueLabel.label.font = UIFont.preferredFont(forTextStyle: .body)
+        valueLabel.label.adjustsFontForContentSizeCategory = true
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -636,7 +683,7 @@ class TunnelEditTableViewReadOnlyKeyValueCell: CopyableLabelTableViewCell {
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.leftAnchor.constraint(equalTo: keyLabel.rightAnchor, constant: 16),
+            valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
             valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
             ])
     }
@@ -673,12 +720,15 @@ class TunnelEditTableViewButtonCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
         buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
             ])
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
