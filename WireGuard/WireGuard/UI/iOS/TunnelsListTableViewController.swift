@@ -51,7 +51,8 @@ class TunnelsListTableViewController: UIViewController {
         // Create the table view
 
         let tableView = UITableView(frame: CGRect.zero, style: .plain)
-        tableView.rowHeight = 60
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
 
@@ -340,6 +341,8 @@ class TunnelsListTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         nameLabel = UILabel()
+        nameLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        nameLabel.adjustsFontForContentSizeCategory = true
         busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
         statusSwitch = UISwitch()
@@ -348,20 +351,23 @@ class TunnelsListTableViewCell: UITableViewCell {
         statusSwitch.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8)
+            contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
             ])
         contentView.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            busyIndicator.rightAnchor.constraint(equalTo: statusSwitch.leftAnchor, constant: -8)
+            statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
             ])
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.numberOfLines = 0
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         NSLayoutConstraint.activate([
-            nameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            nameLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
-            nameLabel.rightAnchor.constraint(equalTo: busyIndicator.leftAnchor)
+            nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
+            nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
+            busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1)
             ])
         self.accessoryType = .disclosureIndicator
 
