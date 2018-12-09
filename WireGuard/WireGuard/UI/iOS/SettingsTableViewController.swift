@@ -36,7 +36,8 @@ class SettingsTableViewController: UITableViewController {
         self.title = "Settings"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
 
-        self.tableView.rowHeight = 44
+        self.tableView.estimatedRowHeight = 44
+        self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.allowsSelection = false
 
         self.tableView.register(TunnelSettingsTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelSettingsTableViewKeyValueCell.id)
@@ -231,11 +232,14 @@ class TunnelSettingsTableViewButtonCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         button = UIButton(type: .system)
+        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        button.titleLabel?.adjustsFontForContentSizeCategory = true
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
             ])
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
