@@ -26,6 +26,7 @@ enum TunnelsManagerError: WireGuardAppError {
     case vpnSystemErrorOnRemoveTunnel
 
     // Tunnel activation
+    case attemptingActivationWhenTunnelIsNotInactive
     case tunnelActivationAttemptFailed // startTunnel() throwed
     case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
     case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
@@ -45,6 +46,8 @@ enum TunnelsManagerError: WireGuardAppError {
         case .vpnSystemErrorOnRemoveTunnel:
             return ("Unable to remove tunnel", "Internal error")
 
+        case .attemptingActivationWhenTunnelIsNotInactive:
+            return ("Activation failure", "The tunnel is already active or in the process of being activated")
         case .tunnelActivationAttemptFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
         case .tunnelActivationFailedInternalError:
@@ -232,6 +235,7 @@ class TunnelsManager {
 
     func startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         guard (tunnel.status == .inactive) else {
+            completionHandler(TunnelsManagerError.attemptingActivationWhenTunnelIsNotInactive)
             return
         }
 
