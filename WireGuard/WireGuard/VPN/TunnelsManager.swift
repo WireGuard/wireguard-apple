@@ -286,10 +286,10 @@ class TunnelsManager {
                 // In case our attempt to start the tunnel, didn't succeed
                 if (tunnel == s.tunnelBeingActivated) {
                     if (session.status == .disconnected) {
-                        let error = (InternetReachability.currentStatus() == .notReachable ?
-                            TunnelsManagerError.tunnelActivationFailedNoInternetConnection :
-                            TunnelsManagerError.tunnelActivationFailedInternalError)
-                        s.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
+                        if (InternetReachability.currentStatus() == .notReachable) {
+                            let error = TunnelsManagerError.tunnelActivationFailedNoInternetConnection
+                            s.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
+                        }
                         s.tunnelBeingActivated = nil
                     } else if (session.status == .connected) {
                         s.tunnelBeingActivated = nil
