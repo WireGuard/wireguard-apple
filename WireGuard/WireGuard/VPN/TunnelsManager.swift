@@ -483,3 +483,30 @@ class TunnelContainer: NSObject {
         }
     }
 }
+
+extension TunnelStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch (self) {
+        case .inactive: return "inactive"
+        case .activating: return "activating"
+        case .active: return "active"
+        case .deactivating: return "deactivating"
+        case .reasserting: return "reasserting"
+        case .restarting: return "restarting"
+        case .waiting: return "waiting"
+        }
+    }
+}
+
+extension NEVPNStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch (self) {
+        case .connected: return "connected"
+        case .connecting: return "connecting"
+        case .disconnected: return "disconnected"
+        case .disconnecting: return "disconnecting"
+        case .reasserting: return "reasserting"
+        case .invalid: return "invalid"
+        }
+    }
+}
