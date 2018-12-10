@@ -363,12 +363,16 @@ class TunnelsListTableViewCell: UITableViewCell {
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.numberOfLines = 0
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        let bottomAnchorConstraint = contentView.layoutMarginsGuide.bottomAnchor.constraint(
+            equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1)
+        bottomAnchorConstraint.priority = .defaultLow // Allow this constraint to be broken when animating a cell away during deletion
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
-            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1),
             nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
-            busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1)
+            busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
+            bottomAnchorConstraint
             ])
+
         self.accessoryType = .disclosureIndicator
 
         statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
