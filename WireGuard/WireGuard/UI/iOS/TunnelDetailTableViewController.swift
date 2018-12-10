@@ -276,7 +276,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
         DispatchQueue.main.async { [weak statusSwitch] in
             guard let statusSwitch = statusSwitch else { return }
             statusSwitch.isOn = !(status == .deactivating || status == .inactive)
-            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active || status == .waiting)
         }
         textLabel?.textColor = (status == .active || status == .inactive) ? UIColor.black : UIColor.gray
     }
