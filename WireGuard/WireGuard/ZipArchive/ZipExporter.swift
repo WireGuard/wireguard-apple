@@ -6,7 +6,7 @@ import UIKit
 enum ZipExporterError: WireGuardAppError {
     case noTunnelsToExport
 
-    func alertText() -> (String, String) {
+    func alertText() -> (String, String)? {
         switch (self) {
         case .noTunnelsToExport:
             return ("Nothing to export", "There are no tunnels to export")

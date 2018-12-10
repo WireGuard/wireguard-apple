@@ -8,7 +8,7 @@ class ErrorPresenter {
     static func showErrorAlert(error: WireGuardAppError, from sourceVC: UIViewController?,
                                onDismissal: (() -> Void)? = nil, onPresented: (() -> Void)? = nil) {
         guard let sourceVC = sourceVC else { return }
-        let (title, message) = error.alertText()
+        guard let (title, message) = error.alertText() else { return }
         let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
             onDismissal?()
         }
