@@ -31,7 +31,7 @@ enum TunnelsManagerError: WireGuardAppError {
     case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
     case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
 
-    func alertText() -> (String, String) {
+    func alertText() -> (String, String)? {
         switch (self) {
         case .tunnelNameEmpty:
             return ("No name provided", "Can't create tunnel with an empty name")
