@@ -390,7 +390,7 @@ class TunnelsListTableViewCell: UITableViewCell {
         DispatchQueue.main.async { [weak statusSwitch, weak busyIndicator] in
             guard let statusSwitch = statusSwitch, let busyIndicator = busyIndicator else { return }
             statusSwitch.isOn = !(status == .deactivating || status == .inactive)
-            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active || status == .waiting)
+            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
             if (status == .inactive || status == .active) {
                 busyIndicator.stopAnimating()
             } else {
