@@ -260,7 +260,7 @@ class TunnelsManager {
             tunnelWaitingForActivation = (tunnel, completionHandler)
             os_log("Tunnel '%{public}@' is waiting for deactivation of '%{public}@' (status: %{public}@)",
                    log: OSLog.default, type: .debug, tunnel.name, tunnelInOperation.name, "\(tunnelInOperation.status)")
-            if (tunnelInOperation.status != .deactivating) {
+            if (tunnelInOperation.status == .active) {
                 tunnelBeingActivated = nil
                 startDeactivation(of: tunnelInOperation)
             }
@@ -301,6 +301,9 @@ class TunnelsManager {
                 guard let tunnel = self?.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
                 guard let s = self else { return }
 
+                os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
+                       log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
+
                 // In case our attempt to start the tunnel, didn't succeed
                 if (tunnel == s.tunnelBeingActivated) {
                     if (session.status == .disconnected) {
@@ -328,8 +331,13 @@ class TunnelsManager {
                 tunnel.refreshStatus()
 
                 // In case some other tunnel is waiting on this tunnel's deactivation
-                if (tunnel.status == .inactive) {
-                    if let (waitingTunnel, waitingTunnelCompletionHandler) = s.tunnelWaitingForActivation {
+
+                if let (waitingTunnel, waitingTunnelCompletionHandler) = s.tunnelWaitingForActivation {
+                    if (tunnel.status == .active) {
+                        os_log("Deactivating tunnel '%{public}@' because tunnel '%{public}@' is waiting for activation",
+                               log: OSLog.default, type: .debug, tunnel.name, waitingTunnel.name)
+                        tunnel.startDeactivation()
+                    } else if (tunnel.status == .inactive) {
                         os_log("Activating waiting tunnel '%{public}@' after deactivation of '%{public}@'",
                                log: OSLog.default, type: .debug, waitingTunnel.name, tunnel.name)
                         precondition(waitingTunnel.status == .waiting)
