@@ -27,7 +27,7 @@ enum TunnelsManagerError: WireGuardAppError {
 
     // Tunnel activation
     case attemptingActivationWhenTunnelIsNotInactive
-    case tunnelActivationSupercededWhileWaiting // Another tunnel activation was initiated while this tunnel was waiting
+    case attemptingActivationWhenAnotherTunnelIsOperational(otherTunnelName: String)
     case tunnelActivationAttemptFailed // startTunnel() throwed
     case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
     case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
@@ -49,8 +49,8 @@ enum TunnelsManagerError: WireGuardAppError {
 
         case .attemptingActivationWhenTunnelIsNotInactive:
             return ("Activation failure", "The tunnel is already active or in the process of being activated")
-        case .tunnelActivationSupercededWhileWaiting:
-            return nil
+        case .attemptingActivationWhenAnotherTunnelIsOperational(let otherTunnelName):
+            return ("Activation failure", "Please disconnect '\(otherTunnelName)' before enabling this tunnel.")
         case .tunnelActivationAttemptFailed:
             return ("Activation failure", "The tunnel could not be activated due to an internal error")
         case .tunnelActivationFailedInternalError:
@@ -69,7 +69,6 @@ class TunnelsManager {
     private var statusObservationToken: AnyObject?
 
     var tunnelBeingActivated: TunnelContainer?
-    var tunnelWaitingForActivation: (tunnel: TunnelContainer, completionHandler: (TunnelsManagerError?) -> Void)?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
@@ -248,36 +247,16 @@ class TunnelsManager {
             return
         }
 
-        if let (waitingTunnel, waitingTunnelCompletionHandler) = self.tunnelWaitingForActivation {
-            precondition(waitingTunnel.status == .waiting)
-            self.tunnelWaitingForActivation = nil
-            waitingTunnel.status = .inactive
-            waitingTunnelCompletionHandler(TunnelsManagerError.tunnelActivationSupercededWhileWaiting)
+        if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
+            completionHandler(TunnelsManagerError.attemptingActivationWhenAnotherTunnelIsOperational(otherTunnelName: tunnelInOperation.name))
+            return
         }
 
-        if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive && $0.status != .waiting }) {
-            tunnel.status = .waiting
-            tunnelWaitingForActivation = (tunnel, completionHandler)
-            os_log("Tunnel '%{public}@' is waiting for deactivation of '%{public}@' (status: %{public}@)",
-                   log: OSLog.default, type: .debug, tunnel.name, tunnelInOperation.name, "\(tunnelInOperation.status)")
-            if (tunnelInOperation.status == .active) {
-                tunnelBeingActivated = nil
-                startDeactivation(of: tunnelInOperation)
-            }
-        } else {
-            tunnelBeingActivated = tunnel
-            tunnel.startActivation(completionHandler: completionHandler)
-        }
+        tunnelBeingActivated = tunnel
+        tunnel.startActivation(completionHandler: completionHandler)
     }
 
     func startDeactivation(of tunnel: TunnelContainer) {
-        if (tunnel.status == .waiting) {
-            let inferredStatus = TunnelStatus(from: tunnel.tunnelProvider.connection.status)
-            if (inferredStatus == .inactive) {
-                tunnel.status = .inactive
-                return
-            }
-        }
         if (tunnel.status == .inactive || tunnel.status == .deactivating) {
             return
         }
@@ -329,23 +308,6 @@ class TunnelsManager {
 
                 // Update tunnel status
                 tunnel.refreshStatus()
-
-                // In case some other tunnel is waiting on this tunnel's deactivation
-
-                if let (waitingTunnel, waitingTunnelCompletionHandler) = s.tunnelWaitingForActivation {
-                    if (tunnel.status == .active) {
-                        os_log("Deactivating tunnel '%{public}@' because tunnel '%{public}@' is waiting for activation",
-                               log: OSLog.default, type: .debug, tunnel.name, waitingTunnel.name)
-                        tunnel.startDeactivation()
-                    } else if (tunnel.status == .inactive) {
-                        os_log("Activating waiting tunnel '%{public}@' after deactivation of '%{public}@'",
-                               log: OSLog.default, type: .debug, waitingTunnel.name, tunnel.name)
-                        precondition(waitingTunnel.status == .waiting)
-                        s.tunnelWaitingForActivation = nil
-                        s.tunnelBeingActivated = waitingTunnel
-                        waitingTunnel.startActivation(completionHandler: waitingTunnelCompletionHandler)
-                    }
-                }
         }
     }
 
@@ -393,7 +355,7 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startActivation(completionHandler: @escaping (TunnelsManagerError?) -> Void) {
-        assert(status == .inactive || status == .restarting || status == .waiting)
+        assert(status == .inactive || status == .restarting)
 
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
 
@@ -468,12 +430,6 @@ class TunnelContainer: NSObject {
 
     fileprivate func startDeactivation() {
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
-        if (status == .waiting && (session.status == .disconnected || session.status == .invalid)) {
-            status = .inactive
-            self.onDeactivationComplete?()
-            self.onDeactivationComplete = nil
-            return
-        }
         session.stopTunnel()
     }
 }
@@ -486,7 +442,6 @@ class TunnelContainer: NSObject {
     case reasserting // Not a possible state at present
 
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
-    case waiting    // Waiting for another tunnel to be brought down
 
     init(from vpnStatus: NEVPNStatus) {
         switch (vpnStatus) {
@@ -515,7 +470,6 @@ extension TunnelStatus: CustomDebugStringConvertible {
         case .deactivating: return "deactivating"
         case .reasserting: return "reasserting"
         case .restarting: return "restarting"
-        case .waiting: return "waiting"
         }
     }
 }
