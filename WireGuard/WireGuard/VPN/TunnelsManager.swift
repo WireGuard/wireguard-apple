@@ -285,8 +285,6 @@ class TunnelsManager {
                 guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
                 if let tunnel = self?.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) {
                     tunnel.tunnelConnectionStatusDidChange()
-                } else if let tunnelName = tunnelProvider.localizedDescription, let tunnel = self?.tunnel(named: tunnelName) {
-                    tunnel.tunnelConnectionStatusDidChange()
                 }
         }
     }
