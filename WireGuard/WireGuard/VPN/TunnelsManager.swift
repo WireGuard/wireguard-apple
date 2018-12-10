@@ -402,8 +402,13 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startDeactivation() {
-        assert(status == .active || status == .waiting)
         let session = (tunnelProvider.connection as! NETunnelProviderSession)
+        if (status == .waiting && (session.status == .disconnected || session.status == .invalid)) {
+            status = .inactive
+            self.onDeactivationComplete?()
+            self.onDeactivationComplete = nil
+            return
+        }
         session.stopTunnel()
     }
 
