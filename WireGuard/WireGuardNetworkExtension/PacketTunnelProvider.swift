@@ -88,8 +88,28 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
 
-        let wireguardSettings = packetTunnelSettingsGenerator.generateWireGuardSettings()
-        let handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fd: fd)
+        let wireguardSettings = packetTunnelSettingsGenerator.uapiConfiguration()
+        
+        var handle: Int32 = -1
+        
+        networkMonitor = NWPathMonitor()
+        networkMonitor?.pathUpdateHandler = { path in
+            guard handle >= 0 else { return }
+            
+            if path.status == .satisfied {
+                let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration()
+                
+                let endpointGoString = endpointString.withCString {
+                    gostring_t(p: $0, n: endpointString.utf8.count)
+                }
+                
+                wg_log(.debug, staticMessage: "Network change detected, calling wgSetConfig")
+                wgSetConfig(handle, endpointGoString)
+            }
+        }
+        networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
+        
+        handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fd: fd)
 
         if handle < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
@@ -113,20 +133,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 startTunnelCompletionHandler(nil /* No errors */)
             }
         }
-        
-        networkMonitor = NWPathMonitor()
-        networkMonitor?.pathUpdateHandler = { path in
-            if path.status == .satisfied {
-                let endpointString = packetTunnelSettingsGenerator.endpointFromSettings()
-                
-                let endpointGoString = endpointString.withCString {
-                    gostring_t(p: $0, n: endpointString.utf8.count)
-                }
-                
-                wgSetConfig(handle, endpointGoString)
-            }
-        }
-        networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
     }
 
     /// Begin the process of stopping the tunnel.
