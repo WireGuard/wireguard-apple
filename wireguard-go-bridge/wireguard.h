@@ -14,6 +14,7 @@ typedef void(*logger_fn_t)(int level, const char *msg);
 extern void wgSetLogger(logger_fn_t logger_fn);
 extern int wgTurnOn(gostring_t ifname, gostring_t settings, int32_t tun_fd);
 extern void wgTurnOff(int handle);
+extern void wgSetConfig(int handle, gostring_t settings);
 extern char *wgVersion();
 
 #endif
