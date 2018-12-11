@@ -128,16 +128,27 @@ func wgTurnOff(tunnelHandle int32) {
 }
 
 //export wgSetConfig
-func wgSetConfig(tunnelHandle int32, settings string) {
+func wgSetConfig(tunnelHandle int32, settings string) int64 {
 	device, ok := tunnelHandles[tunnelHandle]
 	if !ok {
-		return
+		return 0
 	}
 	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
 	err := ipcSetOperation(device, bufferedSettings)
 	if err != nil {
 		device.log.Error.Println(err)
+		return err.Code
 	}
+	return 0
+}
+
+//export wgGetListenPort
+func wgGetListenPort(tunnelHandle int32) uint16 {
+	device, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return 0
+	}
+	return device.net.port
 }
 
 //export wgVersion

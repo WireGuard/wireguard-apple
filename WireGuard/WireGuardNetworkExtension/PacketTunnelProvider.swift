@@ -95,16 +95,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor = NWPathMonitor()
         networkMonitor?.pathUpdateHandler = { path in
             guard handle >= 0 else { return }
-            
             if path.status == .satisfied {
-                let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration()
-                
-                let endpointGoString = endpointString.withCString {
-                    gostring_t(p: $0, n: endpointString.utf8.count)
+                wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
+                let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: wgGetListenPort(handle))
+                let err = endpointString.withCString {
+                    wgSetConfig(handle,  gostring_t(p: $0, n: endpointString.utf8.count))
                 }
-                
-                wg_log(.debug, staticMessage: "Network change detected, calling wgSetConfig")
-                wgSetConfig(handle, endpointGoString)
+                if err == -EADDRINUSE {
+                    let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
+                    _ = endpointString.withCString {
+                        wgSetConfig(handle,  gostring_t(p: $0, n: endpointString.utf8.count))
+                    }
+                }
             }
         }
         networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))

@@ -15,8 +15,8 @@ class PacketTunnelSettingsGenerator {
         self.resolvedEndpoints = resolvedEndpoints
     }
 
-    func endpointUapiConfiguration() -> String {
-        var wgSettings = "listen_port=\(tunnelConfiguration.interface.listenPort ?? 0)\n"
+    func endpointUapiConfiguration(currentListenPort: UInt16) -> String {
+        var wgSettings = "listen_port=\(tunnelConfiguration.interface.listenPort ?? currentListenPort)\n"
 
         for (i, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexEncodedString())\n")
