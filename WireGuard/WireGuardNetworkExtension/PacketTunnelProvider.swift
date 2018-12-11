@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright © 2018 WireGuard LLC. All Rights Reserved.
 
-import NetworkExtension
 import Foundation
+import Network
+import NetworkExtension
 import os.log
 
 enum PacketTunnelProviderError: Error {
@@ -20,9 +21,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: Properties
 
     private var wgHandle: Int32?
+    
+    private var networkMonitor: NWPathMonitor?
 
     // MARK: NEPacketTunnelProvider
 
+    deinit {
+        networkMonitor?.cancel()
+    }
+    
     /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?,
                               completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
@@ -106,10 +113,27 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 startTunnelCompletionHandler(nil /* No errors */)
             }
         }
+        
+        networkMonitor = NWPathMonitor()
+        networkMonitor?.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                let endpointString = packetTunnelSettingsGenerator.endpointFromSettings()
+                
+                let endpointGoString = endpointString.withCString {
+                    gostring_t(p: $0, n: endpointString.utf8.count)
+                }
+                
+                wgSetConfig(handle, endpointGoString)
+            }
+        }
+        networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
     }
 
     /// Begin the process of stopping the tunnel.
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+        networkMonitor?.cancel()
+        networkMonitor = nil
+        
         wg_log(.info, staticMessage: "Stopping tunnel")
         if let handle = wgHandle {
             wgTurnOff(handle)
