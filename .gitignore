@@ -38,3 +38,6 @@ fastlane/screenshots
 fastlane/test_output
 Preview.html
 output
+
+# Wireguard specific
+WireGuard/WireGuard/Config/Developer.xcconfig

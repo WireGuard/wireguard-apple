@@ -15,6 +15,20 @@ class PacketTunnelSettingsGenerator {
         self.resolvedEndpoints = resolvedEndpoints
     }
 
+    func endpointFromSettings() -> String {
+        var wgSettings = "listen_port=\(tunnelConfiguration.interface.listenPort ?? 0)\n"
+
+        for (i, peer) in tunnelConfiguration.peers.enumerated() {
+            wgSettings.append("public_key=\(peer.publicKey.hexEncodedString())\n")
+            if let endpoint = resolvedEndpoints[i] {
+                if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
+                wgSettings.append("endpoint=\(endpoint.stringRepresentation())\n")
+            }
+        }
+        
+        return wgSettings
+    }
+    
     func generateWireGuardSettings() -> String {
         var wgSettings = ""
         let privateKey = tunnelConfiguration.interface.privateKey.hexEncodedString()
