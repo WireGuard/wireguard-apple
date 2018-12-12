@@ -1,6 +1,9 @@
 disabled_rules:
- - force_cast
  - line_length
+ - trailing_whitespace
+opt_in_rules:
+ - unneeded_parentheses_in_closure_argument
+# - trailing_closure
 file_length:
   warning: 500
 cyclomatic_complexity:

@@ -21,83 +21,16 @@ class WgQuickConfigFileParser {
     }
 
     static func parse(_ text: String, name: String) throws -> TunnelConfiguration {
-
         assert(!name.isEmpty)
 
-        func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
-            // required wg fields
-            guard let privateKeyString = attributes["privatekey"] else { return nil }
-            guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else { return nil }
-            var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
-            // other wg fields
-            if let listenPortString = attributes["listenport"] {
-                guard let listenPort = UInt16(listenPortString) else { return nil }
-                interface.listenPort = listenPort
-            }
-            // wg-quick fields
-            if let addressesString = attributes["address"] {
-                var addresses: [IPAddressRange] = []
-                for addressString in addressesString.split(separator: ",") {
-                    let trimmedString = addressString.trimmingCharacters(in: .whitespaces)
-                    guard let address = IPAddressRange(from: trimmedString) else { return nil }
-                    addresses.append(address)
-                }
-                interface.addresses = addresses
-            }
-            if let dnsString = attributes["dns"] {
-                var dnsServers: [DNSServer] = []
-                for dnsServerString in dnsString.split(separator: ",") {
-                    let trimmedString = dnsServerString.trimmingCharacters(in: .whitespaces)
-                    guard let dnsServer = DNSServer(from: trimmedString) else { return nil }
-                    dnsServers.append(dnsServer)
-                }
-                interface.dns = dnsServers
-            }
-            if let mtuString = attributes["mtu"] {
-                guard let mtu = UInt16(mtuString) else { return nil }
-                interface.mtu = mtu
-            }
-            return interface
-        }
-
-        func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
-            // required wg fields
-            guard let publicKeyString = attributes["publickey"] else { return nil }
-            guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else { return nil }
-            var peer = PeerConfiguration(publicKey: publicKey)
-            // wg fields
-            if let preSharedKeyString = attributes["presharedkey"] {
-                guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else { return nil }
-                peer.preSharedKey = preSharedKey
-            }
-            if let allowedIPsString = attributes["allowedips"] {
-                var allowedIPs: [IPAddressRange] = []
-                for allowedIPString in allowedIPsString.split(separator: ",") {
-                    let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    guard let allowedIP = IPAddressRange(from: trimmedString) else { return nil }
-                    allowedIPs.append(allowedIP)
-                }
-                peer.allowedIPs = allowedIPs
-            }
-            if let endpointString = attributes["endpoint"] {
-                guard let endpoint = Endpoint(from: endpointString) else { return nil }
-                peer.endpoint = endpoint
-            }
-            if let persistentKeepAliveString = attributes["persistentkeepalive"] {
-                guard let persistentKeepAlive = UInt16(persistentKeepAliveString) else { return nil }
-                peer.persistentKeepAlive = persistentKeepAlive
-            }
-            return peer
-        }
-
         var interfaceConfiguration: InterfaceConfiguration?
-        var peerConfigurations: [PeerConfiguration] = []
+        var peerConfigurations = [PeerConfiguration]()
 
         let lines = text.split(separator: "\n")
 
-        var parserState: ParserState = .notInASection
-        var attributes: [String: String] = [:]
-
+        var parserState = ParserState.notInASection
+        var attributes = [String: String]()
+        
         for (lineIndex, line) in lines.enumerated() {
             var trimmedLine: String
             if let commentRange = line.range(of: "#") {
@@ -127,12 +60,12 @@ class WgQuickConfigFileParser {
                 }
             }
 
-            let isLastLine: Bool = (lineIndex == lines.count - 1)
+            let isLastLine = (lineIndex == lines.count - 1)
 
             if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
                 if parserState == .inInterfaceSection {
-                    guard let interface = collate(interfaceAttributes: attributes) else { throw ParseError.invalidInterface }
+                    guard let interface = collate(interfaceAttributes: attributes, name: name) else { throw ParseError.invalidInterface }
                     guard interfaceConfiguration == nil else { throw ParseError.multipleInterfaces }
                     interfaceConfiguration = interface
                 } else if parserState == .inPeerSection {
@@ -163,4 +96,71 @@ class WgQuickConfigFileParser {
             throw ParseError.noInterface
         }
     }
+    
+    private static func collate(interfaceAttributes attributes: [String: String], name: String) -> InterfaceConfiguration? {
+        // required wg fields
+        guard let privateKeyString = attributes["privatekey"] else { return nil }
+        guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else { return nil }
+        var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
+        // other wg fields
+        if let listenPortString = attributes["listenport"] {
+            guard let listenPort = UInt16(listenPortString) else { return nil }
+            interface.listenPort = listenPort
+        }
+        // wg-quick fields
+        if let addressesString = attributes["address"] {
+            var addresses: [IPAddressRange] = []
+            for addressString in addressesString.split(separator: ",") {
+                let trimmedString = addressString.trimmingCharacters(in: .whitespaces)
+                guard let address = IPAddressRange(from: trimmedString) else { return nil }
+                addresses.append(address)
+            }
+            interface.addresses = addresses
+        }
+        if let dnsString = attributes["dns"] {
+            var dnsServers: [DNSServer] = []
+            for dnsServerString in dnsString.split(separator: ",") {
+                let trimmedString = dnsServerString.trimmingCharacters(in: .whitespaces)
+                guard let dnsServer = DNSServer(from: trimmedString) else { return nil }
+                dnsServers.append(dnsServer)
+            }
+            interface.dns = dnsServers
+        }
+        if let mtuString = attributes["mtu"] {
+            guard let mtu = UInt16(mtuString) else { return nil }
+            interface.mtu = mtu
+        }
+        return interface
+    }
+    
+    private static func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
+        // required wg fields
+        guard let publicKeyString = attributes["publickey"] else { return nil }
+        guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else { return nil }
+        var peer = PeerConfiguration(publicKey: publicKey)
+        // wg fields
+        if let preSharedKeyString = attributes["presharedkey"] {
+            guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else { return nil }
+            peer.preSharedKey = preSharedKey
+        }
+        if let allowedIPsString = attributes["allowedips"] {
+            var allowedIPs: [IPAddressRange] = []
+            for allowedIPString in allowedIPsString.split(separator: ",") {
+                let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+                guard let allowedIP = IPAddressRange(from: trimmedString) else { return nil }
+                allowedIPs.append(allowedIP)
+            }
+            peer.allowedIPs = allowedIPs
+        }
+        if let endpointString = attributes["endpoint"] {
+            guard let endpoint = Endpoint(from: endpointString) else { return nil }
+            peer.endpoint = endpoint
+        }
+        if let persistentKeepAliveString = attributes["persistentkeepalive"] {
+            guard let persistentKeepAlive = UInt16(persistentKeepAliveString) else { return nil }
+            peer.persistentKeepAlive = persistentKeepAlive
+        }
+        return peer
+    }
+    
 }

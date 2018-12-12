@@ -79,7 +79,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         // Bring up wireguard-go backend
 
-        let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32
+        let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32 //swiftlint:disable:this force_cast
         if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
             ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
@@ -124,7 +124,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Apply network settings
 
         let networkSettings: NEPacketTunnelNetworkSettings = packetTunnelSettingsGenerator.generateNetworkSettings()
-        setTunnelNetworkSettings(networkSettings) { (error) in
+        setTunnelNetworkSettings(networkSettings) { error in
             if let error = error {
                 wg_log(.error, staticMessage: "Starting tunnel failed: Error setting network settings.")
                 wg_log(.error, message: "Error from setTunnelNetworkSettings: \(error.localizedDescription)")
@@ -169,7 +169,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
 
         // Setup WireGuard logger
-        wgSetLogger { (level, msgCStr) in
+        wgSetLogger { level, msgCStr in
             let logType: OSLogType
             switch level {
             case 0:
@@ -187,7 +187,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
-        return withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
+        return withStringsAsGoStrings(interfaceName, settings) { nameGoStr, settingsGoStr in
             return wgTurnOn(nameGoStr, settingsGoStr, fileDescriptor)
         }
     }
@@ -206,9 +206,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 }
 
 private func withStringsAsGoStrings<R>(_ str1: String, _ str2: String, closure: (gostring_t, gostring_t) -> R) -> R {
-    return str1.withCString { (s1cStr) -> R in
+    return str1.withCString { s1cStr in
         let gstr1 = gostring_t(p: s1cStr, n: str1.utf8.count)
-        return str2.withCString { (s2cStr) -> R in
+        return str2.withCString { s2cStr in
             let gstr2 = gostring_t(p: s2cStr, n: str2.utf8.count)
             return closure(gstr1, gstr2)
         }

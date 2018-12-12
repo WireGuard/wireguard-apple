@@ -20,6 +20,6 @@ class ErrorNotifier {
     static func notify(_ error: PacketTunnelProviderError, from tunnelProvider: NEPacketTunnelProvider) {
         guard let (title, message) = ErrorNotifier.errorMessage(for: error) else { return }
         // displayMessage() is deprecated, but there's no better alternative to show the error to the user
-        tunnelProvider.displayMessage("\(title): \(message)", completionHandler: { (_) in })
+        tunnelProvider.displayMessage("\(title): \(message)") { _ in }
     }
 }

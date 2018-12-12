@@ -70,7 +70,7 @@ class PacketTunnelSettingsGenerator {
          * a valid IP address that will actually route over the Internet.
          */
         var remoteAddress: String = "0.0.0.0"
-        let endpointsCompact = resolvedEndpoints.compactMap({ $0 })
+        let endpointsCompact = resolvedEndpoints.compactMap { $0 }
         if endpointsCompact.count == 1 {
             switch endpointsCompact.first!.host {
             case .ipv4(let address):

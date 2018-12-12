@@ -17,7 +17,7 @@ extension NETunnelProviderProtocol {
             "tunnelConfigurationVersion": 1
         ]
 
-        let endpoints = tunnelConfiguration.peers.compactMap({$0.endpoint})
+        let endpoints = tunnelConfiguration.peers.compactMap {$0.endpoint}
         if endpoints.count == 1 {
             serverAddress = endpoints.first!.stringRepresentation()
         } else if endpoints.isEmpty {

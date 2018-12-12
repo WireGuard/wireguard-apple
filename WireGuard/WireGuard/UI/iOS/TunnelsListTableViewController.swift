@@ -34,7 +34,7 @@ class TunnelsListTableViewController: UIViewController {
         NSLayoutConstraint.activate([
             busyIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             busyIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
+        ])
         busyIndicator.startAnimating()
         self.busyIndicator = busyIndicator
 
@@ -54,7 +54,7 @@ class TunnelsListTableViewController: UIViewController {
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.reuseIdentifier)
+        tableView.register(TunnelCell.self)
 
         self.view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +63,7 @@ class TunnelsListTableViewController: UIViewController {
             tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
             tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-            ])
+        ])
         tableView.dataSource = self
         tableView.delegate = self
         self.tableView = tableView
@@ -78,7 +78,7 @@ class TunnelsListTableViewController: UIViewController {
         NSLayoutConstraint.activate([
             centeredAddButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             centeredAddButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-            ])
+        ])
         centeredAddButton.onTapped = { [weak self] in
             self?.addButtonTapped(sender: centeredAddButton)
         }
@@ -105,17 +105,17 @@ class TunnelsListTableViewController: UIViewController {
     @objc func addButtonTapped(sender: AnyObject) {
         if self.tunnelsManager == nil { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
-        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (_) in
+        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] _ in
             self?.presentViewControllerForFileImport()
         }
         alert.addAction(importFileAction)
 
-        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] (_) in
+        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] _ in
             self?.presentViewControllerForScanningQRCode()
         }
         alert.addAction(scanQRCodeAction)
 
-        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (_) in
+        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] _ in
             if let self = self, let tunnelsManager = self.tunnelsManager {
                 self.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
             }
@@ -174,7 +174,7 @@ class TunnelsListTableViewController: UIViewController {
                     return
                 }
                 let configs: [TunnelConfiguration?] = result.value!
-                tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
+                tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] numberSuccessful in
                     if numberSuccessful == configs.count {
                         completionHandler?()
                         return
@@ -241,7 +241,7 @@ extension TunnelsListTableViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsListTableViewCell.reuseIdentifier, for: indexPath) as! TunnelsListTableViewCell
+        let cell: TunnelCell = tableView.dequeueReusableCell(for: indexPath)
         if let tunnelsManager = tunnelsManager {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             cell.tunnel = tunnel
@@ -250,11 +250,11 @@ extension TunnelsListTableViewController: UITableViewDataSource {
                 if isOn {
                     tunnelsManager.startActivation(of: tunnel) { [weak self] error in
                         if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: {
+                            ErrorPresenter.showErrorAlert(error: error, from: self) {
                                 DispatchQueue.main.async {
                                     cell.statusSwitch.isOn = false
                                 }
-                            })
+                            }
                         }
                     }
                 } else {
@@ -281,18 +281,18 @@ extension TunnelsListTableViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete", handler: { [weak self] (_, _, completionHandler) in
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completionHandler in
             guard let tunnelsManager = self?.tunnelsManager else { return }
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
-            tunnelsManager.remove(tunnel: tunnel, completionHandler: { (error) in
+            tunnelsManager.remove(tunnel: tunnel) { error in
                 if error != nil {
                     ErrorPresenter.showErrorAlert(error: error!, from: self)
                     completionHandler(false)
                 } else {
                     completionHandler(true)
                 }
-            })
-        })
+            }
+        }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
@@ -319,18 +319,17 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
     }
 }
 
-class TunnelsListTableViewCell: UITableViewCell {
-    static let reuseIdentifier = "TunnelsListTableViewCell"
+private class TunnelCell: UITableViewCell {
     var tunnel: TunnelContainer? {
         didSet(value) {
             // Bind to the tunnel's name
             nameLabel.text = tunnel?.name ?? ""
-            nameObservervationToken = tunnel?.observe(\.name) { [weak self] (tunnel, _) in
+            nameObservervationToken = tunnel?.observe(\.name) { [weak self] tunnel, _ in
                 self?.nameLabel.text = tunnel.name
             }
             // Bind to the tunnel's status
             update(from: tunnel?.status)
-            statusObservervationToken = tunnel?.observe(\.status) { [weak self] (tunnel, _) in
+            statusObservervationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
                 self?.update(from: tunnel.status)
             }
         }
@@ -357,13 +356,13 @@ class TunnelsListTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
-            ])
+        ])
         contentView.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
-            ])
+        ])
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.numberOfLines = 0
@@ -376,7 +375,7 @@ class TunnelsListTableViewCell: UITableViewCell {
             nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
             busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
             bottomAnchorConstraint
-            ])
+        ])
 
         self.accessoryType = .disclosureIndicator
 
@@ -445,7 +444,7 @@ class BorderedTextButton: UIView {
         NSLayoutConstraint.activate([
             button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             button.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-            ])
+        ])
         layer.borderWidth = 1
         layer.cornerRadius = 5
         layer.borderColor = button.tintColor.cgColor

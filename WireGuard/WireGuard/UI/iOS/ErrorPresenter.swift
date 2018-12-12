@@ -9,7 +9,7 @@ class ErrorPresenter {
                                onPresented: (() -> Void)? = nil, onDismissal: (() -> Void)? = nil) {
         guard let sourceVC = sourceVC else { return }
         guard let (title, message) = error.alertText() else { return }
-        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             onDismissal?()
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -21,7 +21,7 @@ class ErrorPresenter {
     static func showErrorAlert(title: String, message: String, from sourceVC: UIViewController?,
                                onPresented: (() -> Void)? = nil, onDismissal: (() -> Void)? = nil) {
         guard let sourceVC = sourceVC else { return }
-        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             onDismissal?()
         }
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

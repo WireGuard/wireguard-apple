@@ -165,7 +165,7 @@ class TunnelViewModel {
         }
 
         func filterFieldsWithValueOrControl(interfaceFields: [InterfaceField]) -> [InterfaceField] {
-            return interfaceFields.filter { (field) -> Bool in
+            return interfaceFields.filter { field in
                 if TunnelViewModel.interfaceFieldsWithControl.contains(field) {
                     return true
                 }
@@ -291,13 +291,13 @@ class TunnelViewModel {
             }
 
             guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
-            
+
             validatedConfiguration = config
             return .saved(config)
         }
 
         func filterFieldsWithValueOrControl(peerFields: [PeerField]) -> [PeerField] {
-            return peerFields.filter { (field) -> Bool in
+            return peerFields.filter { field in
                 if TunnelViewModel.peerFieldsWithControl.contains(field) {
                     return true
                 }
