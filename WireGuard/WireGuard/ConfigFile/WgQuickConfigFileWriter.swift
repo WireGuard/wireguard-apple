@@ -4,18 +4,18 @@
 import UIKit
 
 class WgQuickConfigFileWriter {
-    static func writeConfigFile(from tc: TunnelConfiguration) -> Data? {
-        let interface = tc.interface
+    static func writeConfigFile(from configuration: TunnelConfiguration) -> Data? {
+        let interface = configuration.interface
         var output = "[Interface]\n"
         output.append("PrivateKey = \(interface.privateKey.base64EncodedString())\n")
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
         }
-        if (!interface.addresses.isEmpty) {
+        if !interface.addresses.isEmpty {
             let addressString = interface.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
             output.append("Address = \(addressString)\n")
         }
-        if (!interface.dns.isEmpty) {
+        if !interface.dns.isEmpty {
             let dnsString = interface.dns.map { $0.stringRepresentation() }.joined(separator: ", ")
             output.append("DNS = \(dnsString)\n")
         }
@@ -23,13 +23,13 @@ class WgQuickConfigFileWriter {
             output.append("MTU = \(mtu)\n")
         }
 
-        for peer in tc.peers {
+        for peer in configuration.peers {
             output.append("\n[Peer]\n")
             output.append("PublicKey = \(peer.publicKey.base64EncodedString())\n")
             if let preSharedKey = peer.preSharedKey {
                 output.append("PresharedKey = \(preSharedKey.base64EncodedString())\n")
             }
-            if (!peer.allowedIPs.isEmpty) {
+            if !peer.allowedIPs.isEmpty {
                 let allowedIPsString = peer.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
                 output.append("AllowedIPs = \(allowedIPsString)\n")
             }

@@ -36,7 +36,7 @@ class PacketTunnelSettingsGenerator {
         if let listenPort = tunnelConfiguration.interface.listenPort {
             wgSettings.append("listen_port=\(listenPort)\n")
         }
-        if (tunnelConfiguration.peers.count > 0) {
+        if tunnelConfiguration.peers.count > 0 {
             wgSettings.append("replace_peers=true\n")
         }
         assert(tunnelConfiguration.peers.count == resolvedEndpoints.count)
@@ -51,11 +51,9 @@ class PacketTunnelSettingsGenerator {
             }
             let persistentKeepAlive = peer.persistentKeepAlive ?? 0
             wgSettings.append("persistent_keepalive_interval=\(persistentKeepAlive)\n")
-            if (!peer.allowedIPs.isEmpty) {
+            if !peer.allowedIPs.isEmpty {
                 wgSettings.append("replace_allowed_ips=true\n")
-                for ip in peer.allowedIPs {
-                    wgSettings.append("allowed_ip=\(ip.stringRepresentation())\n")
-                }
+                peer.allowedIPs.forEach { wgSettings.append("allowed_ip=\($0.stringRepresentation())\n") }
             }
         }
         return wgSettings
@@ -74,7 +72,7 @@ class PacketTunnelSettingsGenerator {
         var remoteAddress: String = "0.0.0.0"
         let endpointsCompact = resolvedEndpoints.compactMap({ $0 })
         if endpointsCompact.count == 1 {
-            switch (endpointsCompact.first!.host) {
+            switch endpointsCompact.first!.host {
             case .ipv4(let address):
                 remoteAddress = "\(address)"
             case .ipv6(let address):
@@ -96,7 +94,7 @@ class PacketTunnelSettingsGenerator {
         // MTU
 
         let mtu = tunnelConfiguration.interface.mtu ?? 0
-        if (mtu == 0) {
+        if mtu == 0 {
             // 0 imples automatic MTU, where we set overhead as 80 bytes, which is the worst case for WireGuard
             networkSettings.tunnelOverheadBytes = 80
         } else {
@@ -112,10 +110,10 @@ class PacketTunnelSettingsGenerator {
         var ipv6NetworkPrefixLengths: [NSNumber] = []
 
         for addressRange in tunnelConfiguration.interface.addresses {
-            if (addressRange.address is IPv4Address) {
+            if addressRange.address is IPv4Address {
                 ipv4Addresses.append("\(addressRange.address)")
                 ipv4SubnetMasks.append(PacketTunnelSettingsGenerator.ipv4SubnetMaskString(of: addressRange))
-            } else if (addressRange.address is IPv6Address) {
+            } else if addressRange.address is IPv6Address {
                 ipv6Addresses.append("\(addressRange.address)")
                 ipv6NetworkPrefixLengths.append(NSNumber(value: addressRange.networkPrefixLength))
             }
@@ -131,10 +129,10 @@ class PacketTunnelSettingsGenerator {
 
         for peer in tunnelConfiguration.peers {
             for addressRange in peer.allowedIPs {
-                if (addressRange.address is IPv4Address) {
+                if addressRange.address is IPv4Address {
                     ipv4IncludedRouteAddresses.append("\(addressRange.address)")
                     ipv4IncludedRouteSubnetMasks.append(PacketTunnelSettingsGenerator.ipv4SubnetMaskString(of: addressRange))
-                } else if (addressRange.address is IPv6Address) {
+                } else if addressRange.address is IPv6Address {
                     ipv6IncludedRouteAddresses.append("\(addressRange.address)")
                     ipv6IncludedRouteNetworkPrefixLengths.append(NSNumber(value: addressRange.networkPrefixLength))
                 }
@@ -151,7 +149,7 @@ class PacketTunnelSettingsGenerator {
 
         for endpoint in resolvedEndpoints {
             guard let endpoint = endpoint else { continue }
-            switch (endpoint.host) {
+            switch endpoint.host {
             case .ipv4(let address):
                 ipv4ExcludedRouteAddresses.append("\(address)")
                 ipv4ExcludedRouteSubnetMasks.append("255.255.255.255") // A single IPv4 address

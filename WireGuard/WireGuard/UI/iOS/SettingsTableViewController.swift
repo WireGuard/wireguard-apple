@@ -40,8 +40,8 @@ class SettingsTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.allowsSelection = false
 
-        self.tableView.register(TunnelSettingsTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelSettingsTableViewKeyValueCell.id)
-        self.tableView.register(TunnelSettingsTableViewButtonCell.self, forCellReuseIdentifier: TunnelSettingsTableViewButtonCell.id)
+        self.tableView.register(TunnelSettingsTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier)
+        self.tableView.register(TunnelSettingsTableViewButtonCell.self, forCellReuseIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier)
 
         let logo = UIImageView(image: UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!)
         logo.contentMode = .scaleAspectFit
@@ -99,9 +99,9 @@ class SettingsTableViewController: UITableViewController {
 
         DispatchQueue.global(qos: .userInitiated).async {
 
-            if (FileManager.default.fileExists(atPath: destinationURL.path)) {
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
                 let isDeleted = FileManager.deleteFile(at: destinationURL)
-                if (!isDeleted) {
+                if !isDeleted {
                     ErrorPresenter.showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared", from: self)
                     return
                 }
@@ -149,7 +149,7 @@ extension SettingsTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch (section) {
+        switch section {
         case 0:
             return "About"
         case 1:
@@ -163,21 +163,21 @@ extension SettingsTableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let field = settingsFieldsBySection[indexPath.section][indexPath.row]
-        if (field == .iosAppVersion || field == .goBackendVersion) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewKeyValueCell.id, for: indexPath) as! TunnelSettingsTableViewKeyValueCell
+        if field == .iosAppVersion || field == .goBackendVersion {
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewKeyValueCell
             cell.key = field.rawValue
-            if (field == .iosAppVersion) {
+            if field == .iosAppVersion {
                 var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
                 if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
                     appVersion += " (\(appBuild))"
                 }
                 cell.value = appVersion
-            } else if (field == .goBackendVersion) {
+            } else if field == .goBackendVersion {
                 cell.value = WIREGUARD_GO_VERSION
             }
             return cell
-        } else if (field == .exportZipArchive) {
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.id, for: indexPath) as! TunnelSettingsTableViewButtonCell
+        } else if field == .exportZipArchive {
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewButtonCell
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
@@ -185,7 +185,7 @@ extension SettingsTableViewController {
             return cell
         } else {
             assert(field == .exportLogFile)
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.id, for: indexPath) as! TunnelSettingsTableViewButtonCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewButtonCell
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
@@ -196,7 +196,7 @@ extension SettingsTableViewController {
 }
 
 class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
-    static let id: String = "TunnelSettingsTableViewKeyValueCell"
+    static let reuseIdentifier = "TunnelSettingsTableViewKeyValueCell"
     var key: String {
         get { return textLabel?.text ?? "" }
         set(value) { textLabel?.text = value }
@@ -207,7 +207,7 @@ class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .value1, reuseIdentifier: TunnelSettingsTableViewKeyValueCell.id)
+        super.init(style: .value1, reuseIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -222,7 +222,7 @@ class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
 }
 
 class TunnelSettingsTableViewButtonCell: UITableViewCell {
-    static let id: String = "TunnelSettingsTableViewButtonCell"
+    static let reuseIdentifier = "TunnelSettingsTableViewButtonCell"
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }

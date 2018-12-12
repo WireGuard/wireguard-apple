@@ -40,10 +40,10 @@ class TunnelDetailTableViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.allowsSelection = false
-        self.tableView.register(TunnelDetailTableViewStatusCell.self, forCellReuseIdentifier: TunnelDetailTableViewStatusCell.id)
-        self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
-        self.tableView.register(TunnelDetailTableViewButtonCell.self, forCellReuseIdentifier: TunnelDetailTableViewButtonCell.id)
-        self.tableView.register(TunnelDetailTableViewActivateOnDemandCell.self, forCellReuseIdentifier: TunnelDetailTableViewActivateOnDemandCell.id)
+        self.tableView.register(TunnelDetailTableViewStatusCell.self, forCellReuseIdentifier: TunnelDetailTableViewStatusCell.reuseIdentifier)
+        self.tableView.register(TunnelDetailTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelDetailTableViewKeyValueCell.reuseIdentifier)
+        self.tableView.register(TunnelDetailTableViewButtonCell.self, forCellReuseIdentifier: TunnelDetailTableViewButtonCell.reuseIdentifier)
+        self.tableView.register(TunnelDetailTableViewActivateOnDemandCell.self, forCellReuseIdentifier: TunnelDetailTableViewActivateOnDemandCell.reuseIdentifier)
 
         // State restoration
         self.restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
@@ -99,17 +99,17 @@ extension TunnelDetailTableViewController {
         let interfaceData = tunnelViewModel.interfaceData
         let numberOfPeerSections = tunnelViewModel.peersData.count
 
-        if (section == 0) {
+        if section == 0 {
             // Status
             return 1
-        } else if (section == 1) {
+        } else if section == 1 {
             // Interface
             return interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields).count
-        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
+        } else if (numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections)) {
             // Peer
             let peerData = tunnelViewModel.peersData[section - 2]
             return peerData.filterFieldsWithValueOrControl(peerFields: peerFields).count
-        } else if (section < (3 + numberOfPeerSections)) {
+        } else if section < (3 + numberOfPeerSections) {
             // Activate on demand
             return 1
         } else {
@@ -122,16 +122,16 @@ extension TunnelDetailTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let numberOfPeerSections = tunnelViewModel.peersData.count
 
-        if (section == 0) {
+        if section == 0 {
             // Status
             return "Status"
-        } else if (section == 1) {
+        } else if section == 1 {
             // Interface
             return "Interface"
-        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
+        } else if (numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections)) {
             // Peer
             return "Peer"
-        } else if (section < (3 + numberOfPeerSections)) {
+        } else if section < (3 + numberOfPeerSections) {
             // On-Demand Activation
             return "On-Demand Activation"
         } else {
@@ -147,13 +147,13 @@ extension TunnelDetailTableViewController {
         let section = indexPath.section
         let row = indexPath.row
 
-        if (section == 0) {
+        if section == 0 {
             // Status
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewStatusCell.id, for: indexPath) as! TunnelDetailTableViewStatusCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewStatusCell.reuseIdentifier, for: indexPath) as! TunnelDetailTableViewStatusCell
             cell.tunnel = self.tunnel
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self else { return }
-                if (isOn) {
+                if isOn {
                     self.tunnelsManager.startActivation(of: self.tunnel) { [weak self] error in
                         if let error = error {
                             ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: {
@@ -168,33 +168,33 @@ extension TunnelDetailTableViewController {
                 }
             }
             return cell
-        } else if (section == 1) {
+        } else if section == 1 {
             // Interface
             let field = interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)[row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.reuseIdentifier, for: indexPath) as! TunnelDetailTableViewKeyValueCell
             // Set key and value
             cell.key = field.rawValue
             cell.value = interfaceData[field]
             return cell
-        } else if ((numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections))) {
+        } else if (numberOfPeerSections > 0) && (section < (2 + numberOfPeerSections)) {
             // Peer
             let peerData = tunnelViewModel.peersData[section - 2]
             let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[row]
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.id, for: indexPath) as! TunnelDetailTableViewKeyValueCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewKeyValueCell.reuseIdentifier, for: indexPath) as! TunnelDetailTableViewKeyValueCell
             // Set key and value
             cell.key = field.rawValue
             cell.value = peerData[field]
             return cell
-        } else if (section < (3 + numberOfPeerSections)) {
+        } else if section < (3 + numberOfPeerSections) {
             // On-Demand Activation
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewActivateOnDemandCell.id, for: indexPath) as! TunnelDetailTableViewActivateOnDemandCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewActivateOnDemandCell.reuseIdentifier, for: indexPath) as! TunnelDetailTableViewActivateOnDemandCell
             cell.tunnel = self.tunnel
             return cell
         } else {
             assert(section == (3 + numberOfPeerSections))
             // Delete configuration
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.id, for: indexPath) as! TunnelDetailTableViewButtonCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelDetailTableViewButtonCell
             cell.buttonText = "Delete tunnel"
             cell.hasDestructiveAction = true
             cell.onTapped = { [weak self] in
@@ -202,7 +202,7 @@ extension TunnelDetailTableViewController {
                 self.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak self] in
                     guard let tunnelsManager = self?.tunnelsManager, let tunnel = self?.tunnel else { return }
                     tunnelsManager.remove(tunnel: tunnel) { (error) in
-                        if (error != nil) {
+                        if error != nil {
                             print("Error removing tunnel: \(String(describing: error))")
                             return
                         }
@@ -216,7 +216,7 @@ extension TunnelDetailTableViewController {
 }
 
 class TunnelDetailTableViewStatusCell: UITableViewCell {
-    static let id: String = "TunnelDetailTableViewStatusCell"
+    static let reuseIdentifier = "TunnelDetailTableViewStatusCell"
 
     var tunnel: TunnelContainer? {
         didSet(value) {
@@ -238,14 +238,14 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         statusSwitch = UISwitch()
-        super.init(style: .default, reuseIdentifier: TunnelDetailTableViewKeyValueCell.id)
+        super.init(style: .default, reuseIdentifier: TunnelDetailTableViewKeyValueCell.reuseIdentifier)
         accessoryView = statusSwitch
 
         statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
 
     @objc func switchToggled() {
-        if (isOnSwitchToggledHandlerEnabled) {
+        if isOnSwitchToggledHandlerEnabled {
             onSwitchToggled?(statusSwitch.isOn)
         }
     }
@@ -256,7 +256,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
             return
         }
         let text: String
-        switch (status) {
+        switch status {
         case .inactive:
             text = "Inactive"
         case .activating:
@@ -297,7 +297,7 @@ class TunnelDetailTableViewStatusCell: UITableViewCell {
 }
 
 class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
-    static let id: String = "TunnelDetailTableViewKeyValueCell"
+    static let reuseIdentifier = "TunnelDetailTableViewKeyValueCell"
     var key: String {
         get { return keyLabel.text ?? "" }
         set(value) { keyLabel.text = value }
@@ -357,9 +357,9 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
 
     func configureForContentSize() {
         var constraints: [NSLayoutConstraint] = []
-        if (self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory) {
+        if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
-            if (!isStackedVertically) {
+            if !isStackedVertically {
                 constraints = [
                     valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
                     valueLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
@@ -370,7 +370,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
             }
         } else {
             // Stack horizontally
-            if (!isStackedHorizontally) {
+            if !isStackedHorizontally {
                 constraints = [
                     contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
                     valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
@@ -380,7 +380,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
                 isStackedVertically = false
             }
         }
-        if (!constraints.isEmpty) {
+        if !constraints.isEmpty {
             NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
             NSLayoutConstraint.activate(constraints)
             self.contentSizeBasedConstraints = constraints
@@ -400,7 +400,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
 }
 
 class TunnelDetailTableViewButtonCell: UITableViewCell {
-    static let id: String = "TunnelDetailTableViewButtonCell"
+    static let reuseIdentifier = "TunnelDetailTableViewButtonCell"
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
@@ -447,7 +447,7 @@ class TunnelDetailTableViewButtonCell: UITableViewCell {
 }
 
 class TunnelDetailTableViewActivateOnDemandCell: UITableViewCell {
-    static let id: String = "TunnelDetailTableViewActivateOnDemandCell"
+    static let reuseIdentifier = "TunnelDetailTableViewActivateOnDemandCell"
 
     var tunnel: TunnelContainer? {
         didSet(value) {

@@ -75,13 +75,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         // Setup packetTunnelSettingsGenerator
 
-        let packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration,
-                                                                          resolvedEndpoints: resolvedEndpoints)
+        let packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
         // Bring up wireguard-go backend
 
-        let fd = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32
-        if fd < 0 {
+        let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32
+        if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
             ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
@@ -111,7 +110,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
         networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
 
-        handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fd: fd)
+        handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fileDescriptor: fileDescriptor)
 
         if handle < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
@@ -187,9 +186,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
-    private func connect(interfaceName: String, settings: String, fd: Int32) -> Int32 { // swiftlint:disable:this cyclomatic_complexity
+    private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
         return withStringsAsGoStrings(interfaceName, settings) { (nameGoStr, settingsGoStr) -> Int32 in
-            return wgTurnOn(nameGoStr, settingsGoStr, fd)
+            return wgTurnOn(nameGoStr, settingsGoStr, fileDescriptor)
         }
     }
 
@@ -237,7 +236,7 @@ private func file_log(type: OSLogType, message: String) {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS: "
     var msgLine = formatter.string(from: Date()) + message
-    if (msgLine.last! != "\n") {
+    if msgLine.last! != "\n" {
         msgLine.append("\n")
     }
     let data = msgLine.data(using: .utf8)

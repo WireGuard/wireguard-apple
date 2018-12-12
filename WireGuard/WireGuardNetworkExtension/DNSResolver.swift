@@ -13,7 +13,7 @@ class DNSResolver {
     static func isAllEndpointsAlreadyResolved(endpoints: [Endpoint?]) -> Bool {
         for endpoint in endpoints {
             guard let endpoint = endpoint else { continue }
-            if (!endpoint.hasHostAsIPAddress()) {
+            if !endpoint.hasHostAsIPAddress() {
                 return false
             }
         }
@@ -23,14 +23,14 @@ class DNSResolver {
     static func resolveSync(endpoints: [Endpoint?]) throws -> [Endpoint?] {
         let dispatchGroup: DispatchGroup = DispatchGroup()
 
-        if (isAllEndpointsAlreadyResolved(endpoints: endpoints)) {
+        if isAllEndpointsAlreadyResolved(endpoints: endpoints) {
             return endpoints
         }
 
-        var resolvedEndpoints: [Endpoint?] = Array<Endpoint?>(repeating: nil, count: endpoints.count)
+        var resolvedEndpoints: [Endpoint?] = Array(repeating: nil, count: endpoints.count)
         for (index, endpoint) in endpoints.enumerated() {
             guard let endpoint = endpoint else { continue }
-            if (endpoint.hasHostAsIPAddress()) {
+            if endpoint.hasHostAsIPAddress() {
                 resolvedEndpoints[index] = endpoint
             } else {
                 let workItem = DispatchWorkItem {
@@ -48,14 +48,14 @@ class DNSResolver {
             let endpoint = tuple.0
             let resolvedEndpoint = tuple.1
             if let endpoint = endpoint {
-                if (resolvedEndpoint == nil) {
+                if resolvedEndpoint == nil {
                     // DNS resolution failed
                     guard let hostname = endpoint.hostname() else { fatalError() }
                     hostnamesWithDnsResolutionFailure.append(hostname)
                 }
             }
         }
-        if (!hostnamesWithDnsResolutionFailure.isEmpty) {
+        if !hostnamesWithDnsResolutionFailure.isEmpty {
             throw DNSResolverError.dnsResolutionFailed(hostnames: hostnamesWithDnsResolutionFailure)
         }
         return resolvedEndpoints
@@ -76,7 +76,7 @@ extension DNSResolver {
             ai_addr: nil,
             ai_next: nil)
         var resultPointer = UnsafeMutablePointer<addrinfo>(OpaquePointer(bitPattern: 0))
-        switch (endpoint.host) {
+        switch endpoint.host {
         case .name(let name, _):
             // The endpoint is a hostname and needs DNS resolution
             let returnValue = getaddrinfo(
@@ -84,29 +84,29 @@ extension DNSResolver {
                 "\(endpoint.port)".cString(using: .utf8), // Port
                 &hints,
                 &resultPointer)
-            if (returnValue == 0) {
+            if returnValue == 0 {
                 // getaddrinfo succeeded
                 let ipv4Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET_ADDRSTRLEN))
                 let ipv6Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET6_ADDRSTRLEN))
                 var ipv4AddressString: String?
                 var ipv6AddressString: String?
-                while (resultPointer != nil) {
+                while resultPointer != nil {
                     let result = resultPointer!.pointee
                     resultPointer = result.ai_next
-                    if (result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size) {
+                    if result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size {
                         var sa4 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in.self).pointee
-                        if (inet_ntop(result.ai_family, &sa4.sin_addr, ipv4Buffer, socklen_t(INET_ADDRSTRLEN)) != nil) {
+                        if inet_ntop(result.ai_family, &sa4.sin_addr, ipv4Buffer, socklen_t(INET_ADDRSTRLEN)) != nil {
                             ipv4AddressString = String(cString: ipv4Buffer)
                             // If we found an IPv4 address, we can stop
                             break
                         }
-                    } else if (result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size) {
-                        if (ipv6AddressString != nil) {
+                    } else if result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size {
+                        if ipv6AddressString != nil {
                             // If we already have an IPv6 address, we can skip this one
                             continue
                         }
                         var sa6 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in6.self).pointee
-                        if (inet_ntop(result.ai_family, &sa6.sin6_addr, ipv6Buffer, socklen_t(INET6_ADDRSTRLEN)) != nil) {
+                        if inet_ntop(result.ai_family, &sa6.sin6_addr, ipv6Buffer, socklen_t(INET6_ADDRSTRLEN)) != nil {
                             ipv6AddressString = String(cString: ipv6Buffer)
                         }
                     }

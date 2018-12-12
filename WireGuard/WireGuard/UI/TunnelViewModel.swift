@@ -43,7 +43,7 @@ class TunnelViewModel {
 
         subscript(field: InterfaceField) -> String {
             get {
-                if (scratchpad.isEmpty) {
+                if scratchpad.isEmpty {
                     // When starting to read a config, setup the scratchpad.
                     // The scratchpad shall serve as a cache of what we want to show in the UI.
                     populateScratchpad()
@@ -51,18 +51,18 @@ class TunnelViewModel {
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
-                if (scratchpad.isEmpty) {
+                if scratchpad.isEmpty {
                     // When starting to edit a config, setup the scratchpad and remove the configuration.
                     // The scratchpad shall be the sole source of the being-edited configuration.
                     populateScratchpad()
                 }
                 validatedConfiguration = nil
-                if (stringValue.isEmpty) {
+                if stringValue.isEmpty {
                     scratchpad.removeValue(forKey: field)
                 } else {
                     scratchpad[field] = stringValue
                 }
-                if (field == .privateKey) {
+                if field == .privateKey {
                     if (stringValue.count == TunnelViewModel.keyLengthInBase64),
                         let privateKey = Data(base64Encoded: stringValue),
                         privateKey.count == TunnelConfiguration.keyLength {
@@ -81,7 +81,7 @@ class TunnelViewModel {
             scratchpad[.name] = config.name
             scratchpad[.privateKey] = config.privateKey.base64EncodedString()
             scratchpad[.publicKey] = config.publicKey.base64EncodedString()
-            if (!config.addresses.isEmpty) {
+            if !config.addresses.isEmpty {
                 scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
             }
             if let listenPort = config.listenPort {
@@ -90,7 +90,7 @@ class TunnelViewModel {
             if let mtu = config.mtu {
                 scratchpad[.mtu] = String(mtu)
             }
-            if (!config.dns.isEmpty) {
+            if !config.dns.isEmpty {
                 scratchpad[.dns] = config.dns.map { $0.stringRepresentation() }.joined(separator: ", ")
             }
         }
@@ -158,16 +158,15 @@ class TunnelViewModel {
                 config.dns = dnsServers
             }
 
-            guard (errorMessages.isEmpty) else {
-                return .error(errorMessages.first!)
-            }
+            guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
+
             validatedConfiguration = config
             return .saved(config)
         }
 
         func filterFieldsWithValueOrControl(interfaceFields: [InterfaceField]) -> [InterfaceField] {
             return interfaceFields.filter { (field) -> Bool in
-                if (TunnelViewModel.interfaceFieldsWithControl.contains(field)) {
+                if TunnelViewModel.interfaceFieldsWithControl.contains(field) {
                     return true
                 }
                 return (!self[field].isEmpty)
@@ -193,7 +192,7 @@ class TunnelViewModel {
 
         subscript(field: PeerField) -> String {
             get {
-                if (scratchpad.isEmpty) {
+                if scratchpad.isEmpty {
                     // When starting to read a config, setup the scratchpad.
                     // The scratchpad shall serve as a cache of what we want to show in the UI.
                     populateScratchpad()
@@ -201,18 +200,18 @@ class TunnelViewModel {
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
-                if (scratchpad.isEmpty) {
+                if scratchpad.isEmpty {
                     // When starting to edit a config, setup the scratchpad and remove the configuration.
                     // The scratchpad shall be the sole source of the being-edited configuration.
                     populateScratchpad()
                 }
                 validatedConfiguration = nil
-                if (stringValue.isEmpty) {
+                if stringValue.isEmpty {
                     scratchpad.removeValue(forKey: field)
                 } else {
                     scratchpad[field] = stringValue
                 }
-                if (field == .allowedIPs) {
+                if field == .allowedIPs {
                     updateExcludePrivateIPsFieldState()
                 }
             }
@@ -225,7 +224,7 @@ class TunnelViewModel {
             if let preSharedKey = config.preSharedKey {
                 scratchpad[.preSharedKey] = preSharedKey.base64EncodedString()
             }
-            if (!config.allowedIPs.isEmpty) {
+            if !config.allowedIPs.isEmpty {
                 scratchpad[.allowedIPs] = config.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
             }
             if let endpoint = config.endpoint {
@@ -291,16 +290,15 @@ class TunnelViewModel {
                 }
             }
 
-            guard (errorMessages.isEmpty) else {
-                return .error(errorMessages.first!)
-            }
+            guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
+            
             validatedConfiguration = config
             return .saved(config)
         }
 
         func filterFieldsWithValueOrControl(peerFields: [PeerField]) -> [PeerField] {
             return peerFields.filter { (field) -> Bool in
-                if (TunnelViewModel.peerFieldsWithControl.contains(field)) {
+                if TunnelViewModel.peerFieldsWithControl.contains(field) {
                     return true
                 }
                 return (!self[field].isEmpty)
@@ -319,12 +317,12 @@ class TunnelViewModel {
         ]
 
         func updateExcludePrivateIPsFieldState() {
-            guard (numberOfPeers == 1) else {
+            guard numberOfPeers == 1 else {
                 shouldAllowExcludePrivateIPsControl = false
                 excludePrivateIPsValue = false
                 return
             }
-            if (scratchpad.isEmpty) {
+            if scratchpad.isEmpty {
                 populateScratchpad()
             }
             let allowedIPStrings = Set<String>(
@@ -332,10 +330,10 @@ class TunnelViewModel {
                     .split(separator: ",")
                     .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
             )
-            if (allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString)) {
+            if allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) {
                 shouldAllowExcludePrivateIPsControl = true
                 excludePrivateIPsValue = false
-            } else if (allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String)) {
+            } else if allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String) {
                 shouldAllowExcludePrivateIPsControl = true
                 excludePrivateIPsValue = true
             } else {
@@ -353,7 +351,7 @@ class TunnelViewModel {
                 .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
             let ipv6Addresses = allowedIPStrings.filter { $0.contains(":") }
             let modifiedAllowedIPStrings: [String]
-            if (isOn) {
+            if isOn {
                 modifiedAllowedIPStrings = ipv6Addresses +
                     TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServerStrings
             } else {
@@ -421,14 +419,14 @@ class TunnelViewModel {
         let interfaceSaveResult = interfaceData.save()
         let peerSaveResults = peersData.map { $0.save() }
         // Collate the results
-        switch (interfaceSaveResult) {
+        switch interfaceSaveResult {
         case .error(let errorMessage):
             return .error(errorMessage)
         case .saved(let interfaceConfiguration):
             var peerConfigurations: [PeerConfiguration] = []
             peerConfigurations.reserveCapacity(peerSaveResults.count)
             for peerSaveResult in peerSaveResults {
-                switch (peerSaveResult) {
+                switch peerSaveResult {
                 case .error(let errorMessage):
                     return .error(errorMessage)
                 case .saved(let peerConfiguration):
@@ -438,7 +436,7 @@ class TunnelViewModel {
 
             let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
             let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
-            if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+            if peerPublicKeysArray.count != peerPublicKeysSet.count {
                 return .error("Two or more peers cannot have the same public key")
             }
 
@@ -452,7 +450,7 @@ class TunnelViewModel {
 
 extension TunnelViewModel {
     static func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
-        switch (activateOnDemandOption) {
+        switch activateOnDemandOption {
         case .none:
             return "Off"
         case .useOnDemandOverWiFiOrCellular:
@@ -466,7 +464,7 @@ extension TunnelViewModel {
 
     static func activateOnDemandDetailText(for activateOnDemandSetting: ActivateOnDemandSetting?) -> String {
         if let activateOnDemandSetting = activateOnDemandSetting {
-            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
+            if activateOnDemandSetting.isActivateOnDemandEnabled {
                 return TunnelViewModel.activateOnDemandOptionText(for: activateOnDemandSetting.activateOnDemandOption)
             } else {
                 return TunnelViewModel.activateOnDemandOptionText(for: .none)

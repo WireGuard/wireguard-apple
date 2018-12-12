@@ -122,29 +122,29 @@ class WgQuickConfigFileParser {
                     attributes[key] = value
                 }
             } else {
-                if (lowercasedLine != "[interface]" && lowercasedLine != "[peer]") {
+                if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
                     throw ParseError.invalidLine(line)
                 }
             }
 
             let isLastLine: Bool = (lineIndex == lines.count - 1)
 
-            if (isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]") {
+            if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
-                if (parserState == .inInterfaceSection) {
+                if parserState == .inInterfaceSection {
                     guard let interface = collate(interfaceAttributes: attributes) else { throw ParseError.invalidInterface }
-                    guard (interfaceConfiguration == nil) else { throw ParseError.multipleInterfaces }
+                    guard interfaceConfiguration == nil else { throw ParseError.multipleInterfaces }
                     interfaceConfiguration = interface
-                } else if (parserState == .inPeerSection) {
+                } else if parserState == .inPeerSection {
                     guard let peer = collate(peerAttributes: attributes) else { throw ParseError.invalidPeer }
                     peerConfigurations.append(peer)
                 }
             }
 
-            if (lowercasedLine == "[interface]") {
+            if lowercasedLine == "[interface]" {
                 parserState = .inInterfaceSection
                 attributes.removeAll()
-            } else if (lowercasedLine == "[peer]") {
+            } else if lowercasedLine == "[peer]" {
                 parserState = .inPeerSection
                 attributes.removeAll()
             }
@@ -152,7 +152,7 @@ class WgQuickConfigFileParser {
 
         let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
-        if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+        if peerPublicKeysArray.count != peerPublicKeysSet.count {
             throw ParseError.multiplePeersWithSamePublicKey
         }
 

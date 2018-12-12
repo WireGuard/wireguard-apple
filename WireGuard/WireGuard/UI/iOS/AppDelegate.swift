@@ -53,7 +53,7 @@ extension AppDelegate {
                      viewControllerWithRestorationIdentifierPath identifierComponents: [String],
                      coder: NSCoder) -> UIViewController? {
         guard let vcIdentifier = identifierComponents.last else { return nil }
-        if (vcIdentifier.hasPrefix("TunnelDetailVC:")) {
+        if vcIdentifier.hasPrefix("TunnelDetailVC:") {
             let tunnelName = String(vcIdentifier.suffix(vcIdentifier.count - "TunnelDetailVC:".count))
             if let tunnelsManager = mainVC?.tunnelsManager {
                 if let tunnel = tunnelsManager.tunnel(named: tunnelName) {

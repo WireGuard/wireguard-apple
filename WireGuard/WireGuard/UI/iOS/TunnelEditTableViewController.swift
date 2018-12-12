@@ -82,7 +82,7 @@ class TunnelEditTableViewController: UITableViewController {
     @objc func saveTapped() {
         self.tableView.endEditing(false)
         let tunnelSaveResult = tunnelViewModel.save()
-        switch (tunnelSaveResult) {
+        switch tunnelSaveResult {
         case .error(let errorMessage):
             let erroringConfiguration = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ? "Interface" : "Peer"
             ErrorPresenter.showErrorAlert(title: "Invalid \(erroringConfiguration)", message: errorMessage, from: self)
@@ -130,21 +130,21 @@ extension TunnelEditTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (section < interfaceSectionCount) {
+        if section < interfaceSectionCount {
             // Interface
             return interfaceFieldsBySection[section].count
-        } else if ((peerSectionCount > 0) && (section < (interfaceSectionCount + peerSectionCount))) {
+        } else if (peerSectionCount > 0) && (section < (interfaceSectionCount + peerSectionCount)) {
             // Peer
             let peerIndex = (section - interfaceSectionCount)
             let peerData = tunnelViewModel.peersData[peerIndex]
             let peerFieldsToShow = peerData.shouldAllowExcludePrivateIPsControl ? peerFields : peerFields.filter { $0 != .excludePrivateIPs }
             return peerFieldsToShow.count
-        } else if (section < (interfaceSectionCount + peerSectionCount + 1)) {
+        } else if section < (interfaceSectionCount + peerSectionCount + 1) {
             // Add peer
             return 1
         } else {
             // On-Demand Rules
-            if (activateOnDemandSetting.isActivateOnDemandEnabled) {
+            if activateOnDemandSetting.isActivateOnDemandEnabled {
                 return 4
             } else {
                 return 1
@@ -153,13 +153,13 @@ extension TunnelEditTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if (section < interfaceSectionCount) {
+        if section < interfaceSectionCount {
             // Interface
             return (section == 0) ? "Interface" : nil
-        } else if ((peerSectionCount > 0) && (section < (interfaceSectionCount + peerSectionCount))) {
+        } else if (peerSectionCount > 0) && (section < (interfaceSectionCount + peerSectionCount)) {
             // Peer
             return "Peer"
-        } else if (section == (interfaceSectionCount + peerSectionCount)) {
+        } else if section == (interfaceSectionCount + peerSectionCount) {
             // Add peer
             return nil
         } else {
@@ -169,11 +169,11 @@ extension TunnelEditTableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.section < interfaceSectionCount) {
+        if indexPath.section < interfaceSectionCount {
             return interfaceFieldCell(for: tableView, at: indexPath)
-        } else if ((peerSectionCount > 0) && (indexPath.section < (interfaceSectionCount + peerSectionCount))) {
+        } else if (peerSectionCount > 0) && (indexPath.section < (interfaceSectionCount + peerSectionCount)) {
             return peerCell(for: tableView, at: indexPath)
-        } else if (indexPath.section == (interfaceSectionCount + peerSectionCount)) {
+        } else if indexPath.section == (interfaceSectionCount + peerSectionCount) {
             return addPeerCell(for: tableView, at: indexPath)
         } else {
             return onDemandCell(for: tableView, at: indexPath)
@@ -183,7 +183,7 @@ extension TunnelEditTableViewController {
     private func interfaceFieldCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let interfaceData = tunnelViewModel.interfaceData
         let field = interfaceFieldsBySection[indexPath.section][indexPath.row]
-        if (field == .generateKeyPair) {
+        if field == .generateKeyPair {
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelEditTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelEditTableViewButtonCell
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self, weak interfaceData] in
@@ -550,9 +550,9 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
 
     func configureForContentSize() {
         var constraints: [NSLayoutConstraint] = []
-        if (self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory) {
+        if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
-            if (!isStackedVertically) {
+            if !isStackedVertically {
                 constraints = [
                     valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
                     valueTextField.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
@@ -563,7 +563,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
             }
         } else {
             // Stack horizontally
-            if (!isStackedHorizontally) {
+            if !isStackedHorizontally {
                 constraints = [
                     contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
                     valueTextField.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
@@ -573,7 +573,7 @@ class TunnelEditTableViewKeyValueCell: UITableViewCell {
                 isStackedVertically = false
             }
         }
-        if (!constraints.isEmpty) {
+        if !constraints.isEmpty {
             NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
             NSLayoutConstraint.activate(constraints)
             self.contentSizeBasedConstraints = constraints
@@ -604,7 +604,7 @@ extension TunnelEditTableViewKeyValueCell: UITextFieldDelegate {
     }
     func textFieldDidEndEditing(_ textField: UITextField) {
         let isModified = (textField.text ?? "" != textFieldValueOnBeginEditing)
-        guard (isModified) else { return }
+        guard isModified else { return }
         if let onValueChanged = onValueChanged {
             onValueChanged(textField.text ?? "")
         }

@@ -17,15 +17,15 @@ extension Endpoint {
     init?(from string: String) {
         // Separation of host and port is based on 'parse_endpoint' function in
         // https://git.zx2c4.com/WireGuard/tree/src/tools/config.c
-        guard (!string.isEmpty) else { return nil }
+        guard !string.isEmpty else { return nil }
         let startOfPort: String.Index
         let hostString: String
-        if (string.first! == "[") {
+        if string.first! == "[" {
             // Look for IPv6-style endpoint, like [::1]:80
             let startOfHost = string.index(after: string.startIndex)
             guard let endOfHost = string.dropFirst().firstIndex(of: "]") else { return nil }
             let afterEndOfHost = string.index(after: endOfHost)
-            guard (string[afterEndOfHost] == ":") else { return nil }
+            guard string[afterEndOfHost] == ":" else { return nil }
             startOfPort = string.index(after: afterEndOfHost)
             hostString = String(string[startOfHost ..< endOfHost])
         } else {
@@ -38,12 +38,12 @@ extension Endpoint {
         let invalidCharacterIndex = hostString.unicodeScalars.firstIndex { char in
             return !CharacterSet.urlHostAllowed.contains(char)
         }
-        guard (invalidCharacterIndex == nil) else { return nil }
+        guard invalidCharacterIndex == nil else { return nil }
         host = NWEndpoint.Host(hostString)
         port = endpointPort
     }
     func stringRepresentation() -> String {
-        switch (host) {
+        switch host {
         case .name(let hostname, _):
             return "\(hostname):\(port)"
         case .ipv4(let address):
@@ -78,7 +78,7 @@ extension Endpoint: Codable {
 
 extension Endpoint {
     func hasHostAsIPAddress() -> Bool {
-        switch (host) {
+        switch host {
         case .name:
             return false
         case .ipv4:
@@ -89,7 +89,7 @@ extension Endpoint {
     }
 
     func hostname() -> String? {
-        switch (host) {
+        switch host {
         case .name(let hostname, _):
             return hostname
         case .ipv4:
