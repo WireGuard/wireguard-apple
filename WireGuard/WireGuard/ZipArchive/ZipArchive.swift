@@ -39,9 +39,9 @@ class ZipArchive {
         zipClose(zipFile, nil)
     }
 
-    static func unarchive(url: URL, requiredFileExtensions: [String]) throws -> [(fileName: String, contents: Data)] {
+    static func unarchive(url: URL, requiredFileExtensions: [String]) throws -> [(fileBaseName: String, contents: Data)] {
 
-        var results: [(fileName: String, contents: Data)] = []
+        var results: [(fileBaseName: String, contents: Data)] = []
 
         guard let zipFile = unzOpen64(url.path) else {
             throw ZipArchiveError.cantOpenInputZipFile
@@ -72,10 +72,11 @@ class ZipArchive {
                 throw ZipArchiveError.badArchive
             }
 
-            if let fileURL = URL(string: String(cString: fileNameBuffer)),
-                !fileURL.hasDirectoryPath,
-                requiredFileExtensions.contains(fileURL.pathExtension) {
+            let lastChar = String(cString: fileNameBuffer).suffix(1)
+            let isDirectory = (lastChar == "/" || lastChar == "\\")
+            let fileURL = URL(fileURLWithFileSystemRepresentation: fileNameBuffer, isDirectory: isDirectory, relativeTo: nil)
 
+            if (!isDirectory && requiredFileExtensions.contains(fileURL.pathExtension)) {
                 var unzippedData = Data()
                 var bytesRead: Int32 = 0
                 repeat {
@@ -88,7 +89,7 @@ class ZipArchive {
                         unzippedData.append(dataRead)
                     }
                 } while (bytesRead > 0)
-                results.append((fileName: fileURL.lastPathComponent, contents: unzippedData))
+                results.append((fileBaseName: fileURL.deletingPathExtension().lastPathComponent, contents: unzippedData))
             }
 
             guard (unzCloseCurrentFile(zipFile) == UNZ_OK) else {
