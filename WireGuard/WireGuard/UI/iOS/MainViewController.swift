@@ -81,7 +81,7 @@ extension MainViewController {
                 let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
                 tunnelDetailNC.restorationIdentifier = "DetailNC"
                 if let self = self {
-                    if (animated) {
+                    if animated {
                         self.showDetailViewController(tunnelDetailNC, sender: self)
                     } else {
                         UIView.performWithoutAnimation {

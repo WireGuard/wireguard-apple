@@ -21,7 +21,7 @@ extension ActivateOnDemandSetting {
         let rules: [NEOnDemandRule]?
         let connectRule = NEOnDemandRuleConnect()
         let disconnectRule = NEOnDemandRuleDisconnect()
-        switch (activateOnDemandOption) {
+        switch activateOnDemandOption {
         case .none:
             rules = nil
         case .useOnDemandOverWiFiOrCellular:
@@ -41,7 +41,7 @@ extension ActivateOnDemandSetting {
     init(from tunnelProviderManager: NETunnelProviderManager) {
         let rules = tunnelProviderManager.onDemandRules ?? []
         let activateOnDemandOption: ActivateOnDemandOption
-        switch (rules.count) {
+        switch rules.count {
         case 0:
             activateOnDemandOption = .none
         case 1:
@@ -51,9 +51,9 @@ extension ActivateOnDemandSetting {
         case 2:
             let connectRule = rules.first(where: { $0.action == .connect })!
             let disconnectRule = rules.first(where: { $0.action == .disconnect })!
-            if (connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == .cellular) {
+            if connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == .cellular {
                 activateOnDemandOption = .useOnDemandOverWiFiOnly
-            } else if (connectRule.interfaceTypeMatch == .cellular && disconnectRule.interfaceTypeMatch == .wiFi) {
+            } else if connectRule.interfaceTypeMatch == .cellular && disconnectRule.interfaceTypeMatch == .wiFi {
                 activateOnDemandOption = .useOnDemandOverCellularOnly
             } else {
                 fatalError("Unexpected onDemandRules set on tunnel provider manager")
@@ -62,7 +62,7 @@ extension ActivateOnDemandSetting {
             fatalError("Unexpected number of onDemandRules set on tunnel provider manager")
         }
         self.activateOnDemandOption = activateOnDemandOption
-        if (activateOnDemandOption == .none) {
+        if activateOnDemandOption == .none {
             self.isActivateOnDemandEnabled = false
         } else {
             self.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled

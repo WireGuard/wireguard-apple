@@ -7,7 +7,7 @@ enum ZipExporterError: WireGuardAppError {
     case noTunnelsToExport
 
     func alertText() -> (String, String)? {
-        switch (self) {
+        switch self {
         case .noTunnelsToExport:
             return ("Nothing to export", "There are no tunnels to export")
         }
@@ -18,7 +18,7 @@ class ZipExporter {
     static func exportConfigFiles(tunnelConfigurations: [TunnelConfiguration], to url: URL,
                                   completion: @escaping (WireGuardAppError?) -> Void) {
 
-        guard (!tunnelConfigurations.isEmpty) else {
+        guard !tunnelConfigurations.isEmpty else {
             completion(ZipExporterError.noTunnelsToExport)
             return
         }
@@ -28,14 +28,14 @@ class ZipExporter {
             for tunnelConfiguration in tunnelConfigurations {
                 if let contents = WgQuickConfigFileWriter.writeConfigFile(from: tunnelConfiguration) {
                     let name = tunnelConfiguration.interface.name
-                    if (name.isEmpty || name == lastTunnelName) { continue }
+                    if name.isEmpty || name == lastTunnelName { continue }
                     inputsToArchiver.append((fileName: "\(name).conf", contents: contents))
                     lastTunnelName = name
                 }
             }
             do {
                 try ZipArchive.archive(inputs: inputsToArchiver, to: url)
-            } catch (let error as WireGuardAppError) {
+            } catch let error as WireGuardAppError {
                 DispatchQueue.main.async { completion(error) }
                 return
             } catch {

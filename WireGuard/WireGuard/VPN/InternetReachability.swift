@@ -39,8 +39,8 @@ class InternetReachability {
 extension InternetReachability.Status {
     init(reachabilityFlags flags: SCNetworkReachabilityFlags) {
         var status: InternetReachability.Status = .notReachable
-        if (flags.contains(.reachable)) {
-            if (flags.contains(.isWWAN)) {
+        if flags.contains(.reachable) {
+            if flags.contains(.isWWAN) {
                 status = .reachableOverCellular
             } else {
                 status = .reachableOverWiFi

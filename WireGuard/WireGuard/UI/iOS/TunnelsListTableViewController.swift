@@ -43,7 +43,7 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     func setTunnelsManager(tunnelsManager: TunnelsManager) {
-        if (self.tunnelsManager != nil) {
+        if self.tunnelsManager != nil {
             // If a tunnels manager is already set, do nothing
             return
         }
@@ -54,7 +54,7 @@ class TunnelsListTableViewController: UIViewController {
         tableView.estimatedRowHeight = 60
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.id)
+        tableView.register(TunnelsListTableViewCell.self, forCellReuseIdentifier: TunnelsListTableViewCell.reuseIdentifier)
 
         self.view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +103,7 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     @objc func addButtonTapped(sender: AnyObject) {
-        if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
+        if self.tunnelsManager == nil { return } // Do nothing until we've loaded the tunnels
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
         let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] (_) in
             self?.presentViewControllerForFileImport()
@@ -136,7 +136,7 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
-        if (self.tunnelsManager == nil) { return } // Do nothing until we've loaded the tunnels
+        if self.tunnelsManager == nil { return } // Do nothing until we've loaded the tunnels
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
         settingsNC.modalPresentationStyle = .formSheet
@@ -167,7 +167,7 @@ class TunnelsListTableViewController: UIViewController {
 
     func importFromFile(url: URL, completionHandler: (() -> Void)?) {
         guard let tunnelsManager = tunnelsManager else { return }
-        if (url.pathExtension == "zip") {
+        if url.pathExtension == "zip" {
             ZipImporter.importConfigFiles(from: url) { [weak self] result in
                 if let error = result.error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -241,13 +241,13 @@ extension TunnelsListTableViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsListTableViewCell.id, for: indexPath) as! TunnelsListTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: TunnelsListTableViewCell.reuseIdentifier, for: indexPath) as! TunnelsListTableViewCell
         if let tunnelsManager = tunnelsManager {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             cell.tunnel = tunnel
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self, let tunnelsManager = self.tunnelsManager else { return }
-                if (isOn) {
+                if isOn {
                     tunnelsManager.startActivation(of: tunnel) { [weak self] error in
                         if let error = error {
                             ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: {
@@ -285,7 +285,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
             guard let tunnelsManager = self?.tunnelsManager else { return }
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             tunnelsManager.remove(tunnel: tunnel, completionHandler: { (error) in
-                if (error != nil) {
+                if error != nil {
                     ErrorPresenter.showErrorAlert(error: error!, from: self)
                     completionHandler(false)
                 } else {
@@ -309,7 +309,7 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
         tableView?.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 
-    func tunnelMoved(at oldIndex: Int, to newIndex: Int) {
+    func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
         tableView?.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
 
@@ -320,7 +320,7 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
 }
 
 class TunnelsListTableViewCell: UITableViewCell {
-    static let id: String = "TunnelsListTableViewCell"
+    static let reuseIdentifier = "TunnelsListTableViewCell"
     var tunnel: TunnelContainer? {
         didSet(value) {
             // Bind to the tunnel's name
@@ -396,7 +396,7 @@ class TunnelsListTableViewCell: UITableViewCell {
             guard let statusSwitch = statusSwitch, let busyIndicator = busyIndicator else { return }
             statusSwitch.isOn = !(status == .deactivating || status == .inactive)
             statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
-            if (status == .inactive || status == .active) {
+            if status == .inactive || status == .active {
                 busyIndicator.stopAnimating()
             } else {
                 busyIndicator.startAnimating()

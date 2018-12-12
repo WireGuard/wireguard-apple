@@ -7,7 +7,7 @@ enum ZipImporterError: WireGuardAppError {
     case noTunnelsInZipArchive
 
     func alertText() -> (String, String)? {
-        switch (self) {
+        switch self {
         case .noTunnelsInZipArchive:
             return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")
         }
@@ -23,17 +23,17 @@ class ZipImporter {
                 for (index, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
                     let fileBaseName = unarchivedFile.fileBaseName
                     let trimmedName = fileBaseName.trimmingCharacters(in: .whitespacesAndNewlines)
-                    if (!trimmedName.isEmpty) {
+                    if !trimmedName.isEmpty {
                         unarchivedFiles[index].fileBaseName = trimmedName
                     } else {
                         unarchivedFiles.remove(at: index)
                     }
                 }
 
-                if (unarchivedFiles.isEmpty) {
+                if unarchivedFiles.isEmpty {
                     throw ZipImporterError.noTunnelsInZipArchive
                 }
-            } catch (let error as WireGuardAppError) {
+            } catch let error as WireGuardAppError {
                 DispatchQueue.main.async { completion(.failure(error)) }
                 return
             } catch {
@@ -41,9 +41,9 @@ class ZipImporter {
             }
 
             unarchivedFiles.sort { $0.fileBaseName < $1.fileBaseName }
-            var configs = Array<TunnelConfiguration?>(repeating: nil, count: unarchivedFiles.count)
+            var configs: [TunnelConfiguration?] = Array(repeating: nil, count: unarchivedFiles.count)
             for (index, file) in unarchivedFiles.enumerated() {
-                if (index > 0 && file == unarchivedFiles[index - 1]) {
+                if index > 0 && file == unarchivedFiles[index - 1] {
                     continue
                 }
                 guard let fileContents = String(data: file.contents, encoding: .utf8) else {

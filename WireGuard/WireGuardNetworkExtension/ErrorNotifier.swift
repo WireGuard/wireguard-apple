@@ -5,7 +5,7 @@ import NetworkExtension
 
 class ErrorNotifier {
     static func errorMessage(for error: PacketTunnelProviderError) -> (String, String)? {
-        switch (error) {
+        switch error {
         case .savedProtocolConfigurationIsInvalid:
             return ("Activation failure", "Could not retrieve tunnel information from the saved configuration")
         case .dnsResolutionFailure:

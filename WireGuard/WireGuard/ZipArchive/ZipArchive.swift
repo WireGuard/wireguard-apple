@@ -9,7 +9,7 @@ enum ZipArchiveError: WireGuardAppError {
     case badArchive
 
     func alertText() -> (String, String)? {
-        switch (self) {
+        switch self {
         case .cantOpenInputZipFile:
             return ("Unable to read zip archive", "The zip archive could not be read.")
         case .cantOpenOutputZipFileForWriting:
@@ -49,15 +49,11 @@ class ZipArchive {
         defer {
             unzClose(zipFile)
         }
-        guard (unzGoToFirstFile(zipFile) == UNZ_OK) else {
-            throw ZipArchiveError.badArchive
-        }
+        guard unzGoToFirstFile(zipFile) == UNZ_OK else { throw ZipArchiveError.badArchive }
 
         var resultOfGoToNextFile: Int32
         repeat {
-            guard (unzOpenCurrentFile(zipFile) == UNZ_OK) else {
-                throw ZipArchiveError.badArchive
-            }
+            guard unzOpenCurrentFile(zipFile) == UNZ_OK else { throw ZipArchiveError.badArchive }
 
             let bufferSize = 16384 // 16 KiB
             var fileNameBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
@@ -68,38 +64,33 @@ class ZipArchive {
                 dataBuffer.deallocate()
             }
 
-            guard (unzGetCurrentFileInfo64(zipFile, nil, fileNameBuffer, UInt(bufferSize), nil, 0, nil, 0) == UNZ_OK) else {
-                throw ZipArchiveError.badArchive
-            }
+            guard unzGetCurrentFileInfo64(zipFile, nil, fileNameBuffer, UInt(bufferSize), nil, 0, nil, 0) == UNZ_OK else { throw ZipArchiveError.badArchive }
 
             let lastChar = String(cString: fileNameBuffer).suffix(1)
             let isDirectory = (lastChar == "/" || lastChar == "\\")
             let fileURL = URL(fileURLWithFileSystemRepresentation: fileNameBuffer, isDirectory: isDirectory, relativeTo: nil)
 
-            if (!isDirectory && requiredFileExtensions.contains(fileURL.pathExtension)) {
+            if !isDirectory && requiredFileExtensions.contains(fileURL.pathExtension) {
                 var unzippedData = Data()
                 var bytesRead: Int32 = 0
                 repeat {
                     bytesRead = unzReadCurrentFile(zipFile, dataBuffer, UInt32(bufferSize))
-                    if (bytesRead > 0) {
+                    if bytesRead > 0 {
                         let dataRead = dataBuffer.withMemoryRebound(to: UInt8.self, capacity: bufferSize) {
-                            (buf: UnsafeMutablePointer<UInt8>) -> Data in
-                            return Data(bytes: buf, count: Int(bytesRead))
+                            return Data(bytes: $0, count: Int(bytesRead))
                         }
                         unzippedData.append(dataRead)
                     }
-                } while (bytesRead > 0)
+                } while bytesRead > 0
                 results.append((fileBaseName: fileURL.deletingPathExtension().lastPathComponent, contents: unzippedData))
             }
 
-            guard (unzCloseCurrentFile(zipFile) == UNZ_OK) else {
-                throw ZipArchiveError.badArchive
-            }
+            guard unzCloseCurrentFile(zipFile) == UNZ_OK else { throw ZipArchiveError.badArchive }
 
             resultOfGoToNextFile = unzGoToNextFile(zipFile)
-        } while (resultOfGoToNextFile == UNZ_OK)
+        } while resultOfGoToNextFile == UNZ_OK
 
-        if (resultOfGoToNextFile == UNZ_END_OF_LIST_OF_FILE) {
+        if resultOfGoToNextFile == UNZ_END_OF_LIST_OF_FILE {
             return results
         } else {
             throw ZipArchiveError.badArchive
