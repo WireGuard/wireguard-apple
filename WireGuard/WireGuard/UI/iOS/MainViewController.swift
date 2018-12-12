@@ -75,7 +75,7 @@ extension MainViewController {
     }
 
     func showTunnelDetailForTunnel(named tunnelName: String, animated: Bool) {
-        let showTunnelDetailBlock: (TunnelsManager) -> Void = { [weak self] (tunnelsManager) in
+        let showTunnelDetailBlock: (TunnelsManager) -> Void = { [weak self] tunnelsManager in
             if let tunnel = tunnelsManager.tunnel(named: tunnelName) {
                 let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
                 let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)

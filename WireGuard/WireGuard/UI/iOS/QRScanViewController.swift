@@ -33,7 +33,7 @@ class QRScanViewController: UIViewController {
             tipLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             tipLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
             tipLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32)
-            ])
+        ])
 
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video),
             let videoInput = try? AVCaptureDeviceInput(device: videoCaptureDevice),
@@ -114,10 +114,10 @@ class QRScanViewController: UIViewController {
 
         let alert = UIAlertController(title: NSLocalizedString("Please name the scanned tunnel", comment: ""), message: nil, preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: { [weak self] _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
-        }))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default) { [weak self] _ in
             guard let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty else { return }
             tunnelConfiguration.interface.name = title
             if let self = self {
@@ -125,15 +125,15 @@ class QRScanViewController: UIViewController {
                     self.dismiss(animated: true, completion: nil)
                 }
             }
-        }))
+        })
         present(alert, animated: true)
     }
 
     func scanDidEncounterError(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
-        }))
+        })
         present(alertController, animated: true)
         captureSession = nil
     }

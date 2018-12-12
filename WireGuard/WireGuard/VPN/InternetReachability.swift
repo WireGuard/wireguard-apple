@@ -28,8 +28,8 @@ class InternetReachability {
                                  sin_port: 0,
                                  sin_addr: in_addr(s_addr: 0),
                                  sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        return withUnsafePointer(to: addrIn) { (addrInPtr) -> SCNetworkReachability? in
-            addrInPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { (addrPtr) -> SCNetworkReachability? in
+        return withUnsafePointer(to: addrIn) { addrInPtr in
+            addrInPtr.withMemoryRebound(to: sockaddr.self, capacity: 1) { addrPtr in
                 return SCNetworkReachabilityCreateWithAddress(nil, addrPtr)
             }
         }

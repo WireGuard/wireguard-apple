@@ -80,7 +80,7 @@ class TunnelsManager {
         // NETunnelProviderManager APIs don't work on the simulator
         completionHandler(.success(TunnelsManager(tunnelProviders: [])))
         #else
-        NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
+        NETunnelProviderManager.loadAllFromPreferences { managers, error in
             if let error = error {
                 os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnListingTunnels))
@@ -112,7 +112,7 @@ class TunnelsManager {
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
-        tunnelProviderManager.saveToPreferences { [weak self] (error) in
+        tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnAddTunnel))
@@ -138,7 +138,7 @@ class TunnelsManager {
             return
         }
         let tail = tunnelConfigurations.dropFirst()
-        self.add(tunnelConfiguration: head) { [weak self, tail] (result) in
+        self.add(tunnelConfiguration: head) { [weak self, tail] result in
             DispatchQueue.main.async {
                 self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful + (result.isSuccess ? 1 : 0), completionHandler: completionHandler)
             }
@@ -169,7 +169,7 @@ class TunnelsManager {
         let isActivatingOnDemand = (!tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled)
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
-        tunnelProviderManager.saveToPreferences { [weak self] (error) in
+        tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnModifyTunnel)
@@ -186,15 +186,14 @@ class TunnelsManager {
 
                 if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
                     // Turn off the tunnel, and then turn it back on, so the changes are made effective
-                    let session = (tunnel.tunnelProvider.connection as! NETunnelProviderSession)
                     tunnel.status = .restarting
-                    session.stopTunnel()
+                    (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
                 }
 
                 if isActivatingOnDemand {
                     // Reload tunnel after saving.
                     // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
-                    tunnelProviderManager.loadFromPreferences { (error) in
+                    tunnelProviderManager.loadFromPreferences { error in
                         tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
                         guard error == nil else {
                             os_log("Modify: Re-loading after saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
@@ -213,7 +212,7 @@ class TunnelsManager {
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
 
-        tunnelProviderManager.removeFromPreferences { [weak self] (error) in
+        tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Remove: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnRemoveTunnel)
@@ -237,7 +236,7 @@ class TunnelsManager {
     }
 
     func tunnel(named tunnelName: String) -> TunnelContainer? {
-        return self.tunnels.first(where: { $0.name == tunnelName })
+        return self.tunnels.first { $0.name == tunnelName }
     }
 
     func startActivation(of tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
@@ -272,7 +271,7 @@ class TunnelsManager {
         statusObservationToken = NotificationCenter.default.addObserver(
             forName: .NEVPNStatusDidChange,
             object: nil,
-            queue: OperationQueue.main) { [weak self] (statusChangeNotification) in
+            queue: OperationQueue.main) { [weak self] statusChangeNotification in
                 guard let self = self else { return }
                 guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
                 guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
@@ -299,7 +298,7 @@ class TunnelsManager {
                     // Don't change tunnel.status when disconnecting for a restart
                     if session.status == .disconnected {
                         self.tunnelBeingActivated = tunnel
-                        tunnel.startActivation(completionHandler: { _ in })
+                        tunnel.startActivation { _ in }
                     }
                     return
                 }
@@ -339,7 +338,7 @@ class TunnelContainer: NSObject {
     }
 
     func tunnelConfiguration() -> TunnelConfiguration? {
-        return (tunnelProvider.protocolConfiguration as! NETunnelProviderProtocol).tunnelConfiguration()
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration()
     }
 
     func activateOnDemandSetting() -> ActivateOnDemandSetting {
@@ -377,7 +376,7 @@ class TunnelContainer: NSObject {
             // then call this function again.
             os_log("startActivation: Tunnel is disabled. Re-enabling and saving", log: OSLog.default, type: .info)
             tunnelProvider.isEnabled = true
-            tunnelProvider.saveToPreferences { [weak self] (error) in
+            tunnelProvider.saveToPreferences { [weak self] error in
                 if error != nil {
                     os_log("Error saving tunnel after re-enabling: %{public}@", log: OSLog.default, type: .error, "\(error!)")
                     completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
@@ -392,10 +391,9 @@ class TunnelContainer: NSObject {
         }
 
         // Start the tunnel
-        let session = (tunnelProvider.connection as! NETunnelProviderSession)
         do {
             os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
-            try session.startTunnel()
+            try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel()
             os_log("startActivation: Success", log: OSLog.default, type: .debug)
             completionHandler(nil)
         } catch let error {
@@ -412,7 +410,7 @@ class TunnelContainer: NSObject {
                 return
             }
             os_log("startActivation: Will reload tunnel and then try to start it. ", log: OSLog.default, type: .info)
-            tunnelProvider.loadFromPreferences { [weak self] (error) in
+            tunnelProvider.loadFromPreferences { [weak self] error in
                 if error != nil {
                     os_log("startActivation: Error reloading tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error!)")
                     self?.status = .inactive
@@ -427,8 +425,7 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startDeactivation() {
-        let session = (tunnelProvider.connection as! NETunnelProviderSession)
-        session.stopTunnel()
+        (tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
     }
 }
 

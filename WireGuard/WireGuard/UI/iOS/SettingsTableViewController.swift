@@ -40,8 +40,8 @@ class SettingsTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.allowsSelection = false
 
-        self.tableView.register(TunnelSettingsTableViewKeyValueCell.self, forCellReuseIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier)
-        self.tableView.register(TunnelSettingsTableViewButtonCell.self, forCellReuseIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier)
+        self.tableView.register(KeyValueCell.self)
+        self.tableView.register(ButtonCell.self)
 
         let logo = UIImageView(image: UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!)
         logo.contentMode = .scaleAspectFit
@@ -76,7 +76,7 @@ class SettingsTableViewController: UITableViewController {
 
         let count = tunnelsManager.numberOfTunnels()
         let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration() }
-        ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] (error) in
+        ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
             if let error = error {
                 ErrorPresenter.showErrorAlert(error: error, from: self)
                 return
@@ -127,7 +127,7 @@ class SettingsTableViewController: UITableViewController {
                 // popoverPresentationController shall be non-nil on the iPad
                 activityVC.popoverPresentationController?.sourceView = sourceView
                 activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-                activityVC.completionWithItemsHandler = { (_, _, _, _) in
+                activityVC.completionWithItemsHandler = { _, _, _, _ in
                     // Remove the exported log file after the activity has completed
                     _ = FileManager.deleteFile(at: destinationURL)
                 }
@@ -164,7 +164,7 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let field = settingsFieldsBySection[indexPath.section][indexPath.row]
         if field == .iosAppVersion || field == .goBackendVersion {
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewKeyValueCell
+            let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
             cell.key = field.rawValue
             if field == .iosAppVersion {
                 var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
@@ -177,7 +177,7 @@ extension SettingsTableViewController {
             }
             return cell
         } else if field == .exportZipArchive {
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewButtonCell
+            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
@@ -185,7 +185,7 @@ extension SettingsTableViewController {
             return cell
         } else {
             assert(field == .exportLogFile)
-            let cell = tableView.dequeueReusableCell(withIdentifier: TunnelSettingsTableViewButtonCell.reuseIdentifier, for: indexPath) as! TunnelSettingsTableViewButtonCell
+            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
@@ -195,8 +195,7 @@ extension SettingsTableViewController {
     }
 }
 
-class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
-    static let reuseIdentifier = "TunnelSettingsTableViewKeyValueCell"
+private class KeyValueCell: UITableViewCell {
     var key: String {
         get { return textLabel?.text ?? "" }
         set(value) { textLabel?.text = value }
@@ -207,7 +206,7 @@ class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .value1, reuseIdentifier: TunnelSettingsTableViewKeyValueCell.reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: KeyValueCell.reuseIdentifier)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -221,8 +220,7 @@ class TunnelSettingsTableViewKeyValueCell: UITableViewCell {
     }
 }
 
-class TunnelSettingsTableViewButtonCell: UITableViewCell {
-    static let reuseIdentifier = "TunnelSettingsTableViewButtonCell"
+private class ButtonCell: UITableViewCell {
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
@@ -242,7 +240,7 @@ class TunnelSettingsTableViewButtonCell: UITableViewCell {
             button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-            ])
+        ])
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
 
