@@ -2,27 +2,27 @@
 // Copyright © 2018 WireGuard LLC. All Rights Reserved.
 
 enum WireGuardResult<T> {
-    case success(T)
-    case failure(WireGuardAppError)
+    case success(_ value: T)
+    case failure(_ error: WireGuardAppError)
 
     var value: T? {
         switch (self) {
-        case .success(let v): return v
-        case .failure(_): return nil
+        case .success(let value): return value
+        case .failure: return nil
         }
     }
 
     var error: WireGuardAppError? {
         switch (self) {
-        case .success(_): return nil
-        case .failure(let e): return e
+        case .success: return nil
+        case .failure(let error): return error
         }
     }
 
     var isSuccess: Bool {
         switch (self) {
-        case .success(_): return true
-        case .failure(_): return false
+        case .success: return true
+        case .failure: return false
         }
     }
 }

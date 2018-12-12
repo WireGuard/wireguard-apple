@@ -32,7 +32,7 @@ class QRScanViewController: UIViewController {
         NSLayoutConstraint.activate([
             tipLabel.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor),
             tipLabel.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor),
-            tipLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
+            tipLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32)
             ])
 
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video),
@@ -118,12 +118,11 @@ class QRScanViewController: UIViewController {
             self?.dismiss(animated: true, completion: nil)
         }))
         alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default, handler: { [weak self] _ in
-            let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-            if (title.isEmpty) { return }
+            guard let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty else { return }
             tunnelConfiguration.interface.name = title
-            if let s = self {
-                s.delegate?.addScannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: s) {
-                    s.dismiss(animated: true, completion: nil)
+            if let self = self {
+                self.delegate?.addScannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self) {
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }))

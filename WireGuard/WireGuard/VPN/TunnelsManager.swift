@@ -118,11 +118,11 @@ class TunnelsManager {
                 completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnAddTunnel))
                 return
             }
-            if let s = self {
+            if let self = self {
                 let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
-                s.tunnels.append(tunnel)
-                s.tunnels.sort { $0.name < $1.name }
-                s.tunnelsListDelegate?.tunnelAdded(at: s.tunnels.firstIndex(of: tunnel)!)
+                self.tunnels.append(tunnel)
+                self.tunnels.sort { $0.name < $1.name }
+                self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
                 completionHandler(.success(tunnel))
             }
         }
@@ -175,14 +175,14 @@ class TunnelsManager {
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnModifyTunnel)
                 return
             }
-            if let s = self {
+            if let self = self {
                 if (isNameChanged) {
-                    let oldIndex = s.tunnels.firstIndex(of: tunnel)!
-                    s.tunnels.sort { $0.name < $1.name }
-                    let newIndex = s.tunnels.firstIndex(of: tunnel)!
-                    s.tunnelsListDelegate?.tunnelMoved(at: oldIndex, to: newIndex)
+                    let oldIndex = self.tunnels.firstIndex(of: tunnel)!
+                    self.tunnels.sort { $0.name < $1.name }
+                    let newIndex = self.tunnels.firstIndex(of: tunnel)!
+                    self.tunnelsListDelegate?.tunnelMoved(at: oldIndex, to: newIndex)
                 }
-                s.tunnelsListDelegate?.tunnelModified(at: s.tunnels.firstIndex(of: tunnel)!)
+                self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
 
                 if (tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting) {
                     // Turn off the tunnel, and then turn it back on, so the changes are made effective
@@ -219,10 +219,10 @@ class TunnelsManager {
                 completionHandler(TunnelsManagerError.vpnSystemErrorOnRemoveTunnel)
                 return
             }
-            if let s = self {
-                let index = s.tunnels.firstIndex(of: tunnel)!
-                s.tunnels.remove(at: index)
-                s.tunnelsListDelegate?.tunnelRemoved(at: index)
+            if let self = self {
+                let index = self.tunnels.firstIndex(of: tunnel)!
+                self.tunnels.remove(at: index)
+                self.tunnelsListDelegate?.tunnelRemoved(at: index)
             }
             completionHandler(nil)
         }
@@ -264,9 +264,7 @@ class TunnelsManager {
     }
 
     func refreshStatuses() {
-        for t in tunnels {
-            t.refreshStatus()
-        }
+        tunnels.forEach { $0.refreshStatus() }
     }
 
     private func startObservingTunnelStatuses() {
@@ -275,24 +273,24 @@ class TunnelsManager {
             forName: .NEVPNStatusDidChange,
             object: nil,
             queue: OperationQueue.main) { [weak self] (statusChangeNotification) in
+                guard let self = self else { return }
                 guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
                 guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
-                guard let tunnel = self?.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
-                guard let s = self else { return }
+                guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
 
                 os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
                        log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
 
                 // In case our attempt to start the tunnel, didn't succeed
-                if (tunnel == s.tunnelBeingActivated) {
+                if (tunnel == self.tunnelBeingActivated) {
                     if (session.status == .disconnected) {
                         if (InternetReachability.currentStatus() == .notReachable) {
                             let error = TunnelsManagerError.tunnelActivationFailedNoInternetConnection
-                            s.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
+                            self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
                         }
-                        s.tunnelBeingActivated = nil
+                        self.tunnelBeingActivated = nil
                     } else if (session.status == .connected) {
-                        s.tunnelBeingActivated = nil
+                        self.tunnelBeingActivated = nil
                     }
                 }
 
@@ -300,7 +298,7 @@ class TunnelsManager {
                 if ((tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting)) {
                     // Don't change tunnel.status when disconnecting for a restart
                     if (session.status == .disconnected) {
-                        s.tunnelBeingActivated = tunnel
+                        self.tunnelBeingActivated = tunnel
                         tunnel.startActivation(completionHandler: { _ in })
                     }
                     return
@@ -387,7 +385,8 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel saved after re-enabling", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown),
+                                      tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
             return
         }

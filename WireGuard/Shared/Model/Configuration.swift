@@ -16,7 +16,7 @@ final class TunnelConfiguration: Codable {
 
         let peerPublicKeysArray = peers.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
-        if (peerPublicKeysArray.count != peerPublicKeysSet.count) {
+        if peerPublicKeysArray.count != peerPublicKeysSet.count {
             fatalError("Two or more peers cannot have the same public key")
         }
     }
@@ -34,8 +34,12 @@ struct InterfaceConfiguration: Codable {
     init(name: String, privateKey: Data) {
         self.name = name
         self.privateKey = privateKey
-        if (name.isEmpty) { fatalError("Empty name") }
-        if (privateKey.count != TunnelConfiguration.keyLength) { fatalError("Invalid private key") }
+        if name.isEmpty {
+            fatalError("Empty name")
+        }
+        if privateKey.count != TunnelConfiguration.keyLength {
+            fatalError("Invalid private key")
+        }
     }
 }
 
@@ -45,7 +49,9 @@ struct PeerConfiguration: Codable {
     var preSharedKey: Data? {
         didSet(value) {
             if let value = value {
-                if (value.count != TunnelConfiguration.keyLength) { fatalError("Invalid preshared key") }
+                if value.count != TunnelConfiguration.keyLength {
+                    fatalError("Invalid preshared key")
+                }
             }
         }
     }
@@ -55,6 +61,8 @@ struct PeerConfiguration: Codable {
 
     init(publicKey: Data) {
         self.publicKey = publicKey
-        if (publicKey.count != TunnelConfiguration.keyLength) { fatalError("Invalid public key") }
+        if publicKey.count != TunnelConfiguration.keyLength {
+            fatalError("Invalid public key")
+        }
     }
 }

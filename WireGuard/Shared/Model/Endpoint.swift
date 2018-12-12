@@ -35,8 +35,8 @@ extension Endpoint {
             hostString = String(string[string.startIndex ..< endOfHost])
         }
         guard let endpointPort = NWEndpoint.Port(String(string[startOfPort ..< string.endIndex])) else { return nil }
-        let invalidCharacterIndex = hostString.unicodeScalars.firstIndex { (c) -> Bool in
-            return !CharacterSet.urlHostAllowed.contains(c)
+        let invalidCharacterIndex = hostString.unicodeScalars.firstIndex { char in
+            return !CharacterSet.urlHostAllowed.contains(char)
         }
         guard (invalidCharacterIndex == nil) else { return nil }
         host = NWEndpoint.Host(hostString)
@@ -79,11 +79,11 @@ extension Endpoint: Codable {
 extension Endpoint {
     func hasHostAsIPAddress() -> Bool {
         switch (host) {
-        case .name(_, _):
+        case .name:
             return false
-        case .ipv4(_):
+        case .ipv4:
             return true
-        case .ipv6(_):
+        case .ipv6:
             return true
         }
     }
@@ -92,9 +92,9 @@ extension Endpoint {
         switch (host) {
         case .name(let hostname, _):
             return hostname
-        case .ipv4(_):
+        case .ipv4:
             return nil
-        case .ipv6(_):
+        case .ipv6:
             return nil
         }
     }

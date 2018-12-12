@@ -57,8 +57,8 @@ class SettingsTableViewController: UITableViewController {
         guard let logo = self.tableView.tableFooterView else { return }
         let bottomPadding = max(self.tableView.layoutMargins.bottom, CGFloat(10))
         let fullHeight = max(self.tableView.contentSize.height, self.tableView.bounds.size.height - self.tableView.layoutMargins.top - bottomPadding)
-        let e = logo.frame
-        logo.frame = CGRect(x: e.minX, y: fullHeight - e.height, width: e.width, height: e.height)
+        let frame = logo.frame
+        logo.frame = CGRect(x: frame.minX, y: fullHeight - frame.height, width: frame.width, height: frame.height)
     }
 
     @objc func doneTapped() {
@@ -116,7 +116,8 @@ class SettingsTableViewController: UITableViewController {
             do {
                 try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
             } catch {
-                os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error, networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
+                os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error,
+                       networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
                 ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The log could not be copied", from: self)
                 return
             }

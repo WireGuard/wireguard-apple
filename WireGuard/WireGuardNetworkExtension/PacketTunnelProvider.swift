@@ -21,7 +21,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: Properties
 
     private var wgHandle: Int32?
-    
+
     private var networkMonitor: NWPathMonitor?
 
     // MARK: NEPacketTunnelProvider
@@ -29,7 +29,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     deinit {
         networkMonitor?.cancel()
     }
-    
+
     /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?,
                               completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
@@ -89,9 +89,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
 
         let wireguardSettings = packetTunnelSettingsGenerator.uapiConfiguration()
-        
+
         var handle: Int32 = -1
-        
+
         networkMonitor = NWPathMonitor()
         networkMonitor?.pathUpdateHandler = { path in
             guard handle >= 0 else { return }
@@ -99,18 +99,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
                 let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: wgGetListenPort(handle))
                 let err = endpointString.withCString {
-                    wgSetConfig(handle,  gostring_t(p: $0, n: endpointString.utf8.count))
+                    wgSetConfig(handle, gostring_t(p: $0, n: endpointString.utf8.count))
                 }
                 if err == -EADDRINUSE {
                     let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
                     _ = endpointString.withCString {
-                        wgSetConfig(handle,  gostring_t(p: $0, n: endpointString.utf8.count))
+                        wgSetConfig(handle, gostring_t(p: $0, n: endpointString.utf8.count))
                     }
                 }
             }
         }
         networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
-        
+
         handle = connect(interfaceName: tunnelConfiguration.interface.name, settings: wireguardSettings, fd: fd)
 
         if handle < 0 {
@@ -141,7 +141,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         networkMonitor?.cancel()
         networkMonitor = nil
-        
+
         wg_log(.info, staticMessage: "Stopping tunnel")
         if let handle = wgHandle {
             wgTurnOff(handle)

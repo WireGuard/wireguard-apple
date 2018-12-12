@@ -20,13 +20,13 @@ class ZipImporter {
             var unarchivedFiles: [(fileBaseName: String, contents: Data)]
             do {
                 unarchivedFiles = try ZipArchive.unarchive(url: url, requiredFileExtensions: ["conf"])
-                for (i, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
+                for (index, unarchivedFile) in unarchivedFiles.enumerated().reversed() {
                     let fileBaseName = unarchivedFile.fileBaseName
                     let trimmedName = fileBaseName.trimmingCharacters(in: .whitespacesAndNewlines)
                     if (!trimmedName.isEmpty) {
-                        unarchivedFiles[i].fileBaseName = trimmedName
+                        unarchivedFiles[index].fileBaseName = trimmedName
                     } else {
-                        unarchivedFiles.remove(at: i)
+                        unarchivedFiles.remove(at: index)
                     }
                 }
 
@@ -42,8 +42,8 @@ class ZipImporter {
 
             unarchivedFiles.sort { $0.fileBaseName < $1.fileBaseName }
             var configs = Array<TunnelConfiguration?>(repeating: nil, count: unarchivedFiles.count)
-            for (i, file) in unarchivedFiles.enumerated() {
-                if (i > 0 && file == unarchivedFiles[i - 1]) {
+            for (index, file) in unarchivedFiles.enumerated() {
+                if (index > 0 && file == unarchivedFiles[index - 1]) {
                     continue
                 }
                 guard let fileContents = String(data: file.contents, encoding: .utf8) else {
@@ -52,7 +52,7 @@ class ZipImporter {
                 guard let tunnelConfig = try? WgQuickConfigFileParser.parse(fileContents, name: file.fileBaseName) else {
                     continue
                 }
-                configs[i] = tunnelConfig
+                configs[index] = tunnelConfig
             }
             DispatchQueue.main.async { completion(.success(configs)) }
         }

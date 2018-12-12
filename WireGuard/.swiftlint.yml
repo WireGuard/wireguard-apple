@@ -1,0 +1,8 @@
+disabled_rules:
+ - force_cast
+ - line_length
+file_length:
+  warning: 500
+cyclomatic_complexity:
+  warning: 10
+  error: 25

@@ -116,8 +116,8 @@ class TunnelsListTableViewController: UIViewController {
         alert.addAction(scanQRCodeAction)
 
         let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] (_) in
-            if let s = self, let tunnelsManager = s.tunnelsManager {
-                s.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
+            if let self = self, let tunnelsManager = self.tunnelsManager {
+                self.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
             }
         }
         alert.addAction(createFromScratchAction)
@@ -246,11 +246,11 @@ extension TunnelsListTableViewController: UITableViewDataSource {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             cell.tunnel = tunnel
             cell.onSwitchToggled = { [weak self] isOn in
-                guard let s = self, let tunnelsManager = s.tunnelsManager else { return }
+                guard let self = self, let tunnelsManager = self.tunnelsManager else { return }
                 if (isOn) {
-                    tunnelsManager.startActivation(of: tunnel) { [weak s] error in
+                    tunnelsManager.startActivation(of: tunnel) { [weak self] error in
                         if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: s, onPresented: {
+                            ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: {
                                 DispatchQueue.main.async {
                                     cell.statusSwitch.isOn = false
                                 }

@@ -27,9 +27,9 @@ extension IPAddressRange {
         }
         let maxNetworkPrefixLength: UInt8 = (address is IPv4Address) ? 32 : 128
         var networkPrefixLength: UInt8
-        if (endOfIPAddress < string.endIndex) { // "/" was located
+        if endOfIPAddress < string.endIndex { // "/" was located
             let indexOfNetworkPrefixLength = string.index(after: endOfIPAddress)
-            guard (indexOfNetworkPrefixLength < string.endIndex) else { return nil }
+            guard indexOfNetworkPrefixLength < string.endIndex else { return nil }
             let networkPrefixLengthSubstring = string[indexOfNetworkPrefixLength ..< string.endIndex]
             guard let npl = UInt8(networkPrefixLengthSubstring) else { return nil }
             networkPrefixLength = min(npl, maxNetworkPrefixLength)
@@ -69,7 +69,7 @@ extension IPAddressRange: Codable {
         var data = try container.decode(Data.self)
         networkPrefixLength = data.removeLast()
         let ipAddressFromData: IPAddress? = {
-            switch (data.count) {
+            switch data.count {
             case 4: return IPv4Address(data)
             case 16: return IPv6Address(data)
             default: return nil

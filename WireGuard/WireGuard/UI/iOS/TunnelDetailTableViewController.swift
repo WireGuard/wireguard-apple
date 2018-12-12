@@ -21,10 +21,10 @@ class TunnelDetailTableViewController: UITableViewController {
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
 
-    init(tunnelsManager tm: TunnelsManager, tunnel t: TunnelContainer) {
-        tunnelsManager = tm
-        tunnel = t
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: t.tunnelConfiguration())
+    init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
+        self.tunnelsManager = tunnelsManager
+        self.tunnel = tunnel
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
         super.init(style: .grouped)
     }
 
@@ -152,11 +152,11 @@ extension TunnelDetailTableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: TunnelDetailTableViewStatusCell.id, for: indexPath) as! TunnelDetailTableViewStatusCell
             cell.tunnel = self.tunnel
             cell.onSwitchToggled = { [weak self] isOn in
-                guard let s = self else { return }
+                guard let self = self else { return }
                 if (isOn) {
-                    s.tunnelsManager.startActivation(of: s.tunnel) { [weak s] error in
+                    self.tunnelsManager.startActivation(of: self.tunnel) { [weak self] error in
                         if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: s, onPresented: {
+                            ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: {
                                 DispatchQueue.main.async {
                                     cell.statusSwitch.isOn = false
                                 }
@@ -164,7 +164,7 @@ extension TunnelDetailTableViewController {
                         }
                     }
                 } else {
-                    s.tunnelsManager.startDeactivation(of: s.tunnel)
+                    self.tunnelsManager.startDeactivation(of: self.tunnel)
                 }
             }
             return cell
@@ -198,16 +198,16 @@ extension TunnelDetailTableViewController {
             cell.buttonText = "Delete tunnel"
             cell.hasDestructiveAction = true
             cell.onTapped = { [weak self] in
-                guard let s = self else { return }
-                s.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak s] in
-                    guard let tunnelsManager = s?.tunnelsManager, let tunnel = s?.tunnel else { return }
+                guard let self = self else { return }
+                self.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak self] in
+                    guard let tunnelsManager = self?.tunnelsManager, let tunnel = self?.tunnel else { return }
                     tunnelsManager.remove(tunnel: tunnel) { (error) in
                         if (error != nil) {
                             print("Error removing tunnel: \(String(describing: error))")
                             return
                         }
                     }
-                    s?.navigationController?.navigationController?.popToRootViewController(animated: true)
+                    self?.navigationController?.navigationController?.popToRootViewController(animated: true)
                 }
             }
             return cell
@@ -374,7 +374,7 @@ class TunnelDetailTableViewKeyValueCell: CopyableLabelTableViewCell {
                 constraints = [
                     contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
                     valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
-                    valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5),
+                    valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
                 ]
                 isStackedHorizontally = true
                 isStackedVertically = false

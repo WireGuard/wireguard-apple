@@ -42,20 +42,21 @@ class MainViewController: UISplitViewController {
 
         // Create the tunnels manager, and when it's ready, inform tunnelsListVC
         TunnelsManager.create { [weak self] result in
+            guard let self = self else { return }
+
             if let error = result.error {
                 ErrorPresenter.showErrorAlert(error: error, from: self)
                 return
             }
             let tunnelsManager: TunnelsManager = result.value!
-            guard let s = self else { return }
 
-            s.tunnelsManager = tunnelsManager
-            s.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
+            self.tunnelsManager = tunnelsManager
+            self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
 
-            tunnelsManager.activationDelegate = s
+            tunnelsManager.activationDelegate = self
 
-            s.onTunnelsManagerReady?(tunnelsManager)
-            s.onTunnelsManagerReady = nil
+            self.onTunnelsManagerReady?(tunnelsManager)
+        self.onTunnelsManagerReady = nil
         }
     }
 }

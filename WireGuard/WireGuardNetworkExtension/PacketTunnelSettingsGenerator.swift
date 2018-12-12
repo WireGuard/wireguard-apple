@@ -18,17 +18,17 @@ class PacketTunnelSettingsGenerator {
     func endpointUapiConfiguration(currentListenPort: UInt16) -> String {
         var wgSettings = "listen_port=\(tunnelConfiguration.interface.listenPort ?? currentListenPort)\n"
 
-        for (i, peer) in tunnelConfiguration.peers.enumerated() {
+        for (index, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexEncodedString())\n")
-            if let endpoint = resolvedEndpoints[i] {
+            if let endpoint = resolvedEndpoints[index] {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation())\n")
             }
         }
-        
+
         return wgSettings
     }
-    
+
     func uapiConfiguration() -> String {
         var wgSettings = ""
         let privateKey = tunnelConfiguration.interface.privateKey.hexEncodedString()
@@ -40,12 +40,12 @@ class PacketTunnelSettingsGenerator {
             wgSettings.append("replace_peers=true\n")
         }
         assert(tunnelConfiguration.peers.count == resolvedEndpoints.count)
-        for (i, peer) in tunnelConfiguration.peers.enumerated() {
+        for (index, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexEncodedString())\n")
             if let preSharedKey = peer.preSharedKey {
                 wgSettings.append("preshared_key=\(preSharedKey.hexEncodedString())\n")
             }
-            if let endpoint = resolvedEndpoints[i] {
+            if let endpoint = resolvedEndpoints[index] {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation())\n")
             }
@@ -200,10 +200,10 @@ class PacketTunnelSettingsGenerator {
     }
 
     static func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
-        let n: UInt8 = addressRange.networkPrefixLength
-        assert(n <= 32)
+        let length: UInt8 = addressRange.networkPrefixLength
+        assert(length <= 32)
         var octets: [UInt8] = [0, 0, 0, 0]
-        let subnetMask: UInt32 = n > 0 ? ~UInt32(0) << (32 - n) : UInt32(0)
+        let subnetMask: UInt32 = length > 0 ? ~UInt32(0) << (32 - length) : UInt32(0)
         octets[0] = UInt8(truncatingIfNeeded: subnetMask >> 24)
         octets[1] = UInt8(truncatingIfNeeded: subnetMask >> 16)
         octets[2] = UInt8(truncatingIfNeeded: subnetMask >> 8)
