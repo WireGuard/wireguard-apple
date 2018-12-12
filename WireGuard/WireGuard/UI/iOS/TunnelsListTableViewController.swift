@@ -165,7 +165,7 @@ class TunnelsListTableViewController: UIViewController {
         self.present(scanQRCodeNC, animated: true)
     }
 
-    func importFromFile(url: URL) {
+    func importFromFile(url: URL, completionHandler: (() -> Void)?) {
         guard let tunnelsManager = tunnelsManager else { return }
         if (url.pathExtension == "zip") {
             ZipImporter.importConfigFiles(from: url) { [weak self] result in
@@ -176,11 +176,12 @@ class TunnelsListTableViewController: UIViewController {
                 let configs: [TunnelConfiguration?] = result.value!
                 tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] (numberSuccessful) in
                     if numberSuccessful == configs.count {
+                        completionHandler?()
                         return
                     }
                     ErrorPresenter.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
                         message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive",
-                        from: self)
+                        from: self, onPresented: completionHandler)
                 }
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
@@ -189,13 +190,15 @@ class TunnelsListTableViewController: UIViewController {
                 let tunnelConfiguration = try? WgQuickConfigFileParser.parse(fileContents, name: fileBaseName) {
                 tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] result in
                     if let error = result.error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                        ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: completionHandler)
+                    } else {
+                        completionHandler?()
                     }
                 }
             } else {
                 ErrorPresenter.showErrorAlert(title: "Unable to import tunnel",
                                               message: "An error occured when importing the tunnel configuration.",
-                                              from: self)
+                                              from: self, onPresented: completionHandler)
             }
         }
     }
@@ -205,7 +208,9 @@ class TunnelsListTableViewController: UIViewController {
 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        urls.forEach(importFromFile)
+        urls.forEach {
+            importFromFile(url: $0, completionHandler: nil)
+        }
     }
 }
 
