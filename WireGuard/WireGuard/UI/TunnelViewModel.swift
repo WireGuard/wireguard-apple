@@ -379,8 +379,8 @@ class TunnelViewModel {
         var peersData: [PeerData] = []
         if let tunnelConfiguration = tunnelConfiguration {
             interfaceData.validatedConfiguration = tunnelConfiguration.interface
-            for (i, peerConfiguration) in tunnelConfiguration.peers.enumerated() {
-                let peerData = PeerData(index: i)
+            for (index, peerConfiguration) in tunnelConfiguration.peers.enumerated() {
+                let peerData = PeerData(index: index)
                 peerData.validatedConfiguration = peerConfiguration
                 peersData.append(peerData)
             }
@@ -397,22 +397,22 @@ class TunnelViewModel {
     func appendEmptyPeer() {
         let peer = PeerData(index: peersData.count)
         peersData.append(peer)
-        for p in peersData {
-            p.numberOfPeers = peersData.count
-            p.updateExcludePrivateIPsFieldState()
+        for peer in peersData {
+            peer.numberOfPeers = peersData.count
+            peer.updateExcludePrivateIPsFieldState()
         }
     }
 
     func deletePeer(peer: PeerData) {
         let removedPeer = peersData.remove(at: peer.index)
         assert(removedPeer.index == peer.index)
-        for p in peersData[peer.index ..< peersData.count] {
-            assert(p.index > 0)
-            p.index = p.index - 1
+        for peer in peersData[peer.index ..< peersData.count] {
+            assert(peer.index > 0)
+            peer.index -= 1
         }
-        for p in peersData {
-            p.numberOfPeers = peersData.count
-            p.updateExcludePrivateIPsFieldState()
+        for peer in peersData {
+            peer.numberOfPeers = peersData.count
+            peer.updateExcludePrivateIPsFieldState()
         }
     }
 

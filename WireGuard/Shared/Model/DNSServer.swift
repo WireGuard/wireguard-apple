@@ -40,7 +40,7 @@ extension DNSServer: Codable {
         let container = try decoder.singleValueContainer()
         var data = try container.decode(Data.self)
         let ipAddressFromData: IPAddress? = {
-            switch (data.count) {
+            switch data.count {
             case 4: return IPv4Address(data)
             case 16: return IPv6Address(data)
             default: return nil

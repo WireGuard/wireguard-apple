@@ -34,7 +34,7 @@ class ScrollableLabel: UIScrollView {
             label.topAnchor.constraint(equalTo: self.contentLayoutGuide.topAnchor),
             label.bottomAnchor.constraint(equalTo: self.contentLayoutGuide.bottomAnchor),
             label.rightAnchor.constraint(equalTo: self.contentLayoutGuide.rightAnchor),
-            label.heightAnchor.constraint(equalTo: self.heightAnchor),
+            label.heightAnchor.constraint(equalTo: self.heightAnchor)
             ])
         // If label has less content, it should expand to fit the scrollView,
         // so that right-alignment works in the label.

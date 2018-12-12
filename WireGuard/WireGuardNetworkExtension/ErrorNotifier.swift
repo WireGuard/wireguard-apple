@@ -8,7 +8,7 @@ class ErrorNotifier {
         switch (error) {
         case .savedProtocolConfigurationIsInvalid:
             return ("Activation failure", "Could not retrieve tunnel information from the saved configuration")
-        case .dnsResolutionFailure(_):
+        case .dnsResolutionFailure:
             return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
         case .couldNotStartWireGuard:
             return ("Activation failure", "WireGuard backend could not be started")

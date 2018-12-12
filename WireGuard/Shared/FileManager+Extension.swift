@@ -20,8 +20,8 @@ extension FileManager {
     static func deleteFile(at url: URL) -> Bool {
         do {
             try FileManager.default.removeItem(at: url)
-        } catch(let e) {
-            os_log("Failed to delete file '%{public}@': %{public}@", log: OSLog.default, type: .debug, url.absoluteString, e.localizedDescription)
+        } catch let error {
+            os_log("Failed to delete file '%{public}@': %{public}@", log: OSLog.default, type: .debug, url.absoluteString, error.localizedDescription)
             return false
         }
         return true

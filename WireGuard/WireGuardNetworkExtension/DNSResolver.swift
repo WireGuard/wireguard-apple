@@ -28,13 +28,13 @@ class DNSResolver {
         }
 
         var resolvedEndpoints: [Endpoint?] = Array<Endpoint?>(repeating: nil, count: endpoints.count)
-        for (i, endpoint) in endpoints.enumerated() {
+        for (index, endpoint) in endpoints.enumerated() {
             guard let endpoint = endpoint else { continue }
             if (endpoint.hasHostAsIPAddress()) {
-                resolvedEndpoints[i] = endpoint
+                resolvedEndpoints[index] = endpoint
             } else {
                 let workItem = DispatchWorkItem {
-                    resolvedEndpoints[i] = DNSResolver.resolveSync(endpoint: endpoint)
+                    resolvedEndpoints[index] = DNSResolver.resolveSync(endpoint: endpoint)
                 }
                 DispatchQueue.global(qos: .userInitiated).async(group: dispatchGroup, execute: workItem)
             }
