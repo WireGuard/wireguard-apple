@@ -362,16 +362,8 @@ class TunnelContainer: NSObject {
         self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
     }
 
-    fileprivate func startActivation(activationDelegate: TunnelsManagerActivationDelegate?) {
-        assert(status == .inactive || status == .restarting || status == .waiting)
-
-        guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
-
-        startActivation(tunnelConfiguration: tunnelConfiguration, activationDelegate: activationDelegate)
-    }
-
     //swiftlint:disable:next function_body_length
-    fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, tunnelConfiguration: TunnelConfiguration, activationDelegate: TunnelsManagerActivationDelegate?) {
+    fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, activationDelegate: TunnelsManagerActivationDelegate?) {
         if recursionCount >= 8 {
             wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
             activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedBecauseOfTooManyErrors)
@@ -397,7 +389,7 @@ class TunnelContainer: NSObject {
                 wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling")
                 wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
                 self.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown),
-                                      tunnelConfiguration: tunnelConfiguration, activationDelegate: activationDelegate)
+                                     activationDelegate: activationDelegate)
             }
             return
         }
@@ -434,7 +426,7 @@ class TunnelContainer: NSObject {
                 }
                 wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded")
                 wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
-                self.startActivation(recursionCount: recursionCount + 1, lastError: systemError, tunnelConfiguration: tunnelConfiguration, activationDelegate: activationDelegate)
+                self.startActivation(recursionCount: recursionCount + 1, lastError: systemError, activationDelegate: activationDelegate)
             }
         }
     }
