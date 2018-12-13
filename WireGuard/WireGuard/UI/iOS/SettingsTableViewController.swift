@@ -118,7 +118,7 @@ class SettingsTableViewController: UITableViewController {
                 return
             }
 
-            let isWritten = Logger.writeLog(mergedWith: networkExtensionLogFilePath, to: destinationURL.path)
+            let isWritten = Logger.writeLog(mergedWith: networkExtensionLogFilePath, tag: "APP", otherTag: "EXT", to: destinationURL.path)
             guard isWritten else {
                 ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Internal error merging logs", from: self)
                 return

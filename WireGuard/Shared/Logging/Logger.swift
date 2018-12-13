@@ -14,14 +14,18 @@ class Logger {
         return (logPtr != nil)
     }
 
-    static func writeLog(mergedWith otherLogFile: String, to targetFile: String) -> Bool {
+    static func writeLog(mergedWith otherLogFile: String, tag: String, otherTag: String, to targetFile: String) -> Bool {
         let otherlogPtr = otherLogFile.withCString { otherLogFileCStr -> UnsafeMutablePointer<log>? in
             return open_log(otherLogFileCStr)
         }
         if let thisLogPtr = Logger.logPtr, let otherlogPtr = otherlogPtr {
             return targetFile.withCString { targetFileCStr -> Bool in
-                let returnValue = write_logs_to_file(targetFileCStr, thisLogPtr, otherlogPtr)
-                return (returnValue == 0)
+                return tag.withCString { tagCStr -> Bool in
+                    return otherTag.withCString { otherTagCStr -> Bool in
+                        let returnValue = write_logs_to_file(targetFileCStr, tagCStr, thisLogPtr, otherTagCStr, otherlogPtr)
+                        return (returnValue == 0)
+                    }
+                }
             }
         }
         return false
