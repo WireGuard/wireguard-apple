@@ -34,7 +34,7 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
         case .anotherTunnelIsOperational(let otherTunnelName):
             return ("Activation failure", "Please disconnect '\(otherTunnelName)' before enabling this tunnel.")
         case .failedWhileStarting, .failedWhileSaving, .failedWhileLoading, .failedBecauseOfTooManyErrors:
-            return ("Activation failure", "The tunnel could not be activated due to an internal error")
+            return ("Activation failure", "The tunnel could not be activated.")
         }
     }
 }
@@ -62,13 +62,13 @@ enum TunnelsManagerError: WireGuardAppError {
         case .tunnelAlreadyExistsWithThatName:
             return ("Name already exists", "A tunnel with that name already exists")
         case .systemErrorOnListingTunnels:
-            return ("Unable to list tunnels", "Internal error")
+            return ("Unable to list tunnels", "")
         case .systemErrorOnAddTunnel:
-            return ("Unable to create tunnel", "Internal error")
+            return ("Unable to create tunnel", "")
         case .systemErrorOnModifyTunnel:
-            return ("Unable to modify tunnel", "Internal error")
+            return ("Unable to modify tunnel", "")
         case .systemErrorOnRemoveTunnel:
-            return ("Unable to remove tunnel", "Internal error")
+            return ("Unable to remove tunnel", "")
         }
     }
 }
