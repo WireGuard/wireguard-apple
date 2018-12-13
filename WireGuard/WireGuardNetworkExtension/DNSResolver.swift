@@ -65,6 +65,8 @@ class DNSResolver {
 extension DNSResolver {
     // Based on DNS resolution code by Jason Donenfeld <jason@zx2c4.com>
     // in parse_endpoint() in src/tools/config.c in the WireGuard codebase
+    
+    //swiftlint:disable:next cyclomatic_complexity
     private static func resolveSync(endpoint: Endpoint) -> Endpoint? {
         switch endpoint.host {
         case .name(let name, _):

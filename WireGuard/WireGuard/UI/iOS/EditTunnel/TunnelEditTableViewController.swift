@@ -79,11 +79,11 @@ class TunnelEditTableViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 44
         self.tableView.rowHeight = UITableView.automaticDimension
 
-        self.tableView.register(KeyValueCell.self)
-        self.tableView.register(ReadOnlyKeyValueCell.self)
-        self.tableView.register(ButtonCell.self)
-        self.tableView.register(SwitchCell.self)
-        self.tableView.register(SelectionListCell.self)
+        self.tableView.register(TunnelEditKeyValueCell.self)
+        self.tableView.register(TunnelEditReadOnlyKeyValueCell.self)
+        self.tableView.register(TunnelEditButtonCell.self)
+        self.tableView.register(TunnelEditSwitchCell.self)
+        self.tableView.register(TunnelEditSelectionListCell.self)
     }
 
     private func loadSections() {
@@ -201,7 +201,7 @@ extension TunnelEditTableViewController {
     }
 
     private func generateKeyPairCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
-        let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = field.rawValue
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
@@ -218,14 +218,14 @@ extension TunnelEditTableViewController {
     }
 
     private func publicKeyCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
-        let cell: ReadOnlyKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditReadOnlyKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
         cell.value = tunnelViewModel.interfaceData[field]
         return cell
     }
 
     private func interfaceFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
-        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
 
         switch field {
@@ -287,7 +287,7 @@ extension TunnelEditTableViewController {
     }
 
     private func deletePeerCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
-        let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = field.rawValue
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self, weak peerData] in
@@ -313,7 +313,7 @@ extension TunnelEditTableViewController {
     }
 
     private func excludePrivateIPsCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
-        let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditSwitchCell = tableView.dequeueReusableCell(for: indexPath)
         cell.message = field.rawValue
         cell.isEnabled = peerData.shouldAllowExcludePrivateIPsControl
         cell.isOn = peerData.excludePrivateIPsValue
@@ -328,7 +328,7 @@ extension TunnelEditTableViewController {
     }
 
     private func peerFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
-        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
 
         switch field {
@@ -377,7 +377,7 @@ extension TunnelEditTableViewController {
     }
 
     private func addPeerCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = "Add peer"
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
@@ -398,7 +398,7 @@ extension TunnelEditTableViewController {
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
-            let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: TunnelEditSwitchCell = tableView.dequeueReusableCell(for: indexPath)
             cell.message = "Activate on demand"
             cell.isOn = activateOnDemandSetting.isActivateOnDemandEnabled
             cell.onSwitchToggled = { [weak self] isOn in
@@ -419,7 +419,7 @@ extension TunnelEditTableViewController {
             }
             return cell
         } else {
-            let cell: SelectionListCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: TunnelEditSelectionListCell = tableView.dequeueReusableCell(for: indexPath)
             let rowOption = activateOnDemandOptions[indexPath.row - 1]
             let selectedOption = activateOnDemandSetting.activateOnDemandOption
             assert(selectedOption != .none)
@@ -484,335 +484,5 @@ extension TunnelEditTableViewController {
         default:
             assertionFailure()
         }
-    }
-}
-
-private class KeyValueCell: UITableViewCell {
-    var key: String {
-        get { return keyLabel.text ?? "" }
-        set(value) {keyLabel.text = value }
-    }
-    var value: String {
-        get { return valueTextField.text ?? "" }
-        set(value) { valueTextField.text = value }
-    }
-    var placeholderText: String {
-        get { return valueTextField.placeholder ?? "" }
-        set(value) { valueTextField.placeholder = value }
-    }
-    var isValueValid: Bool = true {
-        didSet {
-            if isValueValid {
-                keyLabel.textColor = UIColor.black
-            } else {
-                keyLabel.textColor = UIColor.red
-            }
-        }
-    }
-    var keyboardType: UIKeyboardType {
-        get { return valueTextField.keyboardType }
-        set(value) { valueTextField.keyboardType = value }
-    }
-
-    var onValueChanged: ((String) -> Void)?
-    var onValueBeingEdited: ((String) -> Void)?
-
-    let keyLabel: UILabel
-    let valueTextField: UITextField
-
-    var isStackedHorizontally: Bool = false
-    var isStackedVertically: Bool = false
-    var contentSizeBasedConstraints = [NSLayoutConstraint]()
-
-    private var textFieldValueOnBeginEditing: String = ""
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        keyLabel = UILabel()
-        keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        keyLabel.adjustsFontForContentSizeCategory = true
-        valueTextField = UITextField()
-        valueTextField.font = UIFont.preferredFont(forTextStyle: .body)
-        valueTextField.adjustsFontForContentSizeCategory = true
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(keyLabel)
-        keyLabel.translatesAutoresizingMaskIntoConstraints = false
-        keyLabel.textAlignment = .right
-        let widthRatioConstraint = NSLayoutConstraint(item: keyLabel, attribute: .width,
-                                                      relatedBy: .equal,
-                                                      toItem: self, attribute: .width,
-                                                      multiplier: 0.4, constant: 0)
-        // The "Persistent Keepalive" key doesn't fit into 0.4 * width on the iPhone SE,
-        // so set a CR priority > the 0.4-constraint's priority.
-        widthRatioConstraint.priority = .defaultHigh + 1
-        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
-        NSLayoutConstraint.activate([
-            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
-            keyLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5),
-            widthRatioConstraint
-        ])
-        contentView.addSubview(valueTextField)
-        valueTextField.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            valueTextField.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
-            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueTextField.bottomAnchor, multiplier: 0.5)
-        ])
-        valueTextField.delegate = self
-
-        valueTextField.autocapitalizationType = .none
-        valueTextField.autocorrectionType = .no
-        valueTextField.spellCheckingType = .no
-
-        configureForContentSize()
-    }
-
-    func configureForContentSize() {
-        var constraints = [NSLayoutConstraint]()
-        if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
-            // Stack vertically
-            if !isStackedVertically {
-                constraints = [
-                    valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
-                    valueTextField.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
-                    keyLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
-                ]
-                isStackedVertically = true
-                isStackedHorizontally = false
-            }
-        } else {
-            // Stack horizontally
-            if !isStackedHorizontally {
-                constraints = [
-                    contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
-                    valueTextField.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
-                    valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
-                ]
-                isStackedHorizontally = true
-                isStackedVertically = false
-            }
-        }
-        if !constraints.isEmpty {
-            NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
-            NSLayoutConstraint.activate(constraints)
-            self.contentSizeBasedConstraints = constraints
-        }
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        key = ""
-        value = ""
-        placeholderText = ""
-        isValueValid = true
-        keyboardType = .default
-        onValueChanged = nil
-        onValueBeingEdited = nil
-        configureForContentSize()
-    }
-}
-
-extension KeyValueCell: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textFieldValueOnBeginEditing = textField.text ?? ""
-        isValueValid = true
-    }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let isModified = (textField.text ?? "" != textFieldValueOnBeginEditing)
-        guard isModified else { return }
-        if let onValueChanged = onValueChanged {
-            onValueChanged(textField.text ?? "")
-        }
-    }
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if let onValueBeingEdited = onValueBeingEdited {
-            let modifiedText = ((textField.text ?? "") as NSString).replacingCharacters(in: range, with: string)
-            onValueBeingEdited(modifiedText)
-        }
-        return true
-    }
-}
-
-private class ReadOnlyKeyValueCell: CopyableLabelTableViewCell {
-    var key: String {
-        get { return keyLabel.text ?? "" }
-        set(value) {keyLabel.text = value }
-    }
-    var value: String {
-        get { return valueLabel.text }
-        set(value) { valueLabel.text = value }
-    }
-
-    let keyLabel: UILabel
-    let valueLabel: ScrollableLabel
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        keyLabel = UILabel()
-        keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        keyLabel.adjustsFontForContentSizeCategory = true
-        valueLabel = ScrollableLabel()
-        valueLabel.label.font = UIFont.preferredFont(forTextStyle: .body)
-        valueLabel.label.adjustsFontForContentSizeCategory = true
-
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        keyLabel.textColor = UIColor.gray
-        valueLabel.textColor = UIColor.gray
-
-        contentView.addSubview(keyLabel)
-        keyLabel.translatesAutoresizingMaskIntoConstraints = false
-        keyLabel.textAlignment = .right
-        let widthRatioConstraint = NSLayoutConstraint(item: keyLabel, attribute: .width,
-                                                      relatedBy: .equal,
-                                                      toItem: self, attribute: .width,
-                                                      multiplier: 0.4, constant: 0)
-        // In case the key doesn't fit into 0.4 * width,
-        // so set a CR priority > the 0.4-constraint's priority.
-        widthRatioConstraint.priority = .defaultHigh + 1
-        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
-        NSLayoutConstraint.activate([
-            keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
-            widthRatioConstraint
-        ])
-
-        contentView.addSubview(valueLabel)
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
-            valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
-        ])
-    }
-
-    override var textToCopy: String? {
-        return self.valueLabel.text
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        key = ""
-        value = ""
-    }
-}
-
-private class ButtonCell: UITableViewCell {
-    var buttonText: String {
-        get { return button.title(for: .normal) ?? "" }
-        set(value) { button.setTitle(value, for: .normal) }
-    }
-    var hasDestructiveAction: Bool {
-        get { return button.tintColor == UIColor.red }
-        set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
-    }
-    var onTapped: (() -> Void)?
-
-    let button: UIButton
-    var buttonStandardTintColor: UIColor
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        button = UIButton(type: .system)
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        buttonStandardTintColor = button.tintColor
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
-            button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        ])
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-
-    @objc func buttonTapped() {
-        onTapped?()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        buttonText = ""
-        onTapped = nil
-        hasDestructiveAction = false
-    }
-}
-
-private class SwitchCell: UITableViewCell {
-    var message: String {
-        get { return textLabel?.text ?? "" }
-        set(value) { textLabel!.text = value }
-    }
-    var isOn: Bool {
-        get { return switchView.isOn }
-        set(value) { switchView.isOn = value }
-    }
-    var isEnabled: Bool {
-        get { return switchView.isEnabled }
-        set(value) {
-            switchView.isEnabled = value
-            textLabel?.textColor = value ? UIColor.black : UIColor.gray
-        }
-    }
-
-    var onSwitchToggled: ((Bool) -> Void)?
-
-    let switchView: UISwitch
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        switchView = UISwitch()
-        super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        accessoryView = switchView
-        switchView.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
-    }
-
-    @objc func switchToggled() {
-        onSwitchToggled?(switchView.isOn)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        message = ""
-        isOn = false
-    }
-}
-
-private class SelectionListCell: UITableViewCell {
-    var message: String {
-        get { return textLabel?.text ?? "" }
-        set(value) { textLabel!.text = value }
-    }
-    var isChecked: Bool {
-        didSet {
-            accessoryType = isChecked ? .checkmark : .none
-        }
-    }
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        isChecked = false
-        super.init(style: .default, reuseIdentifier: reuseIdentifier)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        message = ""
-        isChecked = false
     }
 }

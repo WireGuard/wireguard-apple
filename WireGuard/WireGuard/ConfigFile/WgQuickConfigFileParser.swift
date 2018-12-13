@@ -20,6 +20,7 @@ class WgQuickConfigFileParser {
         case invalidPeer
     }
 
+    //swiftlint:disable:next cyclomatic_complexity function_body_length
     static func parse(_ text: String, name: String) throws -> TunnelConfiguration {
         assert(!name.isEmpty)
 
@@ -95,6 +96,7 @@ class WgQuickConfigFileParser {
         }
     }
 
+    //swiftlint:disable:next cyclomatic_complexity
     private static func collate(interfaceAttributes attributes: [String: String], name: String) -> InterfaceConfiguration? {
         // required wg fields
         guard let privateKeyString = attributes["privatekey"] else { return nil }
@@ -131,6 +133,7 @@ class WgQuickConfigFileParser {
         return interface
     }
 
+    //swiftlint:disable:next cyclomatic_complexity
     private static func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
         // required wg fields
         guard let publicKeyString = attributes["publickey"] else { return nil }

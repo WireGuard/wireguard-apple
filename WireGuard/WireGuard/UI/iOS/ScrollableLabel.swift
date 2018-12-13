@@ -13,33 +13,31 @@ class ScrollableLabel: UIScrollView {
         set(value) { label.textColor = value }
     }
 
-    let label: UILabel
-
-    init() {
+    let label: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
-        self.label = label
+        return label
+    }()
 
+    init() {
         super.init(frame: CGRect.zero)
 
-        self.isDirectionalLockEnabled = true
-        self.showsHorizontalScrollIndicator = false
-        self.showsVerticalScrollIndicator = false
+        isDirectionalLockEnabled = true
+        showsHorizontalScrollIndicator = false
+        showsVerticalScrollIndicator = false
 
         addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            label.leftAnchor.constraint(equalTo: self.contentLayoutGuide.leftAnchor),
-            label.topAnchor.constraint(equalTo: self.contentLayoutGuide.topAnchor),
-            label.bottomAnchor.constraint(equalTo: self.contentLayoutGuide.bottomAnchor),
-            label.rightAnchor.constraint(equalTo: self.contentLayoutGuide.rightAnchor),
-            label.heightAnchor.constraint(equalTo: self.heightAnchor)
+            label.leftAnchor.constraint(equalTo: contentLayoutGuide.leftAnchor),
+            label.topAnchor.constraint(equalTo: contentLayoutGuide.topAnchor),
+            label.bottomAnchor.constraint(equalTo: contentLayoutGuide.bottomAnchor),
+            label.rightAnchor.constraint(equalTo: contentLayoutGuide.rightAnchor),
+            label.heightAnchor.constraint(equalTo: heightAnchor)
         ])
-        // If label has less content, it should expand to fit the scrollView,
-        // so that right-alignment works in the label.
-        let expandToFitValueLabelConstraint = NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal,
-                                                                 toItem: self, attribute: .width, multiplier: 1, constant: 0)
+
+        let expandToFitValueLabelConstraint = NSLayoutConstraint(item: label, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1, constant: 0)
         expandToFitValueLabelConstraint.priority = .defaultLow + 1
         expandToFitValueLabelConstraint.isActive = true
     }

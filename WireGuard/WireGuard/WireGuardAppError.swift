@@ -3,5 +3,5 @@
 
 protocol WireGuardAppError: Error {
     typealias AlertText = (title: String, message: String)
-    func alertText() -> AlertText
+    var alertText: AlertText { get }
 }
