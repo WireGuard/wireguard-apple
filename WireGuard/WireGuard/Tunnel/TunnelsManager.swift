@@ -63,7 +63,7 @@ enum TunnelsManagerError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .tunnelNameEmpty:
-            return ("No name provided", "Can't create tunnel with an empty name")
+            return ("No name provided", "Cannot create tunnel with an empty name")
         case .tunnelAlreadyExistsWithThatName:
             return ("Name already exists", "A tunnel with that name already exists")
         case .systemErrorOnListingTunnels:
