@@ -48,9 +48,9 @@ class SettingsTableViewController: UITableViewController {
         logo.contentMode = .scaleAspectFit
         var height = self.tableView.estimatedRowHeight * 1.5
         var width = height * image.size.width / image.size.height
-        let minScreenDimension = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
-        if width > minScreenDimension - 30 {
-            width = minScreenDimension - 30
+        let minScreenDimension = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) - max(self.tableView.layoutMargins.right, CGFloat(10))
+        if width > minScreenDimension {
+            width = minScreenDimension
             height = width * image.size.height / image.size.width
         }
         logo.frame = CGRect(x: 0, y: 0, width: width, height: height)
