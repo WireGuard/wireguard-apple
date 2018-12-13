@@ -13,7 +13,7 @@ extension UITableView {
     func register<T: UITableViewCell>(_: T.Type) {
         register(T.self, forCellReuseIdentifier: T.reuseIdentifier)
     }
-    
+
     func dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
         //swiftlint:disable:next force_cast
         return dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as! T

@@ -268,16 +268,16 @@ class TunnelsManager {
 
     private func startObservingTunnelStatuses() {
         guard statusObservationToken == nil else { return }
-        
+
         statusObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
             guard let self = self else { return }
             guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
             guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
             guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
-            
+
             os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
                    log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
-            
+
             // In case our attempt to start the tunnel, didn't succeed
             if tunnel == self.tunnelBeingActivated {
                 if session.status == .disconnected {
@@ -290,7 +290,7 @@ class TunnelsManager {
                     self.tunnelBeingActivated = nil
                 }
             }
-            
+
             // In case we're restarting the tunnel
             if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
                 // Don't change tunnel.status when disconnecting for a restart
@@ -300,7 +300,7 @@ class TunnelsManager {
                 }
                 return
             }
-            
+
             tunnel.refreshStatus()
         }
     }

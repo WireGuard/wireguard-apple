@@ -30,7 +30,7 @@ class WgQuickConfigFileParser {
 
         var parserState = ParserState.notInASection
         var attributes = [String: String]()
-        
+
         for (lineIndex, line) in lines.enumerated() {
             var trimmedLine: String
             if let commentRange = line.range(of: "#") {
@@ -94,7 +94,7 @@ class WgQuickConfigFileParser {
             throw ParseError.noInterface
         }
     }
-    
+
     private static func collate(interfaceAttributes attributes: [String: String], name: String) -> InterfaceConfiguration? {
         // required wg fields
         guard let privateKeyString = attributes["privatekey"] else { return nil }
@@ -130,7 +130,7 @@ class WgQuickConfigFileParser {
         }
         return interface
     }
-    
+
     private static func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
         // required wg fields
         guard let publicKeyString = attributes["publickey"] else { return nil }
@@ -160,5 +160,5 @@ class WgQuickConfigFileParser {
         }
         return peer
     }
-    
+
 }
