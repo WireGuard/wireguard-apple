@@ -29,6 +29,13 @@ void write_msg_to_log(struct log *log, const char *msg)
 	strncpy(line->line, msg, MAX_LOG_LINE_LENGTH - 1);
 	line->line[MAX_LOG_LINE_LENGTH - 1] = '\0';
 
+    // Trim trailing newlines
+    unsigned long length = strlen(msg);
+    while ((length > 0) && (msg[length - 1] == '\n' || msg[length - 1] == '\r')) {
+        line->line[length - 1] = '\0';
+        length--;
+    }
+
 	msync(&log->header, sizeof(log->header), MS_ASYNC);
 	msync(line, sizeof(*line), MS_ASYNC);
 }
