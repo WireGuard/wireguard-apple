@@ -33,38 +33,43 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Settings"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        title = "Settings"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
 
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableView.automaticDimension
-        self.tableView.allowsSelection = false
+        tableView.estimatedRowHeight = 44
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsSelection = false
 
-        self.tableView.register(KeyValueCell.self)
-        self.tableView.register(ButtonCell.self)
+        tableView.register(KeyValueCell.self)
+        tableView.register(ButtonCell.self)
 
-        let image = UIImage(named: "wireguard.pdf")!
-        let logo = UIImageView(image: image)
-        logo.contentMode = .scaleAspectFit
-        var height = self.tableView.estimatedRowHeight * 1.5
-        var width = height * image.size.width / image.size.height
-        let minScreenDimension = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height) - max(self.tableView.layoutMargins.right, CGFloat(10))
-        if width > minScreenDimension {
-            width = minScreenDimension
-            height = width * image.size.height / image.size.width
-        }
-        logo.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        logo.bounds = logo.frame.insetBy(dx: 2, dy: 2)
-        self.tableView.tableFooterView = logo
+        tableView.tableFooterView = UIImageView(image: UIImage(named: "wireguard.pdf"))
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard let logo = self.tableView.tableFooterView else { return }
-        let bottomPadding = max(self.tableView.layoutMargins.bottom, CGFloat(10))
-        let fullHeight = max(self.tableView.contentSize.height, self.tableView.bounds.size.height - self.tableView.layoutMargins.top - bottomPadding)
-        let frame = logo.frame
-        logo.frame = CGRect(x: frame.minX, y: fullHeight - frame.height, width: frame.width, height: frame.height)
+        
+        let bottomPadding = max(tableView.layoutMargins.bottom, 10)
+        let fullHeight = max(tableView.contentSize.height, tableView.bounds.size.height - tableView.layoutMargins.top - bottomPadding)
+        
+        let imageAspectRatio = logo.intrinsicContentSize.width / logo.intrinsicContentSize.height
+        
+        var height = tableView.estimatedRowHeight * 1.5
+        var width = height * imageAspectRatio
+        let maxWidth = view.bounds.size.width - max(tableView.layoutMargins.left + tableView.layoutMargins.right, 20)
+        if width > maxWidth {
+            width = maxWidth
+            height = width / imageAspectRatio
+        }
+        
+        let needsReload = height != logo.frame.height
+        
+        logo.frame = CGRect(x: (view.bounds.size.width - width) / 2, y: fullHeight - height, width: width, height: height)
+        
+        if needsReload {
+            tableView.tableFooterView = logo
+        }
     }
 
     @objc func doneTapped() {
@@ -73,9 +78,7 @@ class SettingsTableViewController: UITableViewController {
 
     func exportConfigurationsAsZipFile(sourceView: UIView) {
         guard let tunnelsManager = tunnelsManager else { return }
-        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return
-        }
+        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
 
         let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
         _ = FileManager.deleteFile(at: destinationURL)
@@ -94,9 +97,7 @@ class SettingsTableViewController: UITableViewController {
     }
 
     func exportLogForLastActivatedTunnel(sourceView: UIView) {
-        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            return
-        }
+        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
 
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
