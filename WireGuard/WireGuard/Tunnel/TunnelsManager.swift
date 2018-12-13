@@ -42,7 +42,7 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
 enum TunnelsManagerActivationError: WireGuardAppError {
     case activationFailed
     func alertText() -> AlertText {
-        return ("Activation failure", "The tunnel could not be activated")
+        return ("Activation failure", "The tunnel could not be activated. Please ensure you are connected to the Internet.")
     }
 }
 
