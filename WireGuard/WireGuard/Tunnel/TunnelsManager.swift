@@ -392,6 +392,8 @@ class TunnelContainer: NSObject {
 
         wg_log(.debug, message: "startActivation: Entering (tunnel: \(self.name))")
 
+        self.status = .activating // Ensure that no other tunnel can attempt activation until this tunnel is done trying
+
         guard tunnelProvider.isEnabled else {
             // In case the tunnel had gotten disabled, re-enable and save it,
             // then call this function again.
