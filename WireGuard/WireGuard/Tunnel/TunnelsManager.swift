@@ -80,8 +80,6 @@ class TunnelsManager {
     weak var activationDelegate: TunnelsManagerActivationDelegate?
     private var statusObservationToken: AnyObject?
 
-    var tunnelBeingActivated: TunnelContainer?
-
     init(tunnelProviders: [NETunnelProviderManager]) {
         self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
         self.startObservingTunnelStatuses()
@@ -271,7 +269,6 @@ class TunnelsManager {
             return
         }
 
-        tunnelBeingActivated = tunnel
         tunnel.startActivation(activationDelegate: self.activationDelegate)
     }
 
@@ -313,7 +310,6 @@ class TunnelsManager {
             if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
                 // Don't change tunnel.status when disconnecting for a restart
                 if session.status == .disconnected {
-                    self.tunnelBeingActivated = tunnel
                     tunnel.startActivation(activationDelegate: self.activationDelegate)
                 }
                 return
