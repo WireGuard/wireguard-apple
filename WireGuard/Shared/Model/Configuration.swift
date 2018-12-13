@@ -26,10 +26,10 @@ final class TunnelConfiguration: Codable {
 struct InterfaceConfiguration: Codable {
     var name: String
     var privateKey: Data
-    var addresses: [IPAddressRange] = []
+    var addresses = [IPAddressRange]()
     var listenPort: UInt16?
     var mtu: UInt16?
-    var dns: [DNSServer] = []
+    var dns = [DNSServer]()
 
     init(name: String, privateKey: Data) {
         self.name = name
@@ -55,7 +55,7 @@ struct PeerConfiguration: Codable {
             }
         }
     }
-    var allowedIPs: [IPAddressRange] = []
+    var allowedIPs = [IPAddressRange]()
     var endpoint: Endpoint?
     var persistentKeepAlive: UInt16?
 

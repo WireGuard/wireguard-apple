@@ -1,6 +1,7 @@
 disabled_rules:
  - line_length
  - trailing_whitespace
+ - todo
 opt_in_rules:
  - unneeded_parentheses_in_closure_argument
 # - trailing_closure

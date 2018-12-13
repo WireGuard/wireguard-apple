@@ -6,7 +6,7 @@ import UIKit
 enum ZipImporterError: WireGuardAppError {
     case noTunnelsInZipArchive
 
-    func alertText() -> (String, String)? {
+    func alertText() -> AlertText {
         switch self {
         case .noTunnelsInZipArchive:
             return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")

@@ -31,8 +31,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     /// Begin the process of establishing the tunnel.
-    override func startTunnel(options: [String: NSObject]?,
-                              completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
+    override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
@@ -58,7 +57,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Resolve endpoint domains
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        var resolvedEndpoints: [Endpoint?] = []
+        var resolvedEndpoints = [Endpoint?]()
         do {
             resolvedEndpoints = try DNSResolver.resolveSync(endpoints: endpoints)
         } catch DNSResolverError.dnsResolutionFailed(let hostnames) {

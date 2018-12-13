@@ -8,7 +8,7 @@ enum ZipArchiveError: WireGuardAppError {
     case cantOpenOutputZipFileForWriting
     case badArchive
 
-    func alertText() -> (String, String)? {
+    func alertText() -> AlertText {
         switch self {
         case .cantOpenInputZipFile:
             return ("Unable to read zip archive", "The zip archive could not be read.")
@@ -41,7 +41,7 @@ class ZipArchive {
 
     static func unarchive(url: URL, requiredFileExtensions: [String]) throws -> [(fileBaseName: String, contents: Data)] {
 
-        var results: [(fileBaseName: String, contents: Data)] = []
+        var results = [(fileBaseName: String, contents: Data)]()
 
         guard let zipFile = unzOpen64(url.path) else {
             throw ZipArchiveError.cantOpenInputZipFile

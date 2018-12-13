@@ -173,7 +173,7 @@ class TunnelsListTableViewController: UIViewController {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
-                let configs: [TunnelConfiguration?] = result.value!
+                let configs = result.value!
                 tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] numberSuccessful in
                     if numberSuccessful == configs.count {
                         completionHandler?()

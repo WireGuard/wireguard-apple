@@ -42,7 +42,7 @@ class DNSResolver {
 
         dispatchGroup.wait() // TODO: Timeout?
 
-        var hostnamesWithDnsResolutionFailure: [String] = []
+        var hostnamesWithDnsResolutionFailure = [String]()
         assert(endpoints.count == resolvedEndpoints.count)
         for tuple in zip(endpoints, resolvedEndpoints) {
             let endpoint = tuple.0
