@@ -12,9 +12,7 @@ public class Logger {
 
     init(withFilePath filePath: String, withTag tag: String) {
         self.tag = tag
-        self.log = filePath.withCString { fileC -> OpaquePointer? in
-            open_log(fileC)
-        }
+        self.log = open_log(filePath)
         if self.log == nil {
             os_log("Cannot open log file for writing. Log will not be saved to file.", log: OSLog.default, type: .error)
         }
@@ -22,20 +20,15 @@ public class Logger {
 
     func log(message: String) {
         guard let log = log else { return }
-        String(format: "[%@] %@", tag, message.trimmingCharacters(in: .newlines)).withCString { messageC in
-            write_msg_to_log(log, messageC)
-        }
+        write_msg_to_log(log, String(format: "[%@] %@", tag, message.trimmingCharacters(in: .newlines)))
     }
 
     func writeLog(mergedWith otherLogFile: String, to targetFile: String) -> Bool {
         guard let log = log else { return false }
-        guard let other = otherLogFile.withCString({ otherC -> OpaquePointer? in
-            return open_log(otherC)
-        }) else { return false }
-        defer { close_log(other) }
-        return targetFile.withCString { fileC -> Bool in
-            return write_logs_to_file(fileC, log, other) == 0
-        }
+        guard let other = open_log(otherLogFile) else { return false }
+        let ret = write_logs_to_file(targetFile, log, other)
+        close_log(other)
+        return ret == 0
     }
 
     static func configureGlobal(withFilePath filePath: String?, withTag tag: String) {
