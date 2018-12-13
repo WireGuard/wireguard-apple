@@ -17,6 +17,18 @@ extension FileManager {
         return sharedFolderURL.appendingPathComponent("tunnel-log.txt")
     }
 
+    static var networkExtensionLastErrorFileURL: URL? {
+        guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: "com.wireguard.ios.app_group_id") as? String else {
+            os_log("Can't obtain app group id from bundle", log: OSLog.default, type: .error)
+            return nil
+        }
+        guard let sharedFolderURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupId) else {
+            os_log("Can't obtain shared folder URL", log: OSLog.default, type: .error)
+            return nil
+        }
+        return sharedFolderURL.appendingPathComponent("last-error.txt")
+    }
+
     static var appLogFileURL: URL? {
         guard let documentDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             os_log("Can't obtain app documents folder URL", log: OSLog.default, type: .error)

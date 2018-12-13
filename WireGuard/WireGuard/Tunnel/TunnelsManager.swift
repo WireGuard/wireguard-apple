@@ -41,8 +41,14 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
 
 enum TunnelsManagerActivationError: WireGuardAppError {
     case activationFailed
+    case activationFailedWithExtensionError(title: String, message: String)
     var alertText: AlertText {
-        return ("Activation failure", "The tunnel could not be activated. Please ensure you are connected to the Internet.")
+        switch self {
+        case .activationFailed:
+            return ("Activation failure", "The tunnel could not be activated. Please ensure you are connected to the Internet.")
+        case .activationFailedWithExtensionError(let title, let message):
+            return (title, message)
+        }
     }
 }
 
@@ -297,7 +303,11 @@ class TunnelsManager {
                     self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
                 } else if session.status == .disconnected {
                     tunnel.isAttemptingActivation = false
-                    self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed)
+                    if let (title, message) = self.lastErrorTextFromNetworkExtension(for: tunnel) {
+                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailedWithExtensionError(title: title, message: message))
+                    } else {
+                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed)
+                    }
                 }
             }
 
@@ -321,6 +331,20 @@ class TunnelsManager {
         }
     }
 
+    func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (title: String, message: String)? {
+        guard let lastErrorFileURL = FileManager.networkExtensionLastErrorFileURL else { return nil }
+        guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
+        guard let lastErrorText = String(data: lastErrorData, encoding: .utf8) else { return nil }
+        let lastErrorStrings = lastErrorText.split(separator: "\n").map { String($0) }
+        guard lastErrorStrings.count == 3 else { return nil }
+        let attemptIdInDisk = lastErrorStrings[0]
+        if let attemptIdForTunnel = tunnel.activationAttemptId, attemptIdInDisk == attemptIdForTunnel {
+            return (title: lastErrorStrings[1], message: lastErrorStrings[2])
+        }
+
+        return nil
+    }
+
     deinit {
         if let statusObservationToken = self.statusObservationToken {
             NotificationCenter.default.removeObserver(statusObservationToken)
@@ -335,6 +359,7 @@ class TunnelContainer: NSObject {
     @objc dynamic var isActivateOnDemandEnabled: Bool
 
     var isAttemptingActivation = false
+    var activationAttemptId: String?
 
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var lastTunnelConnectionStatus: NEVPNStatus?
@@ -398,7 +423,9 @@ class TunnelContainer: NSObject {
         do {
             wg_log(.debug, staticMessage: "startActivation: Starting tunnel")
             self.isAttemptingActivation = true
-            try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel()
+            let activationAttemptId = UUID().uuidString
+            self.activationAttemptId = activationAttemptId
+            try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel(options: ["activationAttemptId": activationAttemptId])
             wg_log(.debug, staticMessage: "startActivation: Success")
             activationDelegate?.tunnelActivationAttemptSucceeded(tunnel: self)
         } catch let error {
