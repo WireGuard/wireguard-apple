@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         wg_log(.info, message: "Launching app")
+        wg_log_versions_to_file()
 
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = UIColor.white
