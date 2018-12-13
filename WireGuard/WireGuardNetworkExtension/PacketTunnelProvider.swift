@@ -28,21 +28,23 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor?.cancel()
     }
 
-    /// Begin the process of establishing the tunnel.
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
+
+        let activationAttemptId = options?["activationAttemptId"] as? String
+        let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
-                ErrorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid, from: self)
+                errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 return
         }
 
-        startTunnel(with: tunnelConfiguration, completionHandler: startTunnelCompletionHandler)
+        startTunnel(with: tunnelConfiguration, errorNotifier: errorNotifier, completionHandler: startTunnelCompletionHandler)
     }
 
     //swiftlint:disable:next function_body_length
-    func startTunnel(with tunnelConfiguration: TunnelConfiguration, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
+    func startTunnel(with tunnelConfiguration: TunnelConfiguration, errorNotifier: ErrorNotifier, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
 
         configureLogger()
 
@@ -55,7 +57,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
             wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
             wg_log(.error, message: "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
-            ErrorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames), from: self)
+            errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
             startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
             return
         } catch {
@@ -73,7 +75,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32 //swiftlint:disable:this force_cast
         if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
-            ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
+            errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
         }
@@ -101,7 +103,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         if handle < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
-            ErrorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard, from: self)
+            errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
         }
@@ -115,7 +117,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             if let error = error {
                 wg_log(.error, staticMessage: "Starting tunnel failed: Error setting network settings.")
                 wg_log(.error, message: "Error from setTunnelNetworkSettings: \(error.localizedDescription)")
-                ErrorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings, from: self)
+                errorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
                 startTunnelCompletionHandler(nil /* No errors */)
@@ -127,6 +129,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         networkMonitor?.cancel()
         networkMonitor = nil
+
+        ErrorNotifier.removeLastErrorFile()
 
         wg_log(.info, staticMessage: "Stopping tunnel")
         if let handle = wgHandle {
