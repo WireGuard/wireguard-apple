@@ -87,14 +87,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             if path.status == .satisfied {
                 wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
                 let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: wgGetListenPort(handle))
-                let err = endpointString.withCString {
-                    wgSetConfig(handle, gostring_t(p: $0, n: endpointString.utf8.count))
-                }
+                let err = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
                 if err == -EADDRINUSE {
                     let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
-                    _ = endpointString.withCString {
-                        wgSetConfig(handle, gostring_t(p: $0, n: endpointString.utf8.count))
-                    }
+                    _ = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
                 }
             }
         }
@@ -158,18 +154,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
-        return withStringsAsGoStrings(interfaceName, settings) { nameGoStr, settingsGoStr in
-            return wgTurnOn(nameGoStr, settingsGoStr, fileDescriptor)
-        }
+        return withStringsAsGoStrings(interfaceName, settings) { return wgTurnOn($0.0, $0.1, fileDescriptor) }
     }
 }
 
-private func withStringsAsGoStrings<R>(_ str1: String, _ str2: String, closure: (gostring_t, gostring_t) -> R) -> R {
-    return str1.withCString { s1cStr in
-        let gstr1 = gostring_t(p: s1cStr, n: str1.utf8.count)
-        return str2.withCString { s2cStr in
-            let gstr2 = gostring_t(p: s2cStr, n: str2.utf8.count)
-            return closure(gstr1, gstr2)
-        }
+// swiftlint:disable large_tuple
+func withStringsAsGoStrings<R>(_ s1: String, _ s2: String? = nil, _ s3: String? = nil, _ s4: String? = nil, call: @escaping ((gostring_t, gostring_t, gostring_t, gostring_t)) -> R) -> R {
+    func helper(_ p1: UnsafePointer<Int8>?, _ p2: UnsafePointer<Int8>?, _ p3: UnsafePointer<Int8>?, _ p4: UnsafePointer<Int8>?) -> R {
+        return call((gostring_t(p: p1, n: s1.utf8.count), gostring_t(p: p2, n: s2?.utf8.count ?? 0), gostring_t(p: p3, n: s3?.utf8.count ?? 0), gostring_t(p: p4, n: s4?.utf8.count ?? 0)))
     }
+    return helper(s1, s2, s3, s4)
 }
