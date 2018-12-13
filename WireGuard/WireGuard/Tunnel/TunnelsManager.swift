@@ -82,7 +82,7 @@ class TunnelsManager {
         #else
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             if let error = error {
-                os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                wg_log(.error, message: "Failed to load tunnel provider managers: \(error)")
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels))
                 return
             }
@@ -114,7 +114,7 @@ class TunnelsManager {
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
-                os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                wg_log(.error, message: "Add: Saving configuration failed: \(error!)")
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel))
                 return
             }
@@ -171,7 +171,7 @@ class TunnelsManager {
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
-                os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                wg_log(.error, message: "Modify: Saving configuration failed: \(error!)")
                 completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                 return
             }
@@ -196,7 +196,7 @@ class TunnelsManager {
                     tunnelProviderManager.loadFromPreferences { error in
                         tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
                         guard error == nil else {
-                            os_log("Modify: Re-loading after saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                            wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error!)")
                             completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                             return
                         }
@@ -214,7 +214,7 @@ class TunnelsManager {
 
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
-                os_log("Remove: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                wg_log(.error, message: "Remove: Saving configuration failed: \(error!)")
                 completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel)
                 return
             }
@@ -275,8 +275,7 @@ class TunnelsManager {
             guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
             guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
 
-            os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
-                   log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
+            wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
             // In case our attempt to start the tunnel, didn't succeed
             if tunnel == self.tunnelBeingActivated {
@@ -361,26 +360,26 @@ class TunnelContainer: NSObject {
                                      tunnelConfiguration: TunnelConfiguration,
                                      completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         if recursionCount >= 8 {
-            os_log("startActivation: Failed after 8 attempts. Giving up with %{public}@", log: OSLog.default, type: .error, "\(lastError!)")
+            wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
             completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
             return
         }
 
-        os_log("startActivation: Entering (tunnel: %{public}@)", log: OSLog.default, type: .debug, self.name)
+        wg_log(.debug, message: "startActivation: Entering (tunnel: \(self.name))")
 
         guard tunnelProvider.isEnabled else {
             // In case the tunnel had gotten disabled, re-enable and save it,
             // then call this function again.
-            os_log("startActivation: Tunnel is disabled. Re-enabling and saving", log: OSLog.default, type: .info)
+            wg_log(.debug, staticMessage: "startActivation: Tunnel is disabled. Re-enabling and saving")
             tunnelProvider.isEnabled = true
             tunnelProvider.saveToPreferences { [weak self] error in
                 if error != nil {
-                    os_log("Error saving tunnel after re-enabling: %{public}@", log: OSLog.default, type: .error, "\(error!)")
+                    wg_log(.error, message: "Error saving tunnel after re-enabling: \(error!)")
                     completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
                     return
                 }
-                os_log("startActivation: Tunnel saved after re-enabling", log: OSLog.default, type: .info)
-                os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
+                wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling")
+                wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
                 self?.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown),
                                       tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
@@ -389,33 +388,33 @@ class TunnelContainer: NSObject {
 
         // Start the tunnel
         do {
-            os_log("startActivation: Starting tunnel", log: OSLog.default, type: .debug)
+            wg_log(.debug, staticMessage: "startActivation: Starting tunnel")
             try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel()
-            os_log("startActivation: Success", log: OSLog.default, type: .debug)
+            wg_log(.debug, staticMessage: "startActivation: Success")
             completionHandler(nil)
         } catch let error {
             guard let systemError = error as? NEVPNError else {
-                os_log("Failed to activate tunnel: Error: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                wg_log(.error, message: "Failed to activate tunnel: Error: \(error)")
                 status = .inactive
                 completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
                 return
             }
             guard systemError.code == NEVPNError.configurationInvalid || systemError.code == NEVPNError.configurationStale else {
-                os_log("Failed to activate tunnel: VPN Error: %{public}@", log: OSLog.default, type: .debug, "\(error)")
+                wg_log(.error, message: "Failed to activate tunnel: VPN Error: \(error)")
                 status = .inactive
                 completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
                 return
             }
-            os_log("startActivation: Will reload tunnel and then try to start it. ", log: OSLog.default, type: .info)
+            wg_log(.debug, staticMessage: "startActivation: Will reload tunnel and then try to start it.")
             tunnelProvider.loadFromPreferences { [weak self] error in
                 if error != nil {
-                    os_log("startActivation: Error reloading tunnel: %{public}@", log: OSLog.default, type: .debug, "\(error!)")
+                    wg_log(.error, message: "startActivation: Error reloading tunnel: \(error!)")
                     self?.status = .inactive
                     completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
                     return
                 }
-                os_log("startActivation: Tunnel reloaded", log: OSLog.default, type: .info)
-                os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
+                wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded")
+                wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
                 self?.startActivation(recursionCount: recursionCount + 1, lastError: systemError, tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
         }
