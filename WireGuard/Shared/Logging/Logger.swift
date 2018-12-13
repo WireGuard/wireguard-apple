@@ -39,17 +39,17 @@ func wg_log(_ type: OSLogType, staticMessage msg: StaticString) {
     let msgString: String = msg.withUTF8Buffer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
         return String(decoding: ptr, as: UTF8.self)
     }
-    file_log(type: type, message: msgString)
+    file_log(message: msgString)
 }
 
 func wg_log(_ type: OSLogType, message msg: String) {
     // Write to os log
     os_log("%{public}s", log: OSLog.default, type: type, msg)
     // Write to file log
-    file_log(type: type, message: msg)
+    file_log(message: msg)
 }
 
-private func file_log(type: OSLogType, message: String) {
+private func file_log(message: String) {
     message.withCString { messageCStr in
         if let logPtr = Logger.logPtr {
             write_msg_to_log(logPtr, messageCStr)
