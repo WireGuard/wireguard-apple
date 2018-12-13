@@ -16,23 +16,6 @@
 #include <sys/mman.h>
 #include "ringlogger.h"
 
-enum {
-	MAX_LOG_LINE_LENGTH = 512,
-	MAX_LINES = 1024,
-	MAGIC = 0xdeadbeefU
-};
-
-struct log_line {
-	struct timeval tv;
-	char line[MAX_LOG_LINE_LENGTH];
-};
-
-struct log {
-	struct { uint32_t first, len; } header;
-	struct log_line lines[MAX_LINES];
-	uint32_t magic;
-};
-
 void write_msg_to_log(struct log *log, const char *msg)
 {
 	struct log_line *line = &log->lines[(log->header.first + log->header.len) % MAX_LINES];
