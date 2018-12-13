@@ -166,15 +166,7 @@ extension TunnelDetailTableViewController {
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
             if isOn {
-                self.tunnelsManager.startActivation(of: self.tunnel) { [weak self] error in
-                    if let error = error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self) {
-                            DispatchQueue.main.async {
-                                cell.statusSwitch.isOn = false
-                            }
-                        }
-                    }
-                }
+                self.tunnelsManager.startActivation(of: self.tunnel)
             } else {
                 self.tunnelsManager.startDeactivation(of: self.tunnel)
             }
