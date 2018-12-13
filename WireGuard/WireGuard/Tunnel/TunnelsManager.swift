@@ -45,7 +45,7 @@ enum TunnelsManagerActivationError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .activationFailed:
-            return ("Activation failure", "The tunnel could not be activated. Please ensure you are connected to the Internet.")
+            return ("Activation failure", "The tunnel could not be activated. Please ensure that you are connected to the Internet.")
         case .activationFailedWithExtensionError(let title, let message):
             return (title, message)
         }
