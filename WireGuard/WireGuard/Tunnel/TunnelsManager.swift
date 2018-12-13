@@ -265,7 +265,6 @@ class TunnelsManager {
         if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
             wg_log(.info, message: "Tunnel '\(tunnel.name)' waiting for deactivation of '\(tunnelInOperation.name)'")
             tunnel.status = .waiting
-            assert(tunnelInOperation.status != .inactive)
             if tunnelInOperation.status != .deactivating {
                 startDeactivation(of: tunnelInOperation)
             }
