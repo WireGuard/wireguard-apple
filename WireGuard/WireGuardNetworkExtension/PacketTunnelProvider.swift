@@ -13,8 +13,6 @@ enum PacketTunnelProviderError: Error {
     case coultNotSetNetworkSettings
 }
 
-private var logFileHandle: FileHandle?
-
 /// A packet tunnel provider object.
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
@@ -45,13 +43,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     func startTunnel(with tunnelConfiguration: TunnelConfiguration, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
 
-        // Configure logging
         configureLogger()
 
         wg_log(.info, message: "Starting tunnel '\(tunnelConfiguration.interface.name)'")
-        wg_log_versions_to_file()
-
-        // Resolve endpoint domains
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
         var resolvedEndpoints = [Endpoint?]()
@@ -141,25 +135,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if let handle = wgHandle {
             wgTurnOff(handle)
         }
-        if let fileHandle = logFileHandle {
-            fileHandle.closeFile()
-        }
         completionHandler()
     }
 
     private func configureLogger() {
-
-        // Setup writing the log to a file
-        if let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path {
-            if !Logger.configure(withFilePath: networkExtensionLogFilePath) {
-                os_log("Can't open log file for writing. Log is not saved to file.", log: OSLog.default, type: .error)
-            }
-        } else {
-            os_log("Can't obtain log file URL. Log is not saved to file.", log: OSLog.default, type: .error)
-        }
-
-        // Setup WireGuard logger
-        wgSetLogger { level, msgCStr in
+        Logger.configureGlobal(withFilePath: FileManager.networkExtensionLogFileURL?.path, withTag: "EXT")
+        wgSetLogger { level, msgC in
+            guard let msgC = msgC else { return }
             let logType: OSLogType
             switch level {
             case 0:
@@ -171,8 +153,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             default:
                 logType = .default
             }
-            let msg = (msgCStr != nil) ? String(cString: msgCStr!) : ""
-            wg_log(logType, message: msg)
+            wg_log(logType, message: String(cString: msgC))
         }
     }
 
