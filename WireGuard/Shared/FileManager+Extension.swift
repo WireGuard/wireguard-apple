@@ -5,43 +5,38 @@ import Foundation
 import os.log
 
 extension FileManager {
-    static var networkExtensionLogFileURL: URL? {
+    private static var sharedFolderURL: URL? {
         guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: "com.wireguard.ios.app_group_id") as? String else {
-            os_log("Cannot obtain app group id from bundle", log: OSLog.default, type: .error)
+            os_log("Cannot obtain app group ID from bundle", log: OSLog.default, type: .error)
             return nil
         }
         guard let sharedFolderURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupId) else {
-            os_log("Cannot obtain shared folder URL", log: OSLog.default, type: .error)
+            wg_log(.error, message: "Cannot obtain shared folder URL")
             return nil
         }
-        return sharedFolderURL.appendingPathComponent("tunnel-log.txt")
+        return sharedFolderURL
+    }
+
+    static var networkExtensionLogFileURL: URL? {
+        return sharedFolderURL?.appendingPathComponent("tunnel-log.bin")
     }
 
     static var networkExtensionLastErrorFileURL: URL? {
-        guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: "com.wireguard.ios.app_group_id") as? String else {
-            os_log("Cannot obtain app group id from bundle", log: OSLog.default, type: .error)
-            return nil
-        }
-        guard let sharedFolderURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupId) else {
-            os_log("Cannot obtain shared folder URL", log: OSLog.default, type: .error)
-            return nil
-        }
-        return sharedFolderURL.appendingPathComponent("last-error.txt")
+        return sharedFolderURL?.appendingPathComponent("last-error.txt")
     }
 
     static var appLogFileURL: URL? {
-        guard let documentDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            os_log("Cannot obtain app documents folder URL", log: OSLog.default, type: .error)
+        guard let documentDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            wg_log(.error, message: "Cannot obtain app documents folder URL")
             return nil
         }
-        return documentDirURL.appendingPathComponent("app-log.txt")
+        return documentDirURL.appendingPathComponent("app-log.bin")
     }
 
     static func deleteFile(at url: URL) -> Bool {
         do {
             try FileManager.default.removeItem(at: url)
-        } catch let error {
-            wg_log(.info, message: "Failed to delete file '\(url.path)': \(error)")
+        } catch {
             return false
         }
         return true
