@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright © 2018 WireGuard LLC. All Rights Reserved.
 
+import Foundation
 import os.log
 
 class Logger {
@@ -30,6 +31,15 @@ class Logger {
         }
         return false
     }
+}
+
+func wg_log_versions_to_file() {
+    var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
+    if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+        appVersion += " (\(appBuild))"
+    }
+    let goBackendVersion = WIREGUARD_GO_VERSION
+    file_log(message: "App version: \(appVersion); Go backend version: \(goBackendVersion)")
 }
 
 func wg_log(_ type: OSLogType, staticMessage msg: StaticString) {
