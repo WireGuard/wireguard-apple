@@ -43,10 +43,16 @@ class SettingsTableViewController: UITableViewController {
         self.tableView.register(KeyValueCell.self)
         self.tableView.register(ButtonCell.self)
 
-        let logo = UIImageView(image: UIImage(named: "wireguard.pdf", in: Bundle.main, compatibleWith: nil)!)
+        let image = UIImage(named: "wireguard.pdf")!
+        let logo = UIImageView(image: image)
         logo.contentMode = .scaleAspectFit
-        let height = self.tableView.rowHeight * 1.5
-        let width = height * logo.image!.size.width / logo.image!.size.height
+        var height = self.tableView.estimatedRowHeight * 1.5
+        var width = height * image.size.width / image.size.height
+        let minScreenDimension = min(UIScreen.main.bounds.size.width, UIScreen.main.bounds.size.height)
+        if width > minScreenDimension - 30 {
+            width = minScreenDimension - 30
+            height = width * image.size.height / image.size.width
+        }
         logo.frame = CGRect(x: 0, y: 0, width: width, height: height)
         logo.bounds = logo.frame.insetBy(dx: 2, dy: 2)
         self.tableView.tableFooterView = logo
