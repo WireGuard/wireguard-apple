@@ -115,13 +115,13 @@ class SettingsTableViewController: UITableViewController {
             }
 
             guard let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path else {
-                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Internal error obtaining extension log path", from: self)
+                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Unable to determine extension log path", from: self)
                 return
             }
 
-            let isWritten = Logger.writeLog(mergedWith: networkExtensionLogFilePath, tag: "APP", otherTag: "EXT", to: destinationURL.path)
+            let isWritten = Logger.global?.writeLog(mergedWith: networkExtensionLogFilePath, to: destinationURL.path) ?? false
             guard isWritten else {
-                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Internal error merging logs", from: self)
+                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Unable to write logs to file", from: self)
                 return
             }
 
