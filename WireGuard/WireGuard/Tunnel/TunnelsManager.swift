@@ -258,9 +258,17 @@ class TunnelsManager {
             return
         }
 
+        if let alreadyWaitingTunnel = tunnels.first(where: { $0.status == .waiting }) {
+            alreadyWaitingTunnel.status = .inactive
+        }
+
         if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
-            self.activationDelegate?.tunnelActivationAttemptFailed(tunnel: tunnel, error: .anotherTunnelIsOperational(otherTunnelName: tunnelInOperation.name))
-            // FIXME: Switches in the UI won't be reset, but we'll be reintroducing waiting, so that's fine
+            wg_log(.info, message: "Tunnel '\(tunnel.name)' waiting for deactivation of '\(tunnelInOperation.name)'")
+            tunnel.status = .waiting
+            assert(tunnelInOperation.status != .inactive)
+            if tunnelInOperation.status != .deactivating {
+                startDeactivation(of: tunnelInOperation)
+            }
             return
         }
 
@@ -269,6 +277,7 @@ class TunnelsManager {
     }
 
     func startDeactivation(of tunnel: TunnelContainer) {
+        tunnel.isAttemptingActivation = false
         if tunnel.status == .inactive || tunnel.status == .deactivating {
             return
         }
@@ -312,6 +321,13 @@ class TunnelsManager {
             }
 
             tunnel.refreshStatus()
+
+            // In case some other tunnel is waiting for this tunnel to get deactivated
+            if session.status == .disconnected || session.status == .invalid {
+                if let waitingTunnel = self.tunnels.first(where: { $0.status == .waiting }) {
+                    waitingTunnel.startActivation(activationDelegate: self.activationDelegate)
+                }
+            }
         }
     }
 
@@ -357,7 +373,7 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startActivation(activationDelegate: TunnelsManagerActivationDelegate?) {
-        assert(status == .inactive || status == .restarting)
+        assert(status == .inactive || status == .restarting || status == .waiting)
 
         guard let tunnelConfiguration = tunnelConfiguration() else { fatalError() }
 
@@ -446,6 +462,7 @@ class TunnelContainer: NSObject {
     case reasserting // Not a possible state at present
 
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
+    case waiting    // Waiting for another tunnel to be brought down
 
     init(from systemStatus: NEVPNStatus) {
         switch systemStatus {
@@ -474,6 +491,7 @@ extension TunnelStatus: CustomDebugStringConvertible {
         case .deactivating: return "deactivating"
         case .reasserting: return "reasserting"
         case .restarting: return "restarting"
+        case .waiting: return "waiting"
         }
     }
 }
