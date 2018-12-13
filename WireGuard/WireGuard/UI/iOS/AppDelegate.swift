@@ -21,6 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             os_log("Can't obtain log file URL. Log is not saved to file.", log: OSLog.default, type: .error)
         }
 
+        wg_log(.info, message: "Launching app")
+
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = UIColor.white
         self.window = window

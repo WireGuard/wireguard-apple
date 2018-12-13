@@ -29,7 +29,7 @@ extension FileManager {
         do {
             try FileManager.default.removeItem(at: url)
         } catch let error {
-            os_log("Failed to delete file '%{public}@': %{public}@", log: OSLog.default, type: .debug, url.absoluteString, error.localizedDescription)
+            wg_log(.info, message: "Failed to delete file '\(url.path)': \(error)")
             return false
         }
         return true
