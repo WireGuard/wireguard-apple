@@ -248,15 +248,7 @@ extension TunnelsListTableViewController: UITableViewDataSource {
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self, let tunnelsManager = self.tunnelsManager else { return }
                 if isOn {
-                    tunnelsManager.startActivation(of: tunnel) { [weak self] error in
-                        if let error = error {
-                            ErrorPresenter.showErrorAlert(error: error, from: self) {
-                                DispatchQueue.main.async {
-                                    cell.statusSwitch.isOn = false
-                                }
-                            }
-                        }
-                    }
+                    tunnelsManager.startActivation(of: tunnel)
                 } else {
                     tunnelsManager.startDeactivation(of: tunnel)
                 }

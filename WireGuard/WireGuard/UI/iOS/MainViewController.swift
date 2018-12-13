@@ -62,8 +62,20 @@ class MainViewController: UISplitViewController {
 }
 
 extension MainViewController: TunnelsManagerActivationDelegate {
-    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerError) {
+    func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) {
         ErrorPresenter.showErrorAlert(error: error, from: self)
+    }
+
+    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
+    }
+
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) {
+        ErrorPresenter.showErrorAlert(error: error, from: self)
+    }
+
+    func tunnelActivationSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
     }
 }
 
