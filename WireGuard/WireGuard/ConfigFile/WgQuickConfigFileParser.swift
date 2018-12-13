@@ -54,13 +54,11 @@ class WgQuickConfigFileParser {
                 } else {
                     attributes[key] = value
                 }
-            } else {
-                if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
-                    throw ParseError.invalidLine(line)
-                }
+            } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
+                throw ParseError.invalidLine(line)
             }
 
-            let isLastLine = (lineIndex == lines.count - 1)
+            let isLastLine = lineIndex == lines.count - 1
 
             if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
@@ -109,7 +107,7 @@ class WgQuickConfigFileParser {
         }
         // wg-quick fields
         if let addressesString = attributes["address"] {
-            var addresses: [IPAddressRange] = []
+            var addresses = [IPAddressRange]()
             for addressString in addressesString.split(separator: ",") {
                 let trimmedString = addressString.trimmingCharacters(in: .whitespaces)
                 guard let address = IPAddressRange(from: trimmedString) else { return nil }
@@ -118,7 +116,7 @@ class WgQuickConfigFileParser {
             interface.addresses = addresses
         }
         if let dnsString = attributes["dns"] {
-            var dnsServers: [DNSServer] = []
+            var dnsServers = [DNSServer]()
             for dnsServerString in dnsString.split(separator: ",") {
                 let trimmedString = dnsServerString.trimmingCharacters(in: .whitespaces)
                 guard let dnsServer = DNSServer(from: trimmedString) else { return nil }
@@ -144,7 +142,7 @@ class WgQuickConfigFileParser {
             peer.preSharedKey = preSharedKey
         }
         if let allowedIPsString = attributes["allowedips"] {
-            var allowedIPs: [IPAddressRange] = []
+            var allowedIPs = [IPAddressRange]()
             for allowedIPString in allowedIPsString.split(separator: ",") {
                 let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                 guard let allowedIP = IPAddressRange(from: trimmedString) else { return nil }

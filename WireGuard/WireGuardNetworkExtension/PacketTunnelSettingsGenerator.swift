@@ -60,16 +60,13 @@ class PacketTunnelSettingsGenerator {
     }
 
     func generateNetworkSettings() -> NEPacketTunnelNetworkSettings {
-
-        // Remote address
-
         /* iOS requires a tunnel endpoint, whereas in WireGuard it's valid for
          * a tunnel to have no endpoint, or for there to be many endpoints, in
          * which case, displaying a single one in settings doesn't really
          * make sense. So, we fill it in with this placeholder, which is not
          * a valid IP address that will actually route over the Internet.
          */
-        var remoteAddress: String = "0.0.0.0"
+        var remoteAddress = "0.0.0.0"
         let endpointsCompact = resolvedEndpoints.compactMap { $0 }
         if endpointsCompact.count == 1 {
             switch endpointsCompact.first!.host {
@@ -83,16 +80,12 @@ class PacketTunnelSettingsGenerator {
         }
 
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: remoteAddress)
-
-        // DNS
-
+        
         let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation() }
         let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
         dnsSettings.matchDomains = [""] // All DNS queries must first go through the VPN's DNS
         networkSettings.dnsSettings = dnsSettings
-
-        // MTU
-
+        
         let mtu = tunnelConfiguration.interface.mtu ?? 0
         if mtu == 0 {
             // 0 imples automatic MTU, where we set overhead as 80 bytes, which is the worst case for WireGuard
@@ -100,104 +93,25 @@ class PacketTunnelSettingsGenerator {
         } else {
             networkSettings.mtu = NSNumber(value: mtu)
         }
-
-        // Addresses from interface addresses
-
-        var ipv4Addresses: [String] = []
-        var ipv4SubnetMasks: [String] = []
-
-        var ipv6Addresses: [String] = []
-        var ipv6NetworkPrefixLengths: [NSNumber] = []
-
-        for addressRange in tunnelConfiguration.interface.addresses {
-            if addressRange.address is IPv4Address {
-                ipv4Addresses.append("\(addressRange.address)")
-                ipv4SubnetMasks.append(PacketTunnelSettingsGenerator.ipv4SubnetMaskString(of: addressRange))
-            } else if addressRange.address is IPv6Address {
-                ipv6Addresses.append("\(addressRange.address)")
-                ipv6NetworkPrefixLengths.append(NSNumber(value: addressRange.networkPrefixLength))
-            }
-        }
-
-        // Included routes from AllowedIPs
-
-        var ipv4IncludedRouteAddresses: [String] = []
-        var ipv4IncludedRouteSubnetMasks: [String] = []
-
-        var ipv6IncludedRouteAddresses: [String] = []
-        var ipv6IncludedRouteNetworkPrefixLengths: [NSNumber] = []
-
-        for peer in tunnelConfiguration.peers {
-            for addressRange in peer.allowedIPs {
-                if addressRange.address is IPv4Address {
-                    ipv4IncludedRouteAddresses.append("\(addressRange.address)")
-                    ipv4IncludedRouteSubnetMasks.append(PacketTunnelSettingsGenerator.ipv4SubnetMaskString(of: addressRange))
-                } else if addressRange.address is IPv6Address {
-                    ipv6IncludedRouteAddresses.append("\(addressRange.address)")
-                    ipv6IncludedRouteNetworkPrefixLengths.append(NSNumber(value: addressRange.networkPrefixLength))
-                }
-            }
-        }
-
-        // Excluded routes from endpoints
-
-        var ipv4ExcludedRouteAddresses: [String] = []
-        var ipv4ExcludedRouteSubnetMasks: [String] = []
-
-        var ipv6ExcludedRouteAddresses: [String] = []
-        var ipv6ExcludedRouteNetworkPrefixLengths: [NSNumber] = []
-
-        for endpoint in resolvedEndpoints {
-            guard let endpoint = endpoint else { continue }
-            switch endpoint.host {
-            case .ipv4(let address):
-                ipv4ExcludedRouteAddresses.append("\(address)")
-                ipv4ExcludedRouteSubnetMasks.append("255.255.255.255") // A single IPv4 address
-            case .ipv6(let address):
-                ipv6ExcludedRouteAddresses.append("\(address)")
-                ipv6ExcludedRouteNetworkPrefixLengths.append(NSNumber(value: UInt8(128))) // A single IPv6 address
-            default:
-                fatalError()
-            }
-        }
-
-        // Apply IPv4 settings
-
-        let ipv4Settings = NEIPv4Settings(addresses: ipv4Addresses, subnetMasks: ipv4SubnetMasks)
-        assert(ipv4IncludedRouteAddresses.count == ipv4IncludedRouteSubnetMasks.count)
-        ipv4Settings.includedRoutes = zip(ipv4IncludedRouteAddresses, ipv4IncludedRouteSubnetMasks).map {
-            NEIPv4Route(destinationAddress: $0.0, subnetMask: $0.1)
-        }
-        assert(ipv4ExcludedRouteAddresses.count == ipv4ExcludedRouteSubnetMasks.count)
-        ipv4Settings.excludedRoutes = zip(ipv4ExcludedRouteAddresses, ipv4ExcludedRouteSubnetMasks).map {
-            NEIPv4Route(destinationAddress: $0.0, subnetMask: $0.1)
-        }
+        
+        let (ipv4Routes, ipv6Routes) = routes()
+        let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
+        let (ipv4ExcludedRoutes, ipv6ExcludedRoutes) = excludedRoutes()
+        
+        let ipv4Settings = NEIPv4Settings(addresses: ipv4Routes.map { $0.destinationAddress }, subnetMasks: ipv4Routes.map { $0.destinationSubnetMask })
+        ipv4Settings.includedRoutes = ipv4IncludedRoutes
+        ipv4Settings.excludedRoutes = ipv4ExcludedRoutes
         networkSettings.ipv4Settings = ipv4Settings
-
-        // Apply IPv6 settings
-
-        /* Big fat ugly hack for broken iOS networking stack: the smallest prefix that will have
-         * any effect on iOS is a /120, so we clamp everything above to /120. This is potentially
-         * very bad, if various network parameters were actually relying on that subnet being
-         * intentionally small. TODO: talk about this with upstream iOS devs.
-         */
-        let ipv6Settings = NEIPv6Settings(addresses: ipv6Addresses, networkPrefixLengths: ipv6NetworkPrefixLengths.map { NSNumber(value: min(120, $0.intValue)) })
-        assert(ipv6IncludedRouteAddresses.count == ipv6IncludedRouteNetworkPrefixLengths.count)
-        ipv6Settings.includedRoutes = zip(ipv6IncludedRouteAddresses, ipv6IncludedRouteNetworkPrefixLengths).map {
-            NEIPv6Route(destinationAddress: $0.0, networkPrefixLength: $0.1)
-        }
-        assert(ipv6ExcludedRouteAddresses.count == ipv6ExcludedRouteNetworkPrefixLengths.count)
-        ipv6Settings.excludedRoutes = zip(ipv6ExcludedRouteAddresses, ipv6ExcludedRouteNetworkPrefixLengths).map {
-            NEIPv6Route(destinationAddress: $0.0, networkPrefixLength: $0.1)
-        }
+        
+        let ipv6Settings = NEIPv6Settings(addresses: ipv6Routes.map { $0.destinationAddress }, networkPrefixLengths: ipv6Routes.map { $0.destinationNetworkPrefixLength })
+        ipv6Settings.includedRoutes = ipv6IncludedRoutes
+        ipv6Settings.excludedRoutes = ipv6ExcludedRoutes
         networkSettings.ipv6Settings = ipv6Settings
-
-        // Done
 
         return networkSettings
     }
 
-    static func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
+    private func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
         let length: UInt8 = addressRange.networkPrefixLength
         assert(length <= 32)
         var octets: [UInt8] = [0, 0, 0, 0]
@@ -208,6 +122,57 @@ class PacketTunnelSettingsGenerator {
         octets[3] = UInt8(truncatingIfNeeded: subnetMask)
         return octets.map { String($0) }.joined(separator: ".")
     }
+    
+    private func routes() -> ([NEIPv4Route], [NEIPv6Route]) {
+        var ipv4Routes = [NEIPv4Route]()
+        var ipv6Routes = [NEIPv6Route]()
+        for addressRange in tunnelConfiguration.interface.addresses {
+            if addressRange.address is IPv4Address {
+                ipv4Routes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: ipv4SubnetMaskString(of: addressRange)))
+            } else if addressRange.address is IPv6Address {
+                /* Big fat ugly hack for broken iOS networking stack: the smallest prefix that will have
+                 * any effect on iOS is a /120, so we clamp everything above to /120. This is potentially
+                 * very bad, if various network parameters were actually relying on that subnet being
+                 * intentionally small. TODO: talk about this with upstream iOS devs.
+                 */
+                ipv6Routes.append(NEIPv6Route(destinationAddress: "\(addressRange.address)", networkPrefixLength: NSNumber(value: min(120, addressRange.networkPrefixLength))))
+            }
+        }
+        return (ipv4Routes, ipv6Routes)
+    }
+    
+    private func includedRoutes() -> ([NEIPv4Route], [NEIPv6Route]) {
+        var ipv4IncludedRoutes = [NEIPv4Route]()
+        var ipv6IncludedRoutes = [NEIPv6Route]()
+        for peer in tunnelConfiguration.peers {
+            for addressRange in peer.allowedIPs {
+                if addressRange.address is IPv4Address {
+                    ipv4IncludedRoutes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: ipv4SubnetMaskString(of: addressRange)))
+                } else if addressRange.address is IPv6Address {
+                    ipv6IncludedRoutes.append(NEIPv6Route(destinationAddress: "\(addressRange.address)", networkPrefixLength: NSNumber(value: addressRange.networkPrefixLength)))
+                }
+            }
+        }
+        return (ipv4IncludedRoutes, ipv6IncludedRoutes)
+    }
+    
+    private func excludedRoutes() -> ([NEIPv4Route], [NEIPv6Route]) {
+        var ipv4ExcludedRoutes = [NEIPv4Route]()
+        var ipv6ExcludedRoutes = [NEIPv6Route]()
+        for endpoint in resolvedEndpoints {
+            guard let endpoint = endpoint else { continue }
+            switch endpoint.host {
+            case .ipv4(let address):
+                ipv4ExcludedRoutes.append(NEIPv4Route(destinationAddress: "\(address)", subnetMask: "255.255.255.255"))
+            case .ipv6(let address):
+                ipv6ExcludedRoutes.append(NEIPv6Route(destinationAddress: "\(address)", networkPrefixLength: NSNumber(value: UInt8(128))))
+            default:
+                fatalError()
+            }
+        }
+        return (ipv4ExcludedRoutes, ipv6ExcludedRoutes)
+    }
+    
 }
 
 private extension Data {

@@ -75,9 +75,7 @@ extension IPAddressRange: Codable {
             default: return nil
             }
         }()
-        guard let ipAddress = ipAddressFromData else {
-            throw DecodingError.invalidData
-        }
+        guard let ipAddress = ipAddressFromData else { throw DecodingError.invalidData }
         address = ipAddress
     }
     enum DecodingError: Error {

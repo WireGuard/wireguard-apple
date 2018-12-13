@@ -334,52 +334,45 @@ extension TunnelEditTableViewController {
         switch field {
         case .publicKey:
             cell.placeholderText = "Required"
-        case .preSharedKey, .endpoint, .allowedIPs:
+            cell.keyboardType = .default
+        case .preSharedKey, .endpoint:
             cell.placeholderText = "Optional"
+            cell.keyboardType = .default
+        case .allowedIPs:
+            cell.placeholderText = "Optional"
+            cell.keyboardType = .numbersAndPunctuation
         case .persistentKeepAlive:
             cell.placeholderText = "Off"
-        case .excludePrivateIPs, .deletePeer:
-            break
-        }
-        
-        switch field {
-        case .persistentKeepAlive:
             cell.keyboardType = .numberPad
-        case .allowedIPs:
-            cell.keyboardType = .numbersAndPunctuation
-        default:
+        case .excludePrivateIPs, .deletePeer:
             cell.keyboardType = .default
         }
 
-        // Show erroring fields
-        cell.isValueValid = (!peerData.fieldsWithError.contains(field))
-        // Bind values to view model
+        cell.isValueValid = !peerData.fieldsWithError.contains(field)
         cell.value = peerData[field]
-        if field != .allowedIPs {
-            cell.onValueChanged = { [weak peerData] value in
-                peerData?[field] = value
-            }
-        }
-        // Compute state of exclude private IPs live
+        
         if field == .allowedIPs {
             cell.onValueBeingEdited = { [weak self, weak peerData] value in
-                if let peerData = peerData, let self = self {
-                    let oldValue = peerData.shouldAllowExcludePrivateIPsControl
-                    peerData[.allowedIPs] = value
-                    if oldValue != peerData.shouldAllowExcludePrivateIPsControl {
-                        if let row = self.peerFields.firstIndex(of: .excludePrivateIPs) {
-                            if peerData.shouldAllowExcludePrivateIPsControl {
-                                self.tableView.insertRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
-                            } else {
-                                self.tableView.deleteRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
-                            }
+                guard let self = self, let peerData = peerData else { return }
+                
+                let oldValue = peerData.shouldAllowExcludePrivateIPsControl
+                peerData[.allowedIPs] = value
+                if oldValue != peerData.shouldAllowExcludePrivateIPsControl {
+                    if let row = self.peerFields.firstIndex(of: .excludePrivateIPs) {
+                        if peerData.shouldAllowExcludePrivateIPsControl {
+                            self.tableView.insertRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
+                        } else {
+                            self.tableView.deleteRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
                         }
                     }
                 }
             }
         } else {
-            cell.onValueBeingEdited = nil
+            cell.onValueChanged = { [weak peerData] value in
+                peerData?[field] = value
+            }
         }
+        
         return cell
     }
 
@@ -410,7 +403,7 @@ extension TunnelEditTableViewController {
             cell.isOn = activateOnDemandSetting.isActivateOnDemandEnabled
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self else { return }
-                let indexPaths: [IndexPath] = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
+                let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
                 if isOn {
                     self.activateOnDemandSetting.isActivateOnDemandEnabled = true
                     if self.activateOnDemandSetting.activateOnDemandOption == .none {
@@ -529,7 +522,7 @@ private class KeyValueCell: UITableViewCell {
 
     var isStackedHorizontally: Bool = false
     var isStackedVertically: Bool = false
-    var contentSizeBasedConstraints: [NSLayoutConstraint] = []
+    var contentSizeBasedConstraints = [NSLayoutConstraint]()
 
     private var textFieldValueOnBeginEditing: String = ""
 
@@ -573,7 +566,7 @@ private class KeyValueCell: UITableViewCell {
     }
 
     func configureForContentSize() {
-        var constraints: [NSLayoutConstraint] = []
+        var constraints = [NSLayoutConstraint]()
         if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
             if !isStackedVertically {

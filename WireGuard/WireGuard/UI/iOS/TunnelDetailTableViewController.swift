@@ -322,9 +322,9 @@ private class KeyValueCell: CopyableLabelTableViewCell {
     let keyLabel: UILabel
     let valueLabel: ScrollableLabel
 
-    var isStackedHorizontally: Bool = false
-    var isStackedVertically: Bool = false
-    var contentSizeBasedConstraints: [NSLayoutConstraint] = []
+    var isStackedHorizontally = false
+    var isStackedVertically = false
+    var contentSizeBasedConstraints = [NSLayoutConstraint]()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         keyLabel = UILabel()
@@ -364,7 +364,7 @@ private class KeyValueCell: CopyableLabelTableViewCell {
     }
 
     func configureForContentSize() {
-        var constraints: [NSLayoutConstraint] = []
+        var constraints = [NSLayoutConstraint]()
         if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
             if !isStackedVertically {

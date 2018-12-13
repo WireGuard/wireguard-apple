@@ -37,8 +37,8 @@ class TunnelViewModel {
     static let keyLengthInBase64 = 44
 
     class InterfaceData {
-        var scratchpad: [InterfaceField: String] = [:]
-        var fieldsWithError: Set<InterfaceField> = []
+        var scratchpad = [InterfaceField: String]()
+        var fieldsWithError = Set<InterfaceField>()
         var validatedConfiguration: InterfaceConfiguration?
 
         subscript(field: InterfaceField) -> String {
@@ -114,9 +114,9 @@ class TunnelViewModel {
                 return .error("Interface's private key must be a 32-byte key in base64 encoding")
             }
             var config = InterfaceConfiguration(name: name, privateKey: privateKey)
-            var errorMessages: [String] = []
+            var errorMessages = [String]()
             if let addressesString = scratchpad[.addresses] {
-                var addresses: [IPAddressRange] = []
+                var addresses = [IPAddressRange]()
                 for addressString in addressesString.split(separator: ",") {
                     let trimmedString = addressString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     if let address = IPAddressRange(from: trimmedString) {
@@ -145,7 +145,7 @@ class TunnelViewModel {
                 }
             }
             if let dnsString = scratchpad[.dns] {
-                var dnsServers: [DNSServer] = []
+                var dnsServers = [DNSServer]()
                 for dnsServerString in dnsString.split(separator: ",") {
                     let trimmedString = dnsServerString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     if let dnsServer = DNSServer(from: trimmedString) {
@@ -177,14 +177,14 @@ class TunnelViewModel {
 
     class PeerData {
         var index: Int
-        var scratchpad: [PeerField: String] = [:]
-        var fieldsWithError: Set<PeerField> = []
+        var scratchpad = [PeerField: String]()
+        var fieldsWithError = Set<PeerField>()
         var validatedConfiguration: PeerConfiguration?
 
         // For exclude private IPs
-        var shouldAllowExcludePrivateIPsControl: Bool = false /* Read-only from the VC's point of view */
-        var excludePrivateIPsValue: Bool = false /* Read-only from the VC's point of view */
-        fileprivate var numberOfPeers: Int = 0
+        private(set) var shouldAllowExcludePrivateIPsControl = false
+        private(set) var excludePrivateIPsValue = false
+        fileprivate var numberOfPeers = 0
 
         init(index: Int) {
             self.index = index
@@ -251,7 +251,7 @@ class TunnelViewModel {
                 return .error("Peer's public key must be a 32-byte key in base64 encoding")
             }
             var config = PeerConfiguration(publicKey: publicKey)
-            var errorMessages: [String] = []
+            var errorMessages = [String]()
             if let preSharedKeyString = scratchpad[.preSharedKey] {
                 if let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength {
                     config.preSharedKey = preSharedKey
@@ -261,7 +261,7 @@ class TunnelViewModel {
                 }
             }
             if let allowedIPsString = scratchpad[.allowedIPs] {
-                var allowedIPs: [IPAddressRange] = []
+                var allowedIPs = [IPAddressRange]()
                 for allowedIPString in allowedIPsString.split(separator: ",") {
                     let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
                     if let allowedIP = IPAddressRange(from: trimmedString) {
@@ -352,11 +352,9 @@ class TunnelViewModel {
             let ipv6Addresses = allowedIPStrings.filter { $0.contains(":") }
             let modifiedAllowedIPStrings: [String]
             if isOn {
-                modifiedAllowedIPStrings = ipv6Addresses +
-                    TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServerStrings
+                modifiedAllowedIPStrings = ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServerStrings
             } else {
-                modifiedAllowedIPStrings = ipv6Addresses +
-                    [TunnelViewModel.PeerData.ipv4DefaultRouteString]
+                modifiedAllowedIPStrings = ipv6Addresses + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
             scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
             validatedConfiguration = nil // The configuration has been modified, and needs to be saved
@@ -374,7 +372,7 @@ class TunnelViewModel {
 
     init(tunnelConfiguration: TunnelConfiguration?) {
         let interfaceData: InterfaceData = InterfaceData()
-        var peersData: [PeerData] = []
+        var peersData = [PeerData]()
         if let tunnelConfiguration = tunnelConfiguration {
             interfaceData.validatedConfiguration = tunnelConfiguration.interface
             for (index, peerConfiguration) in tunnelConfiguration.peers.enumerated() {
@@ -423,7 +421,7 @@ class TunnelViewModel {
         case .error(let errorMessage):
             return .error(errorMessage)
         case .saved(let interfaceConfiguration):
-            var peerConfigurations: [PeerConfiguration] = []
+            var peerConfigurations = [PeerConfiguration]()
             peerConfigurations.reserveCapacity(peerSaveResults.count)
             for peerSaveResult in peerSaveResults {
                 switch peerSaveResult {

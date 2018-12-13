@@ -32,7 +32,8 @@ enum TunnelsManagerError: WireGuardAppError {
     case tunnelActivationFailedInternalError // startTunnel() succeeded, but activation failed
     case tunnelActivationFailedNoInternetConnection // startTunnel() succeeded, but activation failed since no internet
 
-    func alertText() -> (String, String)? {
+    //swiftlint:disable:next cyclomatic_complexity
+    func alertText() -> AlertText {
         switch self {
         case .tunnelNameEmpty:
             return ("No name provided", "Can't create tunnel with an empty name")
@@ -46,7 +47,6 @@ enum TunnelsManagerError: WireGuardAppError {
             return ("Unable to modify tunnel", "Internal error")
         case .vpnSystemErrorOnRemoveTunnel:
             return ("Unable to remove tunnel", "Internal error")
-
         case .attemptingActivationWhenTunnelIsNotInactive:
             return ("Activation failure", "The tunnel is already active or in the process of being activated")
         case .attemptingActivationWhenAnotherTunnelIsOperational(let otherTunnelName):
@@ -267,44 +267,41 @@ class TunnelsManager {
     }
 
     private func startObservingTunnelStatuses() {
-        if statusObservationToken != nil { return }
-        statusObservationToken = NotificationCenter.default.addObserver(
-            forName: .NEVPNStatusDidChange,
-            object: nil,
-            queue: OperationQueue.main) { [weak self] statusChangeNotification in
-                guard let self = self else { return }
-                guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
-                guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
-                guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
-
-                os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
-                       log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
-
-                // In case our attempt to start the tunnel, didn't succeed
-                if tunnel == self.tunnelBeingActivated {
-                    if session.status == .disconnected {
-                        if InternetReachability.currentStatus() == .notReachable {
-                            let error = TunnelsManagerError.tunnelActivationFailedNoInternetConnection
-                            self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
-                        }
-                        self.tunnelBeingActivated = nil
-                    } else if session.status == .connected {
-                        self.tunnelBeingActivated = nil
+        guard statusObservationToken == nil else { return }
+        
+        statusObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
+            guard let self = self else { return }
+            guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
+            guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
+            guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
+            
+            os_log("Tunnel '%{public}@' connection status changed to '%{public}@'",
+                   log: OSLog.default, type: .debug, tunnel.name, "\(tunnel.tunnelProvider.connection.status)")
+            
+            // In case our attempt to start the tunnel, didn't succeed
+            if tunnel == self.tunnelBeingActivated {
+                if session.status == .disconnected {
+                    if InternetReachability.currentStatus() == .notReachable {
+                        let error = TunnelsManagerError.tunnelActivationFailedNoInternetConnection
+                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: error)
                     }
+                    self.tunnelBeingActivated = nil
+                } else if session.status == .connected {
+                    self.tunnelBeingActivated = nil
                 }
-
-                // In case we're restarting the tunnel
-                if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
-                    // Don't change tunnel.status when disconnecting for a restart
-                    if session.status == .disconnected {
-                        self.tunnelBeingActivated = tunnel
-                        tunnel.startActivation { _ in }
-                    }
-                    return
+            }
+            
+            // In case we're restarting the tunnel
+            if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
+                // Don't change tunnel.status when disconnecting for a restart
+                if session.status == .disconnected {
+                    self.tunnelBeingActivated = tunnel
+                    tunnel.startActivation { _ in }
                 }
-
-                // Update tunnel status
-                tunnel.refreshStatus()
+                return
+            }
+            
+            tunnel.refreshStatus()
         }
     }
 
