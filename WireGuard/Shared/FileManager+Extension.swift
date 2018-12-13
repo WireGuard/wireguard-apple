@@ -14,7 +14,15 @@ extension FileManager {
             os_log("Can't obtain shared folder URL", log: OSLog.default, type: .error)
             return nil
         }
-        return sharedFolderURL.appendingPathComponent("last-activated-tunnel-log.txt")
+        return sharedFolderURL.appendingPathComponent("tunnel-log.txt")
+    }
+
+    static var appLogFileURL: URL? {
+        guard let documentDirURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            os_log("Can't obtain app documents folder URL", log: OSLog.default, type: .error)
+            return nil
+        }
+        return documentDirURL.appendingPathComponent("app-log.txt")
     }
 
     static func deleteFile(at url: URL) -> Bool {

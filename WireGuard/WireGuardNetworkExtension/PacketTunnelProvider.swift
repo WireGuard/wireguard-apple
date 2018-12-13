@@ -153,15 +153,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private func configureLogger() {
 
         // Setup writing the log to a file
-        if let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL {
-            let fileManager = FileManager.default
-            let filePath = networkExtensionLogFileURL.path
-            fileManager.createFile(atPath: filePath, contents: nil) // Create the file if it doesn't already exist
-            if let fileHandle = FileHandle(forWritingAtPath: filePath) {
-                logFileHandle = fileHandle
-            } else {
+        if let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path {
+            if !Logger.configure(withFilePath: networkExtensionLogFilePath) {
                 os_log("Can't open log file for writing. Log is not saved to file.", log: OSLog.default, type: .error)
-                logFileHandle = nil
             }
         } else {
             os_log("Can't obtain log file URL. Log is not saved to file.", log: OSLog.default, type: .error)
@@ -211,36 +205,5 @@ private func withStringsAsGoStrings<R>(_ str1: String, _ str2: String, closure: 
             let gstr2 = gostring_t(p: s2cStr, n: str2.utf8.count)
             return closure(gstr1, gstr2)
         }
-    }
-}
-
-private func wg_log(_ type: OSLogType, staticMessage msg: StaticString) {
-    // Write to os log
-    os_log(msg, log: OSLog.default, type: type)
-    // Write to file log
-    let msgString: String = msg.withUTF8Buffer { (ptr: UnsafeBufferPointer<UInt8>) -> String in
-        return String(decoding: ptr, as: UTF8.self)
-    }
-    file_log(type: type, message: msgString)
-}
-
-private func wg_log(_ type: OSLogType, message msg: String) {
-    // Write to os log
-    os_log("%{public}s", log: OSLog.default, type: type, msg)
-    // Write to file log
-    file_log(type: type, message: msg)
-}
-
-private func file_log(type: OSLogType, message: String) {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS: "
-    var msgLine = formatter.string(from: Date()) + message
-    if msgLine.last! != "\n" {
-        msgLine.append("\n")
-    }
-    let data = msgLine.data(using: .utf8)
-    if let data = data, let logFileHandle = logFileHandle {
-        logFileHandle.write(data)
-        logFileHandle.synchronizeFile()
     }
 }

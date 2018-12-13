@@ -108,23 +108,19 @@ class SettingsTableViewController: UITableViewController {
             if FileManager.default.fileExists(atPath: destinationURL.path) {
                 let isDeleted = FileManager.deleteFile(at: destinationURL)
                 if !isDeleted {
-                    ErrorPresenter.showErrorAlert(title: "No log available", message: "The pre-existing log could not be cleared", from: self)
+                    ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The pre-existing log could not be cleared", from: self)
                     return
                 }
             }
 
-            guard let networkExtensionLogFileURL = FileManager.networkExtensionLogFileURL,
-                FileManager.default.fileExists(atPath: networkExtensionLogFileURL.path) else {
-                    ErrorPresenter.showErrorAlert(title: "No log available", message: "Please activate a tunnel and then export the log", from: self)
-                    return
+            guard let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path else {
+                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Internal error obtaining extension log path", from: self)
+                return
             }
 
-            do {
-                try FileManager.default.copyItem(at: networkExtensionLogFileURL, to: destinationURL)
-            } catch {
-                os_log("Failed to copy file: %{public}@ to %{public}@: %{public}@", log: OSLog.default, type: .error,
-                       networkExtensionLogFileURL.absoluteString, destinationURL.absoluteString, error.localizedDescription)
-                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The log could not be copied", from: self)
+            let isWritten = Logger.writeLog(mergedWith: networkExtensionLogFilePath, to: destinationURL.path)
+            guard isWritten else {
+                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Internal error merging logs", from: self)
                 return
             }
 

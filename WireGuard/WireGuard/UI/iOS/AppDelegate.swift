@@ -13,6 +13,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        if let appLogFilePath = FileManager.appLogFileURL?.path {
+            if !Logger.configure(withFilePath: appLogFilePath) {
+                os_log("Can't open log file for writing. Log is not saved to file.", log: OSLog.default, type: .error)
+            }
+        } else {
+            os_log("Can't obtain log file URL. Log is not saved to file.", log: OSLog.default, type: .error)
+        }
+
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = UIColor.white
         self.window = window
