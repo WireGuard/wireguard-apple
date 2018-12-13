@@ -20,10 +20,10 @@ enum TunnelsManagerError: WireGuardAppError {
     // Tunnels list management
     case tunnelNameEmpty
     case tunnelAlreadyExistsWithThatName
-    case vpnSystemErrorOnListingTunnels
-    case vpnSystemErrorOnAddTunnel
-    case vpnSystemErrorOnModifyTunnel
-    case vpnSystemErrorOnRemoveTunnel
+    case systemErrorOnListingTunnels
+    case systemErrorOnAddTunnel
+    case systemErrorOnModifyTunnel
+    case systemErrorOnRemoveTunnel
 
     // Tunnel activation
     case attemptingActivationWhenTunnelIsNotInactive
@@ -39,13 +39,13 @@ enum TunnelsManagerError: WireGuardAppError {
             return ("No name provided", "Can't create tunnel with an empty name")
         case .tunnelAlreadyExistsWithThatName:
             return ("Name already exists", "A tunnel with that name already exists")
-        case .vpnSystemErrorOnListingTunnels:
+        case .systemErrorOnListingTunnels:
             return ("Unable to list tunnels", "Internal error")
-        case .vpnSystemErrorOnAddTunnel:
+        case .systemErrorOnAddTunnel:
             return ("Unable to create tunnel", "Internal error")
-        case .vpnSystemErrorOnModifyTunnel:
+        case .systemErrorOnModifyTunnel:
             return ("Unable to modify tunnel", "Internal error")
-        case .vpnSystemErrorOnRemoveTunnel:
+        case .systemErrorOnRemoveTunnel:
             return ("Unable to remove tunnel", "Internal error")
         case .attemptingActivationWhenTunnelIsNotInactive:
             return ("Activation failure", "The tunnel is already active or in the process of being activated")
@@ -83,7 +83,7 @@ class TunnelsManager {
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             if let error = error {
                 os_log("Failed to load tunnel provider managers: %{public}@", log: OSLog.default, type: .debug, "\(error)")
-                completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnListingTunnels))
+                completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels))
                 return
             }
             completionHandler(.success(TunnelsManager(tunnelProviders: managers ?? [])))
@@ -115,7 +115,7 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Add: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                completionHandler(.failure(TunnelsManagerError.vpnSystemErrorOnAddTunnel))
+                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel))
                 return
             }
             if let self = self {
@@ -172,7 +172,7 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Modify: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                completionHandler(TunnelsManagerError.vpnSystemErrorOnModifyTunnel)
+                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                 return
             }
             if let self = self {
@@ -197,7 +197,7 @@ class TunnelsManager {
                         tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
                         guard error == nil else {
                             os_log("Modify: Re-loading after saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                            completionHandler(TunnelsManagerError.vpnSystemErrorOnModifyTunnel)
+                            completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                             return
                         }
                         completionHandler(nil)
@@ -215,7 +215,7 @@ class TunnelsManager {
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
                 os_log("Remove: Saving configuration failed: %{public}@", log: OSLog.default, type: .error, "\(error!)")
-                completionHandler(TunnelsManagerError.vpnSystemErrorOnRemoveTunnel)
+                completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel)
                 return
             }
             if let self = self {
@@ -394,13 +394,13 @@ class TunnelContainer: NSObject {
             os_log("startActivation: Success", log: OSLog.default, type: .debug)
             completionHandler(nil)
         } catch let error {
-            guard let vpnError = error as? NEVPNError else {
+            guard let systemError = error as? NEVPNError else {
                 os_log("Failed to activate tunnel: Error: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 status = .inactive
                 completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
                 return
             }
-            guard vpnError.code == NEVPNError.configurationInvalid || vpnError.code == NEVPNError.configurationStale else {
+            guard systemError.code == NEVPNError.configurationInvalid || systemError.code == NEVPNError.configurationStale else {
                 os_log("Failed to activate tunnel: VPN Error: %{public}@", log: OSLog.default, type: .debug, "\(error)")
                 status = .inactive
                 completionHandler(TunnelsManagerError.tunnelActivationAttemptFailed)
@@ -416,7 +416,7 @@ class TunnelContainer: NSObject {
                 }
                 os_log("startActivation: Tunnel reloaded", log: OSLog.default, type: .info)
                 os_log("startActivation: Invoking startActivation", log: OSLog.default, type: .debug)
-                self?.startActivation(recursionCount: recursionCount + 1, lastError: vpnError, tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
+                self?.startActivation(recursionCount: recursionCount + 1, lastError: systemError, tunnelConfiguration: tunnelConfiguration, completionHandler: completionHandler)
             }
         }
     }
@@ -435,8 +435,8 @@ class TunnelContainer: NSObject {
 
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
 
-    init(from vpnStatus: NEVPNStatus) {
-        switch vpnStatus {
+    init(from systemStatus: NEVPNStatus) {
+        switch systemStatus {
         case .connected:
             self = .active
         case .connecting:

@@ -83,7 +83,7 @@ class PacketTunnelSettingsGenerator {
 
         let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation() }
         let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
-        dnsSettings.matchDomains = [""] // All DNS queries must first go through the VPN's DNS
+        dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
         networkSettings.dnsSettings = dnsSettings
 
         let mtu = tunnelConfiguration.interface.mtu ?? 0
