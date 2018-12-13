@@ -40,8 +40,8 @@ class SettingsTableViewController: UITableViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsSelection = false
 
-        tableView.register(KeyValueCell.self)
-        tableView.register(ButtonCell.self)
+        tableView.register(SettingsKeyValueCell.self)
+        tableView.register(SettingsButtonCell.self)
 
         tableView.tableFooterView = UIImageView(image: UIImage(named: "wireguard.pdf"))
     }
@@ -167,7 +167,7 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let field = settingsFieldsBySection[indexPath.section][indexPath.row]
         if field == .iosAppVersion || field == .goBackendVersion {
-            let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: SettingsKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
             cell.key = field.rawValue
             if field == .iosAppVersion {
                 var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
@@ -180,7 +180,7 @@ extension SettingsTableViewController {
             }
             return cell
         } else if field == .exportZipArchive {
-            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: SettingsButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
@@ -188,76 +188,12 @@ extension SettingsTableViewController {
             return cell
         } else {
             assert(field == .exportLogFile)
-            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: SettingsButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
             }
             return cell
         }
-    }
-}
-
-private class KeyValueCell: UITableViewCell {
-    var key: String {
-        get { return textLabel?.text ?? "" }
-        set(value) { textLabel?.text = value }
-    }
-    var value: String {
-        get { return detailTextLabel?.text ?? "" }
-        set(value) { detailTextLabel?.text = value }
-    }
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .value1, reuseIdentifier: KeyValueCell.reuseIdentifier)
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        key = ""
-        value = ""
-    }
-}
-
-private class ButtonCell: UITableViewCell {
-    var buttonText: String {
-        get { return button.title(for: .normal) ?? "" }
-        set(value) { button.setTitle(value, for: .normal) }
-    }
-    var onTapped: (() -> Void)?
-
-    let button: UIButton
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        button = UIButton(type: .system)
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
-            button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-        ])
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-
-    @objc func buttonTapped() {
-        onTapped?()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        buttonText = ""
-        onTapped = nil
     }
 }

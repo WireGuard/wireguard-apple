@@ -27,7 +27,7 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
     case failedWhileLoading // reloading config throwed
     case failedBecauseOfTooManyErrors // recursion limit reached
 
-    func alertText() -> AlertText {
+    var alertText: AlertText {
         switch self {
         case .tunnelIsNotInactive:
             return ("Activation failure", "The tunnel is already active or in the process of being activated")
@@ -41,13 +41,12 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
 
 enum TunnelsManagerActivationError: WireGuardAppError {
     case activationFailed
-    func alertText() -> AlertText {
+    var alertText: AlertText {
         return ("Activation failure", "The tunnel could not be activated. Please ensure you are connected to the Internet.")
     }
 }
 
 enum TunnelsManagerError: WireGuardAppError {
-    // Tunnels list management
     case tunnelNameEmpty
     case tunnelAlreadyExistsWithThatName
     case systemErrorOnListingTunnels
@@ -55,7 +54,7 @@ enum TunnelsManagerError: WireGuardAppError {
     case systemErrorOnModifyTunnel
     case systemErrorOnRemoveTunnel
 
-    func alertText() -> AlertText {
+    var alertText: AlertText {
         switch self {
         case .tunnelNameEmpty:
             return ("No name provided", "Can't create tunnel with an empty name")
@@ -87,7 +86,6 @@ class TunnelsManager {
 
     static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
         #if targetEnvironment(simulator)
-        // NETunnelProviderManager APIs don't work on the simulator
         completionHandler(.success(TunnelsManager(tunnelProviders: [])))
         #else
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
@@ -101,9 +99,7 @@ class TunnelsManager {
         #endif
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration,
-             activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting,
-             completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
@@ -128,13 +124,14 @@ class TunnelsManager {
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel))
                 return
             }
-            if let self = self {
-                let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
-                self.tunnels.append(tunnel)
-                self.tunnels.sort { $0.name < $1.name }
-                self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
-                completionHandler(.success(tunnel))
-            }
+            
+            guard let self = self else { return }
+            
+            let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
+            self.tunnels.append(tunnel)
+            self.tunnels.sort { $0.name < $1.name }
+            self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
+            completionHandler(.success(tunnel))
         }
     }
 
@@ -155,8 +152,7 @@ class TunnelsManager {
         }
     }
 
-    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
-                activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelName = tunnelConfiguration.interface.name
         if tunnelName.isEmpty {
             completionHandler(TunnelsManagerError.tunnelNameEmpty)
@@ -185,36 +181,37 @@ class TunnelsManager {
                 completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                 return
             }
-            if let self = self {
-                if isNameChanged {
-                    let oldIndex = self.tunnels.firstIndex(of: tunnel)!
-                    self.tunnels.sort { $0.name < $1.name }
-                    let newIndex = self.tunnels.firstIndex(of: tunnel)!
-                    self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
-                }
-                self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
-
-                if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
-                    // Turn off the tunnel, and then turn it back on, so the changes are made effective
-                    tunnel.status = .restarting
-                    (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
-                }
-
-                if isActivatingOnDemand {
-                    // Reload tunnel after saving.
-                    // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
-                    tunnelProviderManager.loadFromPreferences { error in
-                        tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-                        guard error == nil else {
-                            wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error!)")
-                            completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
-                            return
-                        }
-                        completionHandler(nil)
+            
+            guard let self = self else { return }
+            
+            if isNameChanged {
+                let oldIndex = self.tunnels.firstIndex(of: tunnel)!
+                self.tunnels.sort { $0.name < $1.name }
+                let newIndex = self.tunnels.firstIndex(of: tunnel)!
+                self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
+            }
+            self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
+            
+            if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
+                // Turn off the tunnel, and then turn it back on, so the changes are made effective
+                tunnel.status = .restarting
+                (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+            }
+            
+            if isActivatingOnDemand {
+                // Reload tunnel after saving.
+                // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
+                tunnelProviderManager.loadFromPreferences { error in
+                    tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+                    guard error == nil else {
+                        wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error!)")
+                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
+                        return
                     }
-                } else {
                     completionHandler(nil)
                 }
+            } else {
+                completionHandler(nil)
             }
         }
     }
@@ -274,9 +271,7 @@ class TunnelsManager {
 
     func startDeactivation(of tunnel: TunnelContainer) {
         tunnel.isAttemptingActivation = false
-        if tunnel.status == .inactive || tunnel.status == .deactivating {
-            return
-        }
+        guard tunnel.status != .inactive && tunnel.status != .deactivating else { return }
         tunnel.startDeactivation()
     }
 
@@ -288,10 +283,10 @@ class TunnelsManager {
         guard statusObservationToken == nil else { return }
 
         statusObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
-            guard let self = self else { return }
-            guard let session = statusChangeNotification.object as? NETunnelProviderSession else { return }
-            guard let tunnelProvider = session.manager as? NETunnelProviderManager else { return }
-            guard let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
+            guard let self = self,
+                let session = statusChangeNotification.object as? NETunnelProviderSession,
+                let tunnelProvider = session.manager as? NETunnelProviderManager,
+                let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
 
             wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
@@ -339,7 +334,7 @@ class TunnelContainer: NSObject {
 
     @objc dynamic var isActivateOnDemandEnabled: Bool
 
-    var isAttemptingActivation: Bool = false
+    var isAttemptingActivation = false
 
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var lastTunnelConnectionStatus: NEVPNStatus?
@@ -375,10 +370,8 @@ class TunnelContainer: NSObject {
         startActivation(tunnelConfiguration: tunnelConfiguration, activationDelegate: activationDelegate)
     }
 
-    fileprivate func startActivation(recursionCount: UInt = 0,
-                                     lastError: Error? = nil,
-                                     tunnelConfiguration: TunnelConfiguration,
-                                     activationDelegate: TunnelsManagerActivationDelegate?) {
+    //swiftlint:disable:next function_body_length
+    fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, tunnelConfiguration: TunnelConfiguration, activationDelegate: TunnelsManagerActivationDelegate?) {
         if recursionCount >= 8 {
             wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
             activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedBecauseOfTooManyErrors)
@@ -457,7 +450,6 @@ class TunnelContainer: NSObject {
     case active
     case deactivating
     case reasserting // Not a possible state at present
-
     case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
     case waiting    // Waiting for another tunnel to be brought down
 

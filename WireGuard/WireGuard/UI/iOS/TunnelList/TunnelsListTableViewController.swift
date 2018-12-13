@@ -9,95 +9,88 @@ class TunnelsListTableViewController: UIViewController {
 
     var tunnelsManager: TunnelsManager?
 
-    var busyIndicator: UIActivityIndicatorView?
-    var centeredAddButton: BorderedTextButton?
-    var tableView: UITableView?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = UIColor.white
-
-        // Set up the navigation bar
-        self.title = "WireGuard"
-        let addButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
-        self.navigationItem.rightBarButtonItem = addButtonItem
-        let settingsButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
-        self.navigationItem.leftBarButtonItem = settingsButtonItem
-
-        // Set up the busy indicator
+    let tableView: UITableView = {
+        let tableView = UITableView(frame: CGRect.zero, style: .plain)
+        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
+        tableView.register(TunnelListCell.self)
+        return tableView
+    }()
+    
+    let centeredAddButton: BorderedTextButton = {
+        let button = BorderedTextButton()
+        button.title = "Add a tunnel"
+        button.isHidden = true
+        return button
+    }()
+    
+    let busyIndicator: UIActivityIndicatorView = {
         let busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
+        return busyIndicator
+    }()
+    
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = .white
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
 
-        // Add the busyIndicator, centered
         view.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             busyIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        view.addSubview(centeredAddButton)
+        centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            centeredAddButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            centeredAddButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+        centeredAddButton.onTapped = { [weak self] in
+            guard let self = self else { return }
+            self.addButtonTapped(sender: self.centeredAddButton)
+        }
+        
         busyIndicator.startAnimating()
-        self.busyIndicator = busyIndicator
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-        // State restoration
-        self.restorationIdentifier = "TunnelsListVC"
+        title = "WireGuard"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
+
+        restorationIdentifier = "TunnelsListVC"
     }
 
     func setTunnelsManager(tunnelsManager: TunnelsManager) {
-        if self.tunnelsManager != nil {
-            // If a tunnels manager is already set, do nothing
-            return
-        }
-
-        // Create the table view
-
-        let tableView = UITableView(frame: CGRect.zero, style: .plain)
-        tableView.estimatedRowHeight = 60
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.separatorStyle = .none
-        tableView.register(TunnelCell.self)
-
-        self.view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
-            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-        tableView.dataSource = self
-        tableView.delegate = self
-        self.tableView = tableView
-
-        // Add button at the center
-
-        let centeredAddButton = BorderedTextButton()
-        centeredAddButton.title = "Add a tunnel"
-        centeredAddButton.isHidden = true
-        self.view.addSubview(centeredAddButton)
-        centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            centeredAddButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            centeredAddButton.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
-        ])
-        centeredAddButton.onTapped = { [weak self] in
-            self?.addButtonTapped(sender: centeredAddButton)
-        }
-        centeredAddButton.isHidden = (tunnelsManager.numberOfTunnels() > 0)
-        self.centeredAddButton = centeredAddButton
-
-        // Hide the busy indicator
-
-        self.busyIndicator?.stopAnimating()
-
-        // Keep track of the tunnels manager
-
         self.tunnelsManager = tunnelsManager
         tunnelsManager.tunnelsListDelegate = self
+        
+        busyIndicator.stopAnimating()
+        tableView.reloadData()
+        centeredAddButton.isHidden = tunnelsManager.numberOfTunnels() > 0
     }
 
     override func viewWillAppear(_: Bool) {
         // Remove selection when getting back to the list view on iPhone
-        if let tableView = self.tableView, let selectedRowIndexPath = tableView.indexPathForSelectedRow {
+        if let selectedRowIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRowIndexPath, animated: false)
         }
     }
@@ -241,7 +234,7 @@ extension TunnelsListTableViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: TunnelCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelListCell = tableView.dequeueReusableCell(for: indexPath)
         if let tunnelsManager = tunnelsManager {
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             cell.tunnel = tunnel
@@ -293,161 +286,20 @@ extension TunnelsListTableViewController: UITableViewDelegate {
 
 extension TunnelsListTableViewController: TunnelsManagerListDelegate {
     func tunnelAdded(at index: Int) {
-        tableView?.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
+        tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        centeredAddButton.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
     }
 
     func tunnelModified(at index: Int) {
-        tableView?.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
 
     func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
-        tableView?.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
+        tableView.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
 
     func tunnelRemoved(at index: Int) {
-        tableView?.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-        centeredAddButton?.isHidden = (tunnelsManager?.numberOfTunnels() ?? 0 > 0)
-    }
-}
-
-private class TunnelCell: UITableViewCell {
-    var tunnel: TunnelContainer? {
-        didSet(value) {
-            // Bind to the tunnel's name
-            nameLabel.text = tunnel?.name ?? ""
-            nameObservervationToken = tunnel?.observe(\.name) { [weak self] tunnel, _ in
-                self?.nameLabel.text = tunnel.name
-            }
-            // Bind to the tunnel's status
-            update(from: tunnel?.status)
-            statusObservervationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
-                self?.update(from: tunnel.status)
-            }
-        }
-    }
-    var onSwitchToggled: ((Bool) -> Void)?
-
-    let nameLabel: UILabel
-    let busyIndicator: UIActivityIndicatorView
-    let statusSwitch: UISwitch
-
-    private var statusObservervationToken: AnyObject?
-    private var nameObservervationToken: AnyObject?
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        nameLabel = UILabel()
-        nameLabel.font = UIFont.preferredFont(forTextStyle: .body)
-        nameLabel.adjustsFontForContentSizeCategory = true
-        busyIndicator = UIActivityIndicatorView(style: .gray)
-        busyIndicator.hidesWhenStopped = true
-        statusSwitch = UISwitch()
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(statusSwitch)
-        statusSwitch.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
-        ])
-        contentView.addSubview(busyIndicator)
-        busyIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
-        ])
-        contentView.addSubview(nameLabel)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.numberOfLines = 0
-        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        let bottomAnchorConstraint = contentView.layoutMarginsGuide.bottomAnchor.constraint(
-            equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1)
-        bottomAnchorConstraint.priority = .defaultLow // Allow this constraint to be broken when animating a cell away during deletion
-        NSLayoutConstraint.activate([
-            nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
-            nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
-            busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
-            bottomAnchorConstraint
-        ])
-
-        self.accessoryType = .disclosureIndicator
-
-        statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
-    }
-
-    @objc func switchToggled() {
-        onSwitchToggled?(statusSwitch.isOn)
-    }
-
-    private func update(from status: TunnelStatus?) {
-        guard let status = status else {
-            reset()
-            return
-        }
-        DispatchQueue.main.async { [weak statusSwitch, weak busyIndicator] in
-            guard let statusSwitch = statusSwitch, let busyIndicator = busyIndicator else { return }
-            statusSwitch.isOn = !(status == .deactivating || status == .inactive)
-            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
-            if status == .inactive || status == .active {
-                busyIndicator.stopAnimating()
-            } else {
-                busyIndicator.startAnimating()
-            }
-        }
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    private func reset() {
-        statusSwitch.isOn = false
-        statusSwitch.isUserInteractionEnabled = false
-        busyIndicator.stopAnimating()
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        reset()
-    }
-}
-
-class BorderedTextButton: UIView {
-    let button: UIButton
-
-    override var intrinsicContentSize: CGSize {
-        let buttonSize = button.intrinsicContentSize
-        return CGSize(width: buttonSize.width + 32, height: buttonSize.height + 16)
-    }
-
-    var title: String {
-        get { return button.title(for: .normal) ?? "" }
-        set(value) { button.setTitle(value, for: .normal) }
-    }
-
-    var onTapped: (() -> Void)?
-
-    init() {
-        button = UIButton(type: .system)
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
-        super.init(frame: CGRect.zero)
-        addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-        ])
-        layer.borderWidth = 1
-        layer.cornerRadius = 5
-        layer.borderColor = button.tintColor.cgColor
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-    }
-
-    @objc func buttonTapped() {
-        onTapped?()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        centeredAddButton.isHidden = tunnelsManager?.numberOfTunnels() ?? 0 > 0
     }
 }

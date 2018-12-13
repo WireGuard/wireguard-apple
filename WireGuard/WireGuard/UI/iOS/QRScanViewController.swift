@@ -24,7 +24,7 @@ class QRScanViewController: UIViewController {
         let tipLabel = UILabel()
         tipLabel.text = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`"
         tipLabel.adjustsFontSizeToFitWidth = true
-        tipLabel.textColor = UIColor.lightGray
+        tipLabel.textColor = .lightGray
         tipLabel.textAlignment = .center
 
         view.addSubview(tipLabel)

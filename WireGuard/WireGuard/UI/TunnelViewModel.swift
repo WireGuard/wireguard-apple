@@ -95,6 +95,7 @@ class TunnelViewModel {
             }
         }
 
+        //swiftlint:disable:next cyclomatic_complexity function_body_length
         func save() -> SaveResult<InterfaceConfiguration> {
             if let validatedConfiguration = validatedConfiguration {
                 // It's already validated and saved
@@ -236,6 +237,7 @@ class TunnelViewModel {
             updateExcludePrivateIPsFieldState()
         }
 
+        //swiftlint:disable:next cyclomatic_complexity
         func save() -> SaveResult<PeerConfiguration> {
             if let validatedConfiguration = validatedConfiguration {
                 // It's already validated and saved
