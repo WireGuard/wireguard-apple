@@ -199,13 +199,13 @@ extension TunnelEditTableViewController {
             return interfaceFieldKeyValueCell(for: tableView, at: indexPath, with: field)
         }
     }
-    
+
     private func generateKeyPairCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
         let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = field.rawValue
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
-            
+
             self.tunnelViewModel.interfaceData[.privateKey] = Curve25519.generatePrivateKey().base64EncodedString()
             if let privateKeyRow = self.interfaceFieldsBySection[indexPath.section].firstIndex(of: .privateKey),
                 let publicKeyRow = self.interfaceFieldsBySection[indexPath.section].firstIndex(of: .publicKey) {
@@ -227,7 +227,7 @@ extension TunnelEditTableViewController {
     private func interfaceFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
-        
+
         switch field {
         case .name, .privateKey:
             cell.placeholderText = "Required"
@@ -260,7 +260,7 @@ extension TunnelEditTableViewController {
         if field == .privateKey {
             cell.onValueBeingEdited = { [weak self] value in
                 guard let self = self else { return }
-                
+
                 self.tunnelViewModel.interfaceData[.privateKey] = value
                 if let row = self.interfaceFieldsBySection[indexPath.section].firstIndex(of: .publicKey) {
                     self.tableView.reloadRows(at: [IndexPath(row: row, section: indexPath.section)], with: .none)
@@ -275,7 +275,7 @@ extension TunnelEditTableViewController {
     private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData) -> UITableViewCell {
         let peerFieldsToShow = peerData.shouldAllowExcludePrivateIPsControl ? peerFields : peerFields.filter { $0 != .excludePrivateIPs }
         let field = peerFieldsToShow[indexPath.row]
-        
+
         switch field {
         case .deletePeer:
             return deletePeerCell(for: tableView, at: indexPath, peerData: peerData, field: field)
@@ -285,7 +285,7 @@ extension TunnelEditTableViewController {
             return peerFieldKeyValueCell(for: tableView, at: indexPath, peerData: peerData, field: field)
         }
     }
-    
+
     private func deletePeerCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
         let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = field.rawValue
@@ -304,14 +304,14 @@ extension TunnelEditTableViewController {
                             let rowIndexPath = IndexPath(row: row, section: self.interfaceFieldsBySection.count /* First peer section */)
                             self.tableView.insertRows(at: [rowIndexPath], with: .fade)
                         }
-                        
+
                     }
                 })
             }
         }
         return cell
     }
-    
+
     private func excludePrivateIPsCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
         let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
         cell.message = field.rawValue
@@ -326,7 +326,7 @@ extension TunnelEditTableViewController {
         }
         return cell
     }
-    
+
     private func peerFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
@@ -350,11 +350,11 @@ extension TunnelEditTableViewController {
 
         cell.isValueValid = !peerData.fieldsWithError.contains(field)
         cell.value = peerData[field]
-        
+
         if field == .allowedIPs {
             cell.onValueBeingEdited = { [weak self, weak peerData] value in
                 guard let self = self, let peerData = peerData else { return }
-                
+
                 let oldValue = peerData.shouldAllowExcludePrivateIPsControl
                 peerData[.allowedIPs] = value
                 if oldValue != peerData.shouldAllowExcludePrivateIPsControl {
@@ -372,7 +372,7 @@ extension TunnelEditTableViewController {
                 peerData?[field] = value
             }
         }
-        
+
         return cell
     }
 
@@ -476,7 +476,7 @@ extension TunnelEditTableViewController {
             let option = activateOnDemandOptions[indexPath.row - 1]
             assert(option != .none)
             activateOnDemandSetting.activateOnDemandOption = option
-            
+
             let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
             UIView.performWithoutAnimation {
                 tableView.reloadRows(at: indexPaths, with: .none)
