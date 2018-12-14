@@ -19,7 +19,7 @@
 enum {
 	MAX_LOG_LINE_LENGTH = 512,
 	MAX_LINES = 1024,
-	MAGIC = 0xdeadbeefU
+	MAGIC = 0xbeefbabeU
 };
 
 struct log_line {
@@ -59,7 +59,7 @@ static bool first_before_second(const struct log_line *line1, const struct log_l
 	return false;
 }
 
-int write_logs_to_file(const char *file_name, const struct log *log1, const struct log *log2)
+int write_logs_to_file(const char *file_name, const struct log *log1, const char *tag1, const struct log *log2, const char *tag2)
 {
 	uint32_t i1, i2, len1 = log1->header.len, len2 = log2->header.len;
 	char buf[MAX_LOG_LINE_LENGTH];
@@ -78,19 +78,22 @@ int write_logs_to_file(const char *file_name, const struct log *log1, const stru
 		const struct log_line *line1 = &log1->lines[(log1->header.first + i1) % MAX_LINES];
 		const struct log_line *line2 = &log2->lines[(log2->header.first + i2) % MAX_LINES];
 		const struct log_line *line;
+		const char *tag;
 
 		if (i1 < len1 && (i2 >= len2 || first_before_second(line1, line2))) {
 			line = line1;
+			tag = tag1;
 			++i1;
 		} else if (i2 < len2 && (i1 >= len1 || first_before_second(line2, line1))) {
 			line = line2;
+			tag = tag2;
 			++i2;
 		} else {
 			break;
 		}
 		memcpy(buf, line->line, MAX_LOG_LINE_LENGTH);
 		buf[MAX_LOG_LINE_LENGTH - 1] = '\0';
-		if (fprintf(file, "%lu.%06d: %s\n", line->tv.tv_sec, line->tv.tv_usec, buf) < 0) {
+		if (fprintf(file, "%lu.%06d: [%s] %s\n", line->tv.tv_sec, line->tv.tv_usec, tag, buf) < 0) {
 			int ret = -errno;
 			fclose(file);
 			return ret;

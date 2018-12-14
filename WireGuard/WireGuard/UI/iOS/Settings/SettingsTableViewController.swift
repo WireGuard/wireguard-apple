@@ -119,7 +119,7 @@ class SettingsTableViewController: UITableViewController {
                 return
             }
 
-            let isWritten = Logger.global?.writeLog(mergedWith: networkExtensionLogFilePath, to: destinationURL.path) ?? false
+            let isWritten = Logger.global?.writeLog(called: "APP", mergedWith: networkExtensionLogFilePath, called: "NET", to: destinationURL.path) ?? false
             guard isWritten else {
                 ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Unable to write logs to file", from: self)
                 return
