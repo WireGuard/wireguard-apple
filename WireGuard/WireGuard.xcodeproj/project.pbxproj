@@ -128,7 +128,7 @@
 		6F61F1EA21B937EF00483816 /* WireGuardResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardResult.swift; sourceTree = "<group>"; };
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
-		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TunnelDetailTableViewController.swift; path = TunnelDetail/TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
+		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
 		6F689999218043390012E523 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
 		6F6899A42180447E0012E523 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		6F6899A52180447E0012E523 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
@@ -194,27 +194,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5F45418621C2C6B400994C13 /* EditTunnel */ = {
+		5F4541A721C44F5B00994C13 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */,
-				5F45418B21C2D48200994C13 /* TunnelEditReadOnlyKeyValueCell.swift */,
-			);
-			path = EditTunnel;
-			sourceTree = "<group>";
-		};
-		5F45418821C2C6CC00994C13 /* TunnelList */ = {
-			isa = PBXGroup;
-			children = (
-				6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */,
 				5F45419F21C2D6B700994C13 /* TunnelListCell.swift */,
-			);
-			path = TunnelList;
-			sourceTree = "<group>";
-		};
-		5F4541A721C44F5B00994C13 /* SharedViews */ = {
-			isa = PBXGroup;
-			children = (
+				5F45418B21C2D48200994C13 /* TunnelEditReadOnlyKeyValueCell.swift */,
 				6BB8400321892C920003598F /* CopyableLabelTableViewCell.swift */,
 				6F0068562191AFD200419BE9 /* ScrollableLabel.swift */,
 				5F45418F21C2D53800994C13 /* SwitchCell.swift */,
@@ -224,7 +208,20 @@
 				5F45418921C2D45B00994C13 /* EditableKeyValueCell.swift */,
 				5F4541A121C2D6DF00994C13 /* BorderedTextButton.swift */,
 			);
-			path = SharedViews;
+			path = View;
+			sourceTree = "<group>";
+		};
+		5F4541AC21C4720B00994C13 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */,
+				6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */,
+				6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */,
+				6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */,
+				6FDEF805218725D200D8FBF6 /* SettingsTableViewController.swift */,
+				6F7774DF217181B1006A79B3 /* MainViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */ = {
@@ -283,14 +280,9 @@
 		6F7774DE217181B1006A79B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				5F4541A721C44F5B00994C13 /* SharedViews */,
-				5F45418821C2C6CC00994C13 /* TunnelList */,
-				5F45418621C2C6B400994C13 /* EditTunnel */,
-				6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */,
-				6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */,
-				6FDEF805218725D200D8FBF6 /* SettingsTableViewController.swift */,
+				5F4541AC21C4720B00994C13 /* ViewController */,
+				5F4541A721C44F5B00994C13 /* View */,
 				6F7774E0217181B1006A79B3 /* AppDelegate.swift */,
-				6F7774DF217181B1006A79B3 /* MainViewController.swift */,
 				6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */,
 				5F45417C21C1B23600994C13 /* UITableViewCell+Reuse.swift */,
 			);

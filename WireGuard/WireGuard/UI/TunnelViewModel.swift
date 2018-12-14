@@ -3,6 +3,7 @@
 
 import UIKit
 
+//swiftlint:disable:next type_body_length
 class TunnelViewModel {
 
     enum InterfaceField: String {
