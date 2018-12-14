@@ -96,7 +96,8 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     @objc func addButtonTapped(sender: AnyObject) {
-        if self.tunnelsManager == nil { return } // Do nothing until we've loaded the tunnels
+        guard tunnelsManager != nil else { return }
+        
         let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
         let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] _ in
             self?.presentViewControllerForFileImport()
@@ -125,29 +126,30 @@ class TunnelsListTableViewController: UIViewController {
             alert.popoverPresentationController?.sourceView = sender
             alert.popoverPresentationController?.sourceRect = sender.bounds
         }
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 
     @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
-        if self.tunnelsManager == nil { return } // Do nothing until we've loaded the tunnels
+        guard tunnelsManager != nil else { return }
+        
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
         settingsNC.modalPresentationStyle = .formSheet
-        self.present(settingsNC, animated: true)
+        present(settingsNC, animated: true)
     }
 
     func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
         let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
         let editNC = UINavigationController(rootViewController: editVC)
         editNC.modalPresentationStyle = .formSheet
-        self.present(editNC, animated: true)
+        present(editNC, animated: true)
     }
 
     func presentViewControllerForFileImport() {
         let documentTypes = ["com.wireguard.config.quick", String(kUTTypeText), String(kUTTypeZipArchive)]
         let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
         filePicker.delegate = self
-        self.present(filePicker, animated: true)
+        present(filePicker, animated: true)
     }
 
     func presentViewControllerForScanningQRCode() {
@@ -155,7 +157,7 @@ class TunnelsListTableViewController: UIViewController {
         scanQRCodeVC.delegate = self
         let scanQRCodeNC = UINavigationController(rootViewController: scanQRCodeVC)
         scanQRCodeNC.modalPresentationStyle = .fullScreen
-        self.present(scanQRCodeNC, animated: true)
+        present(scanQRCodeNC, animated: true)
     }
 
     func importFromFile(url: URL, completionHandler: (() -> Void)?) {

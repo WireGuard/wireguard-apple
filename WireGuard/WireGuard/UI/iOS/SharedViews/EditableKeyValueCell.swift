@@ -3,10 +3,10 @@
 
 import UIKit
 
-class TunnelEditKeyValueCell: UITableViewCell {
+class EditableKeyValueCell: UITableViewCell {
     var key: String {
         get { return keyLabel.text ?? "" }
-        set(value) {keyLabel.text = value }
+        set(value) { keyLabel.text = value }
     }
     var value: String {
         get { return valueTextField.text ?? "" }
@@ -89,7 +89,7 @@ class TunnelEditKeyValueCell: UITableViewCell {
     
     func configureForContentSize() {
         var constraints = [NSLayoutConstraint]()
-        if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
+        if traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
             if !isStackedVertically {
                 constraints = [
@@ -113,9 +113,9 @@ class TunnelEditKeyValueCell: UITableViewCell {
             }
         }
         if !constraints.isEmpty {
-            NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
+            NSLayoutConstraint.deactivate(contentSizeBasedConstraints)
             NSLayoutConstraint.activate(constraints)
-            self.contentSizeBasedConstraints = constraints
+            contentSizeBasedConstraints = constraints
         }
     }
     
@@ -136,7 +136,7 @@ class TunnelEditKeyValueCell: UITableViewCell {
     }
 }
 
-extension TunnelEditKeyValueCell: UITextFieldDelegate {
+extension EditableKeyValueCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldValueOnBeginEditing = textField.text ?? ""
         isValueValid = true

@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
 
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.backgroundColor = UIColor.white
+        window.backgroundColor = .white
         self.window = window
 
         let mainVC = MainViewController()

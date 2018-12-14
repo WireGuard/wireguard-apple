@@ -61,7 +61,7 @@ extension Endpoint {
 extension Endpoint: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(self.stringRepresentation())
+        try container.encode(stringRepresentation())
     }
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()

@@ -3,7 +3,7 @@
 
 import UIKit
 
-class TunnelDetailKeyValueCell: CopyableLabelTableViewCell {
+class KeyValueCell: CopyableLabelTableViewCell {
     var key: String {
         get { return keyLabel.text ?? "" }
         set(value) { keyLabel.text = value }
@@ -14,7 +14,7 @@ class TunnelDetailKeyValueCell: CopyableLabelTableViewCell {
     }
     
     override var textToCopy: String? {
-        return self.valueLabel.text
+        return valueLabel.text
     }
     
     let keyLabel: UILabel = {
@@ -46,14 +46,14 @@ class TunnelDetailKeyValueCell: CopyableLabelTableViewCell {
         NSLayoutConstraint.activate([
             keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
             keyLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
-            ])
+        ])
         
         contentView.addSubview(valueLabel)
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueLabel.bottomAnchor, multiplier: 0.5)
-            ])
+        ])
         
         keyLabel.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
         keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -64,7 +64,7 @@ class TunnelDetailKeyValueCell: CopyableLabelTableViewCell {
     
     func configureForContentSize() {
         var constraints = [NSLayoutConstraint]()
-        if self.traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
+        if traitCollection.preferredContentSizeCategory.isAccessibilityCategory {
             // Stack vertically
             if !isStackedVertically {
                 constraints = [
@@ -88,9 +88,9 @@ class TunnelDetailKeyValueCell: CopyableLabelTableViewCell {
             }
         }
         if !constraints.isEmpty {
-            NSLayoutConstraint.deactivate(self.contentSizeBasedConstraints)
+            NSLayoutConstraint.deactivate(contentSizeBasedConstraints)
             NSLayoutConstraint.activate(constraints)
-            self.contentSizeBasedConstraints = constraints
+            contentSizeBasedConstraints = constraints
         }
     }
     

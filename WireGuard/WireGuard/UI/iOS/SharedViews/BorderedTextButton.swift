@@ -33,9 +33,9 @@ class BorderedTextButton: UIView {
         addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            button.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            button.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-            ])
+            button.centerXAnchor.constraint(equalTo: centerXAnchor),
+            button.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ])
         
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }

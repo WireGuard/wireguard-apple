@@ -17,13 +17,13 @@ class CopyableLabelTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
-        self.addGestureRecognizer(gestureRecognizer)
-        self.isUserInteractionEnabled = true
+        addGestureRecognizer(gestureRecognizer)
+        isUserInteractionEnabled = true
     }
 
     // MARK: - UIGestureRecognizer
     @objc func handleTapGesture(_ recognizer: UIGestureRecognizer) {
-        if !self.copyableGesture {
+        if !copyableGesture {
             return
         }
         guard recognizer.state == .recognized else { return }
@@ -31,7 +31,7 @@ class CopyableLabelTableViewCell: UITableViewCell {
         if let recognizerView = recognizer.view,
             let recognizerSuperView = recognizerView.superview, recognizerView.becomeFirstResponder() {
             let menuController = UIMenuController.shared
-            menuController.setTargetRect(self.detailTextLabel?.frame ?? recognizerView.frame, in: self.detailTextLabel?.superview ?? recognizerSuperView)
+            menuController.setTargetRect(detailTextLabel?.frame ?? recognizerView.frame, in: detailTextLabel?.superview ?? recognizerSuperView)
             menuController.setMenuVisible(true, animated: true)
         }
     }
@@ -50,6 +50,6 @@ class CopyableLabelTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.copyableGesture = true
+        copyableGesture = true
     }
 }

@@ -33,7 +33,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
 
-        guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
+        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
