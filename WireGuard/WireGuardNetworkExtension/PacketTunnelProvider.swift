@@ -140,7 +140,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func configureLogger() {
-        Logger.configureGlobal(withFilePath: FileManager.networkExtensionLogFileURL?.path, withTag: "EXT")
+        Logger.configureGlobal(withFilePath: FileManager.networkExtensionLogFileURL?.path)
         wgSetLogger { level, msgC in
             guard let msgC = msgC else { return }
             let logType: OSLogType

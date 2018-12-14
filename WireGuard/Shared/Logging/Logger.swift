@@ -5,33 +5,34 @@ import Foundation
 import os.log
 
 public class Logger {
+    enum LoggerError: Error {
+        case openFailure
+    }
     static var global: Logger?
 
-    var log: OpaquePointer?
-    var tag: String
+    var log: OpaquePointer
 
-    init(withFilePath filePath: String, withTag tag: String) {
-        self.tag = tag
-        self.log = open_log(filePath)
-        if self.log == nil {
-            os_log("Cannot open log file for writing. Log will not be saved to file.", log: OSLog.default, type: .error)
-        }
+    init(withFilePath filePath: String) throws {
+        guard let log = open_log(filePath) else { throw LoggerError.openFailure }
+        self.log = log
+    }
+
+    deinit {
+        close_log(self.log)
     }
 
     func log(message: String) {
-        guard let log = log else { return }
-        write_msg_to_log(log, String(format: "[%@] %@", tag, message.trimmingCharacters(in: .newlines)))
+        write_msg_to_log(log, message.trimmingCharacters(in: .newlines))
     }
 
-    func writeLog(mergedWith otherLogFile: String, to targetFile: String) -> Bool {
-        guard let log = log else { return false }
+    func writeLog(called ourTag: String, mergedWith otherLogFile: String, called otherTag: String, to targetFile: String) -> Bool {
         guard let other = open_log(otherLogFile) else { return false }
-        let ret = write_logs_to_file(targetFile, log, other)
+        let ret = write_logs_to_file(targetFile, log, ourTag, other, otherTag)
         close_log(other)
         return ret == 0
     }
 
-    static func configureGlobal(withFilePath filePath: String?, withTag tag: String) {
+    static func configureGlobal(withFilePath filePath: String?) {
         if Logger.global != nil {
             return
         }
@@ -39,7 +40,12 @@ public class Logger {
             os_log("Unable to determine log destination path. Log will not be saved to file.", log: OSLog.default, type: .error)
             return
         }
-        Logger.global = Logger(withFilePath: filePath, withTag: tag)
+        do {
+            try Logger.global = Logger(withFilePath: filePath)
+        } catch {
+            os_log("Unable to open log file for writing. Log will not be saved to file.", log: OSLog.default, type: .error)
+            return
+        }
         var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
         if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             appVersion += " (\(appBuild))"
