@@ -59,7 +59,7 @@ class TunnelDetailStatusCell: UITableViewCell {
             text = "Waiting"
         }
         textLabel?.text = text
-        DispatchQueue.main.async { [weak statusSwitch] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak statusSwitch] in
             guard let statusSwitch = statusSwitch else { return }
             statusSwitch.isOn = !(status == .deactivating || status == .inactive)
             statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
