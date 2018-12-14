@@ -5,11 +5,12 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <time.h>
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -62,8 +63,8 @@ static bool first_before_second(const struct log_line *line1, const struct log_l
 int write_logs_to_file(const char *file_name, const struct log *log1, const char *tag1, const struct log *log2, const char *tag2)
 {
 	uint32_t i1, i2, len1 = log1->header.len, len2 = log2->header.len;
-	char buf[MAX_LOG_LINE_LENGTH];
 	FILE *file;
+	int ret;
 
 	if (len1 > MAX_LINES)
 		len1 = MAX_LINES;
@@ -75,6 +76,8 @@ int write_logs_to_file(const char *file_name, const struct log *log1, const char
 		return -errno;
 
 	for (i1 = 0, i2 = 0;;) {
+		struct tm tm;
+		char buf[MAX_LOG_LINE_LENGTH];
 		const struct log_line *line1 = &log1->lines[(log1->header.first + i1) % MAX_LINES];
 		const struct log_line *line2 = &log2->lines[(log2->header.first + i2) % MAX_LINES];
 		const struct log_line *line;
@@ -91,16 +94,23 @@ int write_logs_to_file(const char *file_name, const struct log *log1, const char
 		} else {
 			break;
 		}
+
 		memcpy(buf, line->line, MAX_LOG_LINE_LENGTH);
 		buf[MAX_LOG_LINE_LENGTH - 1] = '\0';
-		if (fprintf(file, "%lu.%06d: [%s] %s\n", line->tv.tv_sec, line->tv.tv_usec, tag, buf) < 0) {
-			int ret = -errno;
-			fclose(file);
-			return ret;
-		}
+		if (!localtime_r(&line->tv.tv_sec, &tm))
+			goto err;
+		if (fprintf(file, "%04d-%02d-%02d %02d:%02d:%02d.%06d: [%s] %s\n",
+				  tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
+				  tm.tm_hour, tm.tm_min, tm.tm_sec, line->tv.tv_usec,
+				  tag, buf) < 0)
+			goto err;
 	}
+	errno = 0;
+
+err:
+	ret = -errno;
 	fclose(file);
-	return 0;
+	return ret;
 }
 
 struct log *open_log(const char *file_name)
