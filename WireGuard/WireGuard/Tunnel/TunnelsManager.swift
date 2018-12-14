@@ -358,8 +358,26 @@ class TunnelContainer: NSObject {
 
     @objc dynamic var isActivateOnDemandEnabled: Bool
 
-    var isAttemptingActivation = false
+    var isAttemptingActivation = false {
+        didSet {
+            if isAttemptingActivation {
+                let activationTimer = Timer(timeInterval: 5 /* seconds */, repeats: true) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.refreshStatus()
+                    if self.status == .inactive || self.status == .active {
+                        self.isAttemptingActivation = false // This also invalidates the timer
+                    }
+                }
+                self.activationTimer = activationTimer
+                RunLoop.main.add(activationTimer, forMode: .default)
+            } else {
+                self.activationTimer?.invalidate()
+                self.activationTimer = nil
+            }
+        }
+    }
     var activationAttemptId: String?
+    var activationTimer: Timer?
 
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var lastTunnelConnectionStatus: NEVPNStatus?
