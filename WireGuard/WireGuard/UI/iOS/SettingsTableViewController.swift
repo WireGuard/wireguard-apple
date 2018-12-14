@@ -40,15 +40,15 @@ class SettingsTableViewController: UITableViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsSelection = false
 
-        tableView.register(SettingsKeyValueCell.self)
-        tableView.register(SettingsButtonCell.self)
+        tableView.register(KeyValueCell.self)
+        tableView.register(ButtonCell.self)
 
         tableView.tableFooterView = UIImageView(image: UIImage(named: "wireguard.pdf"))
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        guard let logo = self.tableView.tableFooterView else { return }
+        guard let logo = tableView.tableFooterView else { return }
         
         let bottomPadding = max(tableView.layoutMargins.bottom, 10)
         let fullHeight = max(tableView.contentSize.height, tableView.bounds.size.height - tableView.layoutMargins.top - bottomPadding)
@@ -167,7 +167,8 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let field = settingsFieldsBySection[indexPath.section][indexPath.row]
         if field == .iosAppVersion || field == .goBackendVersion {
-            let cell: SettingsKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.copyableGesture = false
             cell.key = field.rawValue
             if field == .iosAppVersion {
                 var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
@@ -180,7 +181,7 @@ extension SettingsTableViewController {
             }
             return cell
         } else if field == .exportZipArchive {
-            let cell: SettingsButtonCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
@@ -188,7 +189,7 @@ extension SettingsTableViewController {
             return cell
         } else {
             assert(field == .exportLogFile)
-            let cell: SettingsButtonCell = tableView.dequeueReusableCell(for: indexPath)
+            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.rawValue
             cell.onTapped = { [weak self] in
                 self?.exportLogForLastActivatedTunnel(sourceView: cell.button)

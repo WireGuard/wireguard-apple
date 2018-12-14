@@ -63,9 +63,9 @@ extension ActivateOnDemandSetting {
         }
         self.activateOnDemandOption = activateOnDemandOption
         if activateOnDemandOption == .none {
-            self.isActivateOnDemandEnabled = false
+            isActivateOnDemandEnabled = false
         } else {
-            self.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+            isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
         }
     }
 }

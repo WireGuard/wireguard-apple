@@ -12,20 +12,20 @@ class MainViewController: UISplitViewController {
 
     init() {
         let detailVC = UIViewController()
-        detailVC.view.backgroundColor = UIColor.white
+        detailVC.view.backgroundColor = .white
         let detailNC = UINavigationController(rootViewController: detailVC)
 
         let masterVC = TunnelsListTableViewController()
         let masterNC = UINavigationController(rootViewController: masterVC)
 
-        self.tunnelsListVC = masterVC
+        tunnelsListVC = masterVC
 
         super.init(nibName: nil, bundle: nil)
 
-        self.viewControllers = [ masterNC, detailNC ]
+        viewControllers = [ masterNC, detailNC ]
 
         // State restoration
-        self.restorationIdentifier = "MainVC"
+        restorationIdentifier = "MainVC"
         masterNC.restorationIdentifier = "MasterNC"
         detailNC.restorationIdentifier = "DetailNC"
     }
@@ -35,10 +35,10 @@ class MainViewController: UISplitViewController {
     }
 
     override func viewDidLoad() {
-        self.delegate = self
+        delegate = self
 
         // On iPad, always show both masterVC and detailVC, even in portrait mode, like the Settings app
-        self.preferredDisplayMode = .allVisible
+        preferredDisplayMode = .allVisible
 
         // Create the tunnels manager, and when it's ready, inform tunnelsListVC
         TunnelsManager.create { [weak self] result in
@@ -56,7 +56,7 @@ class MainViewController: UISplitViewController {
             tunnelsManager.activationDelegate = self
 
             self.onTunnelsManagerReady?(tunnelsManager)
-        self.onTunnelsManagerReady = nil
+            self.onTunnelsManagerReady = nil
         }
     }
 }

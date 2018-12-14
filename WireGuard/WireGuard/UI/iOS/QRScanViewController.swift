@@ -2,7 +2,6 @@
 // Copyright © 2018 WireGuard LLC. All Rights Reserved.
 
 import AVFoundation
-import CoreData
 import UIKit
 
 protocol QRScanViewControllerDelegate: class {
@@ -18,8 +17,8 @@ class QRScanViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "Scan QR code"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+        title = "Scan QR code"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 
         let tipLabel = UILabel()
         tipLabel.text = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`"
@@ -102,7 +101,7 @@ class QRScanViewController: UIViewController {
             }
         }
 
-        previewLayer?.frame = self.view.bounds
+        previewLayer?.frame = view.bounds
     }
 
     func scanDidComplete(withCode code: String) {

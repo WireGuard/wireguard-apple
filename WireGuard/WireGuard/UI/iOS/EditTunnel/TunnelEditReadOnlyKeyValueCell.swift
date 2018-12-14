@@ -6,28 +6,35 @@ import UIKit
 class TunnelEditReadOnlyKeyValueCell: CopyableLabelTableViewCell {
     var key: String {
         get { return keyLabel.text ?? "" }
-        set(value) {keyLabel.text = value }
+        set(value) { keyLabel.text = value }
     }
     var value: String {
         get { return valueLabel.text }
         set(value) { valueLabel.text = value }
     }
     
-    let keyLabel: UILabel
-    let valueLabel: ScrollableLabel
+    override var textToCopy: String? {
+        return valueLabel.text
+    }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        keyLabel = UILabel()
+    let keyLabel: UILabel = {
+        let keyLabel = UILabel()
         keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
         keyLabel.adjustsFontForContentSizeCategory = true
-        valueLabel = ScrollableLabel()
+        keyLabel.textColor = .gray
+        return keyLabel
+    }()
+    
+    let valueLabel: ScrollableLabel = {
+        let valueLabel = ScrollableLabel()
         valueLabel.label.font = UIFont.preferredFont(forTextStyle: .body)
         valueLabel.label.adjustsFontForContentSizeCategory = true
-        
+        valueLabel.textColor = .gray
+        return valueLabel
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        keyLabel.textColor = UIColor.gray
-        valueLabel.textColor = UIColor.gray
         
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -44,7 +51,7 @@ class TunnelEditReadOnlyKeyValueCell: CopyableLabelTableViewCell {
             keyLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
             widthRatioConstraint
-            ])
+        ])
         
         contentView.addSubview(valueLabel)
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -52,11 +59,7 @@ class TunnelEditReadOnlyKeyValueCell: CopyableLabelTableViewCell {
             valueLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             valueLabel.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
             valueLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
-            ])
-    }
-    
-    override var textToCopy: String? {
-        return self.valueLabel.text
+        ])
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -3,14 +3,14 @@
 
 import UIKit
 
-class TunnelDetailButtonCell: UITableViewCell {
+class ButtonCell: UITableViewCell {
     var buttonText: String {
         get { return button.title(for: .normal) ?? "" }
         set(value) { button.setTitle(value, for: .normal) }
     }
     var hasDestructiveAction: Bool {
-        get { return button.tintColor == UIColor.red }
-        set(value) { button.tintColor = value ? UIColor.red : buttonStandardTintColor }
+        get { return button.tintColor == .red }
+        set(value) { button.tintColor = value ? .red : buttonStandardTintColor }
     }
     var onTapped: (() -> Void)?
     

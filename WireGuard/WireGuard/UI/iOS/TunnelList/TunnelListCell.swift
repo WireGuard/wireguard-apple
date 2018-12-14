@@ -47,14 +47,14 @@ class TunnelListCell: UITableViewCell {
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
-            ])
+        ])
         
         contentView.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
-            ])
+        ])
         
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +66,7 @@ class TunnelListCell: UITableViewCell {
             nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
             busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
             bottomAnchorConstraint
-            ])
+        ])
         
         accessoryType = .disclosureIndicator
         

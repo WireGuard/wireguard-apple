@@ -3,18 +3,20 @@
 
 import UIKit
 
-class SettingsKeyValueCell: UITableViewCell {
-    var key: String {
+class CheckmarkCell: UITableViewCell {
+    var message: String {
         get { return textLabel?.text ?? "" }
-        set(value) { textLabel?.text = value }
+        set(value) { textLabel!.text = value }
     }
-    var value: String {
-        get { return detailTextLabel?.text ?? "" }
-        set(value) { detailTextLabel?.text = value }
+    var isChecked: Bool {
+        didSet {
+            accessoryType = isChecked ? .checkmark : .none
+        }
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .value1, reuseIdentifier: SettingsKeyValueCell.reuseIdentifier)
+        isChecked = false
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -23,7 +25,7 @@ class SettingsKeyValueCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        key = ""
-        value = ""
+        message = ""
+        isChecked = false
     }
 }

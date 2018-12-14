@@ -86,8 +86,8 @@ class TunnelsManager {
     private var statusObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
-        self.tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
-        self.startObservingTunnelStatuses()
+        tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
+        startObservingTunnelStatuses()
     }
 
     static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
@@ -112,7 +112,7 @@ class TunnelsManager {
             return
         }
 
-        if self.tunnels.contains(where: { $0.name == tunnelName }) {
+        if tunnels.contains(where: { $0.name == tunnelName }) {
             completionHandler(.failure(TunnelsManagerError.tunnelAlreadyExistsWithThatName))
             return
         }
@@ -151,7 +151,7 @@ class TunnelsManager {
             return
         }
         let tail = tunnelConfigurations.dropFirst()
-        self.add(tunnelConfiguration: head) { [weak self, tail] result in
+        add(tunnelConfiguration: head) { [weak self, tail] result in
             DispatchQueue.main.async {
                 self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful + (result.isSuccess ? 1 : 0), completionHandler: completionHandler)
             }
@@ -168,7 +168,7 @@ class TunnelsManager {
         let tunnelProviderManager = tunnel.tunnelProvider
         let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
         if isNameChanged {
-            if self.tunnels.contains(where: { $0.name == tunnelName }) {
+            if tunnels.contains(where: { $0.name == tunnelName }) {
                 completionHandler(TunnelsManagerError.tunnelAlreadyExistsWithThatName)
                 return
             }
@@ -249,13 +249,13 @@ class TunnelsManager {
     }
 
     func tunnel(named tunnelName: String) -> TunnelContainer? {
-        return self.tunnels.first { $0.name == tunnelName }
+        return tunnels.first { $0.name == tunnelName }
     }
 
     func startActivation(of tunnel: TunnelContainer) {
         guard tunnels.contains(tunnel) else { return } // Ensure it's not deleted
         guard tunnel.status == .inactive else {
-            self.activationDelegate?.tunnelActivationAttemptFailed(tunnel: tunnel, error: .tunnelIsNotInactive)
+            activationDelegate?.tunnelActivationAttemptFailed(tunnel: tunnel, error: .tunnelIsNotInactive)
             return
         }
 
@@ -272,7 +272,7 @@ class TunnelsManager {
             return
         }
 
-        tunnel.startActivation(activationDelegate: self.activationDelegate)
+        tunnel.startActivation(activationDelegate: activationDelegate)
     }
 
     func startDeactivation(of tunnel: TunnelContainer) {
@@ -346,7 +346,7 @@ class TunnelsManager {
     }
 
     deinit {
-        if let statusObservationToken = self.statusObservationToken {
+        if let statusObservationToken = statusObservationToken {
             NotificationCenter.default.removeObserver(statusObservationToken)
         }
     }
@@ -371,8 +371,8 @@ class TunnelContainer: NSObject {
                 self.activationTimer = activationTimer
                 RunLoop.main.add(activationTimer, forMode: .default)
             } else {
-                self.activationTimer?.invalidate()
-                self.activationTimer = nil
+                activationTimer?.invalidate()
+                activationTimer = nil
             }
         }
     }
@@ -383,11 +383,11 @@ class TunnelContainer: NSObject {
     private var lastTunnelConnectionStatus: NEVPNStatus?
 
     init(tunnel: NETunnelProviderManager) {
-        self.name = tunnel.localizedDescription ?? "Unnamed"
+        name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
         self.status = status
-        self.isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
-        self.tunnelProvider = tunnel
+        isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
+        tunnelProvider = tunnel
         super.init()
     }
 
@@ -400,9 +400,9 @@ class TunnelContainer: NSObject {
     }
 
     func refreshStatus() {
-        let status = TunnelStatus(from: self.tunnelProvider.connection.status)
+        let status = TunnelStatus(from: tunnelProvider.connection.status)
         self.status = status
-        self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
+        isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
     }
 
     //swiftlint:disable:next function_body_length
@@ -413,9 +413,9 @@ class TunnelContainer: NSObject {
             return
         }
 
-        wg_log(.debug, message: "startActivation: Entering (tunnel: \(self.name))")
+        wg_log(.debug, message: "startActivation: Entering (tunnel: \(name))")
 
-        self.status = .activating // Ensure that no other tunnel can attempt activation until this tunnel is done trying
+        status = .activating // Ensure that no other tunnel can attempt activation until this tunnel is done trying
 
         guard tunnelProvider.isEnabled else {
             // In case the tunnel had gotten disabled, re-enable and save it,
@@ -440,14 +440,14 @@ class TunnelContainer: NSObject {
         // Start the tunnel
         do {
             wg_log(.debug, staticMessage: "startActivation: Starting tunnel")
-            self.isAttemptingActivation = true
+            isAttemptingActivation = true
             let activationAttemptId = UUID().uuidString
             self.activationAttemptId = activationAttemptId
             try (tunnelProvider.connection as? NETunnelProviderSession)?.startTunnel(options: ["activationAttemptId": activationAttemptId])
             wg_log(.debug, staticMessage: "startActivation: Success")
             activationDelegate?.tunnelActivationAttemptSucceeded(tunnel: self)
         } catch let error {
-            self.isAttemptingActivation = false
+            isAttemptingActivation = false
             guard let systemError = error as? NEVPNError else {
                 wg_log(.error, message: "Failed to activate tunnel: Error: \(error)")
                 status = .inactive
@@ -478,47 +478,6 @@ class TunnelContainer: NSObject {
 
     fileprivate func startDeactivation() {
         (tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
-    }
-}
-
-@objc enum TunnelStatus: Int {
-    case inactive
-    case activating
-    case active
-    case deactivating
-    case reasserting // Not a possible state at present
-    case restarting // Restarting tunnel (done after saving modifications to an active tunnel)
-    case waiting    // Waiting for another tunnel to be brought down
-
-    init(from systemStatus: NEVPNStatus) {
-        switch systemStatus {
-        case .connected:
-            self = .active
-        case .connecting:
-            self = .activating
-        case .disconnected:
-            self = .inactive
-        case .disconnecting:
-            self = .deactivating
-        case .reasserting:
-            self = .reasserting
-        case .invalid:
-            self = .inactive
-        }
-    }
-}
-
-extension TunnelStatus: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        switch self {
-        case .inactive: return "inactive"
-        case .activating: return "activating"
-        case .active: return "active"
-        case .deactivating: return "deactivating"
-        case .reasserting: return "reasserting"
-        case .restarting: return "restarting"
-        case .waiting: return "waiting"
-        }
     }
 }
 

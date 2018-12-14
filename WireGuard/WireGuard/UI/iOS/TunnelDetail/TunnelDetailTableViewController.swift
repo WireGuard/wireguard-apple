@@ -29,6 +29,8 @@ class TunnelDetailTableViewController: UITableViewController {
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
     private var sections = [Section]()
+    private var onDemandStatusObservervationToken: AnyObject?
+    private var statusObservervationToken: AnyObject?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -41,22 +43,26 @@ class TunnelDetailTableViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    deinit {
+        onDemandStatusObservervationToken = nil
+        statusObservervationToken = nil
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = tunnelViewModel.interfaceData[.name]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped))
+        title = tunnelViewModel.interfaceData[.name]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editTapped))
 
-        self.tableView.estimatedRowHeight = 44
-        self.tableView.rowHeight = UITableView.automaticDimension
-        self.tableView.allowsSelection = false
-        self.tableView.register(TunnelDetailStatusCell.self)
-        self.tableView.register(TunnelDetailKeyValueCell.self)
-        self.tableView.register(TunnelDetailButtonCell.self)
-        self.tableView.register(TunnelDetailActivateOnDemandCell.self)
+        tableView.estimatedRowHeight = 44
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsSelection = false
+        tableView.register(SwitchCell.self)
+        tableView.register(KeyValueCell.self)
+        tableView.register(ButtonCell.self)
 
         // State restoration
-        self.restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
+        restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
     }
 
     private func loadSections() {
@@ -76,8 +82,7 @@ class TunnelDetailTableViewController: UITableViewController {
         present(editNC, animated: true)
     }
 
-    func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView,
-                               onConfirmed: @escaping (() -> Void)) {
+    func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView, onConfirmed: @escaping (() -> Void)) {
         let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
             onConfirmed()
         }
@@ -90,7 +95,7 @@ class TunnelDetailTableViewController: UITableViewController {
         alert.popoverPresentationController?.sourceView = sourceView
         alert.popoverPresentationController?.sourceRect = sourceView.bounds
 
-        self.present(alert, animated: true, completion: nil)
+        present(alert, animated: true, completion: nil)
     }
 }
 
@@ -100,8 +105,8 @@ extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
         loadSections()
-        self.title = tunnel.name
-        self.tableView.reloadData()
+        title = tunnel.name
+        tableView.reloadData()
     }
     func tunnelEditingCancelled() {
         // Nothing to do
@@ -161,8 +166,40 @@ extension TunnelDetailTableViewController {
     }
 
     private func statusCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell: TunnelDetailStatusCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.tunnel = self.tunnel
+        let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
+        
+        let statusUpdate: (SwitchCell, TunnelStatus) -> Void = { cell, status in
+            let text: String
+            switch status {
+            case .inactive:
+                text = "Inactive"
+            case .activating:
+                text = "Activating"
+            case .active:
+                text = "Active"
+            case .deactivating:
+                text = "Deactivating"
+            case .reasserting:
+                text = "Reactivating"
+            case .restarting:
+                text = "Restarting"
+            case .waiting:
+                text = "Waiting"
+            }
+            cell.textLabel?.text = text
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak cell] in
+                cell?.switchView.isOn = !(status == .deactivating || status == .inactive)
+                cell?.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
+            }
+            cell.isEnabled = status == .active || status == .inactive
+        }
+        
+        statusUpdate(cell, tunnel.status)
+        statusObservervationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+            guard let cell = cell else { return }
+            statusUpdate(cell, tunnel.status)
+        }
+        
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
             if isOn {
@@ -176,7 +213,7 @@ extension TunnelDetailTableViewController {
 
     private func interfaceCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let field = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)[indexPath.row]
-        let cell: TunnelDetailKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
         cell.value = tunnelViewModel.interfaceData[field]
         return cell
@@ -184,20 +221,24 @@ extension TunnelDetailTableViewController {
 
     private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData) -> UITableViewCell {
         let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[indexPath.row]
-        let cell: TunnelDetailKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
         cell.value = peerData[field]
         return cell
     }
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell: TunnelDetailActivateOnDemandCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.tunnel = self.tunnel
+        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.key = "Activate on demand"
+        cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
+        onDemandStatusObservervationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
+            cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
+        }
         return cell
     }
 
     private func deleteConfigurationCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell: TunnelDetailButtonCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
         cell.buttonText = "Delete tunnel"
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self] in
