@@ -79,8 +79,8 @@ class TunnelEditTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
 
-        tableView.register(EditableKeyValueCell.self)
-        tableView.register(TunnelEditReadOnlyKeyValueCell.self)
+        tableView.register(TunnelEditKeyValueCell.self)
+        tableView.register(TunnelEditEditableKeyValueCell.self)
         tableView.register(ButtonCell.self)
         tableView.register(SwitchCell.self)
         tableView.register(CheckmarkCell.self)
@@ -218,14 +218,14 @@ extension TunnelEditTableViewController {
     }
 
     private func publicKeyCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
-        let cell: TunnelEditReadOnlyKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
         cell.value = tunnelViewModel.interfaceData[field]
         return cell
     }
 
     private func interfaceFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, with field: TunnelViewModel.InterfaceField) -> UITableViewCell {
-        let cell: EditableKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditEditableKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
 
         switch field {
@@ -328,7 +328,7 @@ extension TunnelEditTableViewController {
     }
 
     private func peerFieldKeyValueCell(for tableView: UITableView, at indexPath: IndexPath, peerData: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField) -> UITableViewCell {
-        let cell: EditableKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: TunnelEditEditableKeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.rawValue
 
         switch field {
