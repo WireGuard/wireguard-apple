@@ -29,6 +29,7 @@ class TunnelEditEditableKeyValueCell: TunnelEditKeyValueCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        copyableGesture = false
         valueTextField.textColor = .black
         valueTextField.isEnabled = true
         valueLabelScrollView.isScrollEnabled = false

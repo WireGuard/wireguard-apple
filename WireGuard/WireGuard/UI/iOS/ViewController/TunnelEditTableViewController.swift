@@ -246,7 +246,6 @@ extension TunnelEditTableViewController {
         // Bind values to view model
         cell.value = tunnelViewModel.interfaceData[field]
         if field == .dns { // While editing DNS, you might directly set exclude private IPs
-            cell.onValueChanged = nil
             cell.onValueBeingEdited = { [weak self] value in
                 self?.tunnelViewModel.interfaceData[field] = value
             }
@@ -254,7 +253,6 @@ extension TunnelEditTableViewController {
             cell.onValueChanged = { [weak self] value in
                 self?.tunnelViewModel.interfaceData[field] = value
             }
-            cell.onValueBeingEdited = nil
         }
         // Compute public key live
         if field == .privateKey {
@@ -266,8 +264,6 @@ extension TunnelEditTableViewController {
                     self.tableView.reloadRows(at: [IndexPath(row: row, section: indexPath.section)], with: .none)
                 }
             }
-        } else {
-            cell.onValueBeingEdited = nil
         }
         return cell
     }
