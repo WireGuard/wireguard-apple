@@ -92,7 +92,7 @@ class TunnelsManager {
 
     static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
         #if targetEnvironment(simulator)
-        completionHandler(.success(TunnelsManager(tunnelProviders: [])))
+        completionHandler(.success(TunnelsManager(tunnelProviders: MockTunnels.createMockTunnels())))
         #else
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             if let error = error {
@@ -272,13 +272,21 @@ class TunnelsManager {
             return
         }
 
+        #if targetEnvironment(simulator)
+        tunnel.status = .active
+        #else
         tunnel.startActivation(activationDelegate: activationDelegate)
+        #endif
     }
 
     func startDeactivation(of tunnel: TunnelContainer) {
         tunnel.isAttemptingActivation = false
         guard tunnel.status != .inactive && tunnel.status != .deactivating else { return }
+        #if targetEnvironment(simulator)
+        tunnel.status = .inactive
+        #else
         tunnel.startDeactivation()
+        #endif
     }
 
     func refreshStatuses() {
