@@ -64,9 +64,7 @@ class TunnelViewModel {
                     scratchpad[field] = stringValue
                 }
                 if field == .privateKey {
-                    if (stringValue.count == TunnelViewModel.keyLengthInBase64),
-                        let privateKey = Data(base64Encoded: stringValue),
-                        privateKey.count == TunnelConfiguration.keyLength {
+                    if stringValue.count == TunnelViewModel.keyLengthInBase64, let privateKey = Data(base64Encoded: stringValue), privateKey.count == TunnelConfiguration.keyLength {
                         let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
                         scratchpad[.publicKey] = publicKey.base64EncodedString()
                     } else {
