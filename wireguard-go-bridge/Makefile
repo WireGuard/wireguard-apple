@@ -5,7 +5,7 @@
 # These are generally passed to us by xcode, but we set working defaults for standalone compilation too.
 ARCHS ?= arm64 armv7
 SDK_NAME ?= iphoneos
-SDKROOT ?= $(shell xcrun --sdk $(SDK_NAME) --show-sdk-path)
+SDK_DIR ?= $(shell xcrun --sdk $(SDK_NAME) --show-sdk-path)
 CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
 CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
 
@@ -16,7 +16,7 @@ BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
 
 UPSTREAM_FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)) ../wireguard-go/go.mod ../wireguard-go/go.sum
 DOWNSTREAM_FILES := $(wildcard src/*.go) $(wildcard src/*/*.go)
-CFLAGS_PREFIX := $(DEPLOYMENT_TARGET_CLANG_FLAG_PREFIX)$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)) -isysroot $(SDKROOT) -arch
+CFLAGS_PREFIX := $(DEPLOYMENT_TARGET_CLANG_FLAG_PREFIX)$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)) -isysroot $(SDK_DIR) -arch
 GOARCH_arm64 := arm64
 GOARCH_armv7 := arm
 GOARCH_x86_64 := amd64
