@@ -11,18 +11,23 @@ class MockTunnels {
         "demo",
         "edgesecurity",
         "home",
-        "office"
+        "office",
+        "infra-fr",
+        "infra-us",
+        "krantz",
+        "metheny",
+        "frisell"
     ]
-    static let address = "192.168.4.184/24"
-    static let dnsServers = ["8.8.8.8", "4.4.4.4"]
-    static let endpoint = "demo.wireguard.com:12912"
+    static let address = "192.168.%d.%d/32"
+    static let dnsServers = ["8.8.8.8", "8.8.4.4"]
+    static let endpoint = "demo.wireguard.com:51820"
     static let allowedIPs = "0.0.0.0/0"
 
     static func createMockTunnels() -> [NETunnelProviderManager] {
         return tunnelNames.map { tunnelName -> NETunnelProviderManager in
 
             var interface = InterfaceConfiguration(name: tunnelName, privateKey: Curve25519.generatePrivateKey())
-            interface.addresses = [IPAddressRange(from: address)!]
+            interface.addresses = [IPAddressRange(from: String(format: address, Int.random(in: 1 ... 10), Int.random(in: 1 ... 254)))!]
             interface.dns = dnsServers.map { DNSServer(from: $0)! }
 
             var peer = PeerConfiguration(publicKey: Curve25519.generatePublicKey(fromPrivateKey: Curve25519.generatePrivateKey()))
