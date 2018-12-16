@@ -2,24 +2,24 @@
 #
 # Copyright (C) 2018 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
 
+# These are generally passed to us by xcode, but we set working defaults for standalone compilation too.
+ARCHS ?= arm64 armv7
+SDK_NAME ?= iphoneos
+SDKROOT ?= $(shell xcrun --sdk $(SDK_NAME) --show-sdk-path)
+CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
+CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
+
+export CC ?= clang
+LIPO ?= lipo
+DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
+BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
+
 UPSTREAM_FILES := $(filter-out %/main.go %/queueconstants.go,$(wildcard ../wireguard-go/*/*.go) $(wildcard ../wireguard-go/*.go)) ../wireguard-go/go.mod ../wireguard-go/go.sum
 DOWNSTREAM_FILES := $(wildcard src/*.go) $(wildcard src/*/*.go)
-
-ARCHS ?= arm64 armv7 x86_64
+CFLAGS_PREFIX := $(DEPLOYMENT_TARGET_CLANG_FLAG_PREFIX)$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)) -isysroot $(SDKROOT) -arch
 GOARCH_arm64 := arm64
 GOARCH_armv7 := arm
 GOARCH_x86_64 := amd64
-DEPLOYMENT_CFLAGS := $(DEPLOYMENT_TARGET_CLANG_FLAG_PREFIX)$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME))
-CGO_FLAGS_x86_64 := -arch x86_64 -isysroot $(shell xcrun --sdk iphonesimulator --show-sdk-path) $(DEPLOYMENT_CFLAGS)
-CGO_FLAGS_arm64 := -arch arm64 -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) $(DEPLOYMENT_CFLAGS)
-CGO_FLAGS_armv7 := -arch armv7 -isysroot $(shell xcrun --sdk iphoneos --show-sdk-path) $(DEPLOYMENT_CFLAGS)
-CC_x86_64 := $(shell xcrun --sdk iphonesimulator --find clang)
-CC_arm64 := $(shell xcrun --sdk iphoneos --find clang)
-CC_armv7 := $(shell xcrun --sdk iphoneos --find clang)
-CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
-CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
-DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
-BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
 export GOOS := darwin
 export CGO_ENABLED := 1
 
@@ -57,16 +57,15 @@ $(foreach FILE,$(UPSTREAM_FILES),$(eval $(call copy-src-to-build,../wireguard-go
 $(foreach FILE,$(DOWNSTREAM_FILES),$(eval $(call copy-src-to-build,src/,$(FILE))))
 
 $(BUILDDIR)/.prepared: $(GOROOT)/bin/go
-	cd "$(BUILDDIR)" || exit $$?; $(foreach ARCH,$(ARCHS),CC="$(CC_$(ARCH))" CGO_CFLAGS="$(CGO_FLAGS_$(ARCH))" CGO_LDFLAGS="$(CGO_FLAGS_$(ARCH))" GOARCH="$(GOARCH_$(ARCH))" go get -tags ios || { ret=$$?; chmod -fR +w "$(GOPATH)/pkg/mod"; rm -rf "$(GOPATH)/pkg/mod"; exit $$ret; };)
+	cd "$(BUILDDIR)" || exit $$?; $(foreach ARCH,$(ARCHS),CGO_CFLAGS="$(CFLAGS_PREFIX) $(ARCH)" CGO_LDFLAGS="$(CFLAGS_PREFIX) $(ARCH)" GOARCH="$(GOARCH_$(ARCH))" go get -tags ios || { ret=$$?; chmod -fR +w "$(GOPATH)/pkg/mod"; rm -rf "$(GOPATH)/pkg/mod"; exit $$ret; };)
 	chmod -fR +w "$(GOPATH)/pkg/mod"
 	touch "$@"
 
 define libwg-go-a
 $(BUILDDIR)/libwg-go-$(1).a: $(BUILDDIR)/.prepared
 	cd "$(BUILDDIR)" || exit $$$$?; \
-	CC="$(CC_$(1))" \
-	CGO_CFLAGS="$(CGO_FLAGS_$(1))" \
-	CGO_LDFLAGS="$(CGO_FLAGS_$(1))" \
+	CGO_CFLAGS="$(CFLAGS_PREFIX) $(ARCH)" \
+	CGO_LDFLAGS="$(CFLAGS_PREFIX) $(ARCH)" \
 	GOARCH="$(GOARCH_$(1))" \
 	go build -tags ios -ldflags=-w -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive && go version > "$(BUILDDIR)/.gobuildversion"; \
 	ret=$$$$?; \
@@ -80,16 +79,11 @@ $(DESTDIR)/wireguard-go-version.h: ../wireguard-go/version.go
 
 $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
 	@mkdir -vp "$(DESTDIR)"
-	xcrun --sdk iphoneos lipo -create -output "$@" $^
-
-$(DESTDIR)/example: example.c $(DESTDIR)/libwg-go.a
-	xcrun --sdk iphoneos clang -framework CoreFoundation -isysroot "$(shell xcrun --sdk iphoneos --show-sdk-path)" -arch arm64 -arch armv7 -L"$(DESTDIR)" -lwg-go -o "$@" "$<"
-
-example: $(DESTDIR)/example
+	$(LIPO) -create -output "$@" $^
 
 clean:
-	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/example" "$(DESTDIR)/wireguard-go-version.h"
+	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
 
 install: build
 
-.PHONY: clean build example version-header install
+.PHONY: clean build version-header install
