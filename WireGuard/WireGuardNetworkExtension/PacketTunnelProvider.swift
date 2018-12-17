@@ -13,16 +13,11 @@ enum PacketTunnelProviderError: Error {
     case coultNotSetNetworkSettings
 }
 
-/// A packet tunnel provider object.
 class PacketTunnelProvider: NEPacketTunnelProvider {
-
-    // MARK: Properties
-
+    
     private var wgHandle: Int32?
 
     private var networkMonitor: NWPathMonitor?
-
-    // MARK: NEPacketTunnelProvider
 
     deinit {
         networkMonitor?.cancel()
@@ -45,7 +40,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     //swiftlint:disable:next function_body_length
     func startTunnel(with tunnelConfiguration: TunnelConfiguration, errorNotifier: ErrorNotifier, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
-
         configureLogger()
 
         wg_log(.info, message: "Starting tunnel '\(tunnelConfiguration.interface.name)'")
@@ -65,8 +59,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             fatalError()
         }
         assert(endpoints.count == resolvedEndpoints.count)
-
-        // Setup packetTunnelSettingsGenerator
 
         let packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
@@ -110,8 +102,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         wgHandle = handle
 
-        // Apply network settings
-
         let networkSettings: NEPacketTunnelNetworkSettings = packetTunnelSettingsGenerator.generateNetworkSettings()
         setTunnelNetworkSettings(networkSettings) { error in
             if let error = error {
@@ -120,12 +110,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 errorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
-                startTunnelCompletionHandler(nil /* No errors */)
+                startTunnelCompletionHandler(nil)
             }
         }
     }
 
-    /// Begin the process of stopping the tunnel.
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         networkMonitor?.cancel()
         networkMonitor = nil

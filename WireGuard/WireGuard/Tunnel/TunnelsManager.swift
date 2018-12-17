@@ -79,7 +79,6 @@ enum TunnelsManagerError: WireGuardAppError {
 }
 
 class TunnelsManager {
-
     private var tunnels: [TunnelContainer]
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
@@ -166,9 +165,9 @@ class TunnelsManager {
         }
 
         let tunnelProviderManager = tunnel.tunnelProvider
-        let isNameChanged = (tunnelName != tunnelProviderManager.localizedDescription)
+        let isNameChanged = tunnelName != tunnelProviderManager.localizedDescription
         if isNameChanged {
-            if tunnels.contains(where: { $0.name == tunnelName }) {
+            guard !tunnels.contains(where: { $0.name == tunnelName }) else {
                 completionHandler(TunnelsManagerError.tunnelAlreadyExistsWithThatName)
                 return
             }
@@ -178,7 +177,7 @@ class TunnelsManager {
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
-        let isActivatingOnDemand = (!tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled)
+        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
@@ -187,7 +186,6 @@ class TunnelsManager {
                 completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
                 return
             }
-            
             guard let self = self else { return }
             
             if isNameChanged {
@@ -439,8 +437,7 @@ class TunnelContainer: NSObject {
                 }
                 wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling")
                 wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
-                self.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown),
-                                     activationDelegate: activationDelegate)
+                self.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), activationDelegate: activationDelegate)
             }
             return
         }
@@ -486,18 +483,5 @@ class TunnelContainer: NSObject {
 
     fileprivate func startDeactivation() {
         (tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
-    }
-}
-
-extension NEVPNStatus: CustomDebugStringConvertible {
-    public var debugDescription: String {
-        switch self {
-        case .connected: return "connected"
-        case .connecting: return "connecting"
-        case .disconnected: return "disconnected"
-        case .disconnecting: return "disconnecting"
-        case .reasserting: return "reasserting"
-        case .invalid: return "invalid"
-        }
     }
 }
