@@ -19,65 +19,6 @@ protocol TunnelsManagerActivationDelegate: class {
     func tunnelActivationSucceeded(tunnel: TunnelContainer) // status changed to connected
 }
 
-enum TunnelsManagerActivationAttemptError: WireGuardAppError {
-    case tunnelIsNotInactive
-    case anotherTunnelIsOperational(otherTunnelName: String)
-    case failedWhileStarting // startTunnel() throwed
-    case failedWhileSaving // save config after re-enabling throwed
-    case failedWhileLoading // reloading config throwed
-    case failedBecauseOfTooManyErrors // recursion limit reached
-
-    var alertText: AlertText {
-        switch self {
-        case .tunnelIsNotInactive:
-            return ("Activation failure", "The tunnel is already active or in the process of being activated")
-        case .anotherTunnelIsOperational(let otherTunnelName):
-            return ("Activation failure", "Please disconnect '\(otherTunnelName)' before enabling this tunnel.")
-        case .failedWhileStarting, .failedWhileSaving, .failedWhileLoading, .failedBecauseOfTooManyErrors:
-            return ("Activation failure", "The tunnel could not be activated.")
-        }
-    }
-}
-
-enum TunnelsManagerActivationError: WireGuardAppError {
-    case activationFailed
-    case activationFailedWithExtensionError(title: String, message: String)
-    var alertText: AlertText {
-        switch self {
-        case .activationFailed:
-            return ("Activation failure", "The tunnel could not be activated. Please ensure that you are connected to the Internet.")
-        case .activationFailedWithExtensionError(let title, let message):
-            return (title, message)
-        }
-    }
-}
-
-enum TunnelsManagerError: WireGuardAppError {
-    case tunnelNameEmpty
-    case tunnelAlreadyExistsWithThatName
-    case systemErrorOnListingTunnels
-    case systemErrorOnAddTunnel
-    case systemErrorOnModifyTunnel
-    case systemErrorOnRemoveTunnel
-
-    var alertText: AlertText {
-        switch self {
-        case .tunnelNameEmpty:
-            return ("No name provided", "Cannot create tunnel with an empty name")
-        case .tunnelAlreadyExistsWithThatName:
-            return ("Name already exists", "A tunnel with that name already exists")
-        case .systemErrorOnListingTunnels:
-            return ("Unable to list tunnels", "")
-        case .systemErrorOnAddTunnel:
-            return ("Unable to create tunnel", "")
-        case .systemErrorOnModifyTunnel:
-            return ("Unable to modify tunnel", "")
-        case .systemErrorOnRemoveTunnel:
-            return ("Unable to remove tunnel", "")
-        }
-    }
-}
-
 class TunnelsManager {
     private var tunnels: [TunnelContainer]
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
@@ -96,7 +37,7 @@ class TunnelsManager {
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             if let error = error {
                 wg_log(.error, message: "Failed to load tunnel provider managers: \(error)")
-                completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels))
+                completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels(systemError: error)))
                 return
             }
             completionHandler(.success(TunnelsManager(tunnelProviders: managers ?? [])))
@@ -126,7 +67,7 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Add: Saving configuration failed: \(error!)")
-                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel))
+                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error!)))
                 return
             }
             
@@ -183,7 +124,7 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Modify: Saving configuration failed: \(error!)")
-                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
+                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error!))
                 return
             }
             guard let self = self else { return }
@@ -209,7 +150,7 @@ class TunnelsManager {
                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
                     guard error == nil else {
                         wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error!)")
-                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel)
+                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error!))
                         return
                     }
                     completionHandler(nil)
@@ -226,7 +167,7 @@ class TunnelsManager {
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Remove: Saving configuration failed: \(error!)")
-                completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel)
+                completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel(systemError: error!))
                 return
             }
             if let self = self {
@@ -415,7 +356,7 @@ class TunnelContainer: NSObject {
     fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, activationDelegate: TunnelsManagerActivationDelegate?) {
         if recursionCount >= 8 {
             wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
-            activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedBecauseOfTooManyErrors)
+            activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedBecauseOfTooManyErrors(lastSystemError: lastError!))
             return
         }
 
@@ -432,7 +373,7 @@ class TunnelContainer: NSObject {
                 guard let self = self else { return }
                 if error != nil {
                     wg_log(.error, message: "Error saving tunnel after re-enabling: \(error!)")
-                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileSaving)
+                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileSaving(systemError: error!))
                     return
                 }
                 wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling")
@@ -456,13 +397,13 @@ class TunnelContainer: NSObject {
             guard let systemError = error as? NEVPNError else {
                 wg_log(.error, message: "Failed to activate tunnel: Error: \(error)")
                 status = .inactive
-                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting)
+                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting(systemError: error))
                 return
             }
             guard systemError.code == NEVPNError.configurationInvalid || systemError.code == NEVPNError.configurationStale else {
                 wg_log(.error, message: "Failed to activate tunnel: VPN Error: \(error)")
                 status = .inactive
-                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting)
+                activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileStarting(systemError: systemError))
                 return
             }
             wg_log(.debug, staticMessage: "startActivation: Will reload tunnel and then try to start it.")
@@ -471,7 +412,7 @@ class TunnelContainer: NSObject {
                 if error != nil {
                     wg_log(.error, message: "startActivation: Error reloading tunnel: \(error!)")
                     self.status = .inactive
-                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileLoading)
+                    activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileLoading(systemError: systemError))
                     return
                 }
                 wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded")
