@@ -399,6 +399,8 @@ extension TunnelEditTableViewController {
             cell.isOn = activateOnDemandSetting.isActivateOnDemandEnabled
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self else { return }
+                guard isOn != self.activateOnDemandSetting.isActivateOnDemandEnabled else { return }
+
                 let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
                 if isOn {
                     self.activateOnDemandSetting.isActivateOnDemandEnabled = true
