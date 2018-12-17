@@ -24,7 +24,6 @@ class MainViewController: UISplitViewController {
 
         viewControllers = [ masterNC, detailNC ]
 
-        // State restoration
         restorationIdentifier = "MainVC"
         masterNC.restorationIdentifier = "MasterNC"
         detailNC.restorationIdentifier = "DetailNC"

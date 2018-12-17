@@ -89,7 +89,6 @@ class TunnelsListTableViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
-        // Remove selection when getting back to the list view on iPhone
         if let selectedRowIndexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: selectedRowIndexPath, animated: false)
         }
