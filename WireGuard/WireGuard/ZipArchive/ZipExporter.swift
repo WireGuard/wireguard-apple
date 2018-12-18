@@ -7,7 +7,7 @@ enum ZipExporterError: WireGuardAppError {
     case noTunnelsToExport
 
     var alertText: AlertText {
-        return ("Nothing to export", "There are no tunnels to export")
+        return (tr("alertNoTunnelsToExportTitle"), tr("alertNoTunnelsToExportMessage"))
     }
 }
 

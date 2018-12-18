@@ -14,17 +14,17 @@ enum TunnelsManagerError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .tunnelNameEmpty:
-            return ("No name provided", "Cannot create tunnel with an empty name")
+            return (tr("alertTunnelNameEmptyTitle"), tr("alertTunnelNameEmptyMessage"))
         case .tunnelAlreadyExistsWithThatName:
-            return ("Name already exists", "A tunnel with that name already exists")
+            return (tr("alertTunnelAlreadyExistsWithThatNameTitle"), tr("alertTunnelAlreadyExistsWithThatNameMessage"))
         case .systemErrorOnListingTunnels(let systemError):
-            return ("Unable to list tunnels", systemError.UIString)
+            return (tr("alertSystemErrorOnListingTunnelsTitle"), systemError.localizedUIString)
         case .systemErrorOnAddTunnel(let systemError):
-            return ("Unable to create tunnel", systemError.UIString)
+            return (tr("alertSystemErrorOnAddTunnelTitle"), systemError.localizedUIString)
         case .systemErrorOnModifyTunnel(let systemError):
-            return ("Unable to modify tunnel", systemError.UIString)
+            return (tr("alertSystemErrorOnModifyTunnelTitle"), systemError.localizedUIString)
         case .systemErrorOnRemoveTunnel(let systemError):
-            return ("Unable to remove tunnel", systemError.UIString)
+            return (tr("alertSystemErrorOnRemoveTunnelTitle"), systemError.localizedUIString)
         }
     }
 }
@@ -39,12 +39,13 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .tunnelIsNotInactive:
-            return ("Activation failure", "The tunnel is already active or in the process of being activated")
+            return (tr("alertTunnelActivationErrorTunnelIsNotInactiveTitle"), tr("alertTunnelActivationErrorTunnelIsNotInactiveMessage"))
         case .failedWhileStarting(let systemError),
              .failedWhileSaving(let systemError),
              .failedWhileLoading(let systemError),
              .failedBecauseOfTooManyErrors(let systemError):
-            return ("Activation failure", "The tunnel could not be activated. " + systemError.UIString)
+            return (tr("alertTunnelActivationSystemErrorTitle"),
+                    tr(format: "alertTunnelActivationSystemErrorMessage (%@)", systemError.localizedUIString))
         }
     }
 }
@@ -56,7 +57,7 @@ enum TunnelsManagerActivationError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .activationFailed:
-            return ("Activation failure", "The tunnel could not be activated. Please ensure that you are connected to the Internet.")
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
         case .activationFailedWithExtensionError(let title, let message):
             return (title, message)
         }
@@ -64,21 +65,21 @@ enum TunnelsManagerActivationError: WireGuardAppError {
 }
 
 extension Error {
-    var UIString: String {
+    var localizedUIString: String {
         if let systemError = self as? NEVPNError {
             switch systemError {
             case NEVPNError.configurationInvalid:
-                return "The configuration is invalid."
+                return tr("alertSystemErrorMessageTunnelConfigurationInvalid")
             case NEVPNError.configurationDisabled:
-                return "The configuration is disabled."
+                return tr("alertSystemErrorMessageTunnelConfigurationDisabled")
             case NEVPNError.connectionFailed:
-                return "The connection failed."
+                return tr("alertSystemErrorMessageTunnelConnectionFailed")
             case NEVPNError.configurationStale:
-                return "The configuration is stale."
+                return tr("alertSystemErrorMessageTunnelConfigurationStale")
             case NEVPNError.configurationReadWriteFailed:
-                return "Reading or writing the configuration failed."
+                return tr("alertSystemErrorMessageTunnelConfigurationReadWriteFailed")
             case NEVPNError.configurationUnknown:
-                return "Unknown system error."
+                return tr("alertSystemErrorMessageTunnelConfigurationUnknown")
             default:
                 return ""
             }

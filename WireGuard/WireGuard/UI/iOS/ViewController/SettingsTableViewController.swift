@@ -6,11 +6,20 @@ import os.log
 
 class SettingsTableViewController: UITableViewController {
 
-    enum SettingsFields: String {
-        case iosAppVersion = "WireGuard for iOS"
-        case goBackendVersion = "WireGuard Go Backend"
-        case exportZipArchive = "Export zip archive"
-        case exportLogFile = "Export log file"
+    enum SettingsFields {
+        case iosAppVersion
+        case goBackendVersion
+        case exportZipArchive
+        case exportLogFile
+
+        var localizedUIString: String {
+            switch self {
+            case .iosAppVersion: return tr("settingsVersionKeyWireGuardForIOS")
+            case .goBackendVersion: return tr("settingsVersionKeyWireGuardGoBackend")
+            case .exportZipArchive: return tr("settingsExportZipButtonTitle")
+            case .exportLogFile: return tr("settingsExportLogFileButtonTitle")
+            }
+        }
     }
 
     let settingsFieldsBySection: [[SettingsFields]] = [
@@ -33,7 +42,7 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Settings"
+        title = tr("settingsViewTitle")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
 
         tableView.estimatedRowHeight = 44
@@ -109,19 +118,19 @@ class SettingsTableViewController: UITableViewController {
             if FileManager.default.fileExists(atPath: destinationURL.path) {
                 let isDeleted = FileManager.deleteFile(at: destinationURL)
                 if !isDeleted {
-                    ErrorPresenter.showErrorAlert(title: "Log export failed", message: "The pre-existing log could not be cleared", from: self)
+                    ErrorPresenter.showErrorAlert(title: tr("alertUnableToRemovePreviousLogTitle"), message: tr("alertUnableToRemovePreviousLogMessage"), from: self)
                     return
                 }
             }
 
             guard let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path else {
-                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Unable to determine extension log path", from: self)
+                ErrorPresenter.showErrorAlert(title: tr("alertUnableToFindExtensionLogPathTitle"), message: tr("alertUnableToFindExtensionLogPathMessage"), from: self)
                 return
             }
 
             let isWritten = Logger.global?.writeLog(called: "APP", mergedWith: networkExtensionLogFilePath, called: "NET", to: destinationURL.path) ?? false
             guard isWritten else {
-                ErrorPresenter.showErrorAlert(title: "Log export failed", message: "Unable to write logs to file", from: self)
+                ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
                 return
             }
 
@@ -153,11 +162,11 @@ extension SettingsTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "About"
+            return tr("settingsSectionTitleAbout")
         case 1:
-            return "Export configurations"
+            return tr("settingsSectionTitleExportConfigurations")
         case 2:
-            return "Tunnel log"
+            return tr("settingsSectionTitleTunnelLog")
         default:
             return nil
         }
@@ -168,7 +177,7 @@ extension SettingsTableViewController {
         if field == .iosAppVersion || field == .goBackendVersion {
             let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
             cell.copyableGesture = false
-            cell.key = field.rawValue
+            cell.key = field.localizedUIString
             if field == .iosAppVersion {
                 var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
                 if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
@@ -181,7 +190,7 @@ extension SettingsTableViewController {
             return cell
         } else if field == .exportZipArchive {
             let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.buttonText = field.rawValue
+            cell.buttonText = field.localizedUIString
             cell.onTapped = { [weak self] in
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
             }
@@ -189,7 +198,7 @@ extension SettingsTableViewController {
         } else {
             assert(field == .exportLogFile)
             let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.buttonText = field.rawValue
+            cell.buttonText = field.localizedUIString
             cell.onTapped = { [weak self] in
                 self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
             }

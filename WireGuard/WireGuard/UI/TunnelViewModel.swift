@@ -6,29 +6,54 @@ import UIKit
 //swiftlint:disable:next type_body_length
 class TunnelViewModel {
 
-    enum InterfaceField: String {
-        case name = "Name"
-        case privateKey = "Private key"
-        case publicKey = "Public key"
-        case generateKeyPair = "Generate keypair"
-        case addresses = "Addresses"
-        case listenPort = "Listen port"
-        case mtu = "MTU"
-        case dns = "DNS servers"
+    enum InterfaceField {
+        case name
+        case privateKey
+        case publicKey
+        case generateKeyPair
+        case addresses
+        case listenPort
+        case mtu
+        case dns
+
+        var localizedUIString: String {
+            switch self {
+            case .name: return tr("tunnelInterfaceName")
+            case .privateKey: return tr("tunnelInterfacePrivateKey")
+            case .publicKey: return tr("tunnelInterfacePublicKey")
+            case .generateKeyPair: return tr("tunnelInterfaceGenerateKeypair")
+            case .addresses: return tr("tunnelInterfaceAddresses")
+            case .listenPort: return tr("tunnelInterfaceListenPort")
+            case .mtu: return tr("tunnelInterfaceMTU")
+            case .dns: return tr("tunnelInterfaceDNS")
+            }
+        }
     }
 
     static let interfaceFieldsWithControl: Set<InterfaceField> = [
         .generateKeyPair
     ]
 
-    enum PeerField: String {
-        case publicKey = "Public key"
-        case preSharedKey = "Preshared key"
-        case endpoint = "Endpoint"
-        case persistentKeepAlive = "Persistent keepalive"
-        case allowedIPs = "Allowed IPs"
-        case excludePrivateIPs = "Exclude private IPs"
-        case deletePeer = "Delete peer"
+    enum PeerField {
+        case publicKey
+        case preSharedKey
+        case endpoint
+        case persistentKeepAlive
+        case allowedIPs
+        case excludePrivateIPs
+        case deletePeer
+
+        var localizedUIString: String {
+            switch self {
+            case .publicKey: return tr("tunnelPeerPublicKey")
+            case .preSharedKey: return tr("tunnelPeerPreSharedKey")
+            case .endpoint: return tr("tunnelPeerEndpoint")
+            case .persistentKeepAlive: return tr("tunnelPeerPersistentKeepalive")
+            case .allowedIPs: return tr("tunnelPeerAllowedIPs")
+            case .excludePrivateIPs: return tr("tunnelPeerExcludePrivateIPs")
+            case .deletePeer: return tr("deletePeerButtonTitle")
+            }
+        }
     }
 
     static let peerFieldsWithControl: Set<PeerField> = [
@@ -103,15 +128,15 @@ class TunnelViewModel {
             fieldsWithError.removeAll()
             guard let name = scratchpad[.name]?.trimmingCharacters(in: .whitespacesAndNewlines), (!name.isEmpty) else {
                 fieldsWithError.insert(.name)
-                return .error("Interface name is required")
+                return .error(tr("alertInvalidInterfaceMessageNameRequired"))
             }
             guard let privateKeyString = scratchpad[.privateKey] else {
                 fieldsWithError.insert(.privateKey)
-                return .error("Interface's private key is required")
+                return .error(tr("alertInvalidInterfaceMessagePrivateKeyRequired"))
             }
             guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
                 fieldsWithError.insert(.privateKey)
-                return .error("Interface's private key must be a 32-byte key in base64 encoding")
+                return .error(tr("alertInvalidInterfaceMessagePrivateKeyInvalid"))
             }
             var config = InterfaceConfiguration(name: name, privateKey: privateKey)
             var errorMessages = [String]()
@@ -122,7 +147,7 @@ class TunnelViewModel {
                         addresses.append(address)
                     } else {
                         fieldsWithError.insert(.addresses)
-                        errorMessages.append("Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation")
+                        errorMessages.append(tr("alertInvalidInterfaceMessageAddressInvalid"))
                     }
                 }
                 config.addresses = addresses
@@ -132,7 +157,7 @@ class TunnelViewModel {
                     config.listenPort = listenPort
                 } else {
                     fieldsWithError.insert(.listenPort)
-                    errorMessages.append("Interface's listen port must be between 0 and 65535, or unspecified")
+                    errorMessages.append(tr("alertInvalidInterfaceMessageListenPortInvalid"))
                 }
             }
             if let mtuString = scratchpad[.mtu] {
@@ -140,7 +165,7 @@ class TunnelViewModel {
                     config.mtu = mtu
                 } else {
                     fieldsWithError.insert(.mtu)
-                    errorMessages.append("Interface's MTU must be between 576 and 65535, or unspecified")
+                    errorMessages.append(tr("alertInvalidInterfaceMessageMTUInvalid"))
                 }
             }
             if let dnsString = scratchpad[.dns] {
@@ -150,7 +175,7 @@ class TunnelViewModel {
                         dnsServers.append(dnsServer)
                     } else {
                         fieldsWithError.insert(.dns)
-                        errorMessages.append("Interface's DNS servers must be a list of comma-separated IP addresses")
+                        errorMessages.append(tr("alertInvalidInterfaceMessageDNSInvalid"))
                     }
                 }
                 config.dns = dnsServers
@@ -243,11 +268,11 @@ class TunnelViewModel {
             fieldsWithError.removeAll()
             guard let publicKeyString = scratchpad[.publicKey] else {
                 fieldsWithError.insert(.publicKey)
-                return .error("Peer's public key is required")
+                return .error(tr("alertInvalidPeerMessagePublicKeyRequired"))
             }
             guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
                 fieldsWithError.insert(.publicKey)
-                return .error("Peer's public key must be a 32-byte key in base64 encoding")
+                return .error(tr("alertInvalidPeerMessagePublicKeyInvalid"))
             }
             var config = PeerConfiguration(publicKey: publicKey)
             var errorMessages = [String]()
@@ -256,7 +281,7 @@ class TunnelViewModel {
                     config.preSharedKey = preSharedKey
                 } else {
                     fieldsWithError.insert(.preSharedKey)
-                    errorMessages.append("Peer's preshared key must be a 32-byte key in base64 encoding")
+                    errorMessages.append(tr("alertInvalidPeerMessagePreSharedKeyInvalid"))
                 }
             }
             if let allowedIPsString = scratchpad[.allowedIPs] {
@@ -266,7 +291,7 @@ class TunnelViewModel {
                         allowedIPs.append(allowedIP)
                     } else {
                         fieldsWithError.insert(.allowedIPs)
-                        errorMessages.append("Peer's allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation")
+                        errorMessages.append(tr("alertInvalidPeerMessageAllowedIPsInvalid"))
                     }
                 }
                 config.allowedIPs = allowedIPs
@@ -276,7 +301,7 @@ class TunnelViewModel {
                     config.endpoint = endpoint
                 } else {
                     fieldsWithError.insert(.endpoint)
-                    errorMessages.append("Peer's endpoint must be of the form 'host:port' or '[host]:port'")
+                    errorMessages.append(tr("alertInvalidPeerMessageEndpointInvalid"))
                 }
             }
             if let persistentKeepAliveString = scratchpad[.persistentKeepAlive] {
@@ -284,7 +309,7 @@ class TunnelViewModel {
                     config.persistentKeepAlive = persistentKeepAlive
                 } else {
                     fieldsWithError.insert(.persistentKeepAlive)
-                    errorMessages.append("Peer's persistent keepalive must be between 0 to 65535, or unspecified")
+                    errorMessages.append(tr("alertInvalidPeerMessagePersistentKeepaliveInvalid"))
                 }
             }
 
@@ -354,7 +379,7 @@ class TunnelViewModel {
 
     enum SaveResult<Configuration> {
         case saved(Configuration)
-        case error(String) // TODO: Localize error messages
+        case error(String)
     }
 
     var interfaceData: InterfaceData
@@ -425,7 +450,7 @@ class TunnelViewModel {
             let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
             let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
             if peerPublicKeysArray.count != peerPublicKeysSet.count {
-                return .error("Two or more peers cannot have the same public key")
+                return .error(tr("alertInvalidPeerMessagePublicKeyDuplicated"))
             }
 
             let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration, peers: peerConfigurations)
@@ -440,13 +465,13 @@ extension TunnelViewModel {
     static func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
         switch activateOnDemandOption {
         case .none:
-            return "Off"
+            return tr("tunnelOnDemandOptionOff")
         case .useOnDemandOverWiFiOrCellular:
-            return "Wi-Fi or cellular"
+            return tr("tunnelOnDemandOptionWiFiOrCellular")
         case .useOnDemandOverWiFiOnly:
-            return "Wi-Fi only"
+            return tr("tunnelOnDemandOptionWiFiOnly")
         case .useOnDemandOverCellularOnly:
-            return "Cellular only"
+            return tr("tunnelOnDemandOptionCellularOnly")
         }
     }
 

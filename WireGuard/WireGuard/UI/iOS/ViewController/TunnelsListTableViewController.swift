@@ -20,7 +20,7 @@ class TunnelsListTableViewController: UIViewController {
     
     let centeredAddButton: BorderedTextButton = {
         let button = BorderedTextButton()
-        button.title = "Add a tunnel"
+        button.title = tr("tunnelsListCenteredAddTunnelButtonTitle")
         button.isHidden = true
         return button
     }()
@@ -72,9 +72,9 @@ class TunnelsListTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "WireGuard"
+        title = tr("tunnelsListTitle")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Settings", style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListSettingsButtonTitle"), style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
 
         restorationIdentifier = "TunnelsListVC"
     }
@@ -97,25 +97,25 @@ class TunnelsListTableViewController: UIViewController {
     @objc func addButtonTapped(sender: AnyObject) {
         guard tunnelsManager != nil else { return }
         
-        let alert = UIAlertController(title: "", message: "Add a new WireGuard tunnel", preferredStyle: .actionSheet)
-        let importFileAction = UIAlertAction(title: "Create from file or archive", style: .default) { [weak self] _ in
+        let alert = UIAlertController(title: "", message: tr("addTunnelMenuHeader"), preferredStyle: .actionSheet)
+        let importFileAction = UIAlertAction(title: tr("addTunnelMenuImportFile"), style: .default) { [weak self] _ in
             self?.presentViewControllerForFileImport()
         }
         alert.addAction(importFileAction)
 
-        let scanQRCodeAction = UIAlertAction(title: "Create from QR code", style: .default) { [weak self] _ in
+        let scanQRCodeAction = UIAlertAction(title: tr("addTunnelMenuQRCode"), style: .default) { [weak self] _ in
             self?.presentViewControllerForScanningQRCode()
         }
         alert.addAction(scanQRCodeAction)
 
-        let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] _ in
+        let createFromScratchAction = UIAlertAction(title: tr("addTunnelMenuFromScratch"), style: .default) { [weak self] _ in
             if let self = self, let tunnelsManager = self.tunnelsManager {
                 self.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager)
             }
         }
         alert.addAction(createFromScratchAction)
 
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
         alert.addAction(cancelAction)
 
         if let sender = sender as? UIBarButtonItem {
@@ -172,9 +172,9 @@ class TunnelsListTableViewController: UIViewController {
                         completionHandler?()
                         return
                     }
-                    ErrorPresenter.showErrorAlert(title: "Created \(numberSuccessful) tunnels",
-                        message: "Created \(numberSuccessful) of \(configs.count) tunnels from zip archive",
-                        from: self, onPresented: completionHandler)
+                    let title = tr(format: "alertImportedFromZipTitle (%d)", numberSuccessful)
+                    let message = tr(format: "alertImportedFromZipMessage (%1$d of %2$d)", numberSuccessful, configs.count)
+                    ErrorPresenter.showErrorAlert(title: title, message: message, from: self, onPresented: completionHandler)
                 }
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
@@ -189,8 +189,7 @@ class TunnelsListTableViewController: UIViewController {
                     }
                 }
             } else {
-                ErrorPresenter.showErrorAlert(title: "Unable to import tunnel",
-                                              message: "An error occured when importing the tunnel configuration.",
+                ErrorPresenter.showErrorAlert(title: tr("alertUnableToImportTitle"), message: tr("alertUnableToImportMessage"),
                                               from: self, onPresented: completionHandler)
             }
         }
@@ -266,7 +265,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView,
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completionHandler in
+        let deleteAction = UIContextualAction(style: .destructive, title: tr("tunnelsListSwipeDeleteButtonTitle")) { [weak self] _, _, completionHandler in
             guard let tunnelsManager = self?.tunnelsManager else { return }
             let tunnel = tunnelsManager.tunnel(at: indexPath.row)
             tunnelsManager.remove(tunnel: tunnel) { error in

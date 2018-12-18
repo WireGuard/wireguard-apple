@@ -17,11 +17,11 @@ class QRScanViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "Scan QR code"
+        title = tr("scanQRCodeViewTitle")
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 
         let tipLabel = UILabel()
-        tipLabel.text = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`"
+        tipLabel.text = tr("scanQRCodeTipText")
         tipLabel.adjustsFontSizeToFitWidth = true
         tipLabel.textColor = .lightGray
         tipLabel.textAlignment = .center
@@ -39,7 +39,7 @@ class QRScanViewController: UIViewController {
             let captureSession = captureSession,
             captureSession.canAddInput(videoInput),
             captureSession.canAddOutput(metadataOutput) else {
-                scanDidEncounterError(title: "Camera Unsupported", message: "This device is not able to scan QR codes")
+                scanDidEncounterError(title: tr("alertScanQRCodeCameraUnsupportedTitle"), message: tr("alertScanQRCodeCameraUnsupportedMessage"))
                 return
         }
 
@@ -103,16 +103,16 @@ class QRScanViewController: UIViewController {
     func scanDidComplete(withCode code: String) {
         let scannedTunnelConfiguration = try? WgQuickConfigFileParser.parse(code, name: "Scanned")
         guard let tunnelConfiguration = scannedTunnelConfiguration else {
-            scanDidEncounterError(title: "Invalid QR Code", message: "The scanned QR code is not a valid WireGuard configuration")
+            scanDidEncounterError(title: tr("alertScanQRCodeInvalidQRCodeTitle"), message: tr("alertScanQRCodeInvalidQRCodeMessage"))
             return
         }
 
-        let alert = UIAlertController(title: NSLocalizedString("Please name the scanned tunnel", comment: ""), message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(title: tr("alertScanQRCodeNamePromptTitle"), message: nil, preferredStyle: .alert)
         alert.addTextField(configurationHandler: nil)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: tr("actionCancel"), style: .cancel) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         })
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Save", comment: ""), style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: tr("actionSave"), style: .default) { [weak self] _ in
             guard let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty else { return }
             tunnelConfiguration.interface.name = title
             if let self = self {
@@ -126,7 +126,7 @@ class QRScanViewController: UIViewController {
 
     func scanDidEncounterError(title: String, message: String) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+        alertController.addAction(UIAlertAction(title: tr("actionOK"), style: .default) { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         })
         present(alertController, animated: true)
@@ -145,7 +145,7 @@ extension QRScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         guard let metadataObject = metadataObjects.first,
             let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject,
             let stringValue = readableObject.stringValue else {
-                scanDidEncounterError(title: "Invalid Code", message: "The scanned code could not be read")
+                scanDidEncounterError(title: tr("alertScanQRCodeUnreadableQRCodeTitle"), message: tr("alertScanQRCodeUnreadableQRCodeMessage"))
                 return
         }
 

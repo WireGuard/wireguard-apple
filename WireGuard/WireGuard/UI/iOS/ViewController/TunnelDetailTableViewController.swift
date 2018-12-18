@@ -85,7 +85,7 @@ class TunnelDetailTableViewController: UITableViewController {
         let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
             onConfirmed()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
         let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
         alert.addAction(destroyAction)
         alert.addAction(cancelAction)
@@ -137,13 +137,13 @@ extension TunnelDetailTableViewController {
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch sections[section] {
         case .status:
-            return "Status"
+            return tr("tunnelSectionTitleStatus")
         case .interface:
-            return "Interface"
+            return tr("tunnelSectionTitleInterface")
         case .peer:
-            return "Peer"
+            return tr("tunnelSectionTitlePeer")
         case .onDemand:
-            return "On-Demand Activation"
+            return tr("tunnelSectionTitleOnDemand")
         case .delete:
             return nil
         }
@@ -171,19 +171,19 @@ extension TunnelDetailTableViewController {
             let text: String
             switch status {
             case .inactive:
-                text = "Inactive"
+                text = tr("tunnelStatusInactive")
             case .activating:
-                text = "Activating"
+                text = tr("tunnelStatusActivating")
             case .active:
-                text = "Active"
+                text = tr("tunnelStatusActive")
             case .deactivating:
-                text = "Deactivating"
+                text = tr("tunnelStatusDeactivating")
             case .reasserting:
-                text = "Reactivating"
+                text = tr("tunnelStatusReasserting")
             case .restarting:
-                text = "Restarting"
+                text = tr("tunnelStatusRestarting")
             case .waiting:
-                text = "Waiting"
+                text = tr("tunnelStatusWaiting")
             }
             cell.textLabel?.text = text
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak cell] in
@@ -213,7 +213,7 @@ extension TunnelDetailTableViewController {
     private func interfaceCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let field = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.key = field.rawValue
+        cell.key = field.localizedUIString
         cell.value = tunnelViewModel.interfaceData[field]
         return cell
     }
@@ -221,14 +221,14 @@ extension TunnelDetailTableViewController {
     private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData) -> UITableViewCell {
         let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.key = field.rawValue
+        cell.key = field.localizedUIString
         cell.value = peerData[field]
         return cell
     }
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.key = "Activate on demand"
+        cell.key = tr("tunnelOnDemandKey")
         cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
         onDemandStatusObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
             cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
@@ -238,11 +238,11 @@ extension TunnelDetailTableViewController {
 
     private func deleteConfigurationCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.buttonText = "Delete tunnel"
+        cell.buttonText = tr("deleteTunnelButtonTitle")
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
-            self.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak self] in
+            self.showConfirmationAlert(message: tr("deleteTunnelConfirmationAlertMessage"), buttonTitle: tr("deleteTunnelConfirmationAlertButtonTitle"), from: cell) { [weak self] in
                 guard let self = self else { return }
                 self.tunnelsManager.remove(tunnel: self.tunnel) { error in
                     if error != nil {

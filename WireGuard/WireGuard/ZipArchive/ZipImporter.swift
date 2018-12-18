@@ -7,7 +7,7 @@ enum ZipImporterError: WireGuardAppError {
     case noTunnelsInZipArchive
 
     var alertText: AlertText {
-        return ("No tunnels in zip archive", "No .conf tunnel files were found inside the zip archive.")
+        return (tr("alertNoTunnelsInImportedZipArchiveTitle"), tr("alertNoTunnelsInImportedZipArchiveMessage"))
     }
 }
 
