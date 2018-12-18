@@ -1,0 +1,210 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018 WireGuard LLC. All Rights Reserved.
+
+// Generic alert action names
+
+"actionOK" = "OK";
+"actionCancel" = "Cancel";
+"actionSave" = "Save";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Settings";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Add a tunnel";
+"tunnelsListSwipeDeleteButtonTitle" = "Delete";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Add a new WireGuard tunnel";
+"addTunnelMenuImportFile" = "Create from file or archive";
+"addTunnelMenuQRCode" = "Create from QR code";
+"addTunnelMenuFromScratch" = "Create from scratch";
+
+// Tunnels list alerts
+
+"alertImportedFromZipTitle (%d)" = "Created %d tunnels";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Created %1$d of %2$d tunnels from zip archive";
+
+"alertUnableToImportTitle" = "Unable to import tunnel";
+"alertUnableToImportMessage" = "An error occured when importing the tunnel configuration.";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "New configuration";
+"editTunnelViewTitle" = "Edit configuration";
+
+"tunnelSectionTitleStatus" = "Status";
+
+"tunnelStatusInactive" = "Inactive";
+"tunnelStatusActivating" = "Activating";
+"tunnelStatusActive" = "Active";
+"tunnelStatusDeactivating" = "Deactivating";
+"tunnelStatusReasserting" = "Reactivating";
+"tunnelStatusRestarting" = "Restarting";
+"tunnelStatusWaiting" = "Waiting";
+
+"tunnelSectionTitleInterface" = "Interface";
+
+"tunnelInterfaceName" = "Name";
+"tunnelInterfacePrivateKey" = "Private key";
+"tunnelInterfacePublicKey" = "Public key";
+"tunnelInterfaceGenerateKeypair" = "Generate keypair";
+"tunnelInterfaceAddresses" = "Addresses";
+"tunnelInterfaceListenPort" = "Listen port";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS servers";
+
+"tunnelSectionTitlePeer" = "Peer";
+
+"tunnelPeerPublicKey" = "Public key";
+"tunnelPeerPreSharedKey" = "Preshared key";
+"tunnelPeerEndpoint" = "Endpoint";
+"tunnelPeerPersistentKeepalive" = "Persistent keepalive";
+"tunnelPeerAllowedIPs" = "Allowed IPs";
+"tunnelPeerExcludePrivateIPs" = "Exclude private IPs";
+
+"tunnelSectionTitleOnDemand" = "On-Demand Activation";
+
+"tunnelOnDemandKey" = "Activate on demand";
+"tunnelOnDemandOptionOff" = "Off";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi or cellular";
+"tunnelOnDemandOptionWiFiOnly" = "Wi-Fi only";
+"tunnelOnDemandOptionCellularOnly" = "Cellular only";
+
+"addPeerButtonTitle" = "Add peer";
+
+"deletePeerButtonTitle" = "Delete peer";
+"deletePeerConfirmationAlertButtonTitle" = "Delete";
+"deletePeerConfirmationAlertMessage" = "Delete this peer?";
+
+"deleteTunnelButtonTitle" = "Delete tunnel";
+"deleteTunnelConfirmationAlertButtonTitle" = "Delete";
+"deleteTunnelConfirmationAlertMessage" = "Delete this tunnel?";
+
+"tunnelEditPlaceholderTextRequired" = "Required";
+"tunnelEditPlaceholderTextOptional" = "Optional";
+"tunnelEditPlaceholderTextAutomatic" = "Automatic";
+"tunnelEditPlaceholderTextOff" = "Off";
+
+// Error alerts while creating / editing a tunnel configuration
+
+/* Alert title for error in the interface data */
+"alertInvalidInterfaceTitle" = "Invalid interface";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Interface name is required";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface's private key is required";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Interface's private key must be a 32-byte key in base64 encoding";
+"alertInvalidInterfaceMessageAddressInvalid" = "Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Interface's listen port must be between 0 and 65535, or unspecified";
+"alertInvalidInterfaceMessageMTUInvalid" = "Interface's MTU must be between 576 and 65535, or unspecified";
+"alertInvalidInterfaceMessageDNSInvalid" = "Interface's DNS servers must be a list of comma-separated IP addresses";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Invalid peer";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Peer's public key is required";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Peer's public key must be a 32-byte key in base64 encoding";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Peer's preshared key must be a 32-byte key in base64 encoding";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Peer's allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation";
+"alertInvalidPeerMessageEndpointInvalid" = "Peer's endpoint must be of the form 'host:port' or '[host]:port'";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Peer's persistent keepalive must be between 0 to 65535, or unspecified";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Two or more peers cannot have the same public key";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Scan QR code";
+"scanQRCodeTipText" = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Camera Unsupported";
+"alertScanQRCodeCameraUnsupportedMessage" = "This device is not able to scan QR codes";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Invalid QR Code";
+"alertScanQRCodeInvalidQRCodeMessage" = "The scanned QR code is not a valid WireGuard configuration";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Invalid Code";
+"alertScanQRCodeUnreadableQRCodeMessage" = "The scanned code could not be read";
+
+"alertScanQRCodeNamePromptTitle" = "Please name the scanned tunnel";
+
+// Settings UI
+
+"settingsViewTitle" = "Settings";
+
+"settingsSectionTitleAbout" = "About";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard for iOS";
+"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+
+"settingsSectionTitleExportConfigurations" = "Export configurations";
+"settingsExportZipButtonTitle" = "Export zip archive";
+
+"settingsSectionTitleTunnelLog" = "Tunnel log";
+"settingsExportLogFileButtonTitle" = "Export log file";
+
+// Settings alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Log export failed";
+"alertUnableToRemovePreviousLogMessage" = "The pre-existing log could not be cleared";
+
+"alertUnableToFindExtensionLogPathTitle" = "Log export failed";
+"alertUnableToFindExtensionLogPathMessage" = "Unable to determine extension log path";
+
+"alertUnableToWriteLogTitle" = "Log export failed";
+"alertUnableToWriteLogMessage" = "Unable to write logs to file";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "Unable to read zip archive";
+"alertCantOpenInputZipFileMessage" = "The zip archive could not be read.";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Unable to create zip archive";
+"alertCantOpenOutputZipFileForWritingMessage" = "Could not open zip file for writing.";
+
+"alertBadArchiveTitle" = "Unable to read zip archive";
+"alertBadArchiveMessage" = "Bad or corrupt zip archive.";
+
+"alertNoTunnelsToExportTitle" = "Nothing to export";
+"alertNoTunnelsToExportMessage" = "There are no tunnels to export";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "No tunnels in zip archive";
+"alertNoTunnelsInImportedZipArchiveMessage" = "No .conf tunnel files were found inside the zip archive.";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "Activation failure";
+"alertTunnelActivationFailureMessage" = "The tunnel could not be activated. Please ensure that you are connected to the Internet.";
+
+"alertTunnelNameEmptyTitle" = "No name provided";
+"alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Name already exists";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "A tunnel with that name already exists";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Activation failure";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "The tunnel is already active or in the process of being activated";
+
+// Tunnel management error alerts on system error
+
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+"alertSystemErrorOnListingTunnelsTitle" = "Unable to list tunnels";
+"alertSystemErrorOnAddTunnelTitle" = "Unable to create tunnel";
+"alertSystemErrorOnModifyTunnelTitle" = "Unable to modify tunnel";
+"alertSystemErrorOnRemoveTunnelTitle" = "Unable to remove tunnel";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "Activation failure";
+"alertTunnelActivationSystemErrorMessage (%@)" = "The tunnel could not be activated. %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "The configuration is invalid.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "The configuration is disabled.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "The connection failed.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "The configuration is stale.";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "Unknown system error.";

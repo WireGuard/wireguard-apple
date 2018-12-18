@@ -11,11 +11,11 @@ enum ZipArchiveError: WireGuardAppError {
     var alertText: AlertText {
         switch self {
         case .cantOpenInputZipFile:
-            return ("Unable to read zip archive", "The zip archive could not be read.")
+            return (tr("alertCantOpenInputZipFileTitle"), tr("alertCantOpenInputZipFileMessage"))
         case .cantOpenOutputZipFileForWriting:
-            return ("Unable to create zip archive", "Could not open zip file for writing.")
+            return (tr("alertCantOpenOutputZipFileForWritingTitle"), tr("alertCantOpenOutputZipFileForWritingMessage"))
         case .badArchive:
-            return ("Unable to read zip archive", "Bad or corrupt zip archive.")
+            return (tr("alertBadArchiveTitle"), tr("alertBadArchiveMessage"))
         }
     }
 }
