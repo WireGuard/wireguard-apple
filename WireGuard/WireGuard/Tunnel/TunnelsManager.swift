@@ -24,6 +24,7 @@ class TunnelsManager {
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
     private var statusObservationToken: AnyObject?
+    private var waiteeObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
@@ -205,6 +206,7 @@ class TunnelsManager {
         if let tunnelInOperation = tunnels.first(where: { $0.status != .inactive }) {
             wg_log(.info, message: "Tunnel '\(tunnel.name)' waiting for deactivation of '\(tunnelInOperation.name)'")
             tunnel.status = .waiting
+            activateWaitingTunnelOnDeactivation(of: tunnelInOperation)
             if tunnelInOperation.status != .deactivating {
                 startDeactivation(of: tunnelInOperation)
             }
@@ -230,6 +232,18 @@ class TunnelsManager {
 
     func refreshStatuses() {
         tunnels.forEach { $0.refreshStatus() }
+    }
+
+    private func activateWaitingTunnelOnDeactivation(of tunnel: TunnelContainer) {
+        waiteeObservationToken = tunnel.observe(\.status) { [weak self] tunnel, _ in
+            guard let self = self else { return }
+            if tunnel.status == .inactive {
+                if let waitingTunnel = self.tunnels.first(where: { $0.status == .waiting }) {
+                    waitingTunnel.startActivation(activationDelegate: self.activationDelegate)
+                }
+                self.waiteeObservationToken = nil
+            }
+        }
     }
 
     private func startObservingTunnelStatuses() {
@@ -268,13 +282,6 @@ class TunnelsManager {
             }
 
             tunnel.refreshStatus()
-
-            // In case some other tunnel is waiting for this tunnel to get deactivated
-            if session.status == .disconnected || session.status == .invalid {
-                if let waitingTunnel = self.tunnels.first(where: { $0.status == .waiting }) {
-                    waitingTunnel.startActivation(activationDelegate: self.activationDelegate)
-                }
-            }
         }
     }
 
@@ -308,18 +315,21 @@ class TunnelContainer: NSObject {
     var isAttemptingActivation = false {
         didSet {
             if isAttemptingActivation {
+                self.activationTimer?.invalidate()
                 let activationTimer = Timer(timeInterval: 5 /* seconds */, repeats: true) { [weak self] _ in
                     guard let self = self else { return }
-                    self.refreshStatus()
-                    if self.status == .inactive || self.status == .active {
-                        self.isAttemptingActivation = false // This also invalidates the timer
+                    wg_log(.debug, message: "Status update notification timeout for tunnel '\(self.name)'. Tunnel status is now '\(self.tunnelProvider.connection.status)'.")
+                    switch self.tunnelProvider.connection.status {
+                    case .connected, .disconnected, .invalid:
+                        self.activationTimer?.invalidate()
+                        self.activationTimer = nil
+                    default:
+                        break
                     }
+                    self.refreshStatus()
                 }
                 self.activationTimer = activationTimer
                 RunLoop.main.add(activationTimer, forMode: .default)
-            } else {
-                activationTimer?.invalidate()
-                activationTimer = nil
             }
         }
     }
