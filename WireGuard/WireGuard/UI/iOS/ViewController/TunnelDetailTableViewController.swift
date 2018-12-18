@@ -29,8 +29,8 @@ class TunnelDetailTableViewController: UITableViewController {
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
     private var sections = [Section]()
-    private var onDemandStatusObservervationToken: AnyObject?
-    private var statusObservervationToken: AnyObject?
+    private var onDemandStatusObservationToken: AnyObject?
+    private var statusObservationToken: AnyObject?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -45,8 +45,8 @@ class TunnelDetailTableViewController: UITableViewController {
     }
     
     deinit {
-        onDemandStatusObservervationToken = nil
-        statusObservervationToken = nil
+        onDemandStatusObservationToken = nil
+        statusObservationToken = nil
     }
 
     override func viewDidLoad() {
@@ -196,7 +196,7 @@ extension TunnelDetailTableViewController {
         }
         
         statusUpdate(cell, tunnel.status)
-        statusObservervationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+        statusObservationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
             guard let cell = cell else { return }
             statusUpdate(cell, tunnel.status)
         }
@@ -232,7 +232,7 @@ extension TunnelDetailTableViewController {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = "Activate on demand"
         cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
-        onDemandStatusObservervationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
+        onDemandStatusObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
             cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
         }
         return cell

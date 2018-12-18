@@ -8,12 +8,12 @@ class TunnelListCell: UITableViewCell {
         didSet(value) {
             // Bind to the tunnel's name
             nameLabel.text = tunnel?.name ?? ""
-            nameObservervationToken = tunnel?.observe(\.name) { [weak self] tunnel, _ in
+            nameObservationToken = tunnel?.observe(\.name) { [weak self] tunnel, _ in
                 self?.nameLabel.text = tunnel.name
             }
             // Bind to the tunnel's status
             update(from: tunnel?.status)
-            statusObservervationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
+            statusObservationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
                 self?.update(from: tunnel.status)
             }
         }
@@ -36,8 +36,8 @@ class TunnelListCell: UITableViewCell {
     
     let statusSwitch = UISwitch()
     
-    private var statusObservervationToken: AnyObject?
-    private var nameObservervationToken: AnyObject?
+    private var statusObservationToken: AnyObject?
+    private var nameObservationToken: AnyObject?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
