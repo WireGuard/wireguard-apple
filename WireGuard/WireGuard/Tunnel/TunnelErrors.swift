@@ -70,17 +70,17 @@ extension Error {
         if let systemError = self as? NEVPNError {
             switch systemError {
             case NEVPNError.configurationInvalid:
-                return "The configuration is invalid"
+                return "The configuration is invalid."
             case NEVPNError.configurationDisabled:
-                return "The configuration is disabled"
+                return "The configuration is disabled."
             case NEVPNError.connectionFailed:
-                return "The connection failed"
+                return "The connection failed."
             case NEVPNError.configurationStale:
-                return "The configuration is stale"
+                return "The configuration is stale."
             case NEVPNError.configurationReadWriteFailed:
-                return "Reading or writing the configuration failed"
+                return "Reading or writing the configuration failed."
             case NEVPNError.configurationUnknown:
-                return "Unknown system error"
+                return "Unknown system error."
             default:
                 return ""
             }
