@@ -11,7 +11,6 @@ struct Endpoint {
 }
 
 // MARK: Converting to and from String
-// For use in the UI
 
 extension Endpoint {
     init?(from string: String) {
@@ -55,7 +54,6 @@ extension Endpoint {
 }
 
 // MARK: Codable
-// For serializing to disk
 
 @available(OSX 10.14, iOS 12.0, *)
 extension Endpoint: Codable {

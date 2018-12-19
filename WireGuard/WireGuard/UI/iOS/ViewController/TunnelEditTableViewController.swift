@@ -449,7 +449,6 @@ extension TunnelEditTableViewController {
         alert.addAction(destroyAction)
         alert.addAction(cancelAction)
 
-        // popoverPresentationController will be nil on iPhone and non-nil on iPad
         alert.popoverPresentationController?.sourceView = sourceView
         alert.popoverPresentationController?.sourceRect = sourceView.bounds
 

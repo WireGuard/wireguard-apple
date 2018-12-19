@@ -127,7 +127,6 @@ class SettingsTableViewController: UITableViewController {
 
             DispatchQueue.main.async {
                 let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-                // popoverPresentationController shall be non-nil on the iPad
                 activityVC.popoverPresentationController?.sourceView = sourceView
                 activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
                 activityVC.completionWithItemsHandler = { _, _, _, _ in

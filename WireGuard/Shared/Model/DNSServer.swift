@@ -10,7 +10,6 @@ struct DNSServer {
 }
 
 // MARK: Converting to and from String
-// For use in the UI
 
 extension DNSServer {
     init?(from addressString: String) {
@@ -28,7 +27,6 @@ extension DNSServer {
 }
 
 // MARK: Codable
-// For serializing to disk
 
 @available(OSX 10.14, iOS 12.0, *)
 extension DNSServer: Codable {
