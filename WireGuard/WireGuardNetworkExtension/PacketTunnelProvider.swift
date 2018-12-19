@@ -41,6 +41,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let tunnelName = tunnelConfiguration.interface.name
         wg_log(.info, message: "Starting tunnel '\(tunnelName)'")
 
+        if activationAttemptId != nil {
+            wg_log(.info, staticMessage: "Tunnel activated from the app")
+        } else {
+            wg_log(.info, staticMessage: "Tunnel not activated from the app")
+        }
+
         let isActivateOnDemandEnabled = tunnelProviderProtocol.isActivateOnDemandEnabled
         if isActivateOnDemandEnabled {
             wg_log(.info, staticMessage: "Tunnel has Activate On Demand enabled")
