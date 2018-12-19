@@ -8,7 +8,7 @@ import os.log
 
 enum PacketTunnelProviderError: Error {
     case savedProtocolConfigurationIsInvalid
-    case dnsResolutionFailure(hostnames: [String])
+    case dnsResolutionFailure(tunnelName: String, isActivateOnDemandEnabled: Bool)
     case couldNotStartWireGuard
     case coultNotSetNetworkSettings
 }
@@ -38,21 +38,22 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         configureLogger()
 
-        wg_log(.info, message: "Starting tunnel '\(tunnelConfiguration.interface.name)'")
+        let tunnelName = tunnelConfiguration.interface.name
+        wg_log(.info, message: "Starting tunnel '\(tunnelName)'")
+
+        let isActivateOnDemandEnabled = tunnelProviderProtocol.isActivateOnDemandEnabled
+        if isActivateOnDemandEnabled {
+            wg_log(.info, staticMessage: "Tunnel has Activate On Demand enabled")
+        } else {
+            wg_log(.info, staticMessage: "Tunnel has Activate On Demand disabled")
+        }
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        var resolvedEndpoints = [Endpoint?]()
-        do {
-            resolvedEndpoints = try DNSResolver.resolveSync(endpoints: endpoints)
-        } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
-            wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
-            wg_log(.error, message: "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
-            errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
-            startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure(hostnames: hostnames))
+        guard let resolvedEndpoints = resolveDomainNames(endpoints: endpoints, isActivateOnDemandEnabled: isActivateOnDemandEnabled) else {
+            let dnsError = PacketTunnelProviderError.dnsResolutionFailure(tunnelName: tunnelName, isActivateOnDemandEnabled: isActivateOnDemandEnabled)
+            errorNotifier.notify(dnsError)
+            startTunnelCompletionHandler(dnsError)
             return
-        } catch {
-            // There can be no other errors from DNSResolver.resolveSync()
-            fatalError()
         }
         assert(endpoints.count == resolvedEndpoints.count)
 
@@ -141,6 +142,36 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             wg_log(logType, message: String(cString: msgC))
         }
+    }
+
+    private func resolveDomainNames(endpoints: [Endpoint?], isActivateOnDemandEnabled: Bool) -> [Endpoint?]? {
+        var resolvedEndpoints = [Endpoint?]()
+        let dnsResolutionAttemptsCount = isActivateOnDemandEnabled ? 10 : 1
+        var isDNSResolved = false
+
+        for attemptIndex in 0 ..< dnsResolutionAttemptsCount {
+            do {
+                resolvedEndpoints = try DNSResolver.resolveSync(endpoints: endpoints)
+                isDNSResolved = true
+            } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
+                wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
+                wg_log(.error, message: "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
+            } catch {
+                // There can be no other errors from DNSResolver.resolveSync()
+                fatalError()
+            }
+            if isDNSResolved {
+                break
+            } else {
+                let isLastAttempt = attemptIndex == dnsResolutionAttemptsCount - 1
+                if !isLastAttempt {
+                    Thread.sleep(forTimeInterval: 4 /* seconds */)
+                    wg_log(.error, message: "Retrying DNS resolution (Attempt \(attemptIndex + 2))")
+                }
+            }
+        }
+
+        return isDNSResolved ? resolvedEndpoints : nil
     }
 
     private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
