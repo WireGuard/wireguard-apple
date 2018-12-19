@@ -110,7 +110,7 @@ class TunnelsListTableViewController: UIViewController {
 
         let createFromScratchAction = UIAlertAction(title: "Create from scratch", style: .default) { [weak self] _ in
             if let self = self, let tunnelsManager = self.tunnelsManager {
-                self.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager, tunnelConfiguration: nil)
+                self.presentViewControllerForTunnelCreation(tunnelsManager: tunnelsManager)
             }
         }
         alert.addAction(createFromScratchAction)
@@ -136,8 +136,8 @@ class TunnelsListTableViewController: UIViewController {
         present(settingsNC, animated: true)
     }
 
-    func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
-        let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnelConfiguration: tunnelConfiguration)
+    func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager) {
+        let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager)
         let editNC = UINavigationController(rootViewController: editVC)
         editNC.modalPresentationStyle = .formSheet
         present(editNC, animated: true)
