@@ -55,12 +55,11 @@ class TunnelEditTableViewController: UITableViewController {
         loadSections()
     }
 
-    init(tunnelsManager: TunnelsManager, tunnelConfiguration: TunnelConfiguration?) {
+    init(tunnelsManager: TunnelsManager) {
         // Use this initializer to create a new tunnel.
-        // If tunnelConfiguration is passed, data will be prepopulated from that configuration.
         self.tunnelsManager = tunnelsManager
         tunnel = nil
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
         activateOnDemandSetting = ActivateOnDemandSetting.defaultSetting
         super.init(style: .grouped)
         loadSections()
