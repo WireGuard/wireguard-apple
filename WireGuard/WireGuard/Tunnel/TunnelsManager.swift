@@ -115,6 +115,9 @@ class TunnelsManager {
             }
             tunnel.name = tunnelName
         }
+
+        let shouldRestartIfActive = !((tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.hasTunnelConfiguration(tunnelConfiguration: tunnelConfiguration) ?? false)
+
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, isActivateOnDemandEnabled: activateOnDemandSetting.isActivateOnDemandEnabled)
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
@@ -137,13 +140,15 @@ class TunnelsManager {
                 self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
             }
             self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
-            
-            if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
-                // Turn off the tunnel, and then turn it back on, so the changes are made effective
-                tunnel.status = .restarting
-                (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+
+            if shouldRestartIfActive {
+                if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
+                    // Turn off the tunnel, and then turn it back on, so the changes are made effective
+                    tunnel.status = .restarting
+                    (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+                }
             }
-            
+
             if isActivatingOnDemand {
                 // Reload tunnel after saving.
                 // Without this, the tunnel stopes getting updates on the tunnel status from iOS.

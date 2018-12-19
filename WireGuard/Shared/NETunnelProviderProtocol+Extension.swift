@@ -37,4 +37,10 @@ extension NETunnelProviderProtocol {
     var isActivateOnDemandEnabled: Bool {
         return (providerConfiguration?["isActivateOnDemandEnabled"] as? Bool) ?? false
     }
+
+    func hasTunnelConfiguration(tunnelConfiguration otherTunnelConfiguration: TunnelConfiguration) -> Bool {
+        guard let serializedThisTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return false }
+        guard let serializedOtherTunnelConfiguration = try? JSONEncoder().encode(otherTunnelConfiguration) else { return false }
+        return serializedThisTunnelConfiguration == serializedOtherTunnelConfiguration
+    }
 }
