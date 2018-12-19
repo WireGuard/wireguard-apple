@@ -23,6 +23,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor?.cancel()
     }
 
+    //swiftlint:disable:next function_body_length
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
 
         let activationAttemptId = options?["activationAttemptId"] as? String
@@ -35,11 +36,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 return
         }
 
-        startTunnel(with: tunnelConfiguration, errorNotifier: errorNotifier, completionHandler: startTunnelCompletionHandler)
-    }
-
-    //swiftlint:disable:next function_body_length
-    func startTunnel(with tunnelConfiguration: TunnelConfiguration, errorNotifier: ErrorNotifier, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         configureLogger()
 
         wg_log(.info, message: "Starting tunnel '\(tunnelConfiguration.interface.name)'")
