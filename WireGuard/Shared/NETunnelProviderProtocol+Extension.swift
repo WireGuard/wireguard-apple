@@ -4,7 +4,7 @@
 import NetworkExtension
 
 extension NETunnelProviderProtocol {
-    convenience init?(tunnelConfiguration: TunnelConfiguration) {
+    convenience init?(tunnelConfiguration: TunnelConfiguration, isActivateOnDemandEnabled: Bool) {
         assert(!tunnelConfiguration.interface.name.isEmpty)
         guard let serializedTunnelConfiguration = try? JSONEncoder().encode(tunnelConfiguration) else { return nil }
 
@@ -14,7 +14,8 @@ extension NETunnelProviderProtocol {
         providerBundleIdentifier = "\(appId).network-extension"
         providerConfiguration = [
             "tunnelConfiguration": serializedTunnelConfiguration,
-            "tunnelConfigurationVersion": 1
+            "tunnelConfigurationVersion": 1,
+            "isActivateOnDemandEnabled": isActivateOnDemandEnabled
         ]
 
         let endpoints = tunnelConfiguration.peers.compactMap {$0.endpoint}
@@ -31,5 +32,9 @@ extension NETunnelProviderProtocol {
     func tunnelConfiguration() -> TunnelConfiguration? {
         guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return nil }
         return try? JSONDecoder().decode(TunnelConfiguration.self, from: serializedTunnelConfiguration)
+    }
+
+    var isActivateOnDemandEnabled: Bool {
+        return (providerConfiguration?["isActivateOnDemandEnabled"] as? Bool) ?? false
     }
 }

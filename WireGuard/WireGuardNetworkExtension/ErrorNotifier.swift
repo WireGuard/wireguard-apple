@@ -18,8 +18,12 @@ class ErrorNotifier {
         switch error {
         case .savedProtocolConfigurationIsInvalid:
             return ("Activation failure", "Could not retrieve tunnel information from the saved configuration")
-        case .dnsResolutionFailure:
-            return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
+        case .dnsResolutionFailure(let tunnelName, let isActivateOnDemandEnabled):
+            if isActivateOnDemandEnabled {
+                return ("DNS resolution failure", "This tunnel has Activate On Demand enabled, so activation might be retried. You may turn off Activate On Demand in the WireGuard app by navigating to: '\(tunnelName)' > Edit")
+            } else {
+                return ("DNS resolution failure", "One or more endpoint domains could not be resolved")
+            }
         case .couldNotStartWireGuard:
             return ("Activation failure", "WireGuard backend could not be started")
         case .coultNotSetNetworkSettings:
