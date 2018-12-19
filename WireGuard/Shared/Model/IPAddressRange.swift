@@ -11,7 +11,6 @@ struct IPAddressRange {
 }
 
 // MARK: Converting to and from String
-// For use in the UI
 
 extension IPAddressRange {
     init?(from string: String) {
@@ -45,7 +44,6 @@ extension IPAddressRange {
 }
 
 // MARK: Codable
-// For serializing to disk
 
 @available(OSX 10.14, iOS 12.0, *)
 extension IPAddressRange: Codable {

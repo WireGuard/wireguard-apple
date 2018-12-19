@@ -59,8 +59,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         let packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
-        // Bring up wireguard-go backend
-
         let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32 //swiftlint:disable:this force_cast
         if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")

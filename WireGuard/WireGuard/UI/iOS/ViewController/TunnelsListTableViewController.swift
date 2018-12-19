@@ -118,7 +118,6 @@ class TunnelsListTableViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         alert.addAction(cancelAction)
 
-        // popoverPresentationController will be nil on iPhone and non-nil on iPad
         if let sender = sender as? UIBarButtonItem {
             alert.popoverPresentationController?.barButtonItem = sender
         } else if let sender = sender as? UIView {
