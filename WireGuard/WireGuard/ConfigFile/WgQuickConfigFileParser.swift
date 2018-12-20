@@ -110,18 +110,16 @@ class WgQuickConfigFileParser {
         // wg-quick fields
         if let addressesString = attributes["address"] {
             var addresses = [IPAddressRange]()
-            for addressString in addressesString.split(separator: ",") {
-                let trimmedString = addressString.trimmingCharacters(in: .whitespaces)
-                guard let address = IPAddressRange(from: trimmedString) else { return nil }
+            for addressString in addressesString.splitToArray(trimmingCharacters: .whitespaces) {
+                guard let address = IPAddressRange(from: addressString) else { return nil }
                 addresses.append(address)
             }
             interface.addresses = addresses
         }
         if let dnsString = attributes["dns"] {
             var dnsServers = [DNSServer]()
-            for dnsServerString in dnsString.split(separator: ",") {
-                let trimmedString = dnsServerString.trimmingCharacters(in: .whitespaces)
-                guard let dnsServer = DNSServer(from: trimmedString) else { return nil }
+            for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespaces) {
+                guard let dnsServer = DNSServer(from: dnsServerString) else { return nil }
                 dnsServers.append(dnsServer)
             }
             interface.dns = dnsServers
@@ -146,9 +144,8 @@ class WgQuickConfigFileParser {
         }
         if let allowedIPsString = attributes["allowedips"] {
             var allowedIPs = [IPAddressRange]()
-            for allowedIPString in allowedIPsString.split(separator: ",") {
-                let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                guard let allowedIP = IPAddressRange(from: trimmedString) else { return nil }
+            for allowedIPString in allowedIPsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
+                guard let allowedIP = IPAddressRange(from: allowedIPString) else { return nil }
                 allowedIPs.append(allowedIP)
             }
             peer.allowedIPs = allowedIPs
