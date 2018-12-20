@@ -31,7 +31,6 @@ enum TunnelsManagerError: WireGuardAppError {
 
 enum TunnelsManagerActivationAttemptError: WireGuardAppError {
     case tunnelIsNotInactive
-    case anotherTunnelIsOperational(otherTunnelName: String)
     case failedWhileStarting(systemError: Error) // startTunnel() throwed
     case failedWhileSaving(systemError: Error) // save config after re-enabling throwed
     case failedWhileLoading(systemError: Error) // reloading config throwed
@@ -41,8 +40,6 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
         switch self {
         case .tunnelIsNotInactive:
             return ("Activation failure", "The tunnel is already active or in the process of being activated")
-        case .anotherTunnelIsOperational(let otherTunnelName):
-            return ("Activation failure", "Please disconnect '\(otherTunnelName)' before enabling this tunnel.")
         case .failedWhileStarting(let systemError),
              .failedWhileSaving(let systemError),
              .failedWhileLoading(let systemError),
