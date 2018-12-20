@@ -294,7 +294,7 @@ class TunnelsManager {
         guard let lastErrorFileURL = FileManager.networkExtensionLastErrorFileURL else { return nil }
         guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
         guard let lastErrorText = String(data: lastErrorData, encoding: .utf8) else { return nil }
-        let lastErrorStrings = lastErrorText.split(separator: "\n").map { String($0) }
+        let lastErrorStrings = lastErrorText.splitToArray(separator: "\n")
         guard lastErrorStrings.count == 3 else { return nil }
         let attemptIdInDisk = lastErrorStrings[0]
         if let attemptIdForTunnel = tunnel.activationAttemptId, attemptIdInDisk == attemptIdForTunnel {

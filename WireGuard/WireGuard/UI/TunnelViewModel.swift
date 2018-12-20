@@ -117,9 +117,8 @@ class TunnelViewModel {
             var errorMessages = [String]()
             if let addressesString = scratchpad[.addresses] {
                 var addresses = [IPAddressRange]()
-                for addressString in addressesString.split(separator: ",") {
-                    let trimmedString = addressString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if let address = IPAddressRange(from: trimmedString) {
+                for addressString in addressesString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
+                    if let address = IPAddressRange(from: addressString) {
                         addresses.append(address)
                     } else {
                         fieldsWithError.insert(.addresses)
@@ -146,9 +145,8 @@ class TunnelViewModel {
             }
             if let dnsString = scratchpad[.dns] {
                 var dnsServers = [DNSServer]()
-                for dnsServerString in dnsString.split(separator: ",") {
-                    let trimmedString = dnsServerString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if let dnsServer = DNSServer(from: trimmedString) {
+                for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
+                    if let dnsServer = DNSServer(from: dnsServerString) {
                         dnsServers.append(dnsServer)
                     } else {
                         fieldsWithError.insert(.dns)
@@ -169,7 +167,7 @@ class TunnelViewModel {
                 if TunnelViewModel.interfaceFieldsWithControl.contains(field) {
                     return true
                 }
-                return (!self[field].isEmpty)
+                return !self[field].isEmpty
             }
             // TODO: Cache this to avoid recomputing
         }
@@ -263,9 +261,8 @@ class TunnelViewModel {
             }
             if let allowedIPsString = scratchpad[.allowedIPs] {
                 var allowedIPs = [IPAddressRange]()
-                for allowedIPString in allowedIPsString.split(separator: ",") {
-                    let trimmedString = allowedIPString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-                    if let allowedIP = IPAddressRange(from: trimmedString) {
+                for allowedIPString in allowedIPsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
+                    if let allowedIP = IPAddressRange(from: allowedIPString) {
                         allowedIPs.append(allowedIP)
                     } else {
                         fieldsWithError.insert(.allowedIPs)
@@ -326,11 +323,7 @@ class TunnelViewModel {
             if scratchpad.isEmpty {
                 populateScratchpad()
             }
-            let allowedIPStrings = Set<String>(
-                (scratchpad[.allowedIPs] ?? "")
-                    .split(separator: ",")
-                    .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
-            )
+            let allowedIPStrings = Set<String>(scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines))
             if allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) {
                 shouldAllowExcludePrivateIPsControl = true
                 excludePrivateIPsValue = false
@@ -344,12 +337,8 @@ class TunnelViewModel {
         }
 
         func excludePrivateIPsValueChanged(isOn: Bool, dnsServers: String) {
-            let allowedIPStrings = (scratchpad[.allowedIPs] ?? "")
-                .split(separator: ",")
-                .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
-            let dnsServerStrings = dnsServers
-                .split(separator: ",")
-                .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
+            let allowedIPStrings = scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines)
+            let dnsServerStrings = dnsServers.splitToArray(trimmingCharacters: .whitespacesAndNewlines)
             let ipv6Addresses = allowedIPStrings.filter { $0.contains(":") }
             let modifiedAllowedIPStrings: [String]
             if isOn {
@@ -476,5 +465,4 @@ extension TunnelViewModel {
     static func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
         return .useOnDemandOverWiFiOrCellular
     }
-
 }
