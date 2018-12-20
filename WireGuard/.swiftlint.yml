@@ -3,7 +3,17 @@ disabled_rules:
  - trailing_whitespace
  - todo
 opt_in_rules:
+ - empty_count
+ - empty_string
+ - implicitly_unwrapped_optional
+ - legacy_random
+ - let_var_whitespace
+ - literal_expression_end_indentation
+ - override_in_extension
+ - redundant_type_annotation
+ - toggle_bool
  - unneeded_parentheses_in_closure_argument
+ - unused_import
 # - trailing_closure
 file_length:
   warning: 500

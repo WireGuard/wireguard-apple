@@ -33,7 +33,7 @@ class ButtonCell: UITableViewCell {
             button.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
-            ])
+        ])
         
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }

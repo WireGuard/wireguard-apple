@@ -42,7 +42,7 @@ class WgQuickConfigFileParser {
 
             trimmedLine = trimmedLine.trimmingCharacters(in: .whitespaces)
 
-            guard trimmedLine.count > 0 else { continue }
+            guard !trimmedLine.isEmpty else { continue }
             let lowercasedLine = line.lowercased()
 
             if let equalsIndex = line.firstIndex(of: "=") {

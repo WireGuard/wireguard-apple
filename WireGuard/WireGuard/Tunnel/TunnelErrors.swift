@@ -52,6 +52,7 @@ enum TunnelsManagerActivationAttemptError: WireGuardAppError {
 enum TunnelsManagerActivationError: WireGuardAppError {
     case activationFailed
     case activationFailedWithExtensionError(title: String, message: String)
+    
     var alertText: AlertText {
         switch self {
         case .activationFailed:

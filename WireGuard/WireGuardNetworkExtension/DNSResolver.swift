@@ -21,7 +21,7 @@ class DNSResolver {
     }
 
     static func resolveSync(endpoints: [Endpoint?]) throws -> [Endpoint?] {
-        let dispatchGroup: DispatchGroup = DispatchGroup()
+        let dispatchGroup = DispatchGroup()
 
         if isAllEndpointsAlreadyResolved(endpoints: endpoints) {
             return endpoints

@@ -8,6 +8,7 @@ public class Logger {
     enum LoggerError: Error {
         case openFailure
     }
+    
     static var global: Logger?
 
     var log: OpaquePointer
