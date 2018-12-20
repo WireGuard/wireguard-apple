@@ -127,7 +127,7 @@ class TunnelsListTableViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    @objc func settingsButtonTapped(sender: UIBarButtonItem!) {
+    @objc func settingsButtonTapped(sender: UIBarButtonItem) {
         guard tunnelsManager != nil else { return }
         
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)

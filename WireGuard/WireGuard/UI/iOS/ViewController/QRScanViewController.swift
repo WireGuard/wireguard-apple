@@ -76,15 +76,11 @@ class QRScanViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         if let connection = previewLayer?.connection {
-
-            let currentDevice: UIDevice = UIDevice.current
-
-            let orientation: UIDeviceOrientation = currentDevice.orientation
-
-            let previewLayerConnection: AVCaptureConnection = connection
+            let currentDevice = UIDevice.current
+            let orientation = currentDevice.orientation
+            let previewLayerConnection = connection
 
             if previewLayerConnection.isVideoOrientationSupported {
-
                 switch orientation {
                 case .portrait:
                     previewLayerConnection.videoOrientation = .portrait

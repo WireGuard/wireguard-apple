@@ -361,7 +361,7 @@ class TunnelViewModel {
     var peersData: [PeerData]
 
     init(tunnelConfiguration: TunnelConfiguration?) {
-        let interfaceData: InterfaceData = InterfaceData()
+        let interfaceData = InterfaceData()
         var peersData = [PeerData]()
         if let tunnelConfiguration = tunnelConfiguration {
             interfaceData.validatedConfiguration = tunnelConfiguration.interface
