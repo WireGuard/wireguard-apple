@@ -4,10 +4,6 @@
 import Network
 import Foundation
 
-enum DNSResolverError: Error {
-    case dnsResolutionFailed(hostnames: [String])
-}
-
 class DNSResolver {
 
     static func isAllEndpointsAlreadyResolved(endpoints: [Endpoint?]) -> Bool {
@@ -20,7 +16,7 @@ class DNSResolver {
         return true
     }
 
-    static func resolveSync(endpoints: [Endpoint?]) throws -> [Endpoint?] {
+    static func resolveSync(endpoints: [Endpoint?]) -> [Endpoint?]? {
         let dispatchGroup = DispatchGroup()
 
         if isAllEndpointsAlreadyResolved(endpoints: endpoints) {
@@ -56,7 +52,8 @@ class DNSResolver {
             }
         }
         if !hostnamesWithDnsResolutionFailure.isEmpty {
-            throw DNSResolverError.dnsResolutionFailed(hostnames: hostnamesWithDnsResolutionFailure)
+            wg_log(.error, message: "DNS resolution failed for the following hostnames: \(hostnamesWithDnsResolutionFailure.joined(separator: ", "))")
+            return nil
         }
         return resolvedEndpoints
     }
