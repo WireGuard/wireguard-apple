@@ -41,7 +41,14 @@ class TunnelsManager {
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels(systemError: error)))
                 return
             }
-            completionHandler(.success(TunnelsManager(tunnelProviders: managers ?? [])))
+            
+            let tunnelManagers = managers ?? []
+            tunnelManagers.forEach {
+                if ($0.protocolConfiguration as? NETunnelProviderProtocol)?.migrateConfigurationIfNeeded() == true {
+                    $0.saveToPreferences { _ in }
+                }
+            }
+            completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
         }
         #endif
     }
@@ -309,6 +316,7 @@ class TunnelsManager {
             NotificationCenter.default.removeObserver(statusObservationToken)
         }
     }
+
 }
 
 class TunnelContainer: NSObject {
@@ -344,6 +352,14 @@ class TunnelContainer: NSObject {
     fileprivate let tunnelProvider: NETunnelProviderManager
     private var lastTunnelConnectionStatus: NEVPNStatus?
 
+    var tunnelConfiguration: TunnelConfiguration? {
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration
+    }
+    
+    var activateOnDemandSetting: ActivateOnDemandSetting {
+        return ActivateOnDemandSetting(from: tunnelProvider)
+    }
+    
     init(tunnel: NETunnelProviderManager) {
         name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
@@ -351,14 +367,6 @@ class TunnelContainer: NSObject {
         isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
         tunnelProvider = tunnel
         super.init()
-    }
-
-    func tunnelConfiguration() -> TunnelConfiguration? {
-        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration()
-    }
-
-    func activateOnDemandSetting() -> ActivateOnDemandSetting {
-        return ActivateOnDemandSetting(from: tunnelProvider)
     }
 
     func refreshStatus() {

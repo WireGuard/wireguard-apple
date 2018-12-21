@@ -12,11 +12,11 @@ class WgQuickConfigFileWriter {
             output.append("ListenPort = \(listenPort)\n")
         }
         if !interface.addresses.isEmpty {
-            let addressString = interface.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
+            let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
             output.append("Address = \(addressString)\n")
         }
         if !interface.dns.isEmpty {
-            let dnsString = interface.dns.map { $0.stringRepresentation() }.joined(separator: ", ")
+            let dnsString = interface.dns.map { $0.stringRepresentation }.joined(separator: ", ")
             output.append("DNS = \(dnsString)\n")
         }
         if let mtu = interface.mtu {
@@ -30,11 +30,11 @@ class WgQuickConfigFileWriter {
                 output.append("PresharedKey = \(preSharedKey.base64EncodedString())\n")
             }
             if !peer.allowedIPs.isEmpty {
-                let allowedIPsString = peer.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
+                let allowedIPsString = peer.allowedIPs.map { $0.stringRepresentation }.joined(separator: ", ")
                 output.append("AllowedIPs = \(allowedIPsString)\n")
             }
             if let endpoint = peer.endpoint {
-                output.append("Endpoint = \(endpoint.stringRepresentation())\n")
+                output.append("Endpoint = \(endpoint.stringRepresentation)\n")
             }
             if let persistentKeepAlive = peer.persistentKeepAlive {
                 output.append("PersistentKeepalive = \(persistentKeepAlive)\n")

@@ -93,7 +93,7 @@ class SettingsTableViewController: UITableViewController {
         _ = FileManager.deleteFile(at: destinationURL)
 
         let count = tunnelsManager.numberOfTunnels()
-        let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration() }
+        let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration }
         ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
             if let error = error {
                 ErrorPresenter.showErrorAlert(error: error, from: self)

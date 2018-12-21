@@ -49,8 +49,8 @@ class TunnelEditTableViewController: UITableViewController {
         // Use this initializer to edit an existing tunnel.
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
-        activateOnDemandSetting = tunnel.activateOnDemandSetting()
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        activateOnDemandSetting = tunnel.activateOnDemandSetting
         super.init(style: .grouped)
         loadSections()
     }

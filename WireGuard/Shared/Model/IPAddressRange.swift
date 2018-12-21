@@ -4,16 +4,28 @@
 import Foundation
 import Network
 
-@available(OSX 10.14, iOS 12.0, *)
 struct IPAddressRange {
     let address: IPAddress
     var networkPrefixLength: UInt8
+    
+    init(address: IPAddress, networkPrefixLength: UInt8) {
+        self.address = address
+        self.networkPrefixLength = networkPrefixLength
+    }
 }
 
-// MARK: Converting to and from String
-
 extension IPAddressRange {
+    var stringRepresentation: String {
+        return "\(address)/\(networkPrefixLength)"
+    }
+    
     init?(from string: String) {
+        guard let parsed = IPAddressRange.parseAddressString(string) else { return nil }
+        address = parsed.0
+        networkPrefixLength = parsed.1
+    }
+    
+    private static func parseAddressString(_ string: String) -> (IPAddress, UInt8)? {
         let endOfIPAddress = string.lastIndex(of: "/") ?? string.endIndex
         let addressString = String(string[string.startIndex ..< endOfIPAddress])
         let address: IPAddress
@@ -24,7 +36,8 @@ extension IPAddressRange {
         } else {
             return nil
         }
-        let maxNetworkPrefixLength: UInt8 = (address is IPv4Address) ? 32 : 128
+        
+        let maxNetworkPrefixLength: UInt8 = address is IPv4Address ? 32 : 128
         var networkPrefixLength: UInt8
         if endOfIPAddress < string.endIndex { // "/" was located
             let indexOfNetworkPrefixLength = string.index(after: endOfIPAddress)
@@ -35,47 +48,25 @@ extension IPAddressRange {
         } else {
             networkPrefixLength = maxNetworkPrefixLength
         }
-        self.address = address
-        self.networkPrefixLength = networkPrefixLength
-    }
-    func stringRepresentation() -> String {
-        return "\(address)/\(networkPrefixLength)"
+        
+        return (address, networkPrefixLength)
     }
 }
 
-// MARK: Codable
-
-@available(OSX 10.14, iOS 12.0, *)
 extension IPAddressRange: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        let addressDataLength: Int
-        if address is IPv4Address {
-            addressDataLength = 4
-        } else if address is IPv6Address {
-            addressDataLength = 16
-        } else {
-            fatalError()
-        }
-        var data = Data(capacity: addressDataLength + 1)
-        data.append(address.rawValue)
-        data.append(networkPrefixLength)
-        try container.encode(data)
+        try container.encode(stringRepresentation)
     }
+    
     public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        var data = try container.decode(Data.self)
-        networkPrefixLength = data.removeLast()
-        let ipAddressFromData: IPAddress? = {
-            switch data.count {
-            case 4: return IPv4Address(data)
-            case 16: return IPv6Address(data)
-            default: return nil
-            }
-        }()
-        guard let ipAddress = ipAddressFromData else { throw DecodingError.invalidData }
-        address = ipAddress
+        let values = try decoder.singleValueContainer()
+        let addressString = try values.decode(String.self)
+        guard let parsed = IPAddressRange.parseAddressString(addressString) else { throw DecodingError.invalidData }
+        address = parsed.0
+        networkPrefixLength = parsed.1
     }
+    
     enum DecodingError: Error {
         case invalidData
     }

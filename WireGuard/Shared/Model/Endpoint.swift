@@ -4,15 +4,48 @@
 import Foundation
 import Network
 
-@available(OSX 10.14, iOS 12.0, *)
 struct Endpoint {
     let host: NWEndpoint.Host
     let port: NWEndpoint.Port
+    
+    init(host: NWEndpoint.Host, port: NWEndpoint.Port) {
+        self.host = host
+        self.port = port
+    }
 }
 
-// MARK: Converting to and from String
+extension Endpoint: Codable {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let endpointString = try container.decode(String.self)
+        guard let endpoint = Endpoint(from: endpointString) else {
+            throw DecodingError.invalidData
+        }
+        self = endpoint
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(stringRepresentation)
+    }
+    
+    enum DecodingError: Error {
+        case invalidData
+    }
+}
 
 extension Endpoint {
+    var stringRepresentation: String {
+        switch host {
+        case .name(let hostname, _):
+            return "\(hostname):\(port)"
+        case .ipv4(let address):
+            return "\(address):\(port)"
+        case .ipv6(let address):
+            return "[\(address)]:\(port)"
+        }
+    }
+    
     init?(from string: String) {
         // Separation of host and port is based on 'parse_endpoint' function in
         // https://git.zx2c4.com/WireGuard/tree/src/tools/config.c
@@ -40,37 +73,6 @@ extension Endpoint {
         guard invalidCharacterIndex == nil else { return nil }
         host = NWEndpoint.Host(hostString)
         port = endpointPort
-    }
-    func stringRepresentation() -> String {
-        switch host {
-        case .name(let hostname, _):
-            return "\(hostname):\(port)"
-        case .ipv4(let address):
-            return "\(address):\(port)"
-        case .ipv6(let address):
-            return "[\(address)]:\(port)"
-        }
-    }
-}
-
-// MARK: Codable
-
-@available(OSX 10.14, iOS 12.0, *)
-extension Endpoint: Codable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(stringRepresentation())
-    }
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let endpointString = try container.decode(String.self)
-        guard let endpoint = Endpoint(from: endpointString) else {
-            throw DecodingError.invalidData
-        }
-        self = endpoint
-    }
-    enum DecodingError: Error {
-        case invalidData
     }
 }
 
