@@ -98,7 +98,7 @@ class TunnelEditTableViewController: UITableViewController {
         let tunnelSaveResult = tunnelViewModel.save()
         switch tunnelSaveResult {
         case .error(let errorMessage):
-            let alertTitle = (tunnelViewModel.interfaceData.validatedConfiguration == nil) ?
+            let alertTitle = (tunnelViewModel.interfaceData.validatedConfiguration == nil || tunnelViewModel.interfaceData.validatedName == nil) ?
                 tr("alertInvalidInterfaceTitle") : tr("alertInvalidPeerTitle")
             ErrorPresenter.showErrorAlert(title: alertTitle, message: errorMessage, from: self)
             tableView.reloadData() // Highlight erroring fields

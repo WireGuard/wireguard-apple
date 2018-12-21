@@ -101,7 +101,7 @@ class QRScanViewController: UIViewController {
     }
 
     func scanDidComplete(withCode code: String) {
-        let scannedTunnelConfiguration = try? TunnelConfiguration(code, name: "Scanned")
+        let scannedTunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: code, called: "Scanned")
         guard let tunnelConfiguration = scannedTunnelConfiguration else {
             scanDidEncounterError(title: tr("alertScanQRCodeInvalidQRCodeTitle"), message: tr("alertScanQRCodeInvalidQRCodeMessage"))
             return
@@ -114,7 +114,7 @@ class QRScanViewController: UIViewController {
         })
         alert.addAction(UIAlertAction(title: tr("actionSave"), style: .default) { [weak self] _ in
             guard let title = alert.textFields?[0].text?.trimmingCharacters(in: .whitespacesAndNewlines), !title.isEmpty else { return }
-            tunnelConfiguration.interface.name = title
+            tunnelConfiguration.name = title
             if let self = self {
                 self.delegate?.addScannedQRCode(tunnelConfiguration: tunnelConfiguration, qrScanViewController: self) {
                     self.dismiss(animated: true, completion: nil)
