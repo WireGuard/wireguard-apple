@@ -6,7 +6,6 @@ import Network
 import NetworkExtension
 
 class PacketTunnelSettingsGenerator {
-
     let tunnelConfiguration: TunnelConfiguration
     let resolvedEndpoints: [Endpoint?]
 
@@ -26,7 +25,7 @@ class PacketTunnelSettingsGenerator {
             wgSettings.append("public_key=\(peer.publicKey.hexEncodedString())\n")
             if let endpoint = resolvedEndpoints[index] {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
-                wgSettings.append("endpoint=\(endpoint.stringRepresentation())\n")
+                wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             }
         }
 
@@ -51,13 +50,13 @@ class PacketTunnelSettingsGenerator {
             }
             if let endpoint = resolvedEndpoints[index] {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
-                wgSettings.append("endpoint=\(endpoint.stringRepresentation())\n")
+                wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             }
             let persistentKeepAlive = peer.persistentKeepAlive ?? 0
             wgSettings.append("persistent_keepalive_interval=\(persistentKeepAlive)\n")
             if !peer.allowedIPs.isEmpty {
                 wgSettings.append("replace_allowed_ips=true\n")
-                peer.allowedIPs.forEach { wgSettings.append("allowed_ip=\($0.stringRepresentation())\n") }
+                peer.allowedIPs.forEach { wgSettings.append("allowed_ip=\($0.stringRepresentation)\n") }
             }
         }
         return wgSettings
@@ -85,7 +84,7 @@ class PacketTunnelSettingsGenerator {
 
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: remoteAddress)
 
-        let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation() }
+        let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
         let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
         dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
         networkSettings.dnsSettings = dnsSettings

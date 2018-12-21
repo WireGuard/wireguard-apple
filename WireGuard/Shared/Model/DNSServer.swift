@@ -4,14 +4,43 @@
 import Foundation
 import Network
 
-@available(OSX 10.14, iOS 12.0, *)
 struct DNSServer {
     let address: IPAddress
+    
+    init(address: IPAddress) {
+        self.address = address
+    }
 }
 
-// MARK: Converting to and from String
+extension DNSServer: Codable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(stringRepresentation)
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let values = try decoder.singleValueContainer()
+        let addressString = try values.decode(String.self)
+        
+        if let address = IPv4Address(addressString) {
+            self.address = address
+        } else if let address = IPv6Address(addressString) {
+            self.address = address
+        } else {
+            throw DecodingError.invalidData
+        }
+    }
+
+    enum DecodingError: Error {
+        case invalidData
+    }
+}
 
 extension DNSServer {
+    var stringRepresentation: String {
+        return "\(address)"
+    }
+    
     init?(from addressString: String) {
         if let addr = IPv4Address(addressString) {
             address = addr
@@ -20,36 +49,5 @@ extension DNSServer {
         } else {
             return nil
         }
-    }
-    func stringRepresentation() -> String {
-        return "\(address)"
-    }
-}
-
-// MARK: Codable
-
-@available(OSX 10.14, iOS 12.0, *)
-extension DNSServer: Codable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(address.rawValue)
-    }
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        var data = try container.decode(Data.self)
-        let ipAddressFromData: IPAddress? = {
-            switch data.count {
-            case 4: return IPv4Address(data)
-            case 16: return IPv6Address(data)
-            default: return nil
-            }
-        }()
-        guard let ipAddress = ipAddressFromData else {
-            throw DecodingError.invalidData
-        }
-        address = ipAddress
-    }
-    enum DecodingError: Error {
-        case invalidData
     }
 }

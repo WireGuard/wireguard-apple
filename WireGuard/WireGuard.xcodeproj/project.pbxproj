@@ -18,6 +18,22 @@
 		5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A821C451D100994C13 /* TunnelStatus.swift */; };
 		5F4541AE21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541AD21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift */; };
 		5F4541B221CBFAEE00994C13 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
+		5FF7B96221CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */; };
+		5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */; };
+		5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
+		5FF7B96621CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
+		5FF7B96E21CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96821CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift */; };
+		5FF7B96F21CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96821CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift */; };
+		5FF7B97021CC967B00A7DD74 /* LegacyIPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96921CC967B00A7DD74 /* LegacyIPAddressRange.swift */; };
+		5FF7B97121CC967B00A7DD74 /* LegacyIPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96921CC967B00A7DD74 /* LegacyIPAddressRange.swift */; };
+		5FF7B97221CC967B00A7DD74 /* LegacyEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96A21CC967B00A7DD74 /* LegacyEndpoint.swift */; };
+		5FF7B97321CC967B00A7DD74 /* LegacyEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96A21CC967B00A7DD74 /* LegacyEndpoint.swift */; };
+		5FF7B97421CC967B00A7DD74 /* LegacyDNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96B21CC967B00A7DD74 /* LegacyDNSServer.swift */; };
+		5FF7B97521CC967B00A7DD74 /* LegacyDNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96B21CC967B00A7DD74 /* LegacyDNSServer.swift */; };
+		5FF7B97621CC967B00A7DD74 /* LegacyPeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96C21CC967B00A7DD74 /* LegacyPeerConfiguration.swift */; };
+		5FF7B97721CC967B00A7DD74 /* LegacyPeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96C21CC967B00A7DD74 /* LegacyPeerConfiguration.swift */; };
+		5FF7B97821CC967B00A7DD74 /* LegacyTunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96D21CC967B00A7DD74 /* LegacyTunnelConfiguration.swift */; };
+		5FF7B97921CC967B00A7DD74 /* LegacyTunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96D21CC967B00A7DD74 /* LegacyTunnelConfiguration.swift */; };
 		6F5A2B4621AFDED40081EDD8 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
 		6F5A2B4821AFF49A0081EDD8 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
@@ -34,7 +50,7 @@
 		6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774DF217181B1006A79B3 /* MainViewController.swift */; };
 		6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E0217181B1006A79B3 /* AppDelegate.swift */; };
 		6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */; };
-		6F7774E82172020C006A79B3 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* Configuration.swift */; };
+		6F7774E82172020C006A79B3 /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */; };
 		6F7774EA217229DB006A79B3 /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E9217229DB006A79B3 /* IPAddressRange.swift */; };
 		6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
 		6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */; };
@@ -64,7 +80,7 @@
 		6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC1E211EC472002C96EB /* Assets.xcassets */; };
 		6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */; };
 		6FFA5D8921942F320001E2F7 /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C472183C6A3000F85AD /* PacketTunnelSettingsGenerator.swift */; };
-		6FFA5D8E2194370D0001E2F7 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* Configuration.swift */; };
+		6FFA5D8E2194370D0001E2F7 /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */; };
 		6FFA5D8F2194370D0001E2F7 /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E9217229DB006A79B3 /* IPAddressRange.swift */; };
 		6FFA5D902194370D0001E2F7 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
 		6FFA5D912194370D0001E2F7 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
@@ -118,6 +134,14 @@
 		5F4541A821C451D100994C13 /* TunnelStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelStatus.swift; sourceTree = "<group>"; };
 		5F4541AD21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NEVPNStatus+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ArrayConversion.swift"; sourceTree = "<group>"; };
+		5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceConfiguration.swift; sourceTree = "<group>"; };
+		5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
+		5FF7B96821CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyInterfaceConfiguration.swift; sourceTree = "<group>"; };
+		5FF7B96921CC967B00A7DD74 /* LegacyIPAddressRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyIPAddressRange.swift; sourceTree = "<group>"; };
+		5FF7B96A21CC967B00A7DD74 /* LegacyEndpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyEndpoint.swift; sourceTree = "<group>"; };
+		5FF7B96B21CC967B00A7DD74 /* LegacyDNSServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyDNSServer.swift; sourceTree = "<group>"; };
+		5FF7B96C21CC967B00A7DD74 /* LegacyPeerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyPeerConfiguration.swift; sourceTree = "<group>"; };
+		5FF7B96D21CC967B00A7DD74 /* LegacyTunnelConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegacyTunnelConfiguration.swift; sourceTree = "<group>"; };
 		6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		6F5D0C1421832391000F85AD /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardNetworkExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -140,7 +164,7 @@
 		6F7774DF217181B1006A79B3 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F7774E0217181B1006A79B3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelsListTableViewController.swift; sourceTree = "<group>"; };
-		6F7774E72172020C006A79B3 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfiguration.swift; sourceTree = "<group>"; };
 		6F7774E9217229DB006A79B3 /* IPAddressRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressRange.swift; sourceTree = "<group>"; };
 		6F7774EE21722D97006A79B3 /* TunnelsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsManager.swift; sourceTree = "<group>"; };
 		6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelEditTableViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +251,19 @@
 			path = ViewController;
 			sourceTree = "<group>";
 		};
+		5FF7B96721CC966300A7DD74 /* Legacy */ = {
+			isa = PBXGroup;
+			children = (
+				5FF7B96B21CC967B00A7DD74 /* LegacyDNSServer.swift */,
+				5FF7B96A21CC967B00A7DD74 /* LegacyEndpoint.swift */,
+				5FF7B96821CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift */,
+				5FF7B96921CC967B00A7DD74 /* LegacyIPAddressRange.swift */,
+				5FF7B96C21CC967B00A7DD74 /* LegacyPeerConfiguration.swift */,
+				5FF7B96D21CC967B00A7DD74 /* LegacyTunnelConfiguration.swift */,
+			);
+			path = Legacy;
+			sourceTree = "<group>";
+		};
 		6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,10 +333,13 @@
 		6F7774E6217201E0006A79B3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				6F7774E72172020C006A79B3 /* Configuration.swift */,
+				5FF7B96721CC966300A7DD74 /* Legacy */,
+				6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */,
 				6F7774E9217229DB006A79B3 /* IPAddressRange.swift */,
 				6F693A552179E556008551C1 /* Endpoint.swift */,
 				6F628C3E217F3413003482A3 /* DNSServer.swift */,
+				5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */,
+				5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -652,13 +692,21 @@
 				6FF3527121C240160008484E /* Logger.swift in Sources */,
 				6F5A2B4621AFDED40081EDD8 /* FileManager+Extension.swift in Sources */,
 				6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */,
+				5FF7B97521CC967B00A7DD74 /* LegacyDNSServer.swift in Sources */,
 				6FFA5D96219446380001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
-				6FFA5D8E2194370D0001E2F7 /* Configuration.swift in Sources */,
+				5FF7B97921CC967B00A7DD74 /* LegacyTunnelConfiguration.swift in Sources */,
+				6FFA5D8E2194370D0001E2F7 /* TunnelConfiguration.swift in Sources */,
+				5FF7B97721CC967B00A7DD74 /* LegacyPeerConfiguration.swift in Sources */,
+				5FF7B96621CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */,
 				6FFA5D8F2194370D0001E2F7 /* IPAddressRange.swift in Sources */,
 				6FFA5D902194370D0001E2F7 /* Endpoint.swift in Sources */,
+				5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */,
 				6FFA5D9321943BC90001E2F7 /* DNSResolver.swift in Sources */,
+				5FF7B97121CC967B00A7DD74 /* LegacyIPAddressRange.swift in Sources */,
+				5FF7B96F21CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift in Sources */,
 				6FFA5D912194370D0001E2F7 /* DNSServer.swift in Sources */,
 				6FFA5D8921942F320001E2F7 /* PacketTunnelSettingsGenerator.swift in Sources */,
+				5FF7B97321CC967B00A7DD74 /* LegacyEndpoint.swift in Sources */,
 				6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,12 +722,17 @@
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */,
 				5F45417D21C1B23600994C13 /* UITableViewCell+Reuse.swift in Sources */,
+				5FF7B97821CC967B00A7DD74 /* LegacyTunnelConfiguration.swift in Sources */,
 				5F45419221C2D55800994C13 /* CheckmarkCell.swift in Sources */,
+				5FF7B97221CC967B00A7DD74 /* LegacyEndpoint.swift in Sources */,
 				6FE254FF219C60290028284D /* ZipExporter.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
 				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
+				5FF7B97021CC967B00A7DD74 /* LegacyIPAddressRange.swift in Sources */,
+				5FF7B96221CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */,
 				5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */,
+				5FF7B96E21CC967B00A7DD74 /* LegacyInterfaceConfiguration.swift in Sources */,
 				6F61F1E921B932F700483816 /* WireGuardAppError.swift in Sources */,
 				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
@@ -696,8 +749,10 @@
 				6FDEF8082187442100D8FBF6 /* WgQuickConfigFileWriter.swift in Sources */,
 				6FE254FB219C10800028284D /* ZipImporter.swift in Sources */,
 				6F7774EA217229DB006A79B3 /* IPAddressRange.swift in Sources */,
+				5FF7B97621CC967B00A7DD74 /* LegacyPeerConfiguration.swift in Sources */,
 				5F4541AE21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift in Sources */,
-				6F7774E82172020C006A79B3 /* Configuration.swift in Sources */,
+				6F7774E82172020C006A79B3 /* TunnelConfiguration.swift in Sources */,
+				5FF7B97421CC967B00A7DD74 /* LegacyDNSServer.swift in Sources */,
 				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
 				6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */,
 				5F4541A021C2D6B700994C13 /* TunnelListCell.swift in Sources */,
@@ -709,6 +764,7 @@
 				6FB1017921C57DE600766195 /* MockTunnels.swift in Sources */,
 				6FDEF806218725D200D8FBF6 /* SettingsTableViewController.swift in Sources */,
 				5F4541A221C2D6DF00994C13 /* BorderedTextButton.swift in Sources */,
+				5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */,
 				6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */,
 				6FFA5DA42197085D0001E2F7 /* ActivateOnDemandSetting.swift in Sources */,
 				5F4541B221CBFAEE00994C13 /* String+ArrayConversion.swift in Sources */,

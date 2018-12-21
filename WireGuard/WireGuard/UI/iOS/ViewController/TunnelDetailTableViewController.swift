@@ -35,7 +35,7 @@ class TunnelDetailTableViewController: UITableViewController {
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         super.init(style: .grouped)
         loadSections()
     }
@@ -101,7 +101,7 @@ class TunnelDetailTableViewController: UITableViewController {
 
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
-        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration())
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         loadSections()
         title = tunnel.name
         restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
@@ -229,9 +229,9 @@ extension TunnelDetailTableViewController {
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = tr("tunnelOnDemandKey")
-        cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
+        cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
         onDemandStatusObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
-            cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting())
+            cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
         }
         return cell
     }

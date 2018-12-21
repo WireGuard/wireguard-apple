@@ -106,7 +106,7 @@ class TunnelViewModel {
             scratchpad[.privateKey] = config.privateKey.base64EncodedString()
             scratchpad[.publicKey] = config.publicKey.base64EncodedString()
             if !config.addresses.isEmpty {
-                scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation() }.joined(separator: ", ")
+                scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
             }
             if let listenPort = config.listenPort {
                 scratchpad[.listenPort] = String(listenPort)
@@ -115,7 +115,7 @@ class TunnelViewModel {
                 scratchpad[.mtu] = String(mtu)
             }
             if !config.dns.isEmpty {
-                scratchpad[.dns] = config.dns.map { $0.stringRepresentation() }.joined(separator: ", ")
+                scratchpad[.dns] = config.dns.map { $0.stringRepresentation }.joined(separator: ", ")
             }
         }
 
@@ -248,10 +248,10 @@ class TunnelViewModel {
                 scratchpad[.preSharedKey] = preSharedKey.base64EncodedString()
             }
             if !config.allowedIPs.isEmpty {
-                scratchpad[.allowedIPs] = config.allowedIPs.map { $0.stringRepresentation() }.joined(separator: ", ")
+                scratchpad[.allowedIPs] = config.allowedIPs.map { $0.stringRepresentation }.joined(separator: ", ")
             }
             if let endpoint = config.endpoint {
-                scratchpad[.endpoint] = endpoint.stringRepresentation()
+                scratchpad[.endpoint] = endpoint.stringRepresentation
             }
             if let persistentKeepAlive = config.persistentKeepAlive {
                 scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)

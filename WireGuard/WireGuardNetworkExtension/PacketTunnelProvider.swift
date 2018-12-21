@@ -26,12 +26,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     //swiftlint:disable:next function_body_length
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
-
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
 
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
-            let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration() else {
+            let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration else {
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 return
