@@ -15,15 +15,11 @@ class PacketTunnelSettingsGenerator {
         self.resolvedEndpoints = resolvedEndpoints
     }
 
-    func endpointUapiConfiguration(shouldIncludeListenPort: Bool, currentListenPort: UInt16?) -> String {
+    func endpointUapiConfiguration(currentListenPort: UInt16?) -> String {
         var wgSettings = ""
 
-        if shouldIncludeListenPort {
-            if let tunnelListenPort = tunnelConfiguration.interface.listenPort {
-                wgSettings.append("listen_port=\(tunnelListenPort)\n")
-            } else if let currentListenPort = currentListenPort {
-                wgSettings.append("listen_port=\(currentListenPort)\n")
-            }
+        if let currentListenPort = currentListenPort {
+            wgSettings.append("listen_port=\(tunnelConfiguration.interface.listenPort ?? currentListenPort)\n")
         }
 
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
