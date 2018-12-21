@@ -19,14 +19,14 @@ class SwitchCell: UITableViewCell {
             textLabel?.textColor = value ? .black : .gray
         }
     }
-    
+
     var onSwitchToggled: ((Bool) -> Void)?
-    
+
     let switchView = UISwitch()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .default, reuseIdentifier: reuseIdentifier)
-        
+
         accessoryView = switchView
         switchView.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
@@ -34,11 +34,11 @@ class SwitchCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     @objc func switchToggled() {
         onSwitchToggled?(switchView.isOn)
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         isEnabled = true

@@ -7,7 +7,7 @@ import Network
 struct IPAddressRange {
     let address: IPAddress
     var networkPrefixLength: UInt8
-    
+
     init(address: IPAddress, networkPrefixLength: UInt8) {
         self.address = address
         self.networkPrefixLength = networkPrefixLength
@@ -18,13 +18,13 @@ extension IPAddressRange {
     var stringRepresentation: String {
         return "\(address)/\(networkPrefixLength)"
     }
-    
+
     init?(from string: String) {
         guard let parsed = IPAddressRange.parseAddressString(string) else { return nil }
         address = parsed.0
         networkPrefixLength = parsed.1
     }
-    
+
     private static func parseAddressString(_ string: String) -> (IPAddress, UInt8)? {
         let endOfIPAddress = string.lastIndex(of: "/") ?? string.endIndex
         let addressString = String(string[string.startIndex ..< endOfIPAddress])
@@ -36,7 +36,7 @@ extension IPAddressRange {
         } else {
             return nil
         }
-        
+
         let maxNetworkPrefixLength: UInt8 = address is IPv4Address ? 32 : 128
         var networkPrefixLength: UInt8
         if endOfIPAddress < string.endIndex { // "/" was located
@@ -48,7 +48,7 @@ extension IPAddressRange {
         } else {
             networkPrefixLength = maxNetworkPrefixLength
         }
-        
+
         return (address, networkPrefixLength)
     }
 }

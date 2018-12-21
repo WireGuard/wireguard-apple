@@ -7,7 +7,7 @@ import Network
 struct Endpoint {
     let host: NWEndpoint.Host
     let port: NWEndpoint.Port
-    
+
     init(host: NWEndpoint.Host, port: NWEndpoint.Port) {
         self.host = host
         self.port = port
@@ -25,7 +25,7 @@ extension Endpoint {
             return "[\(address)]:\(port)"
         }
     }
-    
+
     init?(from string: String) {
         // Separation of host and port is based on 'parse_endpoint' function in
         // https://git.zx2c4.com/WireGuard/tree/src/tools/config.c

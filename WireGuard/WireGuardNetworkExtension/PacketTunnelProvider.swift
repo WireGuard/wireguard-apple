@@ -14,7 +14,7 @@ enum PacketTunnelProviderError: Error {
 }
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
-    
+
     private var wgHandle: Int32?
     private var networkMonitor: NWPathMonitor?
     private var lastFirstInterface: NWInterface?

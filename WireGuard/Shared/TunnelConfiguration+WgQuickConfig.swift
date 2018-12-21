@@ -4,13 +4,13 @@
 import Foundation
 
 extension TunnelConfiguration {
-    
+
     enum ParserState {
         case inInterfaceSection
         case inPeerSection
         case notInASection
     }
-    
+
     enum ParseError: Error {
         case invalidLine(_ line: String.SubSequence)
         case noInterface
@@ -19,17 +19,17 @@ extension TunnelConfiguration {
         case multiplePeersWithSamePublicKey
         case invalidPeer
     }
-    
+
     //swiftlint:disable:next cyclomatic_complexity function_body_length
     convenience init(_ wgQuickConfig: String, name: String?) throws {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
-        
+
         let lines = wgQuickConfig.split(separator: "\n")
-        
+
         var parserState = ParserState.notInASection
         var attributes = [String: String]()
-        
+
         for (lineIndex, line) in lines.enumerated() {
             var trimmedLine: String
             if let commentRange = line.range(of: "#") {
@@ -37,12 +37,12 @@ extension TunnelConfiguration {
             } else {
                 trimmedLine = String(line)
             }
-            
+
             trimmedLine = trimmedLine.trimmingCharacters(in: .whitespaces)
-            
+
             guard !trimmedLine.isEmpty else { continue }
             let lowercasedLine = line.lowercased()
-            
+
             if let equalsIndex = line.firstIndex(of: "=") {
                 // Line contains an attribute
                 let key = line[..<equalsIndex].trimmingCharacters(in: .whitespaces).lowercased()
@@ -56,9 +56,9 @@ extension TunnelConfiguration {
             } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
                 throw ParseError.invalidLine(line)
             }
-            
+
             let isLastLine = lineIndex == lines.count - 1
-            
+
             if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
                 if parserState == .inInterfaceSection {
@@ -70,7 +70,7 @@ extension TunnelConfiguration {
                     peerConfigurations.append(peer)
                 }
             }
-            
+
             if lowercasedLine == "[interface]" {
                 parserState = .inInterfaceSection
                 attributes.removeAll()
@@ -79,20 +79,20 @@ extension TunnelConfiguration {
                 attributes.removeAll()
             }
         }
-        
+
         let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
         if peerPublicKeysArray.count != peerPublicKeysSet.count {
             throw ParseError.multiplePeersWithSamePublicKey
         }
-        
+
         if let interfaceConfiguration = interfaceConfiguration {
             self.init(interface: interfaceConfiguration, peers: peerConfigurations)
         } else {
             throw ParseError.noInterface
         }
     }
-    
+
     func asWgQuickConfig() -> String {
         var output = "[Interface]\n"
         output.append("PrivateKey = \(interface.privateKey.base64EncodedString())\n")
@@ -110,7 +110,7 @@ extension TunnelConfiguration {
         if let mtu = interface.mtu {
             output.append("MTU = \(mtu)\n")
         }
-        
+
         for peer in peers {
             output.append("\n[Peer]\n")
             output.append("PublicKey = \(peer.publicKey.base64EncodedString())\n")
@@ -128,10 +128,10 @@ extension TunnelConfiguration {
                 output.append("PersistentKeepalive = \(persistentKeepAlive)\n")
             }
         }
-        
+
         return output
     }
-    
+
     //swiftlint:disable:next cyclomatic_complexity
     private static func collate(interfaceAttributes attributes: [String: String], name: String?) -> InterfaceConfiguration? {
         // required wg fields
@@ -166,7 +166,7 @@ extension TunnelConfiguration {
         }
         return interface
     }
-    
+
     //swiftlint:disable:next cyclomatic_complexity
     private static func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
         // required wg fields
@@ -196,5 +196,5 @@ extension TunnelConfiguration {
         }
         return peer
     }
-    
+
 }

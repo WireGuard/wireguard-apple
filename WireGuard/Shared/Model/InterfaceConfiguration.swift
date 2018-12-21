@@ -10,7 +10,7 @@ struct InterfaceConfiguration {
     var listenPort: UInt16?
     var mtu: UInt16?
     var dns = [DNSServer]()
-    
+
     init(name: String?, privateKey: Data) {
         self.name = name
         self.privateKey = privateKey

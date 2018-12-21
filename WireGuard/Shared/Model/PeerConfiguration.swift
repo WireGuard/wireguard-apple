@@ -17,7 +17,7 @@ struct PeerConfiguration {
     var allowedIPs = [IPAddressRange]()
     var endpoint: Endpoint?
     var persistentKeepAlive: UInt16?
-    
+
     init(publicKey: Data) {
         self.publicKey = publicKey
         if publicKey.count != TunnelConfiguration.keyLength {

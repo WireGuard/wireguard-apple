@@ -3,6 +3,6 @@
 
 protocol WireGuardAppError: Error {
     typealias AlertText = (title: String, message: String)
-    
+
     var alertText: AlertText { get }
 }
