@@ -37,10 +37,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         configureLogger()
 
-        let tunnelName = tunnelConfiguration.interface.name
-        wg_log(.info, message: "Starting tunnel '\(tunnelName)' from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
-
-        errorNotifier.tunnelName = tunnelName
+        wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
         guard let resolvedEndpoints = DNSResolver.resolveSync(endpoints: endpoints) else {
@@ -67,7 +64,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor!.pathUpdateHandler = pathUpdate
         networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
 
-        let handle = withStringsAsGoStrings(tunnelConfiguration.interface.name, wireguardSettings) { return wgTurnOn($0.0, $0.1, fileDescriptor) }
+        let handle = wireguardSettings.withGoString { return wgTurnOn($0, fileDescriptor) }
         if handle < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
             errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
@@ -131,19 +128,20 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         guard path.status == .satisfied else { return }
         wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
         let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: listenPort)
-        let err = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
+        let err = endpointString.withGoString { return wgSetConfig(handle, $0) }
         if err == -EADDRINUSE && listenPort != nil {
             let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
-            _ = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
+            _ = endpointString.withGoString { return wgSetConfig(handle, $0) }
+
         }
     }
 }
 
-// swiftlint:disable:next large_tuple identifier_name
-func withStringsAsGoStrings<R>(_ s1: String, _ s2: String? = nil, _ s3: String? = nil, _ s4: String? = nil, call: ((gostring_t, gostring_t, gostring_t, gostring_t)) -> R) -> R {
-    // swiftlint:disable:next large_tuple identifier_name
-    func helper(_ p1: UnsafePointer<Int8>?, _ p2: UnsafePointer<Int8>?, _ p3: UnsafePointer<Int8>?, _ p4: UnsafePointer<Int8>?, _ call: ((gostring_t, gostring_t, gostring_t, gostring_t)) -> R) -> R {
-        return call((gostring_t(p: p1, n: s1.utf8.count), gostring_t(p: p2, n: s2?.utf8.count ?? 0), gostring_t(p: p3, n: s3?.utf8.count ?? 0), gostring_t(p: p4, n: s4?.utf8.count ?? 0)))
+extension String {
+    func withGoString<R>(_ call: (gostring_t) -> R) -> R {
+        func helper(_ pointer: UnsafePointer<Int8>?, _ call: (gostring_t) -> R) -> R {
+            return call(gostring_t(p: pointer, n: utf8.count))
+        }
+        return helper(self, call)
     }
-    return helper(s1, s2, s3, s4, call)
 }

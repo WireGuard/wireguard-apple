@@ -8,8 +8,6 @@ class ErrorNotifier {
     let activationAttemptId: String?
     weak var tunnelProvider: NEPacketTunnelProvider?
 
-    var tunnelName: String?
-
     init(activationAttemptId: String?, tunnelProvider: NEPacketTunnelProvider) {
         self.activationAttemptId = activationAttemptId
         self.tunnelProvider = tunnelProvider
