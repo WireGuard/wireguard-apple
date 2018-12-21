@@ -4,14 +4,16 @@
 import Foundation
 
 final class TunnelConfiguration {
+    var name: String?
     var interface: InterfaceConfiguration
     let peers: [PeerConfiguration]
 
     static let keyLength = 32
 
-    init(interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
+    init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
+        self.name = name
 
         let peerPublicKeysArray = peers.map { $0.publicKey }
         let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)

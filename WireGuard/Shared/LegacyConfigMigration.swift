@@ -96,7 +96,7 @@ struct LegacyInterfaceConfiguration: LegacyModel {
     let dns: [LegacyDNSServer]
 
     var migrated: InterfaceConfiguration {
-        var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
+        var interface = InterfaceConfiguration(privateKey: privateKey)
         interface.addresses = addresses.migrated
         interface.listenPort = listenPort
         interface.mtu = mtu
@@ -167,7 +167,7 @@ final class LegacyTunnelConfiguration: LegacyModel {
     let peers: [LegacyPeerConfiguration]
 
     var migrated: TunnelConfiguration {
-        return TunnelConfiguration(interface: interface.migrated, peers: peers.migrated)
+        return TunnelConfiguration(name: interface.name, interface: interface.migrated, peers: peers.migrated)
     }
 }
 

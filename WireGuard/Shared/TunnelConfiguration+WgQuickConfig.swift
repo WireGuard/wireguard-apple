@@ -20,8 +20,8 @@ extension TunnelConfiguration {
         case invalidPeer
     }
 
-    //swiftlint:disable:next cyclomatic_complexity function_body_length
-    convenience init(_ wgQuickConfig: String, name: String?) throws {
+    //swiftlint:disable:next function_body_length cyclomatic_complexity
+    convenience init(fromWgQuickConfig wgQuickConfig: String, called name: String? = nil) throws {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
 
@@ -62,7 +62,7 @@ extension TunnelConfiguration {
             if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
                 if parserState == .inInterfaceSection {
-                    guard let interface = TunnelConfiguration.collate(interfaceAttributes: attributes, name: name) else { throw ParseError.invalidInterface }
+                    guard let interface = TunnelConfiguration.collate(interfaceAttributes: attributes) else { throw ParseError.invalidInterface }
                     guard interfaceConfiguration == nil else { throw ParseError.multipleInterfaces }
                     interfaceConfiguration = interface
                 } else if parserState == .inPeerSection {
@@ -87,7 +87,7 @@ extension TunnelConfiguration {
         }
 
         if let interfaceConfiguration = interfaceConfiguration {
-            self.init(interface: interfaceConfiguration, peers: peerConfigurations)
+            self.init(name: name, interface: interfaceConfiguration, peers: peerConfigurations)
         } else {
             throw ParseError.noInterface
         }
@@ -133,11 +133,11 @@ extension TunnelConfiguration {
     }
 
     //swiftlint:disable:next cyclomatic_complexity
-    private static func collate(interfaceAttributes attributes: [String: String], name: String?) -> InterfaceConfiguration? {
+    private static func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
         // required wg fields
         guard let privateKeyString = attributes["privatekey"] else { return nil }
         guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else { return nil }
-        var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
+        var interface = InterfaceConfiguration(privateKey: privateKey)
         // other wg fields
         if let listenPortString = attributes["listenport"] {
             guard let listenPort = UInt16(listenPortString) else { return nil }

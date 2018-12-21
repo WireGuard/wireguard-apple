@@ -44,7 +44,7 @@ class ZipImporter {
                     continue
                 }
                 guard let fileContents = String(data: file.contents, encoding: .utf8) else { continue }
-                guard let tunnelConfig = try? TunnelConfiguration(fileContents, name: file.fileBaseName) else { continue }
+                guard let tunnelConfig = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: file.fileBaseName) else { continue }
                 configs[index] = tunnelConfig
             }
             DispatchQueue.main.async { completion(.success(configs)) }

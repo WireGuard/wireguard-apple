@@ -27,13 +27,14 @@ extension NETunnelProviderProtocol {
             serverAddress = "Multiple endpoints"
         }
 
-        username = tunnelConfiguration.interface.name
+        //TODO(roopc): Why are we doing this? Just for kicks? Is it useful? Seems needless.
+        username = tunnelConfiguration.name
     }
 
-    func tunnelConfiguration(name: String?) -> TunnelConfiguration? {
+    func asTunnelConfiguration(called name: String? = nil) -> TunnelConfiguration? {
         migrateConfigurationIfNeeded()
         guard let serializedConfig = providerConfiguration?[Keys.wgQuickConfig.rawValue] as? String else { return nil }
-        return try? TunnelConfiguration(serializedConfig, name: name)
+        return try? TunnelConfiguration(fromWgQuickConfig: serializedConfig, called: name)
     }
 
 }

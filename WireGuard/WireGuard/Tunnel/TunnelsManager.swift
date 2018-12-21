@@ -54,7 +54,7 @@ class TunnelsManager {
     }
 
     func add(tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
-        let tunnelName = tunnelConfiguration.interface.name ?? ""
+        let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
             return
@@ -67,7 +67,7 @@ class TunnelsManager {
 
         let tunnelProviderManager = NETunnelProviderManager()
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelConfiguration.interface.name
+        tunnelProviderManager.localizedDescription = tunnelConfiguration.name
         tunnelProviderManager.isEnabled = true
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
@@ -107,7 +107,7 @@ class TunnelsManager {
     }
 
     func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
-        let tunnelName = tunnelConfiguration.interface.name ?? ""
+        let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(TunnelsManagerError.tunnelNameEmpty)
             return
@@ -124,7 +124,7 @@ class TunnelsManager {
         }
 
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelConfiguration.interface.name
+        tunnelProviderManager.localizedDescription = tunnelConfiguration.name
         tunnelProviderManager.isEnabled = true
 
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
@@ -349,7 +349,7 @@ class TunnelContainer: NSObject {
     private var lastTunnelConnectionStatus: NEVPNStatus?
 
     var tunnelConfiguration: TunnelConfiguration? {
-        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration(name: tunnelProvider.localizedDescription)
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(called: tunnelProvider.localizedDescription)
     }
 
     var activateOnDemandSetting: ActivateOnDemandSetting {

@@ -180,7 +180,7 @@ class TunnelsListTableViewController: UIViewController {
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
             if let fileContents = try? String(contentsOf: url),
-                let tunnelConfiguration = try? TunnelConfiguration(fileContents, name: fileBaseName) {
+                let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName) {
                 tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] result in
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: completionHandler)

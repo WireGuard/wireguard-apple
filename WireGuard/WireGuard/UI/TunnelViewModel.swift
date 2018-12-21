@@ -66,6 +66,7 @@ class TunnelViewModel {
         var scratchpad = [InterfaceField: String]()
         var fieldsWithError = Set<InterfaceField>()
         var validatedConfiguration: InterfaceConfiguration?
+        var validatedName: String?
 
         subscript(field: InterfaceField) -> String {
             get {
@@ -83,6 +84,7 @@ class TunnelViewModel {
                     populateScratchpad()
                 }
                 validatedConfiguration = nil
+                validatedName = nil
                 if stringValue.isEmpty {
                     scratchpad.removeValue(forKey: field)
                 } else {
@@ -102,7 +104,8 @@ class TunnelViewModel {
         func populateScratchpad() {
             // Populate the scratchpad from the configuration object
             guard let config = validatedConfiguration else { return }
-            scratchpad[.name] = config.name
+            guard let name = validatedName else { return }
+            scratchpad[.name] = name
             scratchpad[.privateKey] = config.privateKey.base64EncodedString()
             scratchpad[.publicKey] = config.publicKey.base64EncodedString()
             if !config.addresses.isEmpty {
@@ -120,10 +123,10 @@ class TunnelViewModel {
         }
 
         //swiftlint:disable:next cyclomatic_complexity function_body_length
-        func save() -> SaveResult<InterfaceConfiguration> {
-            if let validatedConfiguration = validatedConfiguration {
+        func save() -> SaveResult<(String, InterfaceConfiguration)> {
+            if let config = validatedConfiguration, let name = validatedName {
                 // It's already validated and saved
-                return .saved(validatedConfiguration)
+                return .saved((name, config))
             }
             fieldsWithError.removeAll()
             guard let name = scratchpad[.name]?.trimmingCharacters(in: .whitespacesAndNewlines), (!name.isEmpty) else {
@@ -138,7 +141,7 @@ class TunnelViewModel {
                 fieldsWithError.insert(.privateKey)
                 return .error(tr("alertInvalidInterfaceMessagePrivateKeyInvalid"))
             }
-            var config = InterfaceConfiguration(name: name, privateKey: privateKey)
+            var config = InterfaceConfiguration(privateKey: privateKey)
             var errorMessages = [String]()
             if let addressesString = scratchpad[.addresses] {
                 var addresses = [IPAddressRange]()
@@ -184,7 +187,8 @@ class TunnelViewModel {
             guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
 
             validatedConfiguration = config
-            return .saved(config)
+            validatedName = name
+            return .saved((name, config))
         }
 
         func filterFieldsWithValueOrControl(interfaceFields: [InterfaceField]) -> [InterfaceField] {
@@ -390,6 +394,7 @@ class TunnelViewModel {
         var peersData = [PeerData]()
         if let tunnelConfiguration = tunnelConfiguration {
             interfaceData.validatedConfiguration = tunnelConfiguration.interface
+            interfaceData.validatedName = tunnelConfiguration.name
             for (index, peerConfiguration) in tunnelConfiguration.peers.enumerated() {
                 let peerData = PeerData(index: index)
                 peerData.validatedConfiguration = peerConfiguration
@@ -453,7 +458,7 @@ class TunnelViewModel {
                 return .error(tr("alertInvalidPeerMessagePublicKeyDuplicated"))
             }
 
-            let tunnelConfiguration = TunnelConfiguration(interface: interfaceConfiguration, peers: peerConfigurations)
+            let tunnelConfiguration = TunnelConfiguration(name: interfaceConfiguration.0, interface: interfaceConfiguration.1, peers: peerConfigurations)
             return .saved(tunnelConfiguration)
         }
     }
