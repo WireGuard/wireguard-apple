@@ -41,7 +41,7 @@ class TunnelsManager {
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnListingTunnels(systemError: error)))
                 return
             }
-            
+
             let tunnelManagers = managers ?? []
             tunnelManagers.forEach { tunnelManager in
                 if (tunnelManager.protocolConfiguration as? NETunnelProviderProtocol)?.migrateConfigurationIfNeeded() == true {
@@ -78,9 +78,9 @@ class TunnelsManager {
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error!)))
                 return
             }
-            
+
             guard let self = self else { return }
-            
+
             let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
             self.tunnels.append(tunnel)
             self.tunnels.sort { $0.name < $1.name }
@@ -126,7 +126,7 @@ class TunnelsManager {
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = (tunnelConfiguration).interface.name
         tunnelProviderManager.isEnabled = true
-        
+
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
@@ -137,7 +137,7 @@ class TunnelsManager {
                 return
             }
             guard let self = self else { return }
-            
+
             if isNameChanged {
                 let oldIndex = self.tunnels.firstIndex(of: tunnel)!
                 self.tunnels.sort { $0.name < $1.name }
@@ -351,11 +351,11 @@ class TunnelContainer: NSObject {
     var tunnelConfiguration: TunnelConfiguration? {
         return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration(name: tunnelProvider.localizedDescription)
     }
-    
+
     var activateOnDemandSetting: ActivateOnDemandSetting {
         return ActivateOnDemandSetting(from: tunnelProvider)
     }
-    
+
     init(tunnel: NETunnelProviderManager) {
         name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)

@@ -17,27 +17,27 @@ class TunnelsListTableViewController: UIViewController {
         tableView.register(TunnelListCell.self)
         return tableView
     }()
-    
+
     let centeredAddButton: BorderedTextButton = {
         let button = BorderedTextButton()
         button.title = tr("tunnelsListCenteredAddTunnelButtonTitle")
         button.isHidden = true
         return button
     }()
-    
+
     let busyIndicator: UIActivityIndicatorView = {
         let busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
         return busyIndicator
     }()
-    
+
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
-        
+
         tableView.dataSource = self
         tableView.delegate = self
-        
+
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -53,22 +53,22 @@ class TunnelsListTableViewController: UIViewController {
             busyIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             busyIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        
+
         view.addSubview(centeredAddButton)
         centeredAddButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             centeredAddButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             centeredAddButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        
+
         centeredAddButton.onTapped = { [weak self] in
             guard let self = self else { return }
             self.addButtonTapped(sender: self.centeredAddButton)
         }
-        
+
         busyIndicator.startAnimating()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -82,7 +82,7 @@ class TunnelsListTableViewController: UIViewController {
     func setTunnelsManager(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
         tunnelsManager.tunnelsListDelegate = self
-        
+
         busyIndicator.stopAnimating()
         tableView.reloadData()
         centeredAddButton.isHidden = tunnelsManager.numberOfTunnels() > 0
@@ -96,7 +96,7 @@ class TunnelsListTableViewController: UIViewController {
 
     @objc func addButtonTapped(sender: AnyObject) {
         guard tunnelsManager != nil else { return }
-        
+
         let alert = UIAlertController(title: "", message: tr("addTunnelMenuHeader"), preferredStyle: .actionSheet)
         let importFileAction = UIAlertAction(title: tr("addTunnelMenuImportFile"), style: .default) { [weak self] _ in
             self?.presentViewControllerForFileImport()
@@ -129,7 +129,7 @@ class TunnelsListTableViewController: UIViewController {
 
     @objc func settingsButtonTapped(sender: UIBarButtonItem) {
         guard tunnelsManager != nil else { return }
-        
+
         let settingsVC = SettingsTableViewController(tunnelsManager: tunnelsManager)
         let settingsNC = UINavigationController(rootViewController: settingsVC)
         settingsNC.modalPresentationStyle = .formSheet

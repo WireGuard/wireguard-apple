@@ -7,17 +7,17 @@ import NetworkExtension
 
 protocol LegacyModel: Decodable {
     associatedtype Model
-    
+
     var migrated: Model { get }
 }
 
 struct LegacyDNSServer: LegacyModel {
     let address: IPAddress
-    
+
     var migrated: DNSServer {
         return DNSServer(address: address)
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         var data = try container.decode(Data.self)
@@ -33,7 +33,7 @@ struct LegacyDNSServer: LegacyModel {
         }
         address = ipAddress
     }
-    
+
     enum DecodingError: Error {
         case invalidData
     }
@@ -48,11 +48,11 @@ extension Array where Element == LegacyDNSServer {
 struct LegacyEndpoint: LegacyModel {
     let host: Network.NWEndpoint.Host
     let port: Network.NWEndpoint.Port
-    
+
     var migrated: Endpoint {
         return Endpoint(host: host, port: port)
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let endpointString = try container.decode(String.self)
@@ -81,7 +81,7 @@ struct LegacyEndpoint: LegacyModel {
         host = NWEndpoint.Host(hostString)
         port = endpointPort
     }
-    
+
     enum DecodingError: Error {
         case invalidData
     }
@@ -94,7 +94,7 @@ struct LegacyInterfaceConfiguration: LegacyModel {
     let listenPort: UInt16?
     let mtu: UInt16?
     let dns: [LegacyDNSServer]
-    
+
     var migrated: InterfaceConfiguration {
         var interface = InterfaceConfiguration(name: name, privateKey: privateKey)
         interface.addresses = addresses.migrated
@@ -108,11 +108,11 @@ struct LegacyInterfaceConfiguration: LegacyModel {
 struct LegacyIPAddressRange: LegacyModel {
     let address: IPAddress
     let networkPrefixLength: UInt8
-    
+
     var migrated: IPAddressRange {
         return IPAddressRange(address: address, networkPrefixLength: networkPrefixLength)
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         var data = try container.decode(Data.self)
@@ -127,7 +127,7 @@ struct LegacyIPAddressRange: LegacyModel {
         guard let ipAddress = ipAddressFromData else { throw DecodingError.invalidData }
         address = ipAddress
     }
-    
+
     enum DecodingError: Error {
         case invalidData
     }
@@ -145,7 +145,7 @@ struct LegacyPeerConfiguration: LegacyModel {
     let allowedIPs: [LegacyIPAddressRange]
     let endpoint: LegacyEndpoint?
     let persistentKeepAlive: UInt16?
-    
+
     var migrated: PeerConfiguration {
         var configuration = PeerConfiguration(publicKey: publicKey)
         configuration.preSharedKey = preSharedKey
@@ -165,14 +165,14 @@ extension Array where Element == LegacyPeerConfiguration {
 final class LegacyTunnelConfiguration: LegacyModel {
     let interface: LegacyInterfaceConfiguration
     let peers: [LegacyPeerConfiguration]
-    
+
     var migrated: TunnelConfiguration {
         return TunnelConfiguration(interface: interface.migrated, peers: peers.migrated)
     }
 }
 
 extension NETunnelProviderProtocol {
-    
+
     @discardableResult
     func migrateConfigurationIfNeeded() -> Bool {
         guard let configurationVersion = providerConfiguration?["tunnelConfigurationVersion"] as? Int else { return false }
@@ -183,11 +183,11 @@ extension NETunnelProviderProtocol {
         }
         return true
     }
-    
+
     private func migrateFromConfigurationV1() {
         guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return }
-        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }        
+        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }
         providerConfiguration = [Keys.wgQuickConfig.rawValue: configuration.migrated.asWgQuickConfig()]
     }
-    
+
 }

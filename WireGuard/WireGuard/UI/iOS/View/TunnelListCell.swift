@@ -19,7 +19,7 @@ class TunnelListCell: UITableViewCell {
         }
     }
     var onSwitchToggled: ((Bool) -> Void)?
-    
+
     let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.font = UIFont.preferredFont(forTextStyle: .body)
@@ -27,35 +27,35 @@ class TunnelListCell: UITableViewCell {
         nameLabel.numberOfLines = 0
         return nameLabel
     }()
-    
+
     let busyIndicator: UIActivityIndicatorView = {
         let busyIndicator = UIActivityIndicatorView(style: .gray)
         busyIndicator.hidesWhenStopped = true
         return busyIndicator
     }()
-    
+
     let statusSwitch = UISwitch()
-    
+
     private var statusObservationToken: AnyObject?
     private var nameObservationToken: AnyObject?
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         contentView.addSubview(statusSwitch)
         statusSwitch.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
         ])
-        
+
         contentView.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
         ])
-        
+
         contentView.addSubview(nameLabel)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -67,16 +67,16 @@ class TunnelListCell: UITableViewCell {
             busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
             bottomAnchorConstraint
         ])
-        
+
         accessoryType = .disclosureIndicator
-        
+
         statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
-    
+
     @objc func switchToggled() {
         onSwitchToggled?(statusSwitch.isOn)
     }
-    
+
     private func update(from status: TunnelStatus?) {
         guard let status = status else {
             reset()
@@ -93,17 +93,17 @@ class TunnelListCell: UITableViewCell {
             }
         }
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     private func reset() {
         statusSwitch.isOn = false
         statusSwitch.isUserInteractionEnabled = false
         busyIndicator.stopAnimating()
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         reset()

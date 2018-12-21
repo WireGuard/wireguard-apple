@@ -6,7 +6,7 @@ import Network
 
 struct DNSServer {
     let address: IPAddress
-    
+
     init(address: IPAddress) {
         self.address = address
     }
@@ -16,7 +16,7 @@ extension DNSServer {
     var stringRepresentation: String {
         return "\(address)"
     }
-    
+
     init?(from addressString: String) {
         if let addr = IPv4Address(addressString) {
             address = addr

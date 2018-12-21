@@ -13,20 +13,20 @@ class ButtonCell: UITableViewCell {
         set(value) { button.tintColor = value ? .red : buttonStandardTintColor }
     }
     var onTapped: (() -> Void)?
-    
+
     let button: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         return button
     }()
-    
+
     var buttonStandardTintColor: UIColor
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         buttonStandardTintColor = button.tintColor
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+
         contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -34,18 +34,18 @@ class ButtonCell: UITableViewCell {
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: button.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
-        
+
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
-    
+
     @objc func buttonTapped() {
         onTapped?()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         buttonText = ""

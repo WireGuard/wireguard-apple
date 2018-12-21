@@ -58,12 +58,12 @@ class SettingsTableViewController: UITableViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         guard let logo = tableView.tableFooterView else { return }
-        
+
         let bottomPadding = max(tableView.layoutMargins.bottom, 10)
         let fullHeight = max(tableView.contentSize.height, tableView.bounds.size.height - tableView.layoutMargins.top - bottomPadding)
-        
+
         let imageAspectRatio = logo.intrinsicContentSize.width / logo.intrinsicContentSize.height
-        
+
         var height = tableView.estimatedRowHeight * 1.5
         var width = height * imageAspectRatio
         let maxWidth = view.bounds.size.width - max(tableView.layoutMargins.left + tableView.layoutMargins.right, 20)
@@ -71,11 +71,11 @@ class SettingsTableViewController: UITableViewController {
             width = maxWidth
             height = width / imageAspectRatio
         }
-        
+
         let needsReload = height != logo.frame.height
-        
+
         logo.frame = CGRect(x: (view.bounds.size.width - width) / 2, y: fullHeight - height, width: width, height: height)
-        
+
         if needsReload {
             tableView.tableFooterView = logo
         }

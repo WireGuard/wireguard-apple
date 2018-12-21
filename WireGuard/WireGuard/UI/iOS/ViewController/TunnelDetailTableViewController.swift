@@ -43,7 +43,7 @@ class TunnelDetailTableViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         onDemandStatusObservationToken = nil
         statusObservationToken = nil
@@ -166,7 +166,7 @@ extension TunnelDetailTableViewController {
 
     private func statusCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
-        
+
         let statusUpdate: (SwitchCell, TunnelStatus) -> Void = { cell, status in
             let text: String
             switch status {
@@ -192,13 +192,13 @@ extension TunnelDetailTableViewController {
             }
             cell.isEnabled = status == .active || status == .inactive
         }
-        
+
         statusUpdate(cell, tunnel.status)
         statusObservationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
             guard let cell = cell else { return }
             statusUpdate(cell, tunnel.status)
         }
-        
+
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
             if isOn {
