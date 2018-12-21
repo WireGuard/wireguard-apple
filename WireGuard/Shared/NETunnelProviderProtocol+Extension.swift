@@ -52,24 +52,4 @@ extension NETunnelProviderProtocol {
         return serializedThisTunnelConfiguration == serializedOtherTunnelConfiguration
     }
     
-    @discardableResult
-    func migrateConfigurationIfNeeded() -> Bool {
-        guard let configurationVersion = providerConfiguration?["tunnelConfigurationVersion"] as? Int else { return false }
-        if configurationVersion == 1 {
-            migrateFromConfigurationV1()
-        } else {
-            fatalError("No migration from configuration version \(configurationVersion) exists.")
-        }
-        return true
-    }
-    
-    private func migrateFromConfigurationV1() {
-        guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return }
-        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }
-        guard let tunnelConfigData = try? JSONEncoder().encode(configuration.migrated) else { return }
-        guard let tunnelConfigDictionary = try? JSONSerialization.jsonObject(with: tunnelConfigData, options: .allowFragments) else { return }
-        
-        providerConfiguration = [ Keys.wgQuickConfig.rawValue: tunnelConfigDictionary ]
-    }
-    
 }
