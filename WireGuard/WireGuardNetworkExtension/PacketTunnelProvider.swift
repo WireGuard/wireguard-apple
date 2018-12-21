@@ -81,17 +81,32 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         var handle: Int32 = -1
 
+        func interfaceDescription(_ interface: NWInterface?) -> String {
+            if let interface = interface {
+                return "\(interface.name) (\(interface.type))"
+            } else {
+                return "None"
+            }
+        }
+
         networkMonitor = NWPathMonitor()
+        var previousPrimaryNetworkPathInterface = networkMonitor?.currentPath.availableInterfaces.first
+        wg_log(.debug, message: "Network path primary interface: \(interfaceDescription(previousPrimaryNetworkPathInterface))")
         networkMonitor?.pathUpdateHandler = { path in
             guard handle >= 0 else { return }
             if path.status == .satisfied {
                 wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
-                let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: wgGetListenPort(handle))
+                let primaryNetworkPathInterface = path.availableInterfaces.first
+                wg_log(.debug, message: "Network path primary interface: \(interfaceDescription(primaryNetworkPathInterface))")
+                let shouldIncludeListenPort = previousPrimaryNetworkPathInterface != primaryNetworkPathInterface
+                let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(shouldIncludeListenPort: shouldIncludeListenPort, currentListenPort: wgGetListenPort(handle))
                 let err = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
                 if err == -EADDRINUSE {
-                    let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
+                    // We expect this to happen only if shouldIncludeListenPort is true
+                    let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(shouldIncludeListenPort: shouldIncludeListenPort, currentListenPort: 0)
                     _ = withStringsAsGoStrings(endpointString, call: { return wgSetConfig(handle, $0.0) })
                 }
+                previousPrimaryNetworkPathInterface = primaryNetworkPathInterface
             }
         }
         networkMonitor?.start(queue: DispatchQueue(label: "NetworkMonitor"))
