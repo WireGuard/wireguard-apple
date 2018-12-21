@@ -243,14 +243,21 @@ extension TunnelDetailTableViewController {
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
             self.showConfirmationAlert(message: "Delete this tunnel?", buttonTitle: "Delete", from: cell) { [weak self] in
-                guard let tunnelsManager = self?.tunnelsManager, let tunnel = self?.tunnel else { return }
-                tunnelsManager.remove(tunnel: tunnel) { error in
+                guard let self = self else { return }
+                self.tunnelsManager.remove(tunnel: self.tunnel) { error in
                     if error != nil {
                         print("Error removing tunnel: \(String(describing: error))")
                         return
                     }
                 }
-                self?.navigationController?.navigationController?.popToRootViewController(animated: true)
+                if self.splitViewController?.isCollapsed ?? true {
+                    self.navigationController?.navigationController?.popToRootViewController(animated: true)
+                } else {
+                    let detailVC = UIViewController()
+                    detailVC.view.backgroundColor = .white
+                    let detailNC = UINavigationController(rootViewController: detailVC)
+                    self.showDetailViewController(detailNC, sender: self)
+                }
             }
         }
         return cell
