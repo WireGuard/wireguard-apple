@@ -8,7 +8,7 @@ import os.log
 
 enum PacketTunnelProviderError: Error {
     case savedProtocolConfigurationIsInvalid
-    case dnsResolutionFailure(tunnelName: String, isActivateOnDemandEnabled: Bool)
+    case dnsResolutionFailure
     case couldNotStartWireGuard
     case coultNotSetNetworkSettings
 }
@@ -54,9 +54,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             wg_log(.info, staticMessage: "Tunnel has Activate On Demand disabled")
         }
 
+        errorNotifier.isActivateOnDemandEnabled = isActivateOnDemandEnabled
+        errorNotifier.tunnelName = tunnelName
+
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        guard let resolvedEndpoints = resolveDomainNames(endpoints: endpoints, isActivateOnDemandEnabled: isActivateOnDemandEnabled) else {
-            let dnsError = PacketTunnelProviderError.dnsResolutionFailure(tunnelName: tunnelName, isActivateOnDemandEnabled: isActivateOnDemandEnabled)
+        guard let resolvedEndpoints = resolveDomainNames(endpoints: endpoints) else {
+            wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
+            let dnsError = PacketTunnelProviderError.dnsResolutionFailure
             errorNotifier.notify(dnsError)
             startTunnelCompletionHandler(dnsError)
             return
@@ -148,34 +152,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
-    private func resolveDomainNames(endpoints: [Endpoint?], isActivateOnDemandEnabled: Bool) -> [Endpoint?]? {
-        var resolvedEndpoints = [Endpoint?]()
-        let dnsResolutionAttemptsCount = isActivateOnDemandEnabled ? 10 : 1
-        var isDNSResolved = false
-
-        for attemptIndex in 0 ..< dnsResolutionAttemptsCount {
-            do {
-                resolvedEndpoints = try DNSResolver.resolveSync(endpoints: endpoints)
-                isDNSResolved = true
-            } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
-                wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
-                wg_log(.error, message: "Hostnames for which DNS resolution failed: \(hostnames.joined(separator: ", "))")
-            } catch {
-                // There can be no other errors from DNSResolver.resolveSync()
-                fatalError()
-            }
-            if isDNSResolved {
-                break
-            } else {
-                let isLastAttempt = attemptIndex == dnsResolutionAttemptsCount - 1
-                if !isLastAttempt {
-                    Thread.sleep(forTimeInterval: 4 /* seconds */)
-                    wg_log(.error, message: "Retrying DNS resolution (Attempt \(attemptIndex + 2))")
-                }
-            }
+    private func resolveDomainNames(endpoints: [Endpoint?]) -> [Endpoint?]? {
+        do {
+            return try DNSResolver.resolveSync(endpoints: endpoints)
+        } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
+            wg_log(.error, message: "DNS resolution failed for the following hostnames: \(hostnames.joined(separator: ", "))")
+        } catch {
+            // There can be no other errors from DNSResolver.resolveSync()
+            fatalError()
         }
-
-        return isDNSResolved ? resolvedEndpoints : nil
+        return nil
     }
 
     private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
