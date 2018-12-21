@@ -10,7 +10,6 @@ extension NETunnelProviderProtocol {
     enum Keys: String {
         case tunnelConfiguration = "TunnelConfiguration"
         case tunnelConfigurationVersion = "TunnelConfigurationVersion"
-        case isActivateOnDemandEnabled = "IsActivateOnDemandEnabled"
     }
     
     var tunnelConfiguration: TunnelConfiguration? {
@@ -27,11 +26,7 @@ extension NETunnelProviderProtocol {
         return try? JSONDecoder().decode(TunnelConfiguration.self, from: tunnelConfigurationData!)
     }
     
-    var isActivateOnDemandEnabled: Bool {
-        return providerConfiguration?[Keys.isActivateOnDemandEnabled.rawValue] as? Bool ?? false
-    }
-    
-    convenience init?(tunnelConfiguration: TunnelConfiguration, isActivateOnDemandEnabled: Bool) {
+    convenience init?(tunnelConfiguration: TunnelConfiguration) {
         assert(!tunnelConfiguration.interface.name.isEmpty)
         
         guard let tunnelConfigData = try? JSONEncoder().encode(tunnelConfiguration) else { return nil }
@@ -43,8 +38,7 @@ extension NETunnelProviderProtocol {
         providerBundleIdentifier = "\(appId).network-extension"
         providerConfiguration = [
             Keys.tunnelConfiguration.rawValue: tunnelConfigDictionary,
-            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion,
-            Keys.isActivateOnDemandEnabled.rawValue: isActivateOnDemandEnabled
+            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion
         ]
 
         let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
@@ -85,14 +79,12 @@ extension NETunnelProviderProtocol {
     private func migrateFromConfigurationV1() {
         guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return }
         guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }
-        guard let isActivateOnDemandEnabled = providerConfiguration?["isActivateOnDemandEnabled"] as? Bool else { return }
         guard let tunnelConfigData = try? JSONEncoder().encode(configuration.migrated) else { return }
         guard let tunnelConfigDictionary = try? JSONSerialization.jsonObject(with: tunnelConfigData, options: .allowFragments) else { return }
         
         providerConfiguration = [
             Keys.tunnelConfiguration.rawValue: tunnelConfigDictionary,
-            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion,
-            Keys.isActivateOnDemandEnabled.rawValue: isActivateOnDemandEnabled
+            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion
         ]
     }
     

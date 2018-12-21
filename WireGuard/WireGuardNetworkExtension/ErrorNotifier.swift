@@ -9,7 +9,6 @@ class ErrorNotifier {
     weak var tunnelProvider: NEPacketTunnelProvider?
 
     var tunnelName: String?
-    var isActivateOnDemandEnabled = false
 
     init(activationAttemptId: String?, tunnelProvider: NEPacketTunnelProvider) {
         self.activationAttemptId = activationAttemptId
@@ -31,21 +30,9 @@ class ErrorNotifier {
     }
 
     func notify(_ error: PacketTunnelProviderError) {
-        guard let (title, message) = errorMessage(for: error) else { return }
-        if let activationAttemptId = activationAttemptId, let lastErrorFilePath = FileManager.networkExtensionLastErrorFileURL?.path {
-            // The tunnel was started from the app
-            let onDemandMessage = isActivateOnDemandEnabled ? " This tunnel has Activate On Demand enabled, so this tunnel might be activated automatically. You may turn off Activate On Demand in the WireGuard app by navigating to: '\(tunnelName ?? "tunnel")' > Edit." : ""
-            let errorMessageData = "\(activationAttemptId)\n\(title)\n\(message)\(onDemandMessage)".data(using: .utf8)
-            FileManager.default.createFile(atPath: lastErrorFilePath, contents: errorMessageData, attributes: nil)
-        } else {
-            // The tunnel was probably started from iOS Settings app or activated on-demand
-            if let tunnelProvider = self.tunnelProvider {
-                // displayMessage() is deprecated, but there's no better alternative if invoked from iOS Settings
-                if !isActivateOnDemandEnabled { // If using activate-on-demand, don't use displayMessage
-                    tunnelProvider.displayMessage("\(title): \(message)") { _ in }
-                }
-            }
-        }
+        guard let (title, message) = errorMessage(for: error), let activationAttemptId = activationAttemptId, let lastErrorFilePath = FileManager.networkExtensionLastErrorFileURL?.path else { return }
+        let errorMessageData = "\(activationAttemptId)\n\(title)\n\(message)".data(using: .utf8)
+        FileManager.default.createFile(atPath: lastErrorFilePath, contents: errorMessageData, attributes: nil)
     }
 
     static func removeLastErrorFile() {
