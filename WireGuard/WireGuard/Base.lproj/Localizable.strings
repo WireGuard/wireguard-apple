@@ -177,6 +177,7 @@
 
 "alertTunnelActivationFailureTitle" = "Activation failure";
 "alertTunnelActivationFailureMessage" = "The tunnel could not be activated. Please ensure that you are connected to the Internet.";
+"alertTunnelActivationFailureOnDemandAddendum" = " This tunnel has Activate On Demand enabled, so this tunnel might be re-activated automatically by the OS. You may turn off Activate On Demand in this app by editing the tunnel configuration.";
 
 "alertTunnelNameEmptyTitle" = "No name provided";
 "alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";

@@ -66,7 +66,7 @@ class TunnelsManager {
         }
 
         let tunnelProviderManager = NETunnelProviderManager()
-        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, isActivateOnDemandEnabled: activateOnDemandSetting.isActivateOnDemandEnabled)
+        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
@@ -125,7 +125,7 @@ class TunnelsManager {
 
         let shouldRestartIfActive = !((tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.hasTunnelConfiguration(tunnelConfiguration: tunnelConfiguration) ?? false)
 
-        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, isActivateOnDemandEnabled: activateOnDemandSetting.isActivateOnDemandEnabled)
+        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
         tunnelProviderManager.localizedDescription = tunnelName
         tunnelProviderManager.isEnabled = true
 
@@ -277,9 +277,9 @@ class TunnelsManager {
                 } else if session.status == .disconnected {
                     tunnel.isAttemptingActivation = false
                     if let (title, message) = self.lastErrorTextFromNetworkExtension(for: tunnel) {
-                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailedWithExtensionError(title: title, message: message))
+                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailedWithExtensionError(title: title, message: message, wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
                     } else {
-                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed)
+                        self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed(wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
                     }
                 }
             }

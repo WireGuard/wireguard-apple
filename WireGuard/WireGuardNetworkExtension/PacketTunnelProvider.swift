@@ -24,7 +24,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor?.cancel()
     }
 
-    //swiftlint:disable:next function_body_length
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
@@ -39,22 +38,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         configureLogger()
 
         let tunnelName = tunnelConfiguration.interface.name
-        wg_log(.info, message: "Starting tunnel '\(tunnelName)'")
+        wg_log(.info, message: "Starting tunnel '\(tunnelName)' from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
 
-        if activationAttemptId != nil {
-            wg_log(.info, staticMessage: "Tunnel activated from the app")
-        } else {
-            wg_log(.info, staticMessage: "Tunnel not activated from the app")
-        }
-
-        let isActivateOnDemandEnabled = tunnelProviderProtocol.isActivateOnDemandEnabled
-        if isActivateOnDemandEnabled {
-            wg_log(.info, staticMessage: "Tunnel has Activate On Demand enabled")
-        } else {
-            wg_log(.info, staticMessage: "Tunnel has Activate On Demand disabled")
-        }
-
-        errorNotifier.isActivateOnDemandEnabled = isActivateOnDemandEnabled
         errorNotifier.tunnelName = tunnelName
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
