@@ -3,20 +3,17 @@
 
 import NetworkExtension
 
-let tunnelConfigurationVersion = 2
-
 extension NETunnelProviderProtocol {
     
     enum Keys: String {
-        case tunnelConfiguration = "TunnelConfiguration"
-        case tunnelConfigurationVersion = "TunnelConfigurationVersion"
+        case wgQuickConfig = "WgQuickConfigV1"
     }
     
     var tunnelConfiguration: TunnelConfiguration? {
         migrateConfigurationIfNeeded()
 
         let tunnelConfigurationData: Data?
-        if let configurationDictionary = providerConfiguration?[Keys.tunnelConfiguration.rawValue] {
+        if let configurationDictionary = providerConfiguration?[Keys.wgQuickConfig.rawValue] {
             tunnelConfigurationData = try? JSONSerialization.data(withJSONObject: configurationDictionary, options: [])
         } else {
             tunnelConfigurationData = nil
@@ -36,10 +33,7 @@ extension NETunnelProviderProtocol {
 
         let appId = Bundle.main.bundleIdentifier!
         providerBundleIdentifier = "\(appId).network-extension"
-        providerConfiguration = [
-            Keys.tunnelConfiguration.rawValue: tunnelConfigDictionary,
-            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion
-        ]
+        providerConfiguration = [ Keys.wgQuickConfig.rawValue: tunnelConfigDictionary ]
 
         let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
         if endpoints.count == 1 {
@@ -60,20 +54,13 @@ extension NETunnelProviderProtocol {
     
     @discardableResult
     func migrateConfigurationIfNeeded() -> Bool {
-        guard let providerConfiguration = providerConfiguration else { return false }
-        guard let configurationVersion = providerConfiguration[Keys.tunnelConfigurationVersion.rawValue] as? Int ?? providerConfiguration["tunnelConfigurationVersion"] as? Int else { return false }
-        
-        if configurationVersion < tunnelConfigurationVersion {
-            switch configurationVersion {
-            case 1:
-                migrateFromConfigurationV1()
-            default:
-                fatalError("No migration from configuration version \(configurationVersion) exists.")
-            }
-            return true
+        guard let configurationVersion = providerConfiguration?["tunnelConfigurationVersion"] as? Int else { return false }
+        if configurationVersion == 1 {
+            migrateFromConfigurationV1()
+        } else {
+            fatalError("No migration from configuration version \(configurationVersion) exists.")
         }
-        
-        return false
+        return true
     }
     
     private func migrateFromConfigurationV1() {
@@ -82,10 +69,7 @@ extension NETunnelProviderProtocol {
         guard let tunnelConfigData = try? JSONEncoder().encode(configuration.migrated) else { return }
         guard let tunnelConfigDictionary = try? JSONSerialization.jsonObject(with: tunnelConfigData, options: .allowFragments) else { return }
         
-        providerConfiguration = [
-            Keys.tunnelConfiguration.rawValue: tunnelConfigDictionary,
-            Keys.tunnelConfigurationVersion.rawValue: tunnelConfigurationVersion
-        ]
+        providerConfiguration = [ Keys.wgQuickConfig.rawValue: tunnelConfigDictionary ]
     }
     
 }
