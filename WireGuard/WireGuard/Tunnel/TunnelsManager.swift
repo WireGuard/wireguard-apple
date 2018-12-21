@@ -67,7 +67,7 @@ class TunnelsManager {
 
         let tunnelProviderManager = NETunnelProviderManager()
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = (tunnelConfiguration).interface.name
+        tunnelProviderManager.localizedDescription = tunnelConfiguration.interface.name
         tunnelProviderManager.isEnabled = true
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
@@ -124,7 +124,7 @@ class TunnelsManager {
         }
 
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = (tunnelConfiguration).interface.name
+        tunnelProviderManager.localizedDescription = tunnelConfiguration.interface.name
         tunnelProviderManager.isEnabled = true
 
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
