@@ -32,15 +32,14 @@ var loggerFunc unsafe.Pointer
 var versionString *C.char
 
 type CLogger struct {
-	level         C.int
-	interfaceName string
+	level C.int
 }
 
 func (l *CLogger) Write(p []byte) (int, error) {
 	if uintptr(loggerFunc) == 0 {
 		return 0, errors.New("No logger initialized")
 	}
-	message := C.CString(l.interfaceName + ": " + string(p))
+	message := C.CString(string(p))
 	C.callLogger(loggerFunc, l.level, message)
 	C.free(unsafe.Pointer(message))
 	return len(p), nil
@@ -75,16 +74,12 @@ func wgSetLogger(loggerFn uintptr) {
 }
 
 //export wgTurnOn
-func wgTurnOn(ifnameRef string, settings string, tunFd int32) int32 {
-	interfaceName := string([]byte(ifnameRef))
-
+func wgTurnOn(settings string, tunFd int32) int32 {
 	logger := &Logger{
-		Debug: log.New(&CLogger{level: 0, interfaceName: interfaceName}, "", 0),
-		Info:  log.New(&CLogger{level: 1, interfaceName: interfaceName}, "", 0),
-		Error: log.New(&CLogger{level: 2, interfaceName: interfaceName}, "", 0),
+		Debug: log.New(&CLogger{level: 0}, "", 0),
+		Info:  log.New(&CLogger{level: 1}, "", 0),
+		Error: log.New(&CLogger{level: 2}, "", 0),
 	}
-
-	logger.Debug.Println("Debug log enabled")
 
 	tun, _, err := tun.CreateTUNFromFD(int(tunFd))
 	if err != nil {
