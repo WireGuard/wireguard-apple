@@ -58,11 +58,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         errorNotifier.tunnelName = tunnelName
 
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        guard let resolvedEndpoints = resolveDomainNames(endpoints: endpoints) else {
-            wg_log(.error, staticMessage: "Starting tunnel failed: DNS resolution failure")
-            let dnsError = PacketTunnelProviderError.dnsResolutionFailure
-            errorNotifier.notify(dnsError)
-            startTunnelCompletionHandler(dnsError)
+        guard let resolvedEndpoints = DNSResolver.resolveSync(endpoints: endpoints) else {
+            errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
+            startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure)
             return
         }
         assert(endpoints.count == resolvedEndpoints.count)
@@ -165,18 +163,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             wg_log(logType, message: String(cString: msgC))
         }
-    }
-
-    private func resolveDomainNames(endpoints: [Endpoint?]) -> [Endpoint?]? {
-        do {
-            return try DNSResolver.resolveSync(endpoints: endpoints)
-        } catch DNSResolverError.dnsResolutionFailed(let hostnames) {
-            wg_log(.error, message: "DNS resolution failed for the following hostnames: \(hostnames.joined(separator: ", "))")
-        } catch {
-            // There can be no other errors from DNSResolver.resolveSync()
-            fatalError()
-        }
-        return nil
     }
 
     private func connect(interfaceName: String, settings: String, fileDescriptor: Int32) -> Int32 {
