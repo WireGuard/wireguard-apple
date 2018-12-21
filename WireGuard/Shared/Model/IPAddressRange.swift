@@ -52,22 +52,3 @@ extension IPAddressRange {
         return (address, networkPrefixLength)
     }
 }
-
-extension IPAddressRange: Codable {
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(stringRepresentation)
-    }
-    
-    public init(from decoder: Decoder) throws {
-        let values = try decoder.singleValueContainer()
-        let addressString = try values.decode(String.self)
-        guard let parsed = IPAddressRange.parseAddressString(addressString) else { throw DecodingError.invalidData }
-        address = parsed.0
-        networkPrefixLength = parsed.1
-    }
-    
-    enum DecodingError: Error {
-        case invalidData
-    }
-}

@@ -14,26 +14,6 @@ struct Endpoint {
     }
 }
 
-extension Endpoint: Codable {
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        let endpointString = try container.decode(String.self)
-        guard let endpoint = Endpoint(from: endpointString) else {
-            throw DecodingError.invalidData
-        }
-        self = endpoint
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(stringRepresentation)
-    }
-    
-    enum DecodingError: Error {
-        case invalidData
-    }
-}
-
 extension Endpoint {
     var stringRepresentation: String {
         switch host {
