@@ -101,7 +101,7 @@ class QRScanViewController: UIViewController {
     }
 
     func scanDidComplete(withCode code: String) {
-        let scannedTunnelConfiguration = try? WgQuickConfigFileParser.parse(code, name: "Scanned")
+        let scannedTunnelConfiguration = try? TunnelConfiguration(code, name: "Scanned")
         guard let tunnelConfiguration = scannedTunnelConfiguration else {
             scanDidEncounterError(title: tr("alertScanQRCodeInvalidQRCodeTitle"), message: tr("alertScanQRCodeInvalidQRCodeMessage"))
             return

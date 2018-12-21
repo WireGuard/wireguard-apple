@@ -43,9 +43,9 @@ class TunnelsManager {
             }
             
             let tunnelManagers = managers ?? []
-            tunnelManagers.forEach {
-                if ($0.protocolConfiguration as? NETunnelProviderProtocol)?.migrateConfigurationIfNeeded() == true {
-                    $0.saveToPreferences { _ in }
+            tunnelManagers.forEach { tunnelManager in
+                if (tunnelManager.protocolConfiguration as? NETunnelProviderProtocol)?.migrateConfigurationIfNeeded() == true {
+                    tunnelManager.saveToPreferences { _ in }
                 }
             }
             completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
@@ -54,7 +54,7 @@ class TunnelsManager {
     }
 
     func add(tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
-        let tunnelName = tunnelConfiguration.interface.name
+        let tunnelName = tunnelConfiguration.interface.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
             return
@@ -67,7 +67,7 @@ class TunnelsManager {
 
         let tunnelProviderManager = NETunnelProviderManager()
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelName
+        tunnelProviderManager.localizedDescription = (tunnelConfiguration).interface.name
         tunnelProviderManager.isEnabled = true
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
@@ -107,7 +107,7 @@ class TunnelsManager {
     }
 
     func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
-        let tunnelName = tunnelConfiguration.interface.name
+        let tunnelName = tunnelConfiguration.interface.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(TunnelsManagerError.tunnelNameEmpty)
             return
@@ -123,12 +123,10 @@ class TunnelsManager {
             tunnel.name = tunnelName
         }
 
-        let shouldRestartIfActive = !((tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.hasTunnelConfiguration(tunnelConfiguration: tunnelConfiguration) ?? false)
-
         tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelName
+        tunnelProviderManager.localizedDescription = (tunnelConfiguration).interface.name
         tunnelProviderManager.isEnabled = true
-
+        
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
@@ -148,12 +146,10 @@ class TunnelsManager {
             }
             self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
 
-            if shouldRestartIfActive {
-                if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
-                    // Turn off the tunnel, and then turn it back on, so the changes are made effective
-                    tunnel.status = .restarting
-                    (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
-                }
+            if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
+                // Turn off the tunnel, and then turn it back on, so the changes are made effective
+                tunnel.status = .restarting
+                (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
             }
 
             if isActivatingOnDemand {
@@ -353,7 +349,7 @@ class TunnelContainer: NSObject {
     private var lastTunnelConnectionStatus: NEVPNStatus?
 
     var tunnelConfiguration: TunnelConfiguration? {
-        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.tunnelConfiguration(name: tunnelProvider.localizedDescription)
     }
     
     var activateOnDemandSetting: ActivateOnDemandSetting {

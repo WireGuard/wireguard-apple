@@ -22,8 +22,8 @@ class ZipExporter {
             var inputsToArchiver: [(fileName: String, contents: Data)] = []
             var lastTunnelName: String = ""
             for tunnelConfiguration in tunnelConfigurations {
-                if let contents = WgQuickConfigFileWriter.writeConfigFile(from: tunnelConfiguration) {
-                    let name = tunnelConfiguration.interface.name
+                if let contents = tunnelConfiguration.asWgQuickConfig().data(using: .utf8) {
+                    let name = tunnelConfiguration.interface.name ?? ""
                     if name.isEmpty || name == lastTunnelName { continue }
                     inputsToArchiver.append((fileName: "\(name).conf", contents: contents))
                     lastTunnelName = name

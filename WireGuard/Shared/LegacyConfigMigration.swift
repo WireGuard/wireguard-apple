@@ -186,11 +186,8 @@ extension NETunnelProviderProtocol {
     
     private func migrateFromConfigurationV1() {
         guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return }
-        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }
-        guard let tunnelConfigData = try? JSONEncoder().encode(configuration.migrated) else { return }
-        guard let tunnelConfigDictionary = try? JSONSerialization.jsonObject(with: tunnelConfigData, options: .allowFragments) else { return }
-        
-        providerConfiguration = [Keys.wgQuickConfig.rawValue: tunnelConfigDictionary]
+        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }        
+        providerConfiguration = [Keys.wgQuickConfig.rawValue: configuration.migrated.asWgQuickConfig()]
     }
     
 }

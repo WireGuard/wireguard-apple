@@ -29,7 +29,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
 
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
-            let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration else {
+            let tunnelConfiguration = tunnelProviderProtocol.tunnelConfiguration(name: nil) else {
                 errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                 return
@@ -132,7 +132,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if err == -EADDRINUSE && listenPort != nil {
             let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
             _ = endpointString.withGoString { return wgSetConfig(handle, $0) }
-
         }
     }
 }
