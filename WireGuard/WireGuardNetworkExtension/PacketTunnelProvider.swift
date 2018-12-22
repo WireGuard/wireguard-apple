@@ -8,7 +8,7 @@ import os.log
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
-    private var wgHandle: Int32?
+    private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
     private var lastFirstInterface: NWInterface?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
@@ -42,37 +42,32 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
-        let fileDescriptor = (packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
-        if fileDescriptor < 0 {
-            wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
-            errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-            return
-        }
-
-        let wireguardSettings = packetTunnelSettingsGenerator!.uapiConfiguration()
-
-        networkMonitor = NWPathMonitor()
-        lastFirstInterface = networkMonitor!.currentPath.availableInterfaces.first
-        networkMonitor!.pathUpdateHandler = pathUpdate
-        networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
-
-        let handle = wireguardSettings.withGoString { return wgTurnOn($0, fileDescriptor) }
-        if handle < 0 {
-            wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
-            errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
-            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
-            return
-        }
-        wgHandle = handle
-
-        let networkSettings: NEPacketTunnelNetworkSettings = packetTunnelSettingsGenerator!.generateNetworkSettings()
-        setTunnelNetworkSettings(networkSettings) { error in
+        setTunnelNetworkSettings(packetTunnelSettingsGenerator!.generateNetworkSettings()) { error in
             if let error = error {
                 wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
                 errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
                 startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
             } else {
+                self.networkMonitor = NWPathMonitor()
+                self.lastFirstInterface = self.networkMonitor!.currentPath.availableInterfaces.first
+                self.networkMonitor!.pathUpdateHandler = self.pathUpdate
+                self.networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
+
+                let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
+                if fileDescriptor < 0 {
+                    wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
+                    errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                    startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                    return
+                }
+                let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration().withGoString { return wgTurnOn($0, fileDescriptor) }
+                if handle < 0 {
+                    wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
+                    errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
+                    startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
+                    return
+                }
+                self.handle = handle
                 startTunnelCompletionHandler(nil)
             }
         }
@@ -85,7 +80,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         ErrorNotifier.removeLastErrorFile()
 
         wg_log(.info, staticMessage: "Stopping tunnel")
-        if let handle = wgHandle {
+        if let handle = handle {
             wgTurnOff(handle)
         }
         completionHandler()
@@ -111,7 +106,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func pathUpdate(path: Network.NWPath) {
-        guard let handle = wgHandle, let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator else { return }
+        guard let handle = handle, let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator else { return }
         var listenPort: UInt16?
         //TODO(zx2c4): Remove the `true` here after extensive testing with network/cell simulations.
         if true || path.availableInterfaces.isEmpty || lastFirstInterface != path.availableInterfaces.first {
