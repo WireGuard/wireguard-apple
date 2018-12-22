@@ -280,6 +280,8 @@
 		6F7774DE217181B1006A79B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
+				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
 				5F4541AC21C4720B00994C13 /* ViewController */,
 				5F4541A721C44F5B00994C13 /* View */,
 				6F7774E0217181B1006A79B3 /* AppDelegate.swift */,
@@ -412,8 +414,6 @@
 				6F61F1EA21B937EF00483816 /* WireGuardResult.swift */,
 				6FE1765921C90E87002690EA /* LocalizationHelper.swift */,
 				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
-				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
-				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
 				6FF4AC23211EC472002C96EB /* Info.plist */,
 				6FF4AC2B211EC776002C96EB /* Config.xcconfig */,
 				6F689999218043390012E523 /* WireGuard-Bridging-Header.h */,
