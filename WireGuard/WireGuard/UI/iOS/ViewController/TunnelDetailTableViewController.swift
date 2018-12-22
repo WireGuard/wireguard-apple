@@ -3,8 +3,6 @@
 
 import UIKit
 
-// MARK: TunnelDetailTableViewController
-
 class TunnelDetailTableViewController: UITableViewController {
 
     private enum Section {
@@ -42,11 +40,6 @@ class TunnelDetailTableViewController: UITableViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        onDemandStatusObservationToken = nil
-        statusObservationToken = nil
     }
 
     override func viewDidLoad() {
@@ -250,7 +243,7 @@ extension TunnelDetailTableViewController {
                         return
                     }
                 }
-                if self.splitViewController?.isCollapsed ?? true {
+                if self.splitViewController?.isCollapsed != false {
                     self.navigationController?.navigationController?.popToRootViewController(animated: true)
                 } else {
                     let detailVC = UIViewController()
