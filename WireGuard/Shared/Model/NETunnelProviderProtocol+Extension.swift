@@ -32,9 +32,6 @@ extension NETunnelProviderProtocol {
         } else {
             serverAddress = "Multiple endpoints"
         }
-
-        //TODO(roopc): Why are we doing this? Just for kicks? Is it useful? Seems needless.
-        username = tunnelConfiguration.name
     }
 
     func asTunnelConfiguration(called name: String? = nil) -> TunnelConfiguration? {
