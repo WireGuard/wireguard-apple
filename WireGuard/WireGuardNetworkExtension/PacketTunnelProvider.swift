@@ -38,7 +38,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
-        let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32 //swiftlint:disable:this force_cast
+        let fileDescriptor = (packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
         if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
             errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
