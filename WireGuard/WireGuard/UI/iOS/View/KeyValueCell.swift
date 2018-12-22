@@ -79,7 +79,7 @@ class KeyValueCell: UITableViewCell {
         contentView.addSubview(keyLabel)
         keyLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            keyLabel.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
+            keyLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
             keyLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
         ])
 
@@ -87,10 +87,10 @@ class KeyValueCell: UITableViewCell {
         valueLabelScrollView.addSubview(valueTextField)
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            valueTextField.leftAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.leftAnchor),
+            valueTextField.leadingAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.leadingAnchor),
             valueTextField.topAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.topAnchor),
             valueTextField.bottomAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.bottomAnchor),
-            valueTextField.rightAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.rightAnchor),
+            valueTextField.trailingAnchor.constraint(equalTo: valueLabelScrollView.contentLayoutGuide.trailingAnchor),
             valueTextField.heightAnchor.constraint(equalTo: valueLabelScrollView.heightAnchor)
         ])
         let expandToFitValueLabelConstraint = NSLayoutConstraint(item: valueTextField, attribute: .width, relatedBy: .equal, toItem: valueLabelScrollView, attribute: .width, multiplier: 1, constant: 0)
@@ -102,7 +102,7 @@ class KeyValueCell: UITableViewCell {
         contentView.addSubview(valueLabelScrollView)
         valueLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            valueLabelScrollView.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor),
+            valueLabelScrollView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueLabelScrollView.bottomAnchor, multiplier: 0.5)
         ])
 
@@ -128,8 +128,8 @@ class KeyValueCell: UITableViewCell {
             if !isStackedVertically {
                 constraints = [
                     valueLabelScrollView.topAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
-                    valueLabelScrollView.leftAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leftAnchor),
-                    keyLabel.rightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.rightAnchor)
+                    valueLabelScrollView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+                    keyLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
                 ]
                 isStackedVertically = true
                 isStackedHorizontally = false
@@ -139,7 +139,7 @@ class KeyValueCell: UITableViewCell {
             if !isStackedHorizontally {
                 constraints = [
                     contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: keyLabel.bottomAnchor, multiplier: 0.5),
-                    valueLabelScrollView.leftAnchor.constraint(equalToSystemSpacingAfter: keyLabel.rightAnchor, multiplier: 1),
+                    valueLabelScrollView.leadingAnchor.constraint(equalToSystemSpacingAfter: keyLabel.trailingAnchor, multiplier: 1),
                     valueLabelScrollView.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 0.5)
                 ]
                 isStackedHorizontally = true

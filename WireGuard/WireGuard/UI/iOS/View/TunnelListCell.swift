@@ -46,14 +46,14 @@ class TunnelListCell: UITableViewCell {
         statusSwitch.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            contentView.rightAnchor.constraint(equalTo: statusSwitch.rightAnchor)
+            contentView.trailingAnchor.constraint(equalTo: statusSwitch.trailingAnchor)
         ])
 
         contentView.addSubview(busyIndicator)
         busyIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.leftAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.rightAnchor, multiplier: 1)
+            statusSwitch.leadingAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.trailingAnchor, multiplier: 1)
         ])
 
         contentView.addSubview(nameLabel)
@@ -63,8 +63,8 @@ class TunnelListCell: UITableViewCell {
         bottomAnchorConstraint.priority = .defaultLow
         NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
-            nameLabel.leftAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leftAnchor, multiplier: 1),
-            busyIndicator.leftAnchor.constraint(equalToSystemSpacingAfter: nameLabel.rightAnchor, multiplier: 1),
+            nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leadingAnchor, multiplier: 1),
+            busyIndicator.leadingAnchor.constraint(equalToSystemSpacingAfter: nameLabel.trailingAnchor, multiplier: 1),
             bottomAnchorConstraint
         ])
 
