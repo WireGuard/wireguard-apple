@@ -232,8 +232,11 @@ extension TunnelEditTableViewController {
         case .name, .privateKey:
             cell.placeholderText = tr("tunnelEditPlaceholderTextRequired")
             cell.keyboardType = .default
-        case .addresses, .dns:
-            cell.placeholderText = tr("tunnelEditPlaceholderTextOptional")
+        case .addresses:
+            cell.placeholderText = tr("tunnelEditPlaceholderTextStronglyRecommended")
+            cell.keyboardType = .numbersAndPunctuation
+        case .dns:
+            cell.placeholderText = tunnelViewModel.peersData.contains(where: { return $0.shouldStronglyRecommendDNS }) ? tr("tunnelEditPlaceholderTextStronglyRecommended") : tr("tunnelEditPlaceholderTextOptional")
             cell.keyboardType = .numbersAndPunctuation
         case .listenPort, .mtu:
             cell.placeholderText = tr("tunnelEditPlaceholderTextAutomatic")
