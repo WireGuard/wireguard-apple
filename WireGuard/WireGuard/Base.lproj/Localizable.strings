@@ -68,9 +68,11 @@
 
 "tunnelOnDemandKey" = "Activate on demand";
 "tunnelOnDemandOptionOff" = "Off";
-"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi or cellular";
 "tunnelOnDemandOptionWiFiOnly" = "Wi-Fi only";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi or cellular";
 "tunnelOnDemandOptionCellularOnly" = "Cellular only";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi or ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Ethernet only";
 
 "addPeerButtonTitle" = "Add peer";
 
