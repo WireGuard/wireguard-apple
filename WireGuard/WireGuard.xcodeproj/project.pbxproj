@@ -16,7 +16,6 @@
 		5F4541A221C2D6DF00994C13 /* BorderedTextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A121C2D6DF00994C13 /* BorderedTextButton.swift */; };
 		5F4541A621C4449E00994C13 /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A521C4449E00994C13 /* ButtonCell.swift */; };
 		5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A821C451D100994C13 /* TunnelStatus.swift */; };
-		5F4541AE21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541AD21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift */; };
 		5F4541B221CBFAEE00994C13 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
 		5F9696AA21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
 		5F9696AB21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
@@ -123,7 +122,6 @@
 		5F4541A121C2D6DF00994C13 /* BorderedTextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorderedTextButton.swift; sourceTree = "<group>"; };
 		5F4541A521C4449E00994C13 /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		5F4541A821C451D100994C13 /* TunnelStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelStatus.swift; sourceTree = "<group>"; };
-		5F4541AD21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NEVPNStatus+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+ArrayConversion.swift"; sourceTree = "<group>"; };
 		5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyConfigMigration.swift; sourceTree = "<group>"; };
 		5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TunnelConfiguration+WgQuickConfig.swift"; sourceTree = "<group>"; };
@@ -315,7 +313,6 @@
 				6FFA5DA32197085D0001E2F7 /* ActivateOnDemandSetting.swift */,
 				5F4541A821C451D100994C13 /* TunnelStatus.swift */,
 				6FB1017821C57DE600766195 /* MockTunnels.swift */,
-				5F4541AD21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift */,
 				6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */,
 			);
 			path = Tunnel;
@@ -723,7 +720,6 @@
 				5F45418C21C2D48200994C13 /* TunnelEditKeyValueCell.swift in Sources */,
 				6FE254FB219C10800028284D /* ZipImporter.swift in Sources */,
 				6F7774EA217229DB006A79B3 /* IPAddressRange.swift in Sources */,
-				5F4541AE21C7704300994C13 /* NEVPNStatus+CustomStringConvertible.swift in Sources */,
 				6F7774E82172020C006A79B3 /* TunnelConfiguration.swift in Sources */,
 				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
 				6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */,

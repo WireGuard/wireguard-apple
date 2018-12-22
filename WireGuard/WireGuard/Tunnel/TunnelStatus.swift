@@ -44,3 +44,16 @@ extension TunnelStatus: CustomDebugStringConvertible {
         }
     }
 }
+
+extension NEVPNStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch self {
+        case .connected: return "connected"
+        case .connecting: return "connecting"
+        case .disconnected: return "disconnected"
+        case .disconnecting: return "disconnecting"
+        case .reasserting: return "reasserting"
+        case .invalid: return "invalid"
+        }
+    }
+}
