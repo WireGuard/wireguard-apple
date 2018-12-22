@@ -13,6 +13,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private var lastFirstInterface: NWInterface?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
 
+    deinit {
+        networkMonitor?.cancel()
+    }
+
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)

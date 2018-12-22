@@ -14,6 +14,19 @@ struct IPAddressRange {
     }
 }
 
+extension IPAddressRange: Equatable {
+    static func == (lhs: IPAddressRange, rhs: IPAddressRange) -> Bool {
+        return lhs.address.rawValue == rhs.address.rawValue && lhs.networkPrefixLength == rhs.networkPrefixLength
+    }
+}
+
+extension IPAddressRange: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(address.rawValue)
+        hasher.combine(networkPrefixLength)
+    }
+}
+
 extension IPAddressRange {
     var stringRepresentation: String {
         return "\(address)/\(networkPrefixLength)"

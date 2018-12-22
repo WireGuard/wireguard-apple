@@ -64,7 +64,7 @@ class TunnelsManager {
             }
 
             let newTunnels = managers.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
-            let hasChanges = self.tunnels.map { $0.name } != newTunnels.map { $0.name }
+            let hasChanges = self.tunnels.map { $0.tunnelConfiguration } != newTunnels.map { $0.tunnelConfiguration }
             if hasChanges {
                 self.tunnels = newTunnels
                 completionHandler(true)
