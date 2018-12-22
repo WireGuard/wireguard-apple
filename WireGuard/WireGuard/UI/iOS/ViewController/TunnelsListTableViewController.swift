@@ -196,8 +196,6 @@ class TunnelsListTableViewController: UIViewController {
     }
 }
 
-// MARK: UIDocumentPickerDelegate
-
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         urls.forEach {
@@ -205,8 +203,6 @@ extension TunnelsListTableViewController: UIDocumentPickerDelegate {
         }
     }
 }
-
-// MARK: QRScanViewControllerDelegate
 
 extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
@@ -220,8 +216,6 @@ extension TunnelsListTableViewController: QRScanViewControllerDelegate {
         }
     }
 }
-
-// MARK: UITableViewDataSource
 
 extension TunnelsListTableViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -249,8 +243,6 @@ extension TunnelsListTableViewController: UITableViewDataSource {
         return cell
     }
 }
-
-// MARK: UITableViewDelegate
 
 extension TunnelsListTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -280,8 +272,6 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
-
-// MARK: TunnelsManagerDelegate
 
 extension TunnelsListTableViewController: TunnelsManagerListDelegate {
     func tunnelAdded(at index: Int) {
