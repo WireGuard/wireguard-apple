@@ -414,17 +414,16 @@ extension TunnelEditTableViewController {
                 guard let self = self else { return }
                 guard isOn != self.activateOnDemandSetting.isActivateOnDemandEnabled else { return }
 
+                self.activateOnDemandSetting.isActivateOnDemandEnabled = isOn
+                self.loadSections()
+
                 let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
                 if isOn {
-                    self.activateOnDemandSetting.isActivateOnDemandEnabled = true
                     if self.activateOnDemandSetting.activateOnDemandOption == .none {
                         self.activateOnDemandSetting.activateOnDemandOption = TunnelViewModel.defaultActivateOnDemandOption()
                     }
-                    self.loadSections()
                     self.tableView.insertRows(at: indexPaths, with: .fade)
                 } else {
-                    self.activateOnDemandSetting.isActivateOnDemandEnabled = false
-                    self.loadSections()
                     self.tableView.deleteRows(at: indexPaths, with: .fade)
                 }
             }
@@ -435,7 +434,7 @@ extension TunnelEditTableViewController {
             let selectedOption = activateOnDemandSetting.activateOnDemandOption
             assert(selectedOption != .none)
             cell.message = TunnelViewModel.activateOnDemandOptionText(for: rowOption)
-            cell.isChecked = (selectedOption == rowOption)
+            cell.isChecked = selectedOption == rowOption
             return cell
         }
     }

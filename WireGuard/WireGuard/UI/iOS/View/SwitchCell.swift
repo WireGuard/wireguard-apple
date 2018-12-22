@@ -41,6 +41,7 @@ class SwitchCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        onSwitchToggled = nil
         isEnabled = true
         message = ""
         isOn = false
