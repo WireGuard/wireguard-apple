@@ -255,11 +255,7 @@
 			children = (
 				6FF3526A21C23F720008484E /* Logging */,
 				6F7774E6217201E0006A79B3 /* Model */,
-				6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */,
 				6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */,
-				5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */,
-				5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */,
-				5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -298,6 +294,10 @@
 		6F7774E6217201E0006A79B3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */,
+				6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */,
+				5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */,
+				5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */,
 				6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */,
 				6F7774E9217229DB006A79B3 /* IPAddressRange.swift */,
 				6F693A552179E556008551C1 /* Endpoint.swift */,
