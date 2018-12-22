@@ -8,15 +8,25 @@ protocol TunnelEditTableViewControllerDelegate: class {
     func tunnelEditingCancelled()
 }
 
-// MARK: TunnelEditTableViewController
-
 class TunnelEditTableViewController: UITableViewController {
-
     private enum Section {
         case interface
         case peer(_ peer: TunnelViewModel.PeerData)
         case addPeer
         case onDemand
+        
+        static func == (lhs: Section, rhs: Section) -> Bool {
+            switch (lhs, rhs) {
+            case (.interface, .interface),
+                 (.addPeer, .addPeer),
+                 (.onDemand, .onDemand):
+                return true
+            case let (.peer(peerA), .peer(peerB)):
+                return peerA.index == peerB.index
+            default:
+                return false
+            }
+        }
     }
 
     weak var delegate: TunnelEditTableViewControllerDelegate?
@@ -45,8 +55,8 @@ class TunnelEditTableViewController: UITableViewController {
     var activateOnDemandSetting: ActivateOnDemandSetting
     private var sections = [Section]()
 
+    // Use this initializer to edit an existing tunnel.
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
-        // Use this initializer to edit an existing tunnel.
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
@@ -55,8 +65,8 @@ class TunnelEditTableViewController: UITableViewController {
         loadSections()
     }
 
+    // Use this initializer to create a new tunnel.
     init(tunnelsManager: TunnelsManager) {
-        // Use this initializer to create a new tunnel.
         self.tunnelsManager = tunnelsManager
         tunnel = nil
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
@@ -105,9 +115,7 @@ class TunnelEditTableViewController: UITableViewController {
         case .saved(let tunnelConfiguration):
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
-                tunnelsManager.modify(tunnel: tunnel,
-                                      tunnelConfiguration: tunnelConfiguration,
-                                      activateOnDemandSetting: activateOnDemandSetting) { [weak self] error in
+                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: activateOnDemandSetting) { [weak self] error in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -117,8 +125,7 @@ class TunnelEditTableViewController: UITableViewController {
                 }
             } else {
                 // We're adding a new tunnel
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration,
-                                   activateOnDemandSetting: activateOnDemandSetting) { [weak self] result in
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: activateOnDemandSetting) { [weak self] result in
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -290,8 +297,7 @@ extension TunnelEditTableViewController {
         cell.buttonText = field.localizedUIString
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self, weak peerData] in
-            guard let peerData = peerData else { return }
-            guard let self = self else { return }
+            guard let self = self, let peerData = peerData else { return }
             self.showConfirmationAlert(message: tr("deletePeerConfirmationAlertMessage"), buttonTitle: tr("deletePeerConfirmationAlertButtonTitle"), from: cell) { [weak self] in
                 guard let self = self else { return }
                 let removedSectionIndices = self.deletePeer(peer: peerData)
@@ -351,20 +357,24 @@ extension TunnelEditTableViewController {
         cell.value = peerData[field]
 
         if field == .allowedIPs {
+            let firstInterfaceSection = sections.firstIndex(where: { $0 == .interface })!
+            let interfaceSubSection = interfaceFieldsBySection.firstIndex(where: { $0.contains(.dns) })!
+            let dnsRow = interfaceFieldsBySection[interfaceSubSection].firstIndex(where: { $0 == .dns })!
+            
             cell.onValueBeingEdited = { [weak self, weak peerData] value in
                 guard let self = self, let peerData = peerData else { return }
 
                 let oldValue = peerData.shouldAllowExcludePrivateIPsControl
                 peerData[.allowedIPs] = value
-                if oldValue != peerData.shouldAllowExcludePrivateIPsControl {
-                    if let row = self.peerFields.firstIndex(of: .excludePrivateIPs) {
-                        if peerData.shouldAllowExcludePrivateIPsControl {
-                            self.tableView.insertRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
-                        } else {
-                            self.tableView.deleteRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
-                        }
+                if oldValue != peerData.shouldAllowExcludePrivateIPsControl, let row = self.peerFields.firstIndex(of: .excludePrivateIPs) {
+                    if peerData.shouldAllowExcludePrivateIPsControl {
+                        self.tableView.insertRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
+                    } else {
+                        self.tableView.deleteRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
                     }
                 }
+            
+                tableView.reloadRows(at: [IndexPath(row: dnsRow, section: firstInterfaceSection + interfaceSubSection)], with: .none)
             }
         } else {
             cell.onValueChanged = { [weak peerData] value in
