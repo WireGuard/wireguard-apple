@@ -26,7 +26,7 @@ class MockTunnels {
     static func createMockTunnels() -> [NETunnelProviderManager] {
         return tunnelNames.map { tunnelName -> NETunnelProviderManager in
 
-            var interface = InterfaceConfiguration(name: tunnelName, privateKey: Curve25519.generatePrivateKey())
+            var interface = InterfaceConfiguration(privateKey: Curve25519.generatePrivateKey())
             interface.addresses = [IPAddressRange(from: String(format: address, Int.random(in: 1 ... 10), Int.random(in: 1 ... 254)))!]
             interface.dns = dnsServers.map { DNSServer(from: $0)! }
 
@@ -34,11 +34,11 @@ class MockTunnels {
             peer.endpoint = Endpoint(from: endpoint)
             peer.allowedIPs = [IPAddressRange(from: allowedIPs)!]
 
-            let tunnelConfiguration = TunnelConfiguration(interface: interface, peers: [peer])
+            let tunnelConfiguration = TunnelConfiguration(name: tunnelName, interface: interface, peers: [peer])
 
             let tunnelProviderManager = NETunnelProviderManager()
             tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-            tunnelProviderManager.localizedDescription = tunnelConfiguration.interface.name
+            tunnelProviderManager.localizedDescription = tunnelConfiguration.name
             tunnelProviderManager.isEnabled = true
 
             return tunnelProviderManager
