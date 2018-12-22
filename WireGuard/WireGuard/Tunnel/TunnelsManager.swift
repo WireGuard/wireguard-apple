@@ -395,8 +395,7 @@ class TunnelContainer: NSObject {
                     activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileSaving(systemError: error!))
                     return
                 }
-                wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling")
-                wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
+                wg_log(.debug, staticMessage: "startActivation: Tunnel saved after re-enabling, invoking startActivation")
                 self.startActivation(recursionCount: recursionCount + 1, lastError: NEVPNError(NEVPNError.configurationUnknown), activationDelegate: activationDelegate)
             }
             return
@@ -434,8 +433,7 @@ class TunnelContainer: NSObject {
                     activationDelegate?.tunnelActivationAttemptFailed(tunnel: self, error: .failedWhileLoading(systemError: systemError))
                     return
                 }
-                wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded")
-                wg_log(.debug, staticMessage: "startActivation: Invoking startActivation")
+                wg_log(.debug, staticMessage: "startActivation: Tunnel reloaded, invoking startActivation")
                 self.startActivation(recursionCount: recursionCount + 1, lastError: systemError, activationDelegate: activationDelegate)
             }
         }

@@ -66,7 +66,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         let handle = wireguardSettings.withGoString { return wgTurnOn($0, fileDescriptor) }
         if handle < 0 {
-            wg_log(.error, staticMessage: "Starting tunnel failed: Could not start WireGuard")
+            wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
             errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
             startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
             return
@@ -76,8 +76,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let networkSettings: NEPacketTunnelNetworkSettings = packetTunnelSettingsGenerator!.generateNetworkSettings()
         setTunnelNetworkSettings(networkSettings) { error in
             if let error = error {
-                wg_log(.error, staticMessage: "Starting tunnel failed: Error setting network settings.")
-                wg_log(.error, message: "Error from setTunnelNetworkSettings: \(error.localizedDescription)")
+                wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
                 errorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings)
                 startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
             } else {
