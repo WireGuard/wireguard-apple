@@ -14,7 +14,7 @@ class TunnelEditTableViewController: UITableViewController {
         case peer(_ peer: TunnelViewModel.PeerData)
         case addPeer
         case onDemand
-        
+
         static func == (lhs: Section, rhs: Section) -> Bool {
             switch (lhs, rhs) {
             case (.interface, .interface),
@@ -360,7 +360,7 @@ extension TunnelEditTableViewController {
             let firstInterfaceSection = sections.firstIndex(where: { $0 == .interface })!
             let interfaceSubSection = interfaceFieldsBySection.firstIndex(where: { $0.contains(.dns) })!
             let dnsRow = interfaceFieldsBySection[interfaceSubSection].firstIndex(where: { $0 == .dns })!
-            
+
             cell.onValueBeingEdited = { [weak self, weak peerData] value in
                 guard let self = self, let peerData = peerData else { return }
 
@@ -373,7 +373,7 @@ extension TunnelEditTableViewController {
                         self.tableView.deleteRows(at: [IndexPath(row: row, section: indexPath.section)], with: .fade)
                     }
                 }
-            
+
                 tableView.reloadRows(at: [IndexPath(row: dnsRow, section: firstInterfaceSection + interfaceSubSection)], with: .none)
             }
         } else {

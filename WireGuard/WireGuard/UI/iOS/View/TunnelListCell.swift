@@ -72,7 +72,7 @@ class TunnelListCell: UITableViewCell {
 
         statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
- 
+
     @objc func switchToggled() {
         onSwitchToggled?(statusSwitch.isOn)
     }
