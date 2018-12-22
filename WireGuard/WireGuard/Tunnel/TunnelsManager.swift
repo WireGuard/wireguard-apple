@@ -323,20 +323,11 @@ private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (
     guard let lastErrorStrings = String(data: lastErrorData, encoding: .utf8)?.splitToArray(separator: "\n") else { return nil }
     guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
 
-    switch PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
-    case .some(.savedProtocolConfigurationIsInvalid):
-        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
-    case .some(.dnsResolutionFailure):
-        return (tr("alertTunnelDNSFailureTitle"), tr("alertTunnelDNSFailureMessage"))
-    case .some(.couldNotStartBackend):
-        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationBackendFailureMessage"))
-    case .some(.couldNotDetermineFileDescriptor):
-        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFileDescriptorFailureMessage"))
-    case .some(.couldNotSetNetworkSettings):
-        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSetNetworkSettingsMessage"))
-    default:
-        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
+    if let extensionError = PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
+        return extensionError.alertText
     }
+
+    return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
 }
 
 class TunnelContainer: NSObject {
