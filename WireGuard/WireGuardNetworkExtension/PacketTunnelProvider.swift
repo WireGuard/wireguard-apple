@@ -113,7 +113,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private func pathUpdate(path: Network.NWPath) {
         guard let handle = wgHandle, let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator else { return }
         var listenPort: UInt16?
-        if path.availableInterfaces.isEmpty || lastFirstInterface != path.availableInterfaces.first {
+        //TODO(zx2c4): Remove the `true` here after extensive testing with network/cell simulations.
+        if true || path.availableInterfaces.isEmpty || lastFirstInterface != path.availableInterfaces.first {
             listenPort = wgGetListenPort(handle)
             lastFirstInterface = path.availableInterfaces.first
         }
