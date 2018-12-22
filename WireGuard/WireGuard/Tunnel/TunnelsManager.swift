@@ -55,7 +55,7 @@ class TunnelsManager {
 
     func reload(completionHandler: @escaping (Bool) -> Void) {
         #if targetEnvironment(simulator)
-        completionHandler(.success(false))
+        completionHandler(false)
         #else
         NETunnelProviderManager.loadAllFromPreferences { managers, _ in
             guard let managers = managers else {
