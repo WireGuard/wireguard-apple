@@ -298,13 +298,22 @@ class TunnelsManager {
         guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
         guard let lastErrorText = String(data: lastErrorData, encoding: .utf8) else { return nil }
         let lastErrorStrings = lastErrorText.splitToArray(separator: "\n")
-        guard lastErrorStrings.count == 3 else { return nil }
-        let attemptIdInDisk = lastErrorStrings[0]
-        if let attemptIdForTunnel = tunnel.activationAttemptId, attemptIdInDisk == attemptIdForTunnel {
-            return (title: lastErrorStrings[1], message: lastErrorStrings[2])
-        }
+        guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
 
-        return nil
+        switch PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
+        case .some(.savedProtocolConfigurationIsInvalid):
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
+        case .some(.dnsResolutionFailure):
+            return (tr("alertTunnelDNSFailureTitle"), tr("alertTunnelDNSFailureMessage"))
+        case .some(.couldNotStartBackend):
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationBackendFailureMessage"))
+        case .some(.couldNotDetermineFileDescriptor):
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFileDescriptorFailureMessage"))
+        case .some(.couldNotSetNetworkSettings):
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSetNetworkSettingsMessage"))
+        default:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
+        }
     }
 
     deinit {

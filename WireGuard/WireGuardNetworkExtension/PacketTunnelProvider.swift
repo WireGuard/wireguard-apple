@@ -6,13 +6,6 @@ import Network
 import NetworkExtension
 import os.log
 
-enum PacketTunnelProviderError: Error {
-    case savedProtocolConfigurationIsInvalid
-    case dnsResolutionFailure
-    case couldNotStartWireGuard
-    case coultNotSetNetworkSettings
-}
-
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private var wgHandle: Int32?
@@ -26,7 +19,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
-        let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId, tunnelProvider: self)
+        let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
 
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
             let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
@@ -52,8 +45,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let fileDescriptor = packetFlow.value(forKeyPath: "socket.fileDescriptor") as! Int32 //swiftlint:disable:this force_cast
         if fileDescriptor < 0 {
             wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
-            errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
-            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
+            errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
             return
         }
 
@@ -67,8 +60,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let handle = wireguardSettings.withGoString { return wgTurnOn($0, fileDescriptor) }
         if handle < 0 {
             wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
-            errorNotifier.notify(PacketTunnelProviderError.couldNotStartWireGuard)
-            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartWireGuard)
+            errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
+            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
             return
         }
         wgHandle = handle
@@ -77,8 +70,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         setTunnelNetworkSettings(networkSettings) { error in
             if let error = error {
                 wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
-                errorNotifier.notify(PacketTunnelProviderError.coultNotSetNetworkSettings)
-                startTunnelCompletionHandler(PacketTunnelProviderError.coultNotSetNetworkSettings)
+                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
             } else {
                 startTunnelCompletionHandler(nil)
             }
