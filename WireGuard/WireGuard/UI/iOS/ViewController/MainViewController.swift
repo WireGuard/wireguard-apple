@@ -57,14 +57,14 @@ class MainViewController: UISplitViewController {
             self.onTunnelsManagerReady?(tunnelsManager)
             self.onTunnelsManagerReady = nil
         }
-        
+
         foregroundObservationToken = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
             guard let self = self else { return }
             self.tunnelsManager?.reload { [weak self] hasChanges in
                 guard let self = self, let tunnelsManager = self.tunnelsManager, hasChanges else { return }
-                
+
                 self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
-                
+
                 if self.isCollapsed {
                     (self.viewControllers[0] as? UINavigationController)?.popViewController(animated: false)
                 } else {
@@ -73,12 +73,12 @@ class MainViewController: UISplitViewController {
                     let detailNC = UINavigationController(rootViewController: detailVC)
                     self.showDetailViewController(detailNC, sender: self)
                 }
-                
+
                 if let presentedNavController = self.presentedViewController as? UINavigationController, presentedNavController.viewControllers.first is TunnelEditTableViewController {
                     self.presentedViewController?.dismiss(animated: false, completion: nil)
                 }
             }
-            
+
         }
     }
 

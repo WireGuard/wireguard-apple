@@ -52,7 +52,7 @@ class TunnelsManager {
         }
         #endif
     }
-    
+
     func reload(completionHandler: @escaping (Bool) -> Void) {
         #if targetEnvironment(simulator)
         completionHandler(.success(false))
@@ -62,7 +62,7 @@ class TunnelsManager {
                 completionHandler(false)
                 return
             }
-            
+
             let newTunnels = managers.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
             let hasChanges = self.tunnels.map { $0.name } != newTunnels.map { $0.name }
             if hasChanges {
@@ -317,7 +317,7 @@ private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (
     guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
     guard let lastErrorStrings = String(data: lastErrorData, encoding: .utf8)?.splitToArray(separator: "\n") else { return nil }
     guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
-    
+
     switch PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
     case .some(.savedProtocolConfigurationIsInvalid):
         return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
