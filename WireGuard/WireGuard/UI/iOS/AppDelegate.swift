@@ -10,8 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var mainVC: MainViewController?
 
-    func application(_ application: UIApplication,
-                     willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
 
         let window = UIWindow(frame: UIScreen.main.bounds)
@@ -50,9 +49,7 @@ extension AppDelegate {
         return true
     }
 
-    func application(_ application: UIApplication,
-                     viewControllerWithRestorationIdentifierPath identifierComponents: [String],
-                     coder: NSCoder) -> UIViewController? {
+    func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
         guard let vcIdentifier = identifierComponents.last else { return nil }
         if vcIdentifier.hasPrefix("TunnelDetailVC:") {
             let tunnelName = String(vcIdentifier.suffix(vcIdentifier.count - "TunnelDetailVC:".count))

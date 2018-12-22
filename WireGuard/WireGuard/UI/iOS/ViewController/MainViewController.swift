@@ -7,8 +7,8 @@ class MainViewController: UISplitViewController {
 
     var tunnelsManager: TunnelsManager?
     var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
-
     var tunnelsListVC: TunnelsListTableViewController?
+    private var foregroundObservationToken: AnyObject?
 
     init() {
         let detailVC = UIViewController()
@@ -57,7 +57,31 @@ class MainViewController: UISplitViewController {
             self.onTunnelsManagerReady?(tunnelsManager)
             self.onTunnelsManagerReady = nil
         }
+        
+        foregroundObservationToken = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
+            guard let self = self else { return }
+            self.tunnelsManager?.reload { [weak self] hasChanges in
+                guard let self = self, let tunnelsManager = self.tunnelsManager, hasChanges else { return }
+                
+                self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
+                
+                if self.isCollapsed {
+                    (self.viewControllers[0] as? UINavigationController)?.popViewController(animated: false)
+                } else {
+                    let detailVC = UIViewController()
+                    detailVC.view.backgroundColor = .white
+                    let detailNC = UINavigationController(rootViewController: detailVC)
+                    self.showDetailViewController(detailNC, sender: self)
+                }
+                
+                if let presentedNavController = self.presentedViewController as? UINavigationController, presentedNavController.viewControllers.first is TunnelEditTableViewController {
+                    self.presentedViewController?.dismiss(animated: false, completion: nil)
+                }
+            }
+            
+        }
     }
+
 }
 
 extension MainViewController: TunnelsManagerActivationDelegate {

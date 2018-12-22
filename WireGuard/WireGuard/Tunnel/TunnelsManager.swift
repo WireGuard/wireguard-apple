@@ -52,6 +52,28 @@ class TunnelsManager {
         }
         #endif
     }
+    
+    func reload(completionHandler: @escaping (Bool) -> Void) {
+        #if targetEnvironment(simulator)
+        completionHandler(.success(false))
+        #else
+        NETunnelProviderManager.loadAllFromPreferences { managers, _ in
+            guard let managers = managers else {
+                completionHandler(false)
+                return
+            }
+            
+            let newTunnels = managers.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
+            let hasChanges = self.tunnels.map { $0.name } != newTunnels.map { $0.name }
+            if hasChanges {
+                self.tunnels = newTunnels
+                completionHandler(true)
+            } else {
+                completionHandler(false)
+            }
+        }
+        #endif
+    }
 
     func add(tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
@@ -255,8 +277,6 @@ class TunnelsManager {
     }
 
     private func startObservingTunnelStatuses() {
-        guard statusObservationToken == nil else { return }
-
         statusObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
             guard let self = self,
                 let session = statusChangeNotification.object as? NETunnelProviderSession,
@@ -265,14 +285,13 @@ class TunnelsManager {
 
             wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
-            // Track what happened to our attempt to start the tunnel
             if tunnel.isAttemptingActivation {
                 if session.status == .connected {
                     tunnel.isAttemptingActivation = false
                     self.activationDelegate?.tunnelActivationSucceeded(tunnel: tunnel)
                 } else if session.status == .disconnected {
                     tunnel.isAttemptingActivation = false
-                    if let (title, message) = self.lastErrorTextFromNetworkExtension(for: tunnel) {
+                    if let (title, message) = lastErrorTextFromNetworkExtension(for: tunnel) {
                         self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailedWithExtensionError(title: title, message: message, wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
                     } else {
                         self.activationDelegate?.tunnelActivationFailed(tunnel: tunnel, error: .activationFailed(wasOnDemandEnabled: tunnelProvider.isOnDemandEnabled))
@@ -280,9 +299,7 @@ class TunnelsManager {
                 }
             }
 
-            // In case we're restarting the tunnel
             if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
-                // Don't change tunnel.status when disconnecting for a restart
                 if session.status == .disconnected {
                     tunnel.startActivation(activationDelegate: self.activationDelegate)
                 }
@@ -293,35 +310,28 @@ class TunnelsManager {
         }
     }
 
-    func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (title: String, message: String)? {
-        guard let lastErrorFileURL = FileManager.networkExtensionLastErrorFileURL else { return nil }
-        guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
-        guard let lastErrorText = String(data: lastErrorData, encoding: .utf8) else { return nil }
-        let lastErrorStrings = lastErrorText.splitToArray(separator: "\n")
-        guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
+}
 
-        switch PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
-        case .some(.savedProtocolConfigurationIsInvalid):
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
-        case .some(.dnsResolutionFailure):
-            return (tr("alertTunnelDNSFailureTitle"), tr("alertTunnelDNSFailureMessage"))
-        case .some(.couldNotStartBackend):
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationBackendFailureMessage"))
-        case .some(.couldNotDetermineFileDescriptor):
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFileDescriptorFailureMessage"))
-        case .some(.couldNotSetNetworkSettings):
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSetNetworkSettingsMessage"))
-        default:
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
-        }
+private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (title: String, message: String)? {
+    guard let lastErrorFileURL = FileManager.networkExtensionLastErrorFileURL else { return nil }
+    guard let lastErrorData = try? Data(contentsOf: lastErrorFileURL) else { return nil }
+    guard let lastErrorStrings = String(data: lastErrorData, encoding: .utf8)?.splitToArray(separator: "\n") else { return nil }
+    guard lastErrorStrings.count == 2 && tunnel.activationAttemptId == lastErrorStrings[0] else { return nil }
+    
+    switch PacketTunnelProviderError(rawValue: lastErrorStrings[1]) {
+    case .some(.savedProtocolConfigurationIsInvalid):
+        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
+    case .some(.dnsResolutionFailure):
+        return (tr("alertTunnelDNSFailureTitle"), tr("alertTunnelDNSFailureMessage"))
+    case .some(.couldNotStartBackend):
+        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationBackendFailureMessage"))
+    case .some(.couldNotDetermineFileDescriptor):
+        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFileDescriptorFailureMessage"))
+    case .some(.couldNotSetNetworkSettings):
+        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSetNetworkSettingsMessage"))
+    default:
+        return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
     }
-
-    deinit {
-        if let statusObservationToken = statusObservationToken {
-            NotificationCenter.default.removeObserver(statusObservationToken)
-        }
-    }
-
 }
 
 class TunnelContainer: NSObject {
