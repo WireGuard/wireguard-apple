@@ -281,7 +281,9 @@ class TunnelsManager {
             guard let self = self,
                 let session = statusChangeNotification.object as? NETunnelProviderSession,
                 let tunnelProvider = session.manager as? NETunnelProviderManager,
-                let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
+                let tunnelConfiguration = TunnelContainer(tunnel: tunnelProvider).tunnelConfiguration,
+                let tunnel = self.tunnels.first(where: { $0.tunnelConfiguration == tunnelConfiguration }) else { return }
+            tunnel.tunnelProvider = tunnelProvider
 
             wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
@@ -364,7 +366,7 @@ class TunnelContainer: NSObject {
     var activationAttemptId: String?
     var activationTimer: Timer?
 
-    fileprivate let tunnelProvider: NETunnelProviderManager
+    fileprivate var tunnelProvider: NETunnelProviderManager
     private var lastTunnelConnectionStatus: NEVPNStatus?
 
     var tunnelConfiguration: TunnelConfiguration? {
