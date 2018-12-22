@@ -433,6 +433,20 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
+		6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 6FDAA03521CE69D000FA6925 /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgemacOS" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "$(PROJECT_DIR)/../wireguard-go-bridge";
+			dependencies = (
+			);
+			name = WireGuardGoBridgemacOS;
+			passBuildSettingsInEnvironment = 1;
+			productName = WireGuardGoBridge;
+		};
 		6FDEF7DD21846BC100D8FBF6 /* WireGuardGoBridgeiOS */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = "$(ACTION)";
@@ -539,6 +553,7 @@
 				6FF4AC13211EC46F002C96EB /* WireGuardiOS */,
 				6F5D0C19218352EF000F85AD /* WireGuardNetworkExtensioniOS */,
 				6FDEF7DD21846BC100D8FBF6 /* WireGuardGoBridgeiOS */,
+				6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */,
 			);
 		};
 /* End PBXProject section */
@@ -820,6 +835,33 @@
 			};
 			name = Release;
 		};
+		6FDAA03621CE69D000FA6925 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		6FDAA03721CE69D000FA6925 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		6FDEF7DE21846BC100D8FBF6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1011,6 +1053,15 @@
 			buildConfigurations = (
 				6F5D0C23218352EF000F85AD /* Debug */,
 				6F5D0C24218352EF000F85AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FDAA03521CE69D000FA6925 /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgemacOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FDAA03621CE69D000FA6925 /* Debug */,
+				6FDAA03721CE69D000FA6925 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
