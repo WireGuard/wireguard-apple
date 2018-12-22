@@ -283,7 +283,10 @@ class TunnelsManager {
                 let tunnelProvider = session.manager as? NETunnelProviderManager,
                 let tunnelConfiguration = TunnelContainer(tunnel: tunnelProvider).tunnelConfiguration,
                 let tunnel = self.tunnels.first(where: { $0.tunnelConfiguration == tunnelConfiguration }) else { return }
-            tunnel.tunnelProvider = tunnelProvider
+            if tunnel.tunnelProvider != tunnelProvider {
+                tunnel.tunnelProvider = tunnelProvider
+                tunnel.refreshStatus()
+            }
 
             wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
