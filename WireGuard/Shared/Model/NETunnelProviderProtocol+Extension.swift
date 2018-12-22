@@ -3,8 +3,6 @@
 
 import NetworkExtension
 
-private var tunnelNameKey: Void?
-
 extension NETunnelProviderProtocol {
 
     enum Keys: String {
