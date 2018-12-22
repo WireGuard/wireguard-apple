@@ -14,6 +14,19 @@ struct Endpoint {
     }
 }
 
+extension Endpoint: Equatable {
+    static func == (lhs: Endpoint, rhs: Endpoint) -> Bool {
+        return lhs.host == rhs.host && lhs.port == rhs.port
+    }
+}
+
+extension Endpoint: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(host)
+        hasher.combine(port)
+    }
+}
+
 extension Endpoint {
     var stringRepresentation: String {
         switch host {

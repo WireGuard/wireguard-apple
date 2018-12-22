@@ -12,6 +12,12 @@ struct DNSServer {
     }
 }
 
+extension DNSServer: Equatable {
+    static func == (lhs: DNSServer, rhs: DNSServer) -> Bool {
+        return lhs.address.rawValue == rhs.address.rawValue
+    }
+}
+
 extension DNSServer {
     var stringRepresentation: String {
         return "\(address)"

@@ -22,3 +22,11 @@ final class TunnelConfiguration {
         }
     }
 }
+
+extension TunnelConfiguration: Equatable {
+    static func == (lhs: TunnelConfiguration, rhs: TunnelConfiguration) -> Bool {
+        return lhs.name == rhs.name &&
+            lhs.interface == rhs.interface &&
+            Set(lhs.peers) == Set(rhs.peers)
+    }
+}
