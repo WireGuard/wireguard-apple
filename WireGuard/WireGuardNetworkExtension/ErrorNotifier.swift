@@ -4,32 +4,16 @@
 import NetworkExtension
 
 class ErrorNotifier {
-
     let activationAttemptId: String?
-    weak var tunnelProvider: NEPacketTunnelProvider?
 
-    init(activationAttemptId: String?, tunnelProvider: NEPacketTunnelProvider) {
+    init(activationAttemptId: String?) {
         self.activationAttemptId = activationAttemptId
-        self.tunnelProvider = tunnelProvider
         ErrorNotifier.removeLastErrorFile()
     }
 
-    func errorMessage(for error: PacketTunnelProviderError) -> (String, String)? {
-        switch error {
-        case .savedProtocolConfigurationIsInvalid:
-            return ("Activation failure", "Could not retrieve tunnel information from the saved configuration.")
-        case .dnsResolutionFailure:
-            return ("DNS resolution failure", "One or more endpoint domains could not be resolved.")
-        case .couldNotStartWireGuard:
-            return ("Activation failure", "WireGuard backend could not be started.")
-        case .coultNotSetNetworkSettings:
-            return ("Activation failure", "Error applying network settings on the tunnel.")
-        }
-    }
-
     func notify(_ error: PacketTunnelProviderError) {
-        guard let (title, message) = errorMessage(for: error), let activationAttemptId = activationAttemptId, let lastErrorFilePath = FileManager.networkExtensionLastErrorFileURL?.path else { return }
-        let errorMessageData = "\(activationAttemptId)\n\(title)\n\(message)".data(using: .utf8)
+        guard let activationAttemptId = activationAttemptId, let lastErrorFilePath = FileManager.networkExtensionLastErrorFileURL?.path else { return }
+        let errorMessageData = "\(activationAttemptId)\n\(error)".data(using: .utf8)
         FileManager.default.createFile(atPath: lastErrorFilePath, contents: errorMessageData, attributes: nil)
     }
 

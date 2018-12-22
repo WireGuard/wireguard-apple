@@ -178,7 +178,15 @@
 
 "alertTunnelActivationFailureTitle" = "Activation failure";
 "alertTunnelActivationFailureMessage" = "The tunnel could not be activated. Please ensure that you are connected to the Internet.";
+"alertTunnelActivationSavedConfigFailureMessage" = "Unable to retrieve tunnel information from the saved configuration.";
+"alertTunnelActivationBackendFailureMessage" = "Unable to turn on Go backend library.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "Unable to determine TUN device file descriptor.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Unable to apply network settings to tunnel object.";
+
 "alertTunnelActivationFailureOnDemandAddendum" = " This tunnel has Activate On Demand enabled, so this tunnel might be re-activated automatically by the OS. You may turn off Activate On Demand in this app by editing the tunnel configuration.";
+
+"alertTunnelDNSFailureTitle" = "DNS resolution failure";
+"alertTunnelDNSFailureMessage" = "One or more endpoint domains could not be resolved.";
 
 "alertTunnelNameEmptyTitle" = "No name provided";
 "alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
@@ -186,7 +194,7 @@
 "alertTunnelAlreadyExistsWithThatNameTitle" = "Name already exists";
 "alertTunnelAlreadyExistsWithThatNameMessage" = "A tunnel with that name already exists";
 
-"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Activation failure";
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Activation in progress";
 "alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "The tunnel is already active or in the process of being activated";
 
 // Tunnel management error alerts on system error
