@@ -90,8 +90,6 @@ class TunnelDetailTableViewController: UITableViewController {
     }
 }
 
-// MARK: TunnelEditTableViewControllerDelegate
-
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
@@ -104,8 +102,6 @@ extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate
         // Nothing to do
     }
 }
-
-// MARK: UITableViewDataSource
 
 extension TunnelDetailTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {

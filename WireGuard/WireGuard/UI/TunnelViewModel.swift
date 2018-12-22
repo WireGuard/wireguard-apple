@@ -71,16 +71,12 @@ class TunnelViewModel {
         subscript(field: InterfaceField) -> String {
             get {
                 if scratchpad.isEmpty {
-                    // When starting to read a config, setup the scratchpad.
-                    // The scratchpad shall serve as a cache of what we want to show in the UI.
                     populateScratchpad()
                 }
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
                 if scratchpad.isEmpty {
-                    // When starting to edit a config, setup the scratchpad and remove the configuration.
-                    // The scratchpad shall be the sole source of the being-edited configuration.
                     populateScratchpad()
                 }
                 validatedConfiguration = nil
@@ -102,7 +98,6 @@ class TunnelViewModel {
         }
 
         func populateScratchpad() {
-            // Populate the scratchpad from the configuration object
             guard let config = validatedConfiguration else { return }
             guard let name = validatedName else { return }
             scratchpad[.name] = name
@@ -125,7 +120,6 @@ class TunnelViewModel {
         //swiftlint:disable:next cyclomatic_complexity function_body_length
         func save() -> SaveResult<(String, InterfaceConfiguration)> {
             if let config = validatedConfiguration, let name = validatedName {
-                // It's already validated and saved
                 return .saved((name, config))
             }
             fieldsWithError.removeAll()
@@ -198,7 +192,6 @@ class TunnelViewModel {
                 }
                 return !self[field].isEmpty
             }
-            // TODO: Cache this to avoid recomputing
         }
     }
 
@@ -208,7 +201,6 @@ class TunnelViewModel {
         var fieldsWithError = Set<PeerField>()
         var validatedConfiguration: PeerConfiguration?
 
-        // For exclude private IPs
         private(set) var shouldAllowExcludePrivateIPsControl = false
         private(set) var shouldStronglyRecommendDNS = false
         private(set) var excludePrivateIPsValue = false
@@ -221,16 +213,12 @@ class TunnelViewModel {
         subscript(field: PeerField) -> String {
             get {
                 if scratchpad.isEmpty {
-                    // When starting to read a config, setup the scratchpad.
-                    // The scratchpad shall serve as a cache of what we want to show in the UI.
                     populateScratchpad()
                 }
                 return scratchpad[field] ?? ""
             }
             set(stringValue) {
                 if scratchpad.isEmpty {
-                    // When starting to edit a config, setup the scratchpad and remove the configuration.
-                    // The scratchpad shall be the sole source of the being-edited configuration.
                     populateScratchpad()
                 }
                 validatedConfiguration = nil
@@ -246,7 +234,6 @@ class TunnelViewModel {
         }
 
         func populateScratchpad() {
-            // Populate the scratchpad from the configuration object
             guard let config = validatedConfiguration else { return }
             scratchpad[.publicKey] = config.publicKey.base64EncodedString()
             if let preSharedKey = config.preSharedKey {
@@ -267,7 +254,6 @@ class TunnelViewModel {
         //swiftlint:disable:next cyclomatic_complexity
         func save() -> SaveResult<PeerConfiguration> {
             if let validatedConfiguration = validatedConfiguration {
-                // It's already validated and saved
                 return .saved(validatedConfiguration)
             }
             fieldsWithError.removeAll()
@@ -331,7 +317,6 @@ class TunnelViewModel {
                 }
                 return (!self[field].isEmpty)
             }
-            // TODO: Cache this to avoid recomputing
         }
 
         static let ipv4DefaultRouteString = "0.0.0.0/0"
@@ -378,7 +363,7 @@ class TunnelViewModel {
                 modifiedAllowedIPStrings = ipv6Addresses + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
             scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
-            validatedConfiguration = nil // The configuration has been modified, and needs to be saved
+            validatedConfiguration = nil
             excludePrivateIPsValue = isOn
         }
     }
@@ -435,10 +420,8 @@ class TunnelViewModel {
     }
 
     func save() -> SaveResult<TunnelConfiguration> {
-        // Attempt to save the interface and all peers, so that all erroring fields are collected
         let interfaceSaveResult = interfaceData.save()
-        let peerSaveResults = peersData.map { $0.save() }
-        // Collate the results
+        let peerSaveResults = peersData.map { $0.save() } // Save all, to help mark erroring fields in red
         switch interfaceSaveResult {
         case .error(let errorMessage):
             return .error(errorMessage)
@@ -465,8 +448,6 @@ class TunnelViewModel {
         }
     }
 }
-
-// MARK: Activate on demand
 
 extension TunnelViewModel {
     static func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {

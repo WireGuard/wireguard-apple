@@ -469,8 +469,6 @@ extension TunnelEditTableViewController {
     }
 }
 
-// MARK: UITableViewDelegate
-
 extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if case .onDemand = sections[indexPath.section], indexPath.row > 0 {
