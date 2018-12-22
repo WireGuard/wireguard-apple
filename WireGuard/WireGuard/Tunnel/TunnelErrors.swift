@@ -64,6 +64,23 @@ enum TunnelsManagerActivationError: WireGuardAppError {
     }
 }
 
+extension PacketTunnelProviderError: WireGuardAppError {
+    var alertText: AlertText {
+        switch self {
+        case .savedProtocolConfigurationIsInvalid:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSavedConfigFailureMessage"))
+        case .dnsResolutionFailure:
+            return (tr("alertTunnelDNSFailureTitle"), tr("alertTunnelDNSFailureMessage"))
+        case .couldNotStartBackend:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationBackendFailureMessage"))
+        case .couldNotDetermineFileDescriptor:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFileDescriptorFailureMessage"))
+        case .couldNotSetNetworkSettings:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationSetNetworkSettingsMessage"))
+        }
+    }
+}
+
 extension Error {
     var localizedUIString: String {
         if let systemError = self as? NEVPNError {
