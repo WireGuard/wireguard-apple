@@ -85,6 +85,7 @@
 "tunnelEditPlaceholderTextRequired" = "Required";
 "tunnelEditPlaceholderTextOptional" = "Optional";
 "tunnelEditPlaceholderTextAutomatic" = "Automatic";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Strongly recommended";
 "tunnelEditPlaceholderTextOff" = "Off";
 
 // Error alerts while creating / editing a tunnel configuration

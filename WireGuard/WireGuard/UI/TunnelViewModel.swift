@@ -210,6 +210,7 @@ class TunnelViewModel {
 
         // For exclude private IPs
         private(set) var shouldAllowExcludePrivateIPsControl = false
+        private(set) var shouldStronglyRecommendDNS = false
         private(set) var excludePrivateIPsValue = false
         fileprivate var numberOfPeers = 0
 
@@ -344,15 +345,16 @@ class TunnelViewModel {
         ]
 
         func updateExcludePrivateIPsFieldState() {
+            if scratchpad.isEmpty {
+                populateScratchpad()
+            }
+            let allowedIPStrings = Set<String>(scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+            shouldStronglyRecommendDNS = allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) || allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String)
             guard numberOfPeers == 1 else {
                 shouldAllowExcludePrivateIPsControl = false
                 excludePrivateIPsValue = false
                 return
             }
-            if scratchpad.isEmpty {
-                populateScratchpad()
-            }
-            let allowedIPStrings = Set<String>(scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines))
             if allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) {
                 shouldAllowExcludePrivateIPsControl = true
                 excludePrivateIPsValue = false
