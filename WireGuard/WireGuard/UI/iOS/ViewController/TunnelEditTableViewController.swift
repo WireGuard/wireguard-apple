@@ -417,7 +417,8 @@ extension TunnelEditTableViewController {
                 self.activateOnDemandSetting.isActivateOnDemandEnabled = isOn
                 self.loadSections()
 
-                let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
+                let section = self.sections.firstIndex(where: { $0 == .onDemand })!
+                let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: section) }
                 if isOn {
                     if self.activateOnDemandSetting.activateOnDemandOption == .none {
                         self.activateOnDemandSetting.activateOnDemandOption = TunnelViewModel.defaultActivateOnDemandOption()
