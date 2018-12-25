@@ -977,7 +977,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"OTHER_CFLAGS[arch=*]" = "-DNOCRYPT";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
@@ -997,7 +996,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"OTHER_CFLAGS[arch=*]" = "-DNOCRYPT";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuard/WireGuard-Bridging-Header.h";
