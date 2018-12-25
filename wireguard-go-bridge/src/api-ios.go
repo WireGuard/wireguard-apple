@@ -137,13 +137,49 @@ func wgSetConfig(tunnelHandle int32, settings string) int64 {
 	return 0
 }
 
-//export wgGetListenPort
-func wgGetListenPort(tunnelHandle int32) uint16 {
+//export wgBindInterfaceScope
+func wgBindInterfaceScope(tunnelHandle int32, ifscope int32) {
+	var operr error
 	device, ok := tunnelHandles[tunnelHandle]
 	if !ok {
-		return 0
+		return
 	}
-	return device.net.port
+	device.log.Info.Printf("Binding sockets to interface %d\n", ifscope)
+	bind := device.net.bind.(*NativeBind)
+	for bind.ipv4 != nil {
+		fd, err := bind.ipv4.SyscallConn()
+		if err != nil {
+			device.log.Error.Printf("Unable to bind v4 socket to interface:", err)
+			break
+		}
+		err = fd.Control(func(fd uintptr) {
+			operr = unix.SetsockoptInt(int(fd), unix.IPPROTO_IP, unix.IP_BOUND_IF, int(ifscope))
+		})
+		if err == nil {
+			err = operr
+		}
+		if err != nil {
+			device.log.Error.Printf("Unable to bind v4 socket to interface:", err)
+		}
+		break
+	}
+	for bind.ipv6 != nil {
+		fd, err := bind.ipv6.SyscallConn()
+		if err != nil {
+			device.log.Error.Printf("Unable to bind v6 socket to interface:", err)
+			break
+		}
+		err = fd.Control(func(fd uintptr) {
+			operr = unix.SetsockoptInt(int(fd), unix.IPPROTO_IPV6, unix.IPV6_BOUND_IF, int(ifscope))
+		})
+		if err == nil {
+			err = operr
+		}
+		if err != nil {
+			device.log.Error.Printf("Unable to bind v6 socket to interface:", err)
+		}
+		break
+	}
 }
 
 //export wgVersion

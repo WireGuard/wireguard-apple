@@ -10,7 +10,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
-    private var lastFirstInterface: NWInterface?
+    private var ifname: String?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
 
     deinit {
@@ -49,7 +49,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
             } else {
                 self.networkMonitor = NWPathMonitor()
-                self.lastFirstInterface = self.networkMonitor!.currentPath.availableInterfaces.first
                 self.networkMonitor!.pathUpdateHandler = self.pathUpdate
                 self.networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
 
@@ -60,6 +59,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
                     return
                 }
+                var ifnameSize = socklen_t(IFNAMSIZ)
+                let ifnamePtr = UnsafeMutablePointer<CChar>.allocate(capacity: Int(ifnameSize))
+                ifnamePtr.initialize(repeating: 0, count: Int(ifnameSize))
+                if getsockopt(fileDescriptor, 2 /* SYSPROTO_CONTROL */, 2 /* UTUN_OPT_IFNAME */, ifnamePtr, &ifnameSize) == 0 {
+                    self.ifname = String(cString: ifnamePtr)
+                }
+                wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
                 let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration().withGoString { return wgTurnOn($0, fileDescriptor) }
                 if handle < 0 {
                     wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
@@ -107,19 +113,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private func pathUpdate(path: Network.NWPath) {
         guard let handle = handle, let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator else { return }
-        var listenPort: UInt16?
-        //TODO(zx2c4): Remove the `true` here after extensive testing with network/cell simulations.
-        if true || path.availableInterfaces.isEmpty || lastFirstInterface != path.availableInterfaces.first {
-            listenPort = wgGetListenPort(handle)
-            lastFirstInterface = path.availableInterfaces.first
+        wg_log(.debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
+        _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
+        var interfaces = path.availableInterfaces
+        if let ifname = ifname {
+            interfaces = interfaces.filter { $0.name != ifname }
         }
-        guard path.status == .satisfied else { return }
-        wg_log(.debug, message: "Network change detected, re-establishing sockets and IPs: \(path.availableInterfaces)")
-        let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: listenPort)
-        let err = endpointString.withGoString { return wgSetConfig(handle, $0) }
-        if err == -EADDRINUSE && listenPort != nil {
-            let endpointString = packetTunnelSettingsGenerator.endpointUapiConfiguration(currentListenPort: 0)
-            _ = endpointString.withGoString { return wgSetConfig(handle, $0) }
+        if let ifscope = interfaces.first?.index {
+            wgBindInterfaceScope(handle, Int32(ifscope))
         }
     }
 }
