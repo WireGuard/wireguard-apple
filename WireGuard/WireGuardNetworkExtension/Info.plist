@@ -30,6 +30,8 @@
 		<string>$(PRODUCT_MODULE_NAME).PacketTunnelProvider</string>
 	</dict>
 	<key>com.wireguard.ios.app_group_id</key>
-    <string>group.$(APP_ID_IOS)</string>
+	<string>group.$(APP_ID_IOS)</string>
+	<key>com.wireguard.macos.app_group_id</key>
+	<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 </dict>
 </plist>

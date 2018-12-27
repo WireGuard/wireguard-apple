@@ -28,5 +28,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>com.wireguard.macos.app_group_id</key>
+	<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 </dict>
 </plist>
