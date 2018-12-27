@@ -42,3 +42,6 @@ output
 
 # Wireguard specific
 WireGuard/WireGuard/Config/Developer.xcconfig
+
+# Vim
+.*.sw*
