@@ -689,6 +689,9 @@
 					6FB1BD5C21D2607A00A991BF = {
 						CreatedOnToolsVersion = 10.1;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
 							com.apple.NetworkExtensions = {
 								enabled = 1;
 							};
@@ -696,6 +699,11 @@
 					};
 					6FB1BD9021D4BFE600A991BF = {
 						CreatedOnToolsVersion = 10.1;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+						};
 					};
 					6FDEF7DD21846BC100D8FBF6 = {
 						CreatedOnToolsVersion = 10.0;

@@ -6,7 +6,12 @@ import os.log
 
 extension FileManager {
     private static var sharedFolderURL: URL? {
-        guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: "com.wireguard.ios.app_group_id") as? String else {
+        #if os(iOS)
+        let appGroupIdInfoDictionaryKey = "com.wireguard.ios.app_group_id"
+        #elseif os(OSX)
+        let appGroupIdInfoDictionaryKey = "com.wireguard.macos.app_group_id"
+        #endif
+        guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: appGroupIdInfoDictionaryKey) as? String else {
             os_log("Cannot obtain app group ID from bundle", log: OSLog.default, type: .error)
             return nil
         }
