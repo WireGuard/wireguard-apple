@@ -57,6 +57,7 @@
 		6FB1BD6521D2607E00A991BF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6FB1BD6321D2607E00A991BF /* MainMenu.xib */; };
 		6FB1BD9421D4BFE700A991BF /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1BD9321D4BFE700A991BF /* PacketTunnelProvider.swift */; };
 		6FB1BD9921D4BFE700A991BF /* WireGuardNetworkExtensionmacOS.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6FB1BD9121D4BFE600A991BF /* WireGuardNetworkExtensionmacOS.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		6FB1BDA121D4E00A00A991BF /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB1BDA021D4E00A00A991BF /* libwg-go.a */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
 		6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */; };
 		6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F621863B6100D8FBF6 /* unzip.c */; };
@@ -100,6 +101,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6FB1BD9021D4BFE600A991BF;
 			remoteInfo = WireGuardNetworkExtensionmacOS;
+		};
+		6FB1BD9E21D4DF7A00A991BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6FF4AC0C211EC46F002C96EB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6FDAA03421CE69D000FA6925;
+			remoteInfo = WireGuardGoBridgemacOS;
 		};
 		6FDEF7E121846C0000D8FBF6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -192,6 +200,7 @@
 		6FB1BD9321D4BFE700A991BF /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
 		6FB1BD9521D4BFE700A991BF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6FB1BD9621D4BFE700A991BF /* WireGuardNetworkExtensionmacOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardNetworkExtensionmacOS.entitlements; sourceTree = "<group>"; };
+		6FB1BDA021D4E00A00A991BF /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
 		6FDEF7F621863B6100D8FBF6 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
@@ -241,6 +250,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FB1BDA121D4E00A00A991BF /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,6 +508,7 @@
 			isa = PBXGroup;
 			children = (
 				6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */,
+				6FB1BDA021D4E00A00A991BF /* libwg-go.a */,
 				6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
@@ -587,6 +598,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				6FB1BD9F21D4DF7A00A991BF /* PBXTargetDependency */,
 			);
 			name = WireGuardNetworkExtensionmacOS;
 			productName = WireGuardNetworkExtensionmacOS;
@@ -669,8 +681,8 @@
 				6F5D0C19218352EF000F85AD /* WireGuardNetworkExtensioniOS */,
 				6FDEF7DD21846BC100D8FBF6 /* WireGuardGoBridgeiOS */,
 				6FB1BD5C21D2607A00A991BF /* WireGuardmacOS */,
-				6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */,
 				6FB1BD9021D4BFE600A991BF /* WireGuardNetworkExtensionmacOS */,
+				6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */,
 			);
 		};
 /* End PBXProject section */
@@ -916,6 +928,11 @@
 			isa = PBXTargetDependency;
 			target = 6FB1BD9021D4BFE600A991BF /* WireGuardNetworkExtensionmacOS */;
 			targetProxy = 6FB1BD9721D4BFE700A991BF /* PBXContainerItemProxy */;
+		};
+		6FB1BD9F21D4DF7A00A991BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */;
+			targetProxy = 6FB1BD9E21D4DF7A00A991BF /* PBXContainerItemProxy */;
 		};
 		6FDEF7E221846C0000D8FBF6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
