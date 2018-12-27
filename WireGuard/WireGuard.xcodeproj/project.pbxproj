@@ -393,6 +393,8 @@
 				6F7774E0217181B1006A79B3 /* AppDelegate.swift */,
 				6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */,
 				5F45417C21C1B23600994C13 /* UITableViewCell+Reuse.swift */,
+				6FF4AC23211EC472002C96EB /* Info.plist */,
+				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -533,8 +535,6 @@
 				6F61F1E821B932F700483816 /* WireGuardAppError.swift */,
 				6F61F1EA21B937EF00483816 /* WireGuardResult.swift */,
 				6FE1765921C90E87002690EA /* LocalizationHelper.swift */,
-				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
-				6FF4AC23211EC472002C96EB /* Info.plist */,
 				6FF4AC2B211EC776002C96EB /* Config.xcconfig */,
 				6F689999218043390012E523 /* WireGuard-Bridging-Header.h */,
 			);
@@ -1480,9 +1480,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WireGuard/UI/iOS/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = WireGuard/Info.plist;
+				INFOPLIST_FILE = WireGuard/UI/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1499,9 +1499,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = WireGuard/WireGuard.entitlements;
+				CODE_SIGN_ENTITLEMENTS = WireGuard/UI/iOS/WireGuard.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = WireGuard/Info.plist;
+				INFOPLIST_FILE = WireGuard/UI/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
