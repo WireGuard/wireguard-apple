@@ -220,3 +220,8 @@
 "alertSystemErrorMessageTunnelConfigurationStale" = "The configuration is stale.";
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
 "alertSystemErrorMessageTunnelConfigurationUnknown" = "Unknown system error.";
+
+// Mac status bar menu
+
+"macMenuManageTunnels" = "Manage tunnels";
+"macMenuImportTunnels" = "Import tunnel(s) from file...";

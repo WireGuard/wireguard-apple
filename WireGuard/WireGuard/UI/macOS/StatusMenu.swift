@@ -11,6 +11,8 @@ class StatusMenu: NSMenu {
         self.tunnelsManager = tunnelsManager
         super.init(title: "WireGuard Status Bar Menu")
         addTunnelMenuItems()
+        addItem(NSMenuItem.separator())
+        addTunnelManagementItems()
     }
 
     required init(coder decoder: NSCoder) {
@@ -30,5 +32,22 @@ class StatusMenu: NSMenu {
     @objc func tunnelClicked(sender: AnyObject) {
         guard let tunnel = sender.representedObject as? TunnelContainer else { return }
         print("Tunnel \(tunnel.name) clicked")
+    }
+
+    func addTunnelManagementItems() {
+        let manageItem = NSMenuItem(title: tr("macMenuManageTunnels"), action: #selector(manageTunnelsClicked), keyEquivalent: "")
+        manageItem.target = self
+        addItem(manageItem)
+        let importItem = NSMenuItem(title: tr("macMenuImportTunnels"), action: #selector(importTunnelsClicked), keyEquivalent: "")
+        importItem.target = self
+        addItem(importItem)
+    }
+
+    @objc func manageTunnelsClicked() {
+        print("Unimplemented")
+    }
+
+    @objc func importTunnelsClicked() {
+        print("Unimplemented")
     }
 }
