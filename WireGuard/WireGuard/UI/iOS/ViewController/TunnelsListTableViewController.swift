@@ -157,49 +157,13 @@ class TunnelsListTableViewController: UIViewController {
         scanQRCodeNC.modalPresentationStyle = .fullScreen
         present(scanQRCodeNC, animated: true)
     }
-
-    func importFromFile(url: URL, completionHandler: (() -> Void)?) {
-        guard let tunnelsManager = tunnelsManager else { return }
-        if url.pathExtension == "zip" {
-            ZipImporter.importConfigFiles(from: url) { [weak self] result in
-                if let error = result.error {
-                    ErrorPresenter.showErrorAlert(error: error, from: self)
-                    return
-                }
-                let configs = result.value!
-                tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { [weak self] numberSuccessful in
-                    if numberSuccessful == configs.count {
-                        completionHandler?()
-                        return
-                    }
-                    let title = tr(format: "alertImportedFromZipTitle (%d)", numberSuccessful)
-                    let message = tr(format: "alertImportedFromZipMessage (%1$d of %2$d)", numberSuccessful, configs.count)
-                    ErrorPresenter.showErrorAlert(title: title, message: message, from: self, onPresented: completionHandler)
-                }
-            }
-        } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
-            let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let fileContents = try? String(contentsOf: url),
-                let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName) {
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { [weak self] result in
-                    if let error = result.error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self, onPresented: completionHandler)
-                    } else {
-                        completionHandler?()
-                    }
-                }
-            } else {
-                ErrorPresenter.showErrorAlert(title: tr("alertUnableToImportTitle"), message: tr("alertUnableToImportMessage"),
-                                              from: self, onPresented: completionHandler)
-            }
-        }
-    }
 }
 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        urls.forEach {
-            importFromFile(url: $0, completionHandler: nil)
+        guard let tunnelsManager = tunnelsManager else { return }
+        urls.forEach { url in
+            TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: self, errorPresenterType: ErrorPresenter.self)
         }
     }
 }
