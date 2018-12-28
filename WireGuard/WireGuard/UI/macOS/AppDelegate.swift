@@ -6,14 +6,26 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+    var statusItem: NSStatusItem?
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        TunnelsManager.create { [weak self] result in
+            guard let self = self else { return }
+            guard result.isSuccess else { return } // TODO: Show alert
+
+            let tunnelsManager: TunnelsManager = result.value!
+            let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
+            self.statusItem = createStatusBarItem(with: statusMenu)
+        }
     }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
-    }
-
-
 }
 
+func createStatusBarItem(with statusMenu: StatusMenu) -> NSStatusItem {
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    if let statusBarImage = NSImage(named: "WireGuardMacStatusBarIcon") {
+        statusBarImage.isTemplate = true
+        statusItem.button?.image = statusBarImage
+    }
+    statusItem.menu = statusMenu
+    return statusItem
+}
