@@ -12,5 +12,9 @@
 	<array>
 		<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 	</array>
+	<key>com.apple.security.network.client</key>
+	<true/>
+	<key>com.apple.security.network.server</key>
+	<true/>
 </dict>
 </plist>
