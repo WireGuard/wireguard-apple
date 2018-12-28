@@ -22,6 +22,8 @@
 	<string>$(VERSION_ID)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2018 WireGuard LLC. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
