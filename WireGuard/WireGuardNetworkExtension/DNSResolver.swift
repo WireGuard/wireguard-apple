@@ -45,7 +45,6 @@ class DNSResolver {
             let resolvedEndpoint = tuple.1
             if let endpoint = endpoint {
                 if resolvedEndpoint == nil {
-                    // DNS resolution failed
                     guard let hostname = endpoint.hostname() else { fatalError() }
                     hostnamesWithDnsResolutionFailure.append(hostname)
                 }
@@ -57,81 +56,97 @@ class DNSResolver {
         }
         return resolvedEndpoints
     }
-}
 
-extension DNSResolver {
-    // Based on DNS resolution code by Jason Donenfeld <jason@zx2c4.com>
-    // in parse_endpoint() in src/tools/config.c in the WireGuard codebase
-
-    //swiftlint:disable:next cyclomatic_complexity
     private static func resolveSync(endpoint: Endpoint) -> Endpoint? {
         switch endpoint.host {
         case .name(let name, _):
             var resultPointer = UnsafeMutablePointer<addrinfo>(OpaquePointer(bitPattern: 0))
+            var hints = addrinfo(
+                ai_flags: AI_ALL, // We set this to ALL so that we get v4 addresses even on DNS64 networks
+                ai_family: AF_UNSPEC,
+                ai_socktype: SOCK_DGRAM,
+                ai_protocol: IPPROTO_UDP,
+                ai_addrlen: 0,
+                ai_canonname: nil,
+                ai_addr: nil,
+                ai_next: nil)
+            if getaddrinfo(name, "\(endpoint.port)", &hints, &resultPointer) != 0 {
+                return nil
+            }
+            var next = resultPointer
+            var ipv4Address: IPv4Address?
+            var ipv6Address: IPv6Address?
+            while next != nil {
+                let result = next!.pointee
+                next = result.ai_next
+                if result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size {
+                    var sa4 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in.self).pointee
+                    ipv4Address = IPv4Address(Data(bytes: &sa4.sin_addr, count: MemoryLayout<in_addr>.size))
+                    break // If we found an IPv4 address, we can stop
+                } else if result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size {
+                    var sa6 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in6.self).pointee
+                    ipv6Address = IPv6Address(Data(bytes: &sa6.sin6_addr, count: MemoryLayout<in6_addr>.size))
+                    continue // If we already have an IPv6 address, we can skip this one
+                }
+            }
+            freeaddrinfo(resultPointer)
 
-            // The endpoint is a hostname and needs DNS resolution
-            if addressInfo(for: name, port: endpoint.port, resultPointer: &resultPointer) == 0 {
-                // getaddrinfo succeeded
-                let ipv4Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET_ADDRSTRLEN))
-                let ipv6Buffer = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET6_ADDRSTRLEN))
-                var ipv4AddressString: String?
-                var ipv6AddressString: String?
-                while resultPointer != nil {
-                    let result = resultPointer!.pointee
-                    resultPointer = result.ai_next
-                    if result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size {
-                        var sa4 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in.self).pointee
-                        if inet_ntop(result.ai_family, &sa4.sin_addr, ipv4Buffer, socklen_t(INET_ADDRSTRLEN)) != nil {
-                            ipv4AddressString = String(cString: ipv4Buffer)
-                            // If we found an IPv4 address, we can stop
-                            break
-                        }
-                    } else if result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size {
-                        if ipv6AddressString != nil {
-                            // If we already have an IPv6 address, we can skip this one
-                            continue
-                        }
-                        var sa6 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in6.self).pointee
-                        if inet_ntop(result.ai_family, &sa6.sin6_addr, ipv6Buffer, socklen_t(INET6_ADDRSTRLEN)) != nil {
-                            ipv6AddressString = String(cString: ipv6Buffer)
-                        }
-                    }
-                }
-                ipv4Buffer.deallocate()
-                ipv6Buffer.deallocate()
-                // We prefer an IPv4 address over an IPv6 address
-                if let ipv4AddressString = ipv4AddressString, let ipv4Address = IPv4Address(ipv4AddressString) {
-                    return Endpoint(host: .ipv4(ipv4Address), port: endpoint.port)
-                } else if let ipv6AddressString = ipv6AddressString, let ipv6Address = IPv6Address(ipv6AddressString) {
-                    return Endpoint(host: .ipv6(ipv6Address), port: endpoint.port)
-                } else {
-                    return nil
-                }
+            // We prefer an IPv4 address over an IPv6 address
+            if let ipv4Address = ipv4Address {
+                return Endpoint(host: .ipv4(ipv4Address), port: endpoint.port)
+            } else if let ipv6Address = ipv6Address {
+                return Endpoint(host: .ipv6(ipv6Address), port: endpoint.port)
             } else {
-                // getaddrinfo failed
                 return nil
             }
         default:
-            // The endpoint is already resolved
             return endpoint
         }
     }
+}
 
-    private static func addressInfo(for name: String, port: NWEndpoint.Port, resultPointer: inout UnsafeMutablePointer<addrinfo>?) -> Int32 {
+extension Endpoint {
+    func withReresolvedIP() -> Endpoint {
+        var ret = self
+        let hostname: String
+        switch host {
+        case .name(let name, _):
+            hostname = name
+        case .ipv4(let address):
+            hostname = "\(address)"
+        case .ipv6(let address):
+            hostname = "\(address)"
+        }
+
+        var resultPointer = UnsafeMutablePointer<addrinfo>(OpaquePointer(bitPattern: 0))
         var hints = addrinfo(
-            ai_flags: 0,
+            ai_flags: 0, // We set this to zero so that we actually resolve this using DNS64
             ai_family: AF_UNSPEC,
-            ai_socktype: SOCK_DGRAM, // WireGuard is UDP-only
-            ai_protocol: IPPROTO_UDP, // WireGuard is UDP-only
+            ai_socktype: SOCK_DGRAM,
+            ai_protocol: IPPROTO_UDP,
             ai_addrlen: 0,
             ai_canonname: nil,
             ai_addr: nil,
             ai_next: nil)
-
-        return getaddrinfo(
-            name.cString(using: .utf8), // Hostname
-            "\(port)".cString(using: .utf8), // Port
-            &hints,
-            &resultPointer)
+        if getaddrinfo(hostname, "\(port)", &hints, &resultPointer) != 0 || resultPointer == nil {
+            return ret
+        }
+        let result = resultPointer!.pointee
+        if result.ai_family == AF_INET && result.ai_addrlen == MemoryLayout<sockaddr_in>.size {
+            var sa4 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in.self).pointee
+            let addr = IPv4Address(Data(bytes: &sa4.sin_addr, count: MemoryLayout<in_addr>.size))
+            ret = Endpoint(host: .ipv4(addr!), port: port)
+        } else if result.ai_family == AF_INET6 && result.ai_addrlen == MemoryLayout<sockaddr_in6>.size {
+            var sa6 = UnsafeRawPointer(result.ai_addr)!.assumingMemoryBound(to: sockaddr_in6.self).pointee
+            let addr = IPv6Address(Data(bytes: &sa6.sin6_addr, count: MemoryLayout<in6_addr>.size))
+            ret = Endpoint(host: .ipv6(addr!), port: port)
+        }
+        freeaddrinfo(resultPointer)
+        if ret.host != host {
+            wg_log(.debug, message: "DNS64: mapped \(host) to \(ret.host)")
+        } else {
+            wg_log(.debug, message: "DNS64: mapped \(host) to itself.")
+        }
+        return ret
     }
 }

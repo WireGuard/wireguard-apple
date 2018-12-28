@@ -17,6 +17,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor?.cancel()
     }
 
+    //swiftlint:disable:next function_body_length
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
@@ -65,6 +66,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 if getsockopt(fileDescriptor, 2 /* SYSPROTO_CONTROL */, 2 /* UTUN_OPT_IFNAME */, ifnamePtr, &ifnameSize) == 0 {
                     self.ifname = String(cString: ifnamePtr)
                 }
+                ifnamePtr.deallocate()
                 wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
                 let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration().withGoString { return wgTurnOn($0, fileDescriptor) }
                 if handle < 0 {
