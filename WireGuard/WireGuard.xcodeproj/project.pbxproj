@@ -111,6 +111,7 @@
 		6FBA103E21D6B6D70051C35F /* TunnelImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */; };
 		6FBA103F21D6B6FF0051C35F /* TunnelImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */; };
 		6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */; };
+		6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA104121D6BC210051C35F /* ErrorPresenter.swift */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
 		6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */; };
 		6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F621863B6100D8FBF6 /* unzip.c */; };
@@ -256,6 +257,7 @@
 		6FBA101621D655340051C35F /* StatusMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMenu.swift; sourceTree = "<group>"; };
 		6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPresenterProtocol.swift; sourceTree = "<group>"; };
 		6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelImporter.swift; sourceTree = "<group>"; };
+		6FBA104121D6BC210051C35F /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
 		6FDEF7F621863B6100D8FBF6 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
@@ -462,12 +464,13 @@
 		6FB1BD5E21D2607A00A991BF /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				6FBA101321D613F30051C35F /* Application.swift */,
 				6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */,
+				6FBA101621D655340051C35F /* StatusMenu.swift */,
+				6FBA104121D6BC210051C35F /* ErrorPresenter.swift */,
 				6FB1BD6121D2607E00A991BF /* Assets.xcassets */,
 				6FB1BD6621D2607E00A991BF /* Info.plist */,
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
-				6FBA101321D613F30051C35F /* Application.swift */,
-				6FBA101621D655340051C35F /* StatusMenu.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -1040,6 +1043,7 @@
 				6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */,
 				6FB1BDC321D50F0300A991BF /* TunnelConfiguration.swift in Sources */,
 				6FB1BDC421D50F0300A991BF /* IPAddressRange.swift in Sources */,
+				6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */,
 				6FB1BDC521D50F0300A991BF /* Endpoint.swift in Sources */,
 				6FB1BDC621D50F0300A991BF /* DNSServer.swift in Sources */,
 				6FB1BDC721D50F0300A991BF /* InterfaceConfiguration.swift in Sources */,
