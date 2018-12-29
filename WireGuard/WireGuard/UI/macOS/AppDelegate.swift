@@ -16,6 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let tunnelsManager: TunnelsManager = result.value!
             let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
             self.statusItem = createStatusBarItem(with: statusMenu)
+
+            tunnelsManager.tunnelsListDelegate = statusMenu
         }
     }
 }
