@@ -6,7 +6,10 @@ import Cocoa
 class StatusMenu: NSMenu {
 
     let tunnelsManager: TunnelsManager
+    var tunnelStatusObservers = [AnyObject]()
+
     var firstTunnelMenuItemIndex: Int = 0
+    var numberOfTunnelMenuItems: Int = 0
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
@@ -27,22 +30,9 @@ class StatusMenu: NSMenu {
         let numberOfTunnels = tunnelsManager.numberOfTunnels()
         for index in 0 ..< tunnelsManager.numberOfTunnels() {
             let tunnel = tunnelsManager.tunnel(at: index)
-            let menuItem = createTunnelMenuItem(for: tunnel)
-            addItem(menuItem)
+            insertTunnelMenuItem(for: tunnel, at: numberOfTunnelMenuItems)
         }
         return numberOfTunnels > 0
-    }
-
-    func createTunnelMenuItem(for tunnel: TunnelContainer) -> NSMenuItem {
-        let menuItem = NSMenuItem(title: tunnel.name, action: #selector(tunnelClicked(sender:)), keyEquivalent: "")
-        menuItem.target = self
-        menuItem.representedObject = tunnel
-        return menuItem
-    }
-
-    @objc func tunnelClicked(sender: AnyObject) {
-        guard let tunnel = sender.representedObject as? TunnelContainer else { return }
-        print("Tunnel \(tunnel.name) clicked")
     }
 
     func addTunnelManagementItems() {
@@ -52,6 +42,16 @@ class StatusMenu: NSMenu {
         let importItem = NSMenuItem(title: tr("macMenuImportTunnels"), action: #selector(importTunnelsClicked), keyEquivalent: "")
         importItem.target = self
         addItem(importItem)
+    }
+
+    @objc func tunnelClicked(sender: AnyObject) {
+        guard let tunnelMenuItem = sender as? NSMenuItem else { return }
+        guard let tunnel = tunnelMenuItem.representedObject as? TunnelContainer else { return }
+        if tunnelMenuItem.state == .off {
+            tunnelsManager.startActivation(of: tunnel)
+        } else {
+            tunnelsManager.startDeactivation(of: tunnel)
+        }
     }
 
     @objc func manageTunnelsClicked() {
@@ -70,36 +70,72 @@ class StatusMenu: NSMenu {
     }
 }
 
-extension StatusMenu: TunnelsManagerListDelegate {
-    func tunnelAdded(at index: Int) {
-        let tunnel = tunnelsManager.tunnel(at: index)
-        let menuItem = createTunnelMenuItem(for: tunnel)
-        if tunnelsManager.numberOfTunnels() == 1 {
-            insertItem(NSMenuItem.separator(), at: firstTunnelMenuItemIndex + index)
+extension StatusMenu {
+    func insertTunnelMenuItem(for tunnel: TunnelContainer, at tunnelIndex: Int) {
+        let menuItem = NSMenuItem(title: tunnel.name, action: #selector(tunnelClicked(sender:)), keyEquivalent: "")
+        menuItem.target = self
+        menuItem.representedObject = tunnel
+        updateTunnelMenuItem(menuItem)
+        let statusObservationToken = tunnel.observe(\.status) { _, _ in
+            updateTunnelMenuItem(menuItem)
         }
-        insertItem(menuItem, at: firstTunnelMenuItemIndex + index)
-    }
-
-    func tunnelModified(at index: Int) {
-        let tunnel = tunnelsManager.tunnel(at: index)
-        if let menuItem = item(at: firstTunnelMenuItemIndex + index) {
-            menuItem.title = tunnel.name
+        tunnelStatusObservers.insert(statusObservationToken, at: tunnelIndex)
+        insertItem(menuItem, at: firstTunnelMenuItemIndex + tunnelIndex)
+        if numberOfTunnelMenuItems == 0 {
+            insertItem(NSMenuItem.separator(), at: firstTunnelMenuItemIndex + tunnelIndex + 1)
         }
+        numberOfTunnelMenuItems += 1
     }
 
-    func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
-        let tunnel = tunnelsManager.tunnel(at: oldIndex)
-        let menuItem = createTunnelMenuItem(for: tunnel)
-        removeItem(at: firstTunnelMenuItemIndex + oldIndex)
-        insertItem(menuItem, at: firstTunnelMenuItemIndex + newIndex)
-    }
-
-    func tunnelRemoved(at index: Int) {
-        removeItem(at: firstTunnelMenuItemIndex + index)
-        if tunnelsManager.numberOfTunnels() == 0 {
+    func removeTunnelMenuItem(at tunnelIndex: Int) {
+        removeItem(at: firstTunnelMenuItemIndex + tunnelIndex)
+        tunnelStatusObservers.remove(at: tunnelIndex)
+        numberOfTunnelMenuItems -= 1
+        if numberOfTunnelMenuItems == 0 {
             if let firstItem = item(at: firstTunnelMenuItemIndex), firstItem.isSeparatorItem {
                 removeItem(at: firstTunnelMenuItemIndex)
             }
         }
+    }
+
+    func moveTunnelMenuItem(from oldTunnelIndex: Int, to newTunnelIndex: Int) {
+        let oldMenuItem = item(at: firstTunnelMenuItemIndex + oldTunnelIndex)!
+        let oldMenuItemTitle = oldMenuItem.title
+        let oldMenuItemTunnel = oldMenuItem.representedObject
+        removeItem(at: firstTunnelMenuItemIndex + oldTunnelIndex)
+        let menuItem = NSMenuItem(title: oldMenuItemTitle, action: #selector(tunnelClicked(sender:)), keyEquivalent: "")
+        menuItem.target = self
+        menuItem.representedObject = oldMenuItemTunnel
+        insertItem(menuItem, at: firstTunnelMenuItemIndex + newTunnelIndex)
+        let statusObserver = tunnelStatusObservers.remove(at: oldTunnelIndex)
+        tunnelStatusObservers.insert(statusObserver, at: newTunnelIndex)
+    }
+}
+
+private func updateTunnelMenuItem(_ tunnelMenuItem: NSMenuItem) {
+    guard let tunnel = tunnelMenuItem.representedObject as? TunnelContainer else { return }
+    tunnelMenuItem.title = tunnel.name
+    let shouldShowCheckmark = (tunnel.status != .inactive && tunnel.status != .deactivating)
+    tunnelMenuItem.state = shouldShowCheckmark ? .on : .off
+}
+
+extension StatusMenu: TunnelsManagerListDelegate {
+    func tunnelAdded(at index: Int) {
+        let tunnel = tunnelsManager.tunnel(at: index)
+        insertTunnelMenuItem(for: tunnel, at: index)
+    }
+
+    func tunnelModified(at index: Int) {
+        if let tunnelMenuItem = item(at: firstTunnelMenuItemIndex + index) {
+            updateTunnelMenuItem(tunnelMenuItem)
+        }
+    }
+
+    func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
+        moveTunnelMenuItem(from: oldIndex, to: newIndex)
+    }
+
+    func tunnelRemoved(at index: Int) {
+        removeTunnelMenuItem(at: index)
     }
 }
