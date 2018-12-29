@@ -18,7 +18,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem = createStatusBarItem(with: statusMenu)
 
             tunnelsManager.tunnelsListDelegate = statusMenu
+            tunnelsManager.activationDelegate = self
         }
+    }
+}
+
+extension AppDelegate: TunnelsManagerActivationDelegate {
+    func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) {
+        ErrorPresenter.showErrorAlert(error: error, from: nil)
+    }
+
+    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
+    }
+
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) {
+        ErrorPresenter.showErrorAlert(error: error, from: nil)
+    }
+
+    func tunnelActivationSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
     }
 }
 
