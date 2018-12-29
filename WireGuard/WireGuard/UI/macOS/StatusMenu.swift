@@ -8,12 +8,24 @@ class StatusMenu: NSMenu {
     let tunnelsManager: TunnelsManager
     var tunnelStatusObservers = [AnyObject]()
 
+    var statusMenuItem: NSMenuItem?
+    var networksMenuItem: NSMenuItem?
     var firstTunnelMenuItemIndex: Int = 0
     var numberOfTunnelMenuItems: Int = 0
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
         super.init(title: "WireGuard Status Bar Menu")
+
+        addStatusMenuItems()
+        addItem(NSMenuItem.separator())
+        for index in 0 ..< tunnelsManager.numberOfTunnels() {
+            let isUpdated = updateStatusMenuItems(with: tunnelsManager.tunnel(at: index), ignoreInactive: true)
+            if isUpdated {
+                break
+            }
+        }
+
         firstTunnelMenuItemIndex = numberOfItems
         let isAdded = addTunnelMenuItems()
         if isAdded {
@@ -24,6 +36,55 @@ class StatusMenu: NSMenu {
 
     required init(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func addStatusMenuItems() {
+        let statusTitle = tr(format: "macMenuStatus (%@)", tr("tunnelStatusInactive"))
+        let statusMenuItem = NSMenuItem(title: statusTitle, action: #selector(manageTunnelsClicked), keyEquivalent: "")
+        statusMenuItem.isEnabled = false
+        addItem(statusMenuItem)
+        let networksMenuItem = NSMenuItem(title: tr("macMenuNetworksInactive"), action: #selector(manageTunnelsClicked), keyEquivalent: "")
+        networksMenuItem.isEnabled = false
+        addItem(networksMenuItem)
+        self.statusMenuItem = statusMenuItem
+        self.networksMenuItem = networksMenuItem
+    }
+
+    @discardableResult
+    func updateStatusMenuItems(with tunnel: TunnelContainer, ignoreInactive: Bool) -> Bool {
+        guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem else { return false }
+        var statusText: String
+
+        switch tunnel.status {
+        case .waiting:
+            return false
+        case .inactive:
+            if ignoreInactive {
+                return false
+            }
+            statusText = tr("tunnelStatusInactive")
+        case .activating:
+            statusText = tr("tunnelStatusActivating")
+        case .active:
+            statusText = tr("tunnelStatusActive")
+        case .deactivating:
+            statusText = tr("tunnelStatusDeactivating")
+        case .reasserting:
+            statusText = tr("tunnelStatusReasserting")
+        case .restarting:
+            statusText = tr("tunnelStatusRestarting")
+        }
+
+        statusMenuItem.title = tr(format: "macMenuStatus (%@)", statusText)
+
+        let addresses = tunnel.tunnelConfiguration?.interface.addresses ?? []
+        let addressesString = addresses.map { $0.stringRepresentation }.joined(separator: ", ")
+        if addressesString.isEmpty {
+            networksMenuItem.title = tr("macMenuNetworksNone")
+        } else {
+            networksMenuItem.title = tr(format: "macMenuNetworks (%@)", addressesString)
+        }
+        return true
     }
 
     func addTunnelMenuItems() -> Bool {
@@ -76,8 +137,9 @@ extension StatusMenu {
         menuItem.target = self
         menuItem.representedObject = tunnel
         updateTunnelMenuItem(menuItem)
-        let statusObservationToken = tunnel.observe(\.status) { _, _ in
+        let statusObservationToken = tunnel.observe(\.status) { [weak self] tunnel, _ in
             updateTunnelMenuItem(menuItem)
+            self?.updateStatusMenuItems(with: tunnel, ignoreInactive: false)
         }
         tunnelStatusObservers.insert(statusObservationToken, at: tunnelIndex)
         insertItem(menuItem, at: firstTunnelMenuItemIndex + tunnelIndex)

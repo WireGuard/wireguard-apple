@@ -223,5 +223,10 @@
 
 // Mac status bar menu
 
+"macMenuStatus (%@)" = "Status: %@";
+"macMenuNetworks (%@)" = "Networks: %@";
+"macMenuNetworksInactive" = "Networks: -";
+"macMenuNetworksNone" = "Networks: None";
+
 "macMenuManageTunnels" = "Manage tunnels";
 "macMenuImportTunnels" = "Import tunnel(s) from file...";
