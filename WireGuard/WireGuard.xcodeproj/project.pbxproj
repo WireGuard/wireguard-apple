@@ -26,6 +26,9 @@
 		5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */; };
 		5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
 		5FF7B96621CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
+		6F4DD16B21DA558800690EAE /* TunnelListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16A21DA558800690EAE /* TunnelListCell.swift */; };
+		6F4DD16C21DA558F00690EAE /* NSTableView+Reuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */; };
+		6F4DD16E21DBEA0700690EAE /* ManageTunnelsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */; };
 		6F5A2B4621AFDED40081EDD8 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
 		6F5A2B4821AFF49A0081EDD8 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
 		6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1C218352EF000F85AD /* PacketTunnelProvider.swift */; };
@@ -112,6 +115,7 @@
 		6FBA103F21D6B6FF0051C35F /* TunnelImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */; };
 		6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */; };
 		6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA104121D6BC210051C35F /* ErrorPresenter.swift */; };
+		6FBA104621D7EBFA0051C35F /* TunnelsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
 		6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */; };
 		6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEF7F621863B6100D8FBF6 /* unzip.c */; };
@@ -212,6 +216,9 @@
 		5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TunnelConfiguration+WgQuickConfig.swift"; sourceTree = "<group>"; };
 		5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceConfiguration.swift; sourceTree = "<group>"; };
 		5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
+		6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableView+Reuse.swift"; sourceTree = "<group>"; };
+		6F4DD16A21DA558800690EAE /* TunnelListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelListCell.swift; sourceTree = "<group>"; };
+		6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageTunnelsRootViewController.swift; sourceTree = "<group>"; };
 		6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extension.swift"; sourceTree = "<group>"; };
 		6F5D0C1421832391000F85AD /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		6F5D0C1A218352EF000F85AD /* WireGuardNetworkExtensioniOS.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardNetworkExtensioniOS.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -258,6 +265,7 @@
 		6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPresenterProtocol.swift; sourceTree = "<group>"; };
 		6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelImporter.swift; sourceTree = "<group>"; };
 		6FBA104121D6BC210051C35F /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
+		6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsListTableViewController.swift; sourceTree = "<group>"; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
 		6FDEF7F621863B6100D8FBF6 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
@@ -348,6 +356,14 @@
 				6F7774DF217181B1006A79B3 /* MainViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		6F4DD16921DA556600690EAE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6F4DD16A21DA558800690EAE /* TunnelListCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */ = {
@@ -464,6 +480,8 @@
 		6FB1BD5E21D2607A00A991BF /* macOS */ = {
 			isa = PBXGroup;
 			children = (
+				6F4DD16921DA556600690EAE /* View */,
+				6FBA104421D7EA750051C35F /* ViewController */,
 				6FBA101321D613F30051C35F /* Application.swift */,
 				6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */,
 				6FBA101621D655340051C35F /* StatusMenu.swift */,
@@ -471,8 +489,18 @@
 				6FB1BD6121D2607E00A991BF /* Assets.xcassets */,
 				6FB1BD6621D2607E00A991BF /* Info.plist */,
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
+				6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */,
 			);
 			path = macOS;
+			sourceTree = "<group>";
+		};
+		6FBA104421D7EA750051C35F /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */,
+				6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		6FDEF7E72186320E00D8FBF6 /* ZipArchive */ = {
@@ -1021,11 +1049,14 @@
 				6FB1BDD021D50F5300A991BF /* TunnelErrors.swift in Sources */,
 				6FB1BDD121D50F5300A991BF /* ZipImporter.swift in Sources */,
 				6FB1BDD221D50F5300A991BF /* ZipExporter.swift in Sources */,
+				6FBA104621D7EBFA0051C35F /* TunnelsListTableViewController.swift in Sources */,
 				6FB1BDD321D50F5300A991BF /* ZipArchive.swift in Sources */,
 				6FB1BDD421D50F5300A991BF /* ioapi.c in Sources */,
 				6FB1BDD521D50F5300A991BF /* unzip.c in Sources */,
 				6FB1BDD621D50F5300A991BF /* zip.c in Sources */,
 				6FB1BDD721D50F5300A991BF /* WireGuardAppError.swift in Sources */,
+				6F4DD16E21DBEA0700690EAE /* ManageTunnelsRootViewController.swift in Sources */,
+				6F4DD16C21DA558F00690EAE /* NSTableView+Reuse.swift in Sources */,
 				6FB1BDD821D50F5300A991BF /* WireGuardResult.swift in Sources */,
 				6FB1BDD921D50F5300A991BF /* LocalizationHelper.swift in Sources */,
 				6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */,
@@ -1034,6 +1065,7 @@
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,
 				6FB1BDBD21D50F0200A991BF /* ringlogger.h in Sources */,
 				6FBA103F21D6B6FF0051C35F /* TunnelImporter.swift in Sources */,
+				6F4DD16B21DA558800690EAE /* TunnelListCell.swift in Sources */,
 				6FB1BDBE21D50F0200A991BF /* Logger.swift in Sources */,
 				6FB1BDBF21D50F0200A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,

@@ -116,7 +116,11 @@ class StatusMenu: NSMenu {
     }
 
     @objc func manageTunnelsClicked() {
-        print("Unimplemented")
+        let manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
+        let window = NSWindow(contentViewController: manageTunnelsRootVC)
+        window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(self)
     }
 
     @objc func importTunnelsClicked() {
