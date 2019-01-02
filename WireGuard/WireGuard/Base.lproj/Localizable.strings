@@ -230,3 +230,7 @@
 
 "macMenuManageTunnels" = "Manage tunnels";
 "macMenuImportTunnels" = "Import tunnel(s) from file...";
+
+// Mac detail view fields
+
+"macDetailFieldKey (%@)" = "%@:";

@@ -3,9 +3,15 @@
 
 import Cocoa
 
+protocol TunnelsListTableViewControllerDelegate: class {
+    func tunnelSelected(tunnel: TunnelContainer)
+    func tunnelListEmpty()
+}
+
 class TunnelsListTableViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
+    weak var delegate: TunnelsListTableViewControllerDelegate?
 
     let tableView: NSTableView = {
         let tableView = NSTableView()
@@ -147,6 +153,17 @@ extension TunnelsListTableViewController: NSTableViewDelegate {
         let cell: TunnelListCell = tableView.dequeueReusableCell()
         cell.tunnel = tunnelsManager.tunnel(at: row)
         return cell
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        guard tableView.selectedRow >= 0 else {
+            if tunnelsManager.numberOfTunnels() == 0 {
+                delegate?.tunnelListEmpty()
+            }
+            return
+        }
+        let selectedTunnel = tunnelsManager.tunnel(at: tableView.selectedRow)
+        delegate?.tunnelSelected(tunnel: selectedTunnel)
     }
 }
 

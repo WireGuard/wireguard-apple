@@ -6,6 +6,8 @@ import Cocoa
 class ManageTunnelsRootViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
+    let tunnelDetailContainerView = NSView()
+    var tunnelDetailContentVC: NSViewController?
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
@@ -32,25 +34,53 @@ class ManageTunnelsRootViewController: NSViewController {
         ])
 
         let tunnelsListVC = TunnelsListTableViewController(tunnelsManager: tunnelsManager)
+        tunnelsListVC.delegate = self
         let tunnelsListView = tunnelsListVC.view
-        let tunnelDetailView = NSView()
-        tunnelDetailView.wantsLayer = true
-        tunnelDetailView.layer?.backgroundColor = NSColor.gray.cgColor
 
         addChild(tunnelsListVC)
         view.addSubview(tunnelsListView)
-        view.addSubview(tunnelDetailView)
+        view.addSubview(tunnelDetailContainerView)
 
         tunnelsListView.translatesAutoresizingMaskIntoConstraints = false
-        tunnelDetailView.translatesAutoresizingMaskIntoConstraints = false
+        tunnelDetailContainerView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             tunnelsListView.topAnchor.constraint(equalTo: container.topAnchor),
             tunnelsListView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
             tunnelsListView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            tunnelDetailView.leadingAnchor.constraint(equalTo: tunnelsListView.trailingAnchor, constant: horizontalSpacing),
-            tunnelDetailView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            tunnelDetailContainerView.topAnchor.constraint(equalTo: container.topAnchor),
+            tunnelDetailContainerView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            tunnelDetailContainerView.leadingAnchor.constraint(equalTo: tunnelsListView.trailingAnchor, constant: horizontalSpacing),
+            tunnelDetailContainerView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             tunnelsListView.widthAnchor.constraint(equalTo: container.widthAnchor, multiplier: 0.3)
         ])
+    }
+
+    private func setTunnelDetailContentVC(_ contentVC: NSViewController) {
+        if let currentContentVC = tunnelDetailContentVC {
+            currentContentVC.view.removeFromSuperview()
+            currentContentVC.removeFromParent()
+        }
+        addChild(contentVC)
+        tunnelDetailContainerView.addSubview(contentVC.view)
+        contentVC.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tunnelDetailContainerView.topAnchor.constraint(equalTo: contentVC.view.topAnchor),
+            tunnelDetailContainerView.bottomAnchor.constraint(equalTo: contentVC.view.bottomAnchor),
+            tunnelDetailContainerView.leadingAnchor.constraint(equalTo: contentVC.view.leadingAnchor),
+            tunnelDetailContainerView.trailingAnchor.constraint(equalTo: contentVC.view.trailingAnchor)
+        ])
+        tunnelDetailContentVC = contentVC
+    }
+}
+
+extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegate {
+    func tunnelSelected(tunnel: TunnelContainer) {
+        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+        setTunnelDetailContentVC(tunnelDetailVC)
+    }
+
+    func tunnelListEmpty() {
+        // TODO
     }
 }
