@@ -65,11 +65,15 @@ class TunnelsListTableViewController: NSViewController {
         clipView.documentView = tableView
         scrollView.contentView = clipView
 
+        let fillerButton = FillerButton()
+
         let containerView = NSView()
         containerView.addSubview(scrollView)
         containerView.addSubview(buttonBar)
+        containerView.addSubview(fillerButton)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         buttonBar.translatesAutoresizingMaskIntoConstraints = false
+        fillerButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -77,7 +81,11 @@ class TunnelsListTableViewController: NSViewController {
             containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonBar.topAnchor, constant: 1),
             containerView.leadingAnchor.constraint(equalTo: buttonBar.leadingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: buttonBar.bottomAnchor)
+            containerView.bottomAnchor.constraint(equalTo: buttonBar.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: fillerButton.topAnchor, constant: 1),
+            containerView.bottomAnchor.constraint(equalTo: fillerButton.bottomAnchor),
+            buttonBar.trailingAnchor.constraint(equalTo: fillerButton.leadingAnchor, constant: 1),
+            fillerButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
         ])
 
         NSLayoutConstraint.activate([
@@ -139,5 +147,25 @@ extension TunnelsListTableViewController: NSTableViewDelegate {
         let cell: TunnelListCell = tableView.dequeueReusableCell()
         cell.tunnel = tunnelsManager.tunnel(at: row)
         return cell
+    }
+}
+
+class FillerButton: NSButton {
+    override var intrinsicContentSize: NSSize {
+        return NSSize(width: NSView.noIntrinsicMetric, height: NSView.noIntrinsicMetric)
+    }
+
+    init() {
+        super.init(frame: CGRect.zero)
+        title = ""
+        bezelStyle = .smallSquare
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        // Eat mouseDown event, so that the button looks enabled but is unresponsive
     }
 }
