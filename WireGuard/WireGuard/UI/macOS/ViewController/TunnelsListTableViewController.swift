@@ -59,6 +59,7 @@ class TunnelsListTableViewController: NSViewController {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
         scrollView.autohidesScrollers = true
+        scrollView.borderType = .bezelBorder
 
         let clipView = NSClipView()
         clipView.documentView = tableView
@@ -74,7 +75,7 @@ class TunnelsListTableViewController: NSViewController {
             containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: buttonBar.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: buttonBar.topAnchor, constant: 1),
             containerView.leadingAnchor.constraint(equalTo: buttonBar.leadingAnchor),
             containerView.bottomAnchor.constraint(equalTo: buttonBar.bottomAnchor)
         ])
