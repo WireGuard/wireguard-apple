@@ -13,6 +13,13 @@ class StatusMenu: NSMenu {
     var firstTunnelMenuItemIndex: Int = 0
     var numberOfTunnelMenuItems: Int = 0
 
+    lazy var manageTunnelsWindow: NSWindow = {
+        let manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
+        let window = NSWindow(contentViewController: manageTunnelsRootVC)
+        window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
+        return window
+    }()
+
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
         super.init(title: "WireGuard Status Bar Menu")
@@ -116,17 +123,16 @@ class StatusMenu: NSMenu {
     }
 
     @objc func manageTunnelsClicked() {
-        let manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
-        let window = NSWindow(contentViewController: manageTunnelsRootVC)
-        window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
         NSApp.activate(ignoringOtherApps: true)
-        window.makeKeyAndOrderFront(self)
+        manageTunnelsWindow.makeKeyAndOrderFront(self)
     }
 
     @objc func importTunnelsClicked() {
+        NSApp.activate(ignoringOtherApps: true)
+        manageTunnelsWindow.makeKeyAndOrderFront(self)
         let openPanel = NSOpenPanel()
         openPanel.allowedFileTypes = ["conf", "zip"]
-        openPanel.begin { [weak tunnelsManager] response in
+        openPanel.beginSheetModal(for: manageTunnelsWindow) { [weak tunnelsManager] response in
             guard let tunnelsManager = tunnelsManager else { return }
             guard response == .OK else { return }
             guard let url = openPanel.url else { return }
