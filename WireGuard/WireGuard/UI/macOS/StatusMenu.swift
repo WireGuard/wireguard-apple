@@ -39,7 +39,7 @@ class StatusMenu: NSMenu {
     }
 
     func addStatusMenuItems() {
-        let statusTitle = tr(format: "macMenuStatus (%@)", tr("tunnelStatusInactive"))
+        let statusTitle = tr(format: "macStatus (%@)", tr("tunnelStatusInactive"))
         let statusMenuItem = NSMenuItem(title: statusTitle, action: #selector(manageTunnelsClicked), keyEquivalent: "")
         statusMenuItem.isEnabled = false
         addItem(statusMenuItem)
@@ -75,7 +75,7 @@ class StatusMenu: NSMenu {
             statusText = tr("tunnelStatusRestarting")
         }
 
-        statusMenuItem.title = tr(format: "macMenuStatus (%@)", statusText)
+        statusMenuItem.title = tr(format: "macStatus (%@)", statusText)
 
         let addresses = tunnel.tunnelConfiguration?.interface.addresses ?? []
         let addressesString = addresses.map { $0.stringRepresentation }.joined(separator: ", ")
