@@ -233,6 +233,10 @@
 "macMenuExportLog" = "Export log to file...";
 "macMenuExportTunnels" = "Export tunnels to zip...";
 
+// Mac window title
+
+"macWindowTitleManageTunnels" = "Manage WireGuard Tunnels";
+
 // Mac detail view fields
 
 "macDetailFieldKey (%@)" = "%@:";
