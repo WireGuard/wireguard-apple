@@ -63,6 +63,13 @@ class TunnelDetailTableViewController: NSViewController {
         return button
     }()
 
+    let box: NSBox = {
+        let box = NSBox()
+        box.titlePosition = .noTitle
+        box.fillColor = .unemphasizedSelectedContentBackgroundColor
+        return box
+    }()
+
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel {
@@ -111,9 +118,11 @@ class TunnelDetailTableViewController: NSViewController {
         let containerView = NSView()
         let bottomControlsContainer = NSLayoutGuide()
         containerView.addLayoutGuide(bottomControlsContainer)
+        containerView.addSubview(box)
         containerView.addSubview(scrollView)
         containerView.addSubview(statusCheckbox)
         containerView.addSubview(editButton)
+        box.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         statusCheckbox.translatesAutoresizingMaskIntoConstraints = false
         editButton.translatesAutoresizingMaskIntoConstraints = false
@@ -131,6 +140,13 @@ class TunnelDetailTableViewController: NSViewController {
             statusCheckbox.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor),
             editButton.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
             editButton.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor)
+        ])
+
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: box.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: box.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: box.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: box.trailingAnchor)
         ])
 
         view = containerView
