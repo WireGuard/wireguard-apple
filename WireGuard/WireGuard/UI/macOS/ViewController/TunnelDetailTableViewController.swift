@@ -47,6 +47,22 @@ class TunnelDetailTableViewController: NSViewController {
         return tableView
     }()
 
+    let statusCheckbox: NSButton = {
+        let checkbox = NSButton()
+        checkbox.title = ""
+        checkbox.setButtonType(.switch)
+        checkbox.state = .off
+        return checkbox
+    }()
+
+    let editButton: NSButton = {
+        let button = NSButton()
+        button.title = tr("Edit")
+        button.setButtonType(.momentaryPushIn)
+        button.bezelStyle = .rounded
+        return button
+    }()
+
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel {
@@ -55,6 +71,7 @@ class TunnelDetailTableViewController: NSViewController {
         }
     }
     private var tableViewModelRows = [TableViewModelRow]()
+    private var statusObservationToken: AnyObject?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -62,6 +79,10 @@ class TunnelDetailTableViewController: NSViewController {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         super.init(nibName: nil, bundle: nil)
         updateTableViewModelRows()
+        updateStatus()
+        statusObservationToken = tunnel.observe(\TunnelContainer.status) { [weak self] _, _ in
+            self?.updateStatus()
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -72,6 +93,12 @@ class TunnelDetailTableViewController: NSViewController {
         tableView.dataSource = self
         tableView.delegate = self
 
+        statusCheckbox.target = self
+        statusCheckbox.action = #selector(statusCheckboxToggled(sender:))
+
+        editButton.target = self
+        editButton.action = #selector(editButtonClicked)
+
         let clipView = NSClipView()
         clipView.documentView = tableView
 
@@ -81,7 +108,32 @@ class TunnelDetailTableViewController: NSViewController {
         scrollView.hasVerticalScroller = true
         scrollView.autohidesScrollers = true
 
-        view = scrollView
+        let containerView = NSView()
+        let bottomControlsContainer = NSLayoutGuide()
+        containerView.addLayoutGuide(bottomControlsContainer)
+        containerView.addSubview(scrollView)
+        containerView.addSubview(statusCheckbox)
+        containerView.addSubview(editButton)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        statusCheckbox.translatesAutoresizingMaskIntoConstraints = false
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            containerView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            containerView.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
+            bottomControlsContainer.heightAnchor.constraint(equalToConstant: 60),
+            scrollView.bottomAnchor.constraint(equalTo: bottomControlsContainer.topAnchor),
+            bottomControlsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            statusCheckbox.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
+            statusCheckbox.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor),
+            editButton.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
+            editButton.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor)
+        ])
+
+        view = containerView
     }
 
     func updateTableViewModelRows() {
@@ -94,6 +146,44 @@ class TunnelDetailTableViewController: NSViewController {
             for field in peerFields where !peerData[field].isEmpty {
                 tableViewModelRows.append(.peerFieldRow(peer: peerData, field: field))
             }
+        }
+    }
+
+    func updateStatus() {
+        let statusText: String
+        switch tunnel.status {
+        case .waiting:
+            statusText = tr("tunnelStatusWaiting")
+        case .inactive:
+            statusText = tr("tunnelStatusInactive")
+        case .activating:
+            statusText = tr("tunnelStatusActivating")
+        case .active:
+            statusText = tr("tunnelStatusActive")
+        case .deactivating:
+            statusText = tr("tunnelStatusDeactivating")
+        case .reasserting:
+            statusText = tr("tunnelStatusReasserting")
+        case .restarting:
+            statusText = tr("tunnelStatusRestarting")
+        }
+        statusCheckbox.title = tr(format: "macStatus (%@)", statusText)
+        let shouldBeChecked = (tunnel.status != .inactive && tunnel.status != .deactivating)
+        let shouldBeEnabled = (tunnel.status == .active || tunnel.status == .inactive)
+        statusCheckbox.state = shouldBeChecked ? .on : .off
+        statusCheckbox.isEnabled = shouldBeEnabled
+    }
+
+    @objc func editButtonClicked() {
+        print("editButtonClicked")
+    }
+
+    @objc func statusCheckboxToggled(sender: AnyObject?) {
+        guard let statusCheckbox = sender as? NSButton else { return }
+        if statusCheckbox.state == .on {
+            tunnelsManager.startActivation(of: tunnel)
+        } else if statusCheckbox.state == .off {
+            tunnelsManager.startDeactivation(of: tunnel)
         }
     }
 }
