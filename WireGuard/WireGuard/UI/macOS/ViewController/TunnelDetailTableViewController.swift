@@ -133,7 +133,7 @@ class TunnelDetailTableViewController: NSViewController {
             containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             containerView.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
-            bottomControlsContainer.heightAnchor.constraint(equalToConstant: 60),
+            bottomControlsContainer.heightAnchor.constraint(equalToConstant: 32),
             scrollView.bottomAnchor.constraint(equalTo: bottomControlsContainer.topAnchor),
             bottomControlsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             statusCheckbox.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),

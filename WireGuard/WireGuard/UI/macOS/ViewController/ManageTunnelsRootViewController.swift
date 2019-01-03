@@ -21,8 +21,9 @@ class ManageTunnelsRootViewController: NSViewController {
     override func loadView() {
         view = NSView()
 
-        let horizontalSpacing: CGFloat = 30
+        let horizontalSpacing: CGFloat = 20
         let verticalSpacing: CGFloat = 20
+        let centralSpacing: CGFloat = 10
 
         let container = NSLayoutGuide()
         view.addLayoutGuide(container)
@@ -50,7 +51,7 @@ class ManageTunnelsRootViewController: NSViewController {
             tunnelsListView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
             tunnelDetailContainerView.topAnchor.constraint(equalTo: container.topAnchor),
             tunnelDetailContainerView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-            tunnelDetailContainerView.leadingAnchor.constraint(equalTo: tunnelsListView.trailingAnchor, constant: horizontalSpacing),
+            tunnelDetailContainerView.leadingAnchor.constraint(equalTo: tunnelsListView.trailingAnchor, constant: centralSpacing),
             tunnelDetailContainerView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             tunnelsListView.widthAnchor.constraint(equalTo: container.widthAnchor, multiplier: 0.3)
         ])
