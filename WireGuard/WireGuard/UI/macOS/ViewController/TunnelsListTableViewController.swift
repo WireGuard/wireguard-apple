@@ -61,6 +61,7 @@ class TunnelsListTableViewController: NSViewController {
     override func loadView() {
         tableView.dataSource = self
         tableView.delegate = self
+        selectFirstTunnel()
 
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
@@ -147,6 +148,13 @@ class TunnelsListTableViewController: NSViewController {
     }
     @objc func exportTunnelsClicked() {
         print("exportTunnelsClicked")
+    }
+
+    @discardableResult
+    private func selectFirstTunnel() -> Bool {
+        guard tunnelsManager.numberOfTunnels() > 0 else { return false }
+        tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+        return true
     }
 }
 
