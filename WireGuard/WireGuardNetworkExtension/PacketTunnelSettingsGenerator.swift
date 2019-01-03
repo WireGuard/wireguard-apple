@@ -72,13 +72,19 @@ class PacketTunnelSettingsGenerator {
         dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
         networkSettings.dnsSettings = dnsSettings
 
-        let mtu = tunnelConfiguration.interface.mtu ?? 0
+        var mtu = tunnelConfiguration.interface.mtu ?? 0
+
+        /* 0 means automatic MTU. In theory, we should just do
+         * `networkSettings.tunnelOverheadBytes = 80` but in
+         * practice there are too many broken networks out there.
+         * Instead set it to 1280. Boohoo. Maybe someday we'll
+         * add a nob, maybe, or iOS will do probing for us.
+         */
         if mtu == 0 {
-            // 0 imples automatic MTU, where we set overhead as 80 bytes, which is the worst case for WireGuard
-            networkSettings.tunnelOverheadBytes = 80
-        } else {
-            networkSettings.mtu = NSNumber(value: mtu)
+            mtu = 1280
         }
+
+        networkSettings.mtu = NSNumber(value: mtu)
 
         let (ipv4Routes, ipv6Routes) = routes()
         let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
