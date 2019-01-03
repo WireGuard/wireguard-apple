@@ -223,7 +223,6 @@
 
 // Mac status bar menu
 
-"macMenuStatus (%@)" = "Status: %@";
 "macMenuNetworks (%@)" = "Networks: %@";
 "macMenuNetworksInactive" = "Networks: -";
 "macMenuNetworksNone" = "Networks: None";
@@ -234,3 +233,7 @@
 // Mac detail view fields
 
 "macDetailFieldKey (%@)" = "%@:";
+
+// Mac status display
+
+"macStatus (%@)" = "Status: %@";
