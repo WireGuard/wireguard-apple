@@ -37,15 +37,15 @@ class TunnelsListTableViewController: NSViewController {
 
     let addMenu: NSMenu = {
         let addMenu = NSMenu(title: "TunnelsListAdd")
-        addMenu.addItem(withTitle: "Add empty tunnel", action: #selector(addEmptyTunnelClicked), keyEquivalent: "")
-        addMenu.addItem(withTitle: "Import tunnel(s) from file...", action: #selector(importTunnelClicked), keyEquivalent: "")
+        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(addEmptyTunnelClicked), keyEquivalent: "")
+        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(importTunnelClicked), keyEquivalent: "")
         return addMenu
     }()
 
     let actionMenu: NSMenu = {
         let actionMenu = NSMenu(title: "TunnelsListAction")
-        actionMenu.addItem(withTitle: "Export log to file", action: #selector(exportLogClicked), keyEquivalent: "")
-        actionMenu.addItem(withTitle: "Export tunnels to zip", action: #selector(exportTunnelsClicked), keyEquivalent: "")
+        actionMenu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(exportLogClicked), keyEquivalent: "")
+        actionMenu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(exportTunnelsClicked), keyEquivalent: "")
         return actionMenu
     }()
 
