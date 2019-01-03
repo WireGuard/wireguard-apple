@@ -16,6 +16,7 @@ class StatusMenu: NSMenu {
     lazy var manageTunnelsWindow: NSWindow = {
         let manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
         let window = NSWindow(contentViewController: manageTunnelsRootVC)
+        window.title = tr("macWindowTitleManageTunnels")
         window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
         return window
     }()
