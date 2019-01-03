@@ -221,7 +221,7 @@
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
 "alertSystemErrorMessageTunnelConfigurationUnknown" = "Unknown system error.";
 
-// Mac status bar menu
+// Mac status bar menu / pulldown menu
 
 "macMenuNetworks (%@)" = "Networks: %@";
 "macMenuNetworksInactive" = "Networks: -";
@@ -229,6 +229,9 @@
 
 "macMenuManageTunnels" = "Manage tunnels";
 "macMenuImportTunnels" = "Import tunnel(s) from file...";
+"macMenuAddEmptyTunnel" = "Add empty tunnel...";
+"macMenuExportLog" = "Export log to file...";
+"macMenuExportTunnels" = "Export tunnels to zip...";
 
 // Mac detail view fields
 
