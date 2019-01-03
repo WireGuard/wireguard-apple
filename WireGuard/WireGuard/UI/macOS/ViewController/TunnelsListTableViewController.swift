@@ -127,7 +127,15 @@ class TunnelsListTableViewController: NSViewController {
     }
 
     @objc func importTunnelClicked() {
-        print("importTunnelClicked")
+        guard let window = view.window else { return }
+        let openPanel = NSOpenPanel()
+        openPanel.allowedFileTypes = ["conf", "zip"]
+        openPanel.beginSheetModal(for: window) { [weak tunnelsManager] response in
+            guard let tunnelsManager = tunnelsManager else { return }
+            guard response == .OK else { return }
+            guard let url = openPanel.url else { return }
+            TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: nil, errorPresenterType: ErrorPresenter.self)
+        }
     }
 
     @objc func removeTunnelClicked() {
