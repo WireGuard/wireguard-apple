@@ -6,6 +6,7 @@ import Cocoa
 class ManageTunnelsRootViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
+    var tunnelsListVC: TunnelsListTableViewController?
     let tunnelDetailContainerView = NSView()
     var tunnelDetailContentVC: NSViewController?
 
@@ -34,11 +35,11 @@ class ManageTunnelsRootViewController: NSViewController {
             view.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: horizontalSpacing)
         ])
 
-        let tunnelsListVC = TunnelsListTableViewController(tunnelsManager: tunnelsManager)
-        tunnelsListVC.delegate = self
-        let tunnelsListView = tunnelsListVC.view
+        tunnelsListVC = TunnelsListTableViewController(tunnelsManager: tunnelsManager)
+        tunnelsListVC!.delegate = self
+        let tunnelsListView = tunnelsListVC!.view
 
-        addChild(tunnelsListVC)
+        addChild(tunnelsListVC!)
         view.addSubview(tunnelsListView)
         view.addSubview(tunnelDetailContainerView)
 

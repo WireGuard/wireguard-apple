@@ -13,9 +13,10 @@ class StatusMenu: NSMenu {
     var firstTunnelMenuItemIndex: Int = 0
     var numberOfTunnelMenuItems: Int = 0
 
+    var manageTunnelsRootVC: ManageTunnelsRootViewController?
     lazy var manageTunnelsWindow: NSWindow = {
-        let manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
-        let window = NSWindow(contentViewController: manageTunnelsRootVC)
+        manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
+        let window = NSWindow(contentViewController: manageTunnelsRootVC!)
         window.title = tr("macWindowTitleManageTunnels")
         window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
         return window
@@ -196,19 +197,23 @@ extension StatusMenu: TunnelsManagerListDelegate {
     func tunnelAdded(at index: Int) {
         let tunnel = tunnelsManager.tunnel(at: index)
         insertTunnelMenuItem(for: tunnel, at: index)
+        manageTunnelsRootVC?.tunnelsListVC?.tunnelAdded(at: index)
     }
 
     func tunnelModified(at index: Int) {
         if let tunnelMenuItem = item(at: firstTunnelMenuItemIndex + index) {
             updateTunnelMenuItem(tunnelMenuItem)
         }
+        manageTunnelsRootVC?.tunnelsListVC?.tunnelModified(at: index)
     }
 
     func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
         moveTunnelMenuItem(from: oldIndex, to: newIndex)
+        manageTunnelsRootVC?.tunnelsListVC?.tunnelMoved(from: oldIndex, to: newIndex)
     }
 
     func tunnelRemoved(at index: Int) {
         removeTunnelMenuItem(at: index)
+        manageTunnelsRootVC?.tunnelsListVC?.tunnelRemoved(at: index)
     }
 }

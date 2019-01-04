@@ -206,6 +206,24 @@ class TunnelsListTableViewController: NSViewController {
     }
 }
 
+extension TunnelsListTableViewController {
+    func tunnelAdded(at index: Int) {
+        tableView.insertRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
+    }
+
+    func tunnelModified(at index: Int) {
+        tableView.reloadData(forRowIndexes: IndexSet(integer: index), columnIndexes: IndexSet(integer: 0))
+    }
+
+    func tunnelMoved(from oldIndex: Int, to newIndex: Int) {
+        tableView.moveRow(at: oldIndex, to: newIndex)
+    }
+
+    func tunnelRemoved(at index: Int) {
+        tableView.removeRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
+    }
+}
+
 extension TunnelsListTableViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return tunnelsManager.numberOfTunnels()
