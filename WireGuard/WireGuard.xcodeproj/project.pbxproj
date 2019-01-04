@@ -744,6 +744,9 @@
 							com.apple.NetworkExtensions = {
 								enabled = 1;
 							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
 						};
 					};
 					6FB1BD9021D4BFE600A991BF = {

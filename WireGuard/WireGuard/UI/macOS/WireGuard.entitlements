@@ -12,7 +12,7 @@
 	<array>
 		<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 	</array>
-	<key>com.apple.security.files.user-selected.read-only</key>
+	<key>com.apple.security.files.user-selected.read-write</key>
 	<true/>
 </dict>
 </plist>
