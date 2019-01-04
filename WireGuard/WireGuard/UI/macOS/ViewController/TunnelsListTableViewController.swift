@@ -61,7 +61,7 @@ class TunnelsListTableViewController: NSViewController {
     override func loadView() {
         tableView.dataSource = self
         tableView.delegate = self
-        selectFirstTunnel()
+        selectTunnel(at: 0)
 
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
@@ -140,7 +140,30 @@ class TunnelsListTableViewController: NSViewController {
     }
 
     @objc func removeTunnelClicked() {
-        print("removeTunnelClicked")
+        guard let window = view.window else { return }
+        let selectedTunnelIndex = tableView.selectedRow
+        let selectedTunnel = tunnelsManager.tunnel(at: selectedTunnelIndex)
+        let alert = NSAlert()
+        alert.messageText = tr(format: "macDeleteTunnelConfirmationAlertMessage (%@)", selectedTunnel.name)
+        alert.informativeText = tr("macDeleteTunnelConfirmationAlertInfo")
+        alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleDelete"))
+        alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleCancel"))
+        alert.beginSheetModal(for: window) { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.buttonBar.setEnabled(false, forSegment: 1)
+            self?.tunnelsManager.remove(tunnel: selectedTunnel) { [weak self] error in
+                guard let self = self else { return }
+                self.buttonBar.setEnabled(true, forSegment: 1)
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
+                }
+                let tunnelIndex = min(selectedTunnelIndex, self.tunnelsManager.numberOfTunnels() - 1)
+                if tunnelIndex > 0 {
+                    self.selectTunnel(at: tunnelIndex)
+                }
+            }
+        }
     }
 
     @objc func exportLogClicked() {
@@ -199,10 +222,12 @@ class TunnelsListTableViewController: NSViewController {
     }
 
     @discardableResult
-    private func selectFirstTunnel() -> Bool {
-        guard tunnelsManager.numberOfTunnels() > 0 else { return false }
-        tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
-        return true
+    private func selectTunnel(at index: Int) -> Bool {
+        if index < tunnelsManager.numberOfTunnels() {
+            tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+            return true
+        }
+        return false
     }
 }
 
