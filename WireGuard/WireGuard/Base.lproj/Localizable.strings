@@ -233,9 +233,14 @@
 "macMenuExportLog" = "Export log to file...";
 "macMenuExportTunnels" = "Export tunnels to zip...";
 
-// Mac window title
+// Mac manage tunnels window
 
 "macWindowTitleManageTunnels" = "Manage WireGuard Tunnels";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Are you sure you want to delete tunnel \"%@\"?";
+"macDeleteTunnelConfirmationAlertInfo" = "You can't undo this action";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
 
 // Mac detail view fields
 
