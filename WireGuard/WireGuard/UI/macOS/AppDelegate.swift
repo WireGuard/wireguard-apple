@@ -9,6 +9,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
+
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
             guard result.isSuccess else { return } // TODO: Show alert
