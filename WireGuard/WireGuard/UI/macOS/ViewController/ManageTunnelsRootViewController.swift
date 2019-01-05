@@ -82,7 +82,8 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
         setTunnelDetailContentVC(tunnelDetailVC)
     }
 
-    func tunnelListEmpty() {
-        // TODO
+    func tunnelsListEmpty() {
+        let noTunnelsVC = NoTunnelsDetailViewController(tunnelsManager: tunnelsManager)
+        setTunnelDetailContentVC(noTunnelsVC)
     }
 }

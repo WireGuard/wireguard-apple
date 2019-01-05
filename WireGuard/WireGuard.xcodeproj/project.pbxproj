@@ -117,6 +117,7 @@
 		6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */; };
 		6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA104121D6BC210051C35F /* ErrorPresenter.swift */; };
 		6FBA104621D7EBFA0051C35F /* TunnelsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */; };
+		6FCD99AA21E0E14700BA4C82 /* NoTunnelsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCD99A821E0E0C700BA4C82 /* NoTunnelsDetailViewController.swift */; };
 		6FDB3C3B21DCF47400A0C0BF /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDB3C3A21DCF47400A0C0BF /* TunnelDetailTableViewController.swift */; };
 		6FDB3C3C21DCF6BB00A0C0BF /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */; };
@@ -270,6 +271,7 @@
 		6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelImporter.swift; sourceTree = "<group>"; };
 		6FBA104121D6BC210051C35F /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsListTableViewController.swift; sourceTree = "<group>"; };
+		6FCD99A821E0E0C700BA4C82 /* NoTunnelsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoTunnelsDetailViewController.swift; sourceTree = "<group>"; };
 		6FDB3C3A21DCF47400A0C0BF /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
 		6FDEF7E321846C1A00D8FBF6 /* libwg-go.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FDEF7E52185EFAF00D8FBF6 /* QRScanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRScanViewController.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 				6FBA104521D7EBFA0051C35F /* TunnelsListTableViewController.swift */,
 				6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */,
 				6FDB3C3A21DCF47400A0C0BF /* TunnelDetailTableViewController.swift */,
+				6FCD99A821E0E0C700BA4C82 /* NoTunnelsDetailViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -1086,6 +1089,7 @@
 				6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */,
 				6FB1BDC221D50F0300A991BF /* LegacyConfigMigration.swift in Sources */,
 				6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */,
+				6FCD99AA21E0E14700BA4C82 /* NoTunnelsDetailViewController.swift in Sources */,
 				6FB1BDC321D50F0300A991BF /* TunnelConfiguration.swift in Sources */,
 				6FB1BDC421D50F0300A991BF /* IPAddressRange.swift in Sources */,
 				6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */,

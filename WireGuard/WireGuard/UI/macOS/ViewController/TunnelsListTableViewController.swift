@@ -5,7 +5,7 @@ import Cocoa
 
 protocol TunnelsListTableViewControllerDelegate: class {
     func tunnelSelected(tunnel: TunnelContainer)
-    func tunnelListEmpty()
+    func tunnelsListEmpty()
 }
 
 class TunnelsListTableViewController: NSViewController {
@@ -61,7 +61,10 @@ class TunnelsListTableViewController: NSViewController {
     override func loadView() {
         tableView.dataSource = self
         tableView.delegate = self
-        selectTunnel(at: 0)
+        let isSelected = selectTunnel(at: 0)
+        if !isSelected {
+            delegate?.tunnelsListEmpty()
+        }
 
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
@@ -246,6 +249,9 @@ extension TunnelsListTableViewController {
 
     func tunnelRemoved(at index: Int) {
         tableView.removeRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
+        if tunnelsManager.numberOfTunnels() == 0 {
+            delegate?.tunnelsListEmpty()
+        }
     }
 }
 
@@ -263,12 +269,7 @@ extension TunnelsListTableViewController: NSTableViewDelegate {
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
-        guard tableView.selectedRow >= 0 else {
-            if tunnelsManager.numberOfTunnels() == 0 {
-                delegate?.tunnelListEmpty()
-            }
-            return
-        }
+        guard tableView.selectedRow >= 0 else { return }
         let selectedTunnel = tunnelsManager.tunnel(at: tableView.selectedRow)
         delegate?.tunnelSelected(tunnel: selectedTunnel)
     }
