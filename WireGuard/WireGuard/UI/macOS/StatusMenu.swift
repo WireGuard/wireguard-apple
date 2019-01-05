@@ -132,14 +132,7 @@ class StatusMenu: NSMenu {
     @objc func importTunnelsClicked() {
         NSApp.activate(ignoringOtherApps: true)
         manageTunnelsWindow.makeKeyAndOrderFront(self)
-        let openPanel = NSOpenPanel()
-        openPanel.allowedFileTypes = ["conf", "zip"]
-        openPanel.beginSheetModal(for: manageTunnelsWindow) { [weak tunnelsManager] response in
-            guard let tunnelsManager = tunnelsManager else { return }
-            guard response == .OK else { return }
-            guard let url = openPanel.url else { return }
-            TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: nil, errorPresenterType: ErrorPresenter.self)
-        }
+        ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: manageTunnelsRootVC!)
     }
 }
 
