@@ -229,6 +229,9 @@ class TunnelsListTableViewController: NSViewController {
 extension TunnelsListTableViewController {
     func tunnelAdded(at index: Int) {
         tableView.insertRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
+        if tunnelsManager.numberOfTunnels() == 1 {
+            selectTunnel(at: 0)
+        }
     }
 
     func tunnelModified(at index: Int) {
