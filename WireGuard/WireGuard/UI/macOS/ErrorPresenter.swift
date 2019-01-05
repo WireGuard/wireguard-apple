@@ -9,7 +9,15 @@ class ErrorPresenter: ErrorPresenterProtocol {
         alert.messageText = title
         alert.informativeText = message
         onPresented?()
-        alert.runModal()
-        onDismissal?()
+        if let sourceVC = sourceVC as? NSViewController {
+            NSApp.activate(ignoringOtherApps: true)
+            sourceVC.view.window!.makeKeyAndOrderFront(nil)
+            alert.beginSheetModal(for: sourceVC.view.window!) { _ in
+                onDismissal?()
+            }
+        } else {
+            alert.runModal()
+            onDismissal?()
+        }
     }
 }
