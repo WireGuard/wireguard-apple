@@ -242,6 +242,8 @@
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
 
+"macButtonImportTunnels" = "Import tunnel(s) from file";
+
 // Mac detail view fields
 
 "macDetailFieldKey (%@)" = "%@:";
