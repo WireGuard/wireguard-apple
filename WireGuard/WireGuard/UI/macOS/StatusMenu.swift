@@ -217,3 +217,29 @@ extension StatusMenu: TunnelsManagerListDelegate {
         manageTunnelsRootVC?.tunnelsListVC?.tunnelRemoved(at: index)
     }
 }
+
+extension StatusMenu: TunnelsManagerActivationDelegate {
+    func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) {
+        if let manageTunnelsRootVC = manageTunnelsRootVC, manageTunnelsWindow.isVisible {
+            ErrorPresenter.showErrorAlert(error: error, from: manageTunnelsRootVC)
+        } else {
+            ErrorPresenter.showErrorAlert(error: error, from: nil)
+        }
+    }
+
+    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
+    }
+
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) {
+        if let manageTunnelsRootVC = manageTunnelsRootVC, manageTunnelsWindow.isVisible {
+            ErrorPresenter.showErrorAlert(error: error, from: manageTunnelsRootVC)
+        } else {
+            ErrorPresenter.showErrorAlert(error: error, from: nil)
+        }
+    }
+
+    func tunnelActivationSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do
+    }
+}
