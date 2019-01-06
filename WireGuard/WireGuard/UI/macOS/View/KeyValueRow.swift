@@ -3,7 +3,7 @@
 
 import Cocoa
 
-class KeyValueRow: NSView {
+class EditableKeyValueRow: NSView {
     let keyLabel: NSTextField = {
         let keyLabel = NSTextField()
         keyLabel.isEditable = false
@@ -18,12 +18,9 @@ class KeyValueRow: NSView {
 
     let valueLabel: NSTextField = {
         let valueLabel = NSTextField()
-        valueLabel.isEditable = false
         valueLabel.isSelectable = true
-        valueLabel.isBordered = false
         valueLabel.maximumNumberOfLines = 1
         valueLabel.lineBreakMode = .byTruncatingTail
-        valueLabel.backgroundColor = .clear
         return valueLabel
     }()
 
@@ -44,6 +41,11 @@ class KeyValueRow: NSView {
                 keyLabel.font = NSFont.systemFont(ofSize: 0)
             }
         }
+    }
+
+    override var intrinsicContentSize: NSSize {
+        let height = max(keyLabel.intrinsicContentSize.height, valueLabel.intrinsicContentSize.height)
+        return NSSize(width: NSView.noIntrinsicMetric, height: height)
     }
 
     init() {
@@ -72,5 +74,18 @@ class KeyValueRow: NSView {
         key = ""
         value = ""
         isKeyInBold = false
+    }
+}
+
+class KeyValueRow: EditableKeyValueRow {
+    override init() {
+        super.init()
+        valueLabel.isEditable = false
+        valueLabel.isBordered = false
+        valueLabel.backgroundColor = .clear
+    }
+
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

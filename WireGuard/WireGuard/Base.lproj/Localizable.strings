@@ -244,10 +244,15 @@
 
 "macButtonImportTunnels" = "Import tunnel(s) from file";
 
-// Mac detail view fields
+// Mac detail/edit view fields
 
-"macDetailFieldKey (%@)" = "%@:";
+"macFieldKey (%@)" = "%@:";
 
 // Mac status display
 
 "macStatus (%@)" = "Status: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "Discard";
+"macEditSave" = "Save";
