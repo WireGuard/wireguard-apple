@@ -191,7 +191,8 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     @objc func editButtonClicked() {
-        print("editButtonClicked")
+        let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+        presentAsSheet(tunnelEditVC)
     }
 
     @objc func statusCheckboxToggled(sender: AnyObject?) {
@@ -217,14 +218,14 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         case .interfaceFieldRow(let field):
             let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
-            cell.key = tr(format: "macDetailFieldKey (%@)", localizedKeyString)
+            cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
             cell.value = tunnelViewModel.interfaceData[field]
             cell.isKeyInBold = modelRow.isTitleRow()
             return cell
         case .peerFieldRow(let peerData, let field):
             let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
-            cell.key = tr(format: "macDetailFieldKey (%@)", localizedKeyString)
+            cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
             cell.value = peerData[field]
             cell.isKeyInBold = modelRow.isTitleRow()
             return cell
