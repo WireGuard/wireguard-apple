@@ -3,7 +3,7 @@
 
 import Cocoa
 
-class KeyValueCell: NSView {
+class KeyValueRow: NSView {
     let keyLabel: NSTextField = {
         let keyLabel = NSTextField()
         keyLabel.isEditable = false

@@ -3,7 +3,7 @@
 
 import Cocoa
 
-class TunnelListCell: NSView {
+class TunnelListRow: NSView {
     var tunnel: TunnelContainer? {
         didSet(value) {
             // Bind to the tunnel's name
@@ -12,9 +12,9 @@ class TunnelListCell: NSView {
                 self?.nameLabel.stringValue = tunnel.name
             }
             // Bind to the tunnel's status
-            statusImageView.image = TunnelListCell.image(for: tunnel?.status)
+            statusImageView.image = TunnelListRow.image(for: tunnel?.status)
             statusObservationToken = tunnel?.observe(\TunnelContainer.status) { [weak self] tunnel, _ in
-                self?.statusImageView.image = TunnelListCell.image(for: tunnel.status)
+                self?.statusImageView.image = TunnelListRow.image(for: tunnel.status)
             }
         }
     }

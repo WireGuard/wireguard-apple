@@ -215,14 +215,14 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         let modelRow = tableViewModelRows[row]
         switch modelRow {
         case .interfaceFieldRow(let field):
-            let cell: KeyValueCell = tableView.dequeueReusableCell()
+            let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
             cell.key = tr(format: "macDetailFieldKey (%@)", localizedKeyString)
             cell.value = tunnelViewModel.interfaceData[field]
             cell.isKeyInBold = modelRow.isTitleRow()
             return cell
         case .peerFieldRow(let peerData, let field):
-            let cell: KeyValueCell = tableView.dequeueReusableCell()
+            let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
             cell.key = tr(format: "macDetailFieldKey (%@)", localizedKeyString)
             cell.value = peerData[field]

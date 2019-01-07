@@ -258,7 +258,7 @@ extension TunnelsListTableViewController: NSTableViewDataSource {
 
 extension TunnelsListTableViewController: NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell: TunnelListCell = tableView.dequeueReusableCell()
+        let cell: TunnelListRow = tableView.dequeueReusableCell()
         cell.tunnel = tunnelsManager.tunnel(at: row)
         return cell
     }
