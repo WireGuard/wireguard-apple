@@ -3,3 +3,4 @@
 #include "zip.h"
 #include "wireguard-go-version.h"
 #include "ringlogger.h"
+#include "highlighter.h"
