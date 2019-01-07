@@ -6,28 +6,30 @@
 #include <sys/types.h>
 
 enum highlight_type {
-    HighlightSection,
-    HighlightKeytype,
-    HighlightKey,
-    HighlightCmd,
-    HighlightIP,
-    HighlightCidr,
-    HighlightHost,
-    HighlightPort,
-    HighlightTable,
-    HighlightFwMark,
-    HighlightMTU,
-    HighlightSaveConfig,
-    HighlightKeepalive,
-    HighlightComment,
-    HighlightDelimiter,
-    HighlightError,
-    HighlightEnd
+	HighlightSection,
+	HighlightKeytype,
+	HighlightKey,
+	HighlightIP,
+	HighlightCidr,
+	HighlightHost,
+	HighlightPort,
+	HighlightMTU,
+	HighlightKeepalive,
+	HighlightComment,
+	HighlightDelimiter,
+#ifndef MOBILE_WGQUICK_SUBSET
+	HighlightTable,
+	HighlightFwMark,
+	HighlightSaveConfig,
+	HighlightCmd,
+#endif
+	HighlightError,
+	HighlightEnd
 };
 
 struct highlight_span {
-    enum highlight_type type;
-    size_t start, len;
+	enum highlight_type type;
+	size_t start, len;
 };
 
 struct highlight_span *highlight_config(const char *config);
