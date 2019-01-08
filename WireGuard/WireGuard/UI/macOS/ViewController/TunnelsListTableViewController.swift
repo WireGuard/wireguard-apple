@@ -138,6 +138,7 @@ class TunnelsListTableViewController: NSViewController {
     @objc func removeTunnelClicked() {
         guard let window = view.window else { return }
         let selectedTunnelIndex = tableView.selectedRow
+        guard selectedTunnelIndex >= 0 && selectedTunnelIndex < tunnelsManager.numberOfTunnels() else { return }
         let selectedTunnel = tunnelsManager.tunnel(at: selectedTunnelIndex)
         let alert = NSAlert()
         alert.messageText = tr(format: "macDeleteTunnelConfirmationAlertMessage (%@)", selectedTunnel.name)
@@ -149,13 +150,13 @@ class TunnelsListTableViewController: NSViewController {
             self?.buttonBar.setEnabled(false, forSegment: 1)
             self?.tunnelsManager.remove(tunnel: selectedTunnel) { [weak self] error in
                 guard let self = self else { return }
-                self.buttonBar.setEnabled(true, forSegment: 1)
+                defer { self.buttonBar.setEnabled(true, forSegment: 1) }
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
                 let tunnelIndex = min(selectedTunnelIndex, self.tunnelsManager.numberOfTunnels() - 1)
-                if tunnelIndex > 0 {
+                if tunnelIndex >= 0 {
                     self.selectTunnel(at: tunnelIndex)
                 }
             }
