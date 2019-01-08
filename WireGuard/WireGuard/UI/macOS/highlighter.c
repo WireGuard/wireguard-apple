@@ -470,9 +470,13 @@ static void highlight_value(struct highlight_span_array *ret, const string_span_
 {
 	switch (section) {
 	case PrivateKey:
+		append_highlight_span(ret, parent.s, s, is_valid_key(s) ? HighlightPrivateKey : HighlightError);
+		break;
 	case PublicKey:
+		append_highlight_span(ret, parent.s, s, is_valid_key(s) ? HighlightPublicKey : HighlightError);
+		break;
 	case PresharedKey:
-		append_highlight_span(ret, parent.s, s, is_valid_key(s) ? HighlightKey : HighlightError);
+		append_highlight_span(ret, parent.s, s, is_valid_key(s) ? HighlightPresharedKey : HighlightError);
 		break;
 	case MTU:
 		append_highlight_span(ret, parent.s, s, is_valid_mtu(s) ? HighlightMTU : HighlightError);

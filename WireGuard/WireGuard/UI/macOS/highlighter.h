@@ -8,7 +8,9 @@
 enum highlight_type {
 	HighlightSection,
 	HighlightKeytype,
-	HighlightKey,
+	HighlightPrivateKey,
+	HighlightPublicKey,
+	HighlightPresharedKey,
 	HighlightIP,
 	HighlightCidr,
 	HighlightHost,
