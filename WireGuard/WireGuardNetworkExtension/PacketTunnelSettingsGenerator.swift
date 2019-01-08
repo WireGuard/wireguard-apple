@@ -63,9 +63,7 @@ class PacketTunnelSettingsGenerator {
          * make sense. So, we fill it in with this placeholder, which is not
          * a valid IP address that will actually route over the Internet.
          */
-        let remoteAddress = "0.0.0.0"
-
-        let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: remoteAddress)
+        let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "127.0.0.1")
 
         let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
         let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
