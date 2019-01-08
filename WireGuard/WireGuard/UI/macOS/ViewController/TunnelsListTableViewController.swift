@@ -234,6 +234,10 @@ extension TunnelsListTableViewController {
         if tunnelsManager.numberOfTunnels() == 1 {
             selectTunnel(at: 0)
         }
+        if !NSApp.isActive {
+            // macOS's VPN prompt might have caused us to lose focus
+            NSApp.activate(ignoringOtherApps: true)
+        }
     }
 
     func tunnelModified(at index: Int) {
