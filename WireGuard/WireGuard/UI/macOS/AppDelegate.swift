@@ -13,7 +13,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
-            guard result.isSuccess else { return } // TODO: Show alert
+            if let error = result.error {
+                ErrorPresenter.showErrorAlert(error: error, from: nil)
+                return
+            }
 
             let tunnelsManager: TunnelsManager = result.value!
             let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
