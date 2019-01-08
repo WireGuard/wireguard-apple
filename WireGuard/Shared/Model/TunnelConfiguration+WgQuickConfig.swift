@@ -12,16 +12,28 @@ extension TunnelConfiguration {
     }
 
     enum ParseError: Error {
-        case invalidLine(_ line: String.SubSequence)
+        case invalidLine(String.SubSequence)
         case noInterface
-        case invalidInterface
         case multipleInterfaces
+        case interfaceHasNoPrivateKey
+        case interfaceHasInvalidPrivateKey(String)
+        case interfaceHasInvalidListenPort(String)
+        case interfaceHasInvalidAddress(String)
+        case interfaceHasInvalidDNS(String)
+        case interfaceHasInvalidMTU(String)
+        case interfaceHasUnrecognizedKey(String)
+        case peerHasNoPublicKey
+        case peerHasInvalidPublicKey(String)
+        case peerHasInvalidPreSharedKey(String)
+        case peerHasInvalidAllowedIP(String)
+        case peerHasInvalidEndpoint(String)
+        case peerHasInvalidPersistentKeepAlive(String)
+        case peerHasUnrecognizedKey(String)
         case multiplePeersWithSamePublicKey
-        case invalidPeer
     }
 
     //swiftlint:disable:next function_body_length cyclomatic_complexity
-    convenience init(fromWgQuickConfig wgQuickConfig: String, called name: String? = nil) throws {
+    convenience init(fromWgQuickConfig wgQuickConfig: String, called name: String? = nil, ignoreUnrecognizedKeys: Bool = true) throws {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
 
@@ -45,13 +57,27 @@ extension TunnelConfiguration {
 
             if let equalsIndex = line.firstIndex(of: "=") {
                 // Line contains an attribute
-                let key = line[..<equalsIndex].trimmingCharacters(in: .whitespaces).lowercased()
+                let keyWithCase = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
+                let key = keyWithCase.lowercased()
                 let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
                 let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
                 if let presentValue = attributes[key], keysWithMultipleEntriesAllowed.contains(key) {
                     attributes[key] = presentValue + "," + value
                 } else {
                     attributes[key] = value
+                }
+                if !ignoreUnrecognizedKeys {
+                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
+                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
+                    if parserState == .inInterfaceSection {
+                        guard interfaceSectionKeys.contains(key) else {
+                            throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
+                        }
+                    } else if parserState == .inPeerSection {
+                        guard peerSectionKeys.contains(key) else {
+                            throw ParseError.peerHasUnrecognizedKey(keyWithCase)
+                        }
+                    }
                 }
             } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
                 throw ParseError.invalidLine(line)
@@ -62,11 +88,11 @@ extension TunnelConfiguration {
             if isLastLine || lowercasedLine == "[interface]" || lowercasedLine == "[peer]" {
                 // Previous section has ended; process the attributes collected so far
                 if parserState == .inInterfaceSection {
-                    guard let interface = TunnelConfiguration.collate(interfaceAttributes: attributes) else { throw ParseError.invalidInterface }
+                    let interface = try TunnelConfiguration.collate(interfaceAttributes: attributes)
                     guard interfaceConfiguration == nil else { throw ParseError.multipleInterfaces }
                     interfaceConfiguration = interface
                 } else if parserState == .inPeerSection {
-                    guard let peer = TunnelConfiguration.collate(peerAttributes: attributes) else { throw ParseError.invalidPeer }
+                    let peer = try TunnelConfiguration.collate(peerAttributes: attributes)
                     peerConfigurations.append(peer)
                 }
             }
@@ -133,21 +159,26 @@ extension TunnelConfiguration {
     }
 
     //swiftlint:disable:next cyclomatic_complexity
-    private static func collate(interfaceAttributes attributes: [String: String]) -> InterfaceConfiguration? {
-        // required wg fields
-        guard let privateKeyString = attributes["privatekey"] else { return nil }
-        guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else { return nil }
+    private static func collate(interfaceAttributes attributes: [String: String]) throws -> InterfaceConfiguration {
+        guard let privateKeyString = attributes["privatekey"] else {
+            throw ParseError.interfaceHasNoPrivateKey
+        }
+        guard let privateKey = Data(base64Encoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
+            throw ParseError.interfaceHasInvalidPrivateKey(privateKeyString)
+        }
         var interface = InterfaceConfiguration(privateKey: privateKey)
-        // other wg fields
         if let listenPortString = attributes["listenport"] {
-            guard let listenPort = UInt16(listenPortString) else { return nil }
+            guard let listenPort = UInt16(listenPortString) else {
+                throw ParseError.interfaceHasInvalidListenPort(listenPortString)
+            }
             interface.listenPort = listenPort
         }
-        // wg-quick fields
         if let addressesString = attributes["address"] {
             var addresses = [IPAddressRange]()
             for addressString in addressesString.splitToArray(trimmingCharacters: .whitespaces) {
-                guard let address = IPAddressRange(from: addressString) else { return nil }
+                guard let address = IPAddressRange(from: addressString) else {
+                    throw ParseError.interfaceHasInvalidAddress(addressString)
+                }
                 addresses.append(address)
             }
             interface.addresses = addresses
@@ -155,43 +186,57 @@ extension TunnelConfiguration {
         if let dnsString = attributes["dns"] {
             var dnsServers = [DNSServer]()
             for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespaces) {
-                guard let dnsServer = DNSServer(from: dnsServerString) else { return nil }
+                guard let dnsServer = DNSServer(from: dnsServerString) else {
+                    throw ParseError.interfaceHasInvalidDNS(dnsServerString)
+                }
                 dnsServers.append(dnsServer)
             }
             interface.dns = dnsServers
         }
         if let mtuString = attributes["mtu"] {
-            guard let mtu = UInt16(mtuString) else { return nil }
+            guard let mtu = UInt16(mtuString) else {
+                throw ParseError.interfaceHasInvalidMTU(mtuString)
+            }
             interface.mtu = mtu
         }
         return interface
     }
 
     //swiftlint:disable:next cyclomatic_complexity
-    private static func collate(peerAttributes attributes: [String: String]) -> PeerConfiguration? {
-        // required wg fields
-        guard let publicKeyString = attributes["publickey"] else { return nil }
-        guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else { return nil }
+    private static func collate(peerAttributes attributes: [String: String]) throws -> PeerConfiguration {
+        guard let publicKeyString = attributes["publickey"] else {
+            throw ParseError.peerHasNoPublicKey
+        }
+        guard let publicKey = Data(base64Encoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
+            throw ParseError.peerHasInvalidPublicKey(publicKeyString)
+        }
         var peer = PeerConfiguration(publicKey: publicKey)
-        // wg fields
         if let preSharedKeyString = attributes["presharedkey"] {
-            guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else { return nil }
+            guard let preSharedKey = Data(base64Encoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else {
+                throw ParseError.peerHasInvalidPreSharedKey(preSharedKeyString)
+            }
             peer.preSharedKey = preSharedKey
         }
         if let allowedIPsString = attributes["allowedips"] {
             var allowedIPs = [IPAddressRange]()
             for allowedIPString in allowedIPsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
-                guard let allowedIP = IPAddressRange(from: allowedIPString) else { return nil }
+                guard let allowedIP = IPAddressRange(from: allowedIPString) else {
+                    throw ParseError.peerHasInvalidAllowedIP(allowedIPString)
+                }
                 allowedIPs.append(allowedIP)
             }
             peer.allowedIPs = allowedIPs
         }
         if let endpointString = attributes["endpoint"] {
-            guard let endpoint = Endpoint(from: endpointString) else { return nil }
+            guard let endpoint = Endpoint(from: endpointString) else {
+                throw ParseError.peerHasInvalidEndpoint(endpointString)
+            }
             peer.endpoint = endpoint
         }
         if let persistentKeepAliveString = attributes["persistentkeepalive"] {
-            guard let persistentKeepAlive = UInt16(persistentKeepAliveString) else { return nil }
+            guard let persistentKeepAlive = UInt16(persistentKeepAliveString) else {
+                throw ParseError.peerHasInvalidPersistentKeepAlive(persistentKeepAliveString)
+            }
             peer.persistentKeepAlive = persistentKeepAlive
         }
         return peer
