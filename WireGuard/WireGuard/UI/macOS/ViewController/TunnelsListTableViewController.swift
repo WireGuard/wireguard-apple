@@ -165,8 +165,8 @@ class TunnelsListTableViewController: NSViewController {
     @objc func exportLogClicked() {
         guard let window = view.window else { return }
         let savePanel = NSSavePanel()
-        savePanel.prompt = "Save"
-        savePanel.nameFieldLabel = "Export log to"
+        savePanel.prompt = tr("macSheetButtonExportLog")
+        savePanel.nameFieldLabel = tr("macNameFieldExportLog")
 
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
@@ -199,8 +199,8 @@ class TunnelsListTableViewController: NSViewController {
         guard let window = view.window else { return }
         let savePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["zip"]
-        savePanel.prompt = "Save"
-        savePanel.nameFieldLabel = "Export tunnels to"
+        savePanel.prompt = tr("macSheetButtonExportZip")
+        savePanel.nameFieldLabel = tr("macNameFieldExportZip")
         savePanel.nameFieldStringValue = "wireguard-export.zip"
         savePanel.beginSheetModal(for: window) { [weak tunnelsManager] response in
             guard let tunnelsManager = tunnelsManager else { return }
