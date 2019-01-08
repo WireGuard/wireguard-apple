@@ -8,12 +8,14 @@ class TunnelDetailTableViewController: NSViewController {
     private enum TableViewModelRow {
         case interfaceFieldRow(TunnelViewModel.InterfaceField)
         case peerFieldRow(peer: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField)
+        case onDemandRow
         case spacerRow
 
         func localizedSectionKeyString() -> String {
             switch self {
             case .interfaceFieldRow: return tr("tunnelSectionTitleInterface")
             case .peerFieldRow: return tr("tunnelSectionTitlePeer")
+            case .onDemandRow: return ""
             case .spacerRow: return ""
             }
         }
@@ -22,6 +24,7 @@ class TunnelDetailTableViewController: NSViewController {
             switch self {
             case .interfaceFieldRow(let field): return field == .name
             case .peerFieldRow(_, let field): return field == .publicKey
+            case .onDemandRow: return true
             case .spacerRow: return false
             }
         }
@@ -163,6 +166,8 @@ class TunnelDetailTableViewController: NSViewController {
                 tableViewModelRows.append(.peerFieldRow(peer: peerData, field: field))
             }
         }
+        tableViewModelRows.append(.spacerRow)
+        tableViewModelRows.append(.onDemandRow)
     }
 
     func updateStatus() {
@@ -232,6 +237,12 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             return cell
         case .spacerRow:
             return NSView()
+        case .onDemandRow:
+            let cell: KeyValueRow = tableView.dequeueReusableCell()
+            cell.key = tr("macFieldOnDemand")
+            cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
+            cell.isKeyInBold = true
+            return cell
         }
     }
 }

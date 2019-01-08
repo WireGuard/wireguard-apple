@@ -59,6 +59,7 @@
 		6F919EDA218C65C50023B400 /* wireguard_doc_logo_44x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED6218C65C50023B400 /* wireguard_doc_logo_44x58.png */; };
 		6F919EDB218C65C50023B400 /* wireguard_doc_logo_64x64.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED7218C65C50023B400 /* wireguard_doc_logo_64x64.png */; };
 		6F919EDC218C65C50023B400 /* wireguard_doc_logo_320x320.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED8218C65C50023B400 /* wireguard_doc_logo_320x320.png */; };
+		6F9B582921E8D6D100544D02 /* PopupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9B582721E8CD4300544D02 /* PopupRow.swift */; };
 		6FB1017921C57DE600766195 /* MockTunnels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1017821C57DE600766195 /* MockTunnels.swift */; };
 		6FB1BD6021D2607A00A991BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */; };
 		6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB1BD6121D2607E00A991BF /* Assets.xcassets */; };
@@ -267,6 +268,7 @@
 		6F919ED6218C65C50023B400 /* wireguard_doc_logo_44x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_44x58.png; sourceTree = "<group>"; };
 		6F919ED7218C65C50023B400 /* wireguard_doc_logo_64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_64x64.png; sourceTree = "<group>"; };
 		6F919ED8218C65C50023B400 /* wireguard_doc_logo_320x320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_320x320.png; sourceTree = "<group>"; };
+		6F9B582721E8CD4300544D02 /* PopupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupRow.swift; sourceTree = "<group>"; };
 		6FB1017821C57DE600766195 /* MockTunnels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTunnels.swift; sourceTree = "<group>"; };
 		6FB1BD5D21D2607A00A991BF /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 				6F613D9A21DE33B8004B217A /* KeyValueRow.swift */,
 				5F52D0BA21E3781B00283CEA /* ConfTextView.swift */,
 				5F52D0BC21E3785C00283CEA /* ConfTextStorage.swift */,
+				6F9B582721E8CD4300544D02 /* PopupRow.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1103,6 +1106,7 @@
 				6FCD99B121E0EDA900BA4C82 /* TunnelEditViewController.swift in Sources */,
 				6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */,
 				6FB1BDCB21D50F1700A991BF /* Curve25519.swift in Sources */,
+				6F9B582921E8D6D100544D02 /* PopupRow.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,
 				6FB1BDBD21D50F0200A991BF /* ringlogger.h in Sources */,

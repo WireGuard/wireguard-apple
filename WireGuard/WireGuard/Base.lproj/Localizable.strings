@@ -255,6 +255,7 @@
 // Mac detail/edit view fields
 
 "macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "On-Demand:";
 
 // Mac status display
 

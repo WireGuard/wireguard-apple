@@ -41,6 +41,12 @@ class TunnelEditViewController: NSViewController {
         return textView
     }()
 
+    let onDemandRow: PopupRow = {
+        let popupRow = PopupRow()
+        popupRow.key = tr("macFieldOnDemand")
+        return popupRow
+    }()
+
     let scrollView: NSScrollView = {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
@@ -64,6 +70,13 @@ class TunnelEditViewController: NSViewController {
         return button
     }()
 
+    let activateOnDemandOptions: [ActivateOnDemandOption] = [
+        .none,
+        .useOnDemandOverWiFiOrEthernet,
+        .useOnDemandOverWiFiOnly,
+        .useOnDemandOverEthernetOnly
+    ]
+
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
 
@@ -82,6 +95,7 @@ class TunnelEditViewController: NSViewController {
     }
 
     func populateTextFields() {
+        let selectedActivateOnDemandOption: ActivateOnDemandOption
         if let tunnel = tunnel {
             // Editing an existing tunnel
             let tunnelConfiguration = tunnel.tunnelConfiguration!
@@ -99,6 +113,11 @@ class TunnelEditViewController: NSViewController {
                     publicKeyRow?.value = ""
                 }
             }
+            if tunnel.activateOnDemandSetting.isActivateOnDemandEnabled {
+                selectedActivateOnDemandOption = tunnel.activateOnDemandSetting.activateOnDemandOption
+            } else {
+                selectedActivateOnDemandOption = .none
+            }
         } else {
             // Creating a new tunnel
             let privateKey = Curve25519.generatePrivateKey()
@@ -109,7 +128,13 @@ class TunnelEditViewController: NSViewController {
             """
             publicKeyRow.value = publicKey.base64EncodedString()
             textView.string = bootstrappingText
+            selectedActivateOnDemandOption = .none
         }
+
+        onDemandRow.valueOptions = activateOnDemandOptions.map {
+            return TunnelViewModel.activateOnDemandOptionText(for: $0)
+        }
+        onDemandRow.selectedOptionIndex = activateOnDemandOptions.firstIndex(of: selectedActivateOnDemandOption)!
     }
 
     override func loadView() {
@@ -126,7 +151,7 @@ class TunnelEditViewController: NSViewController {
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
 
-        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, scrollView])
+        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, onDemandRow, scrollView])
         editorStackView.orientation = .vertical
         editorStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
         editorStackView.spacing = internalSpacing
@@ -157,6 +182,13 @@ class TunnelEditViewController: NSViewController {
             ErrorPresenter.showErrorAlert(title: tr("macAlertNameIsEmpty"), message: "", from: self)
             return
         }
+        let onDemandSetting: ActivateOnDemandSetting
+        let onDemandOption = activateOnDemandOptions[onDemandRow.selectedOptionIndex]
+        if onDemandOption == .none {
+            onDemandSetting = ActivateOnDemandSetting.defaultSetting
+        } else {
+            onDemandSetting = ActivateOnDemandSetting(isActivateOnDemandEnabled: true, activateOnDemandOption: onDemandOption)
+        }
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
             if name != tunnel.name && tunnelsManager.tunnel(named: name) != nil {
@@ -165,7 +197,6 @@ class TunnelEditViewController: NSViewController {
             }
             do {
                 let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
-                let onDemandSetting = ActivateOnDemandSetting.defaultSetting
                 tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -187,7 +218,6 @@ class TunnelEditViewController: NSViewController {
             }
             do {
                 let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
-                let onDemandSetting = ActivateOnDemandSetting.defaultSetting
                 tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
