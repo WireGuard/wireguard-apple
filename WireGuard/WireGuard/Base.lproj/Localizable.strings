@@ -245,6 +245,12 @@
 "macButtonImportTunnels" = "Import tunnel(s) from file";
 "macSheetButtonImport" = "Import";
 
+"macNameFieldExportLog" = "Export log to";
+"macSheetButtonExportLog" = "Save";
+
+"macNameFieldExportZip" = "Export tunnels to";
+"macSheetButtonExportZip" = "Save";
+
 // Mac detail/edit view fields
 
 "macFieldKey (%@)" = "%@:";
