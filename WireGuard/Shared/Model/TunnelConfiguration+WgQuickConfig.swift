@@ -34,7 +34,7 @@ extension TunnelConfiguration {
     }
 
     //swiftlint:disable:next function_body_length cyclomatic_complexity
-    convenience init(fromWgQuickConfig wgQuickConfig: String, called name: String? = nil, ignoreUnrecognizedKeys: Bool = true) throws {
+    convenience init(fromWgQuickConfig wgQuickConfig: String, called name: String? = nil) throws {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
 
@@ -71,17 +71,15 @@ extension TunnelConfiguration {
                 } else {
                     attributes[key] = value
                 }
-                if !ignoreUnrecognizedKeys {
-                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
-                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
-                    if parserState == .inInterfaceSection {
-                        guard interfaceSectionKeys.contains(key) else {
-                            throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
-                        }
-                    } else if parserState == .inPeerSection {
-                        guard peerSectionKeys.contains(key) else {
-                            throw ParseError.peerHasUnrecognizedKey(keyWithCase)
-                        }
+                let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
+                let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
+                if parserState == .inInterfaceSection {
+                    guard interfaceSectionKeys.contains(key) else {
+                        throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
+                    }
+                } else if parserState == .inPeerSection {
+                    guard peerSectionKeys.contains(key) else {
+                        throw ParseError.peerHasUnrecognizedKey(keyWithCase)
                     }
                 }
             } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {

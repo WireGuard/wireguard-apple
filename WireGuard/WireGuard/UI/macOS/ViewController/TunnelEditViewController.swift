@@ -128,7 +128,7 @@ class TunnelEditViewController: NSViewController {
                 return
             }
             do {
-                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value, ignoreUnrecognizedKeys: false)
+                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
                 let onDemandSetting = ActivateOnDemandSetting.defaultSetting
                 tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
                     if let error = error {
