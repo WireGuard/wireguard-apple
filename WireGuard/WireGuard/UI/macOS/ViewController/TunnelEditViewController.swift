@@ -116,7 +116,33 @@ class TunnelEditViewController: NSViewController {
     }
 
     @objc func saveButtonClicked() {
-        print("saveButtonClicked")
+        let name = nameRow.value
+        guard !name.isEmpty else {
+            ErrorPresenter.showErrorAlert(title: tr("macAlertNameIsEmpty"), message: "", from: self)
+            return
+        }
+        if let tunnel = tunnel {
+            // We're modifying an existing tunnel
+            if name != tunnel.name && tunnelsManager.tunnel(named: name) != nil {
+                ErrorPresenter.showErrorAlert(title: tr(format: "macAlertDuplicateName (%@)", name), message: "", from: self)
+                return
+            }
+            do {
+                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value, ignoreUnrecognizedKeys: false)
+                let onDemandSetting = ActivateOnDemandSetting.defaultSetting
+                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
+                    if let error = error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                        return
+                    }
+                    self?.dismiss(self)
+                }
+            } catch let error as WireGuardAppError {
+                ErrorPresenter.showErrorAlert(error: error, from: self)
+            } catch {
+                fatalError()
+            }
+        }
     }
 
     @objc func discardButtonClicked() {

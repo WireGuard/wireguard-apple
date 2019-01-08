@@ -257,6 +257,9 @@
 "macEditDiscard" = "Discard";
 "macEditSave" = "Save";
 
+"macAlertNameIsEmpty" = "Name is required";
+"macAlertDuplicateName (%@)" = "Another tunnel already exists with the name '%@'.";
+
 "macAlertInvalidLine (%@)" = "Invalid line: '%@'.";
 
 "macAlertNoInterface" = "Configuration must have an 'Interface' section.";
