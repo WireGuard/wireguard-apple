@@ -232,6 +232,7 @@
 "macMenuAddEmptyTunnel" = "Add empty tunnel...";
 "macMenuExportLog" = "Export log to file...";
 "macMenuExportTunnels" = "Export tunnels to zip...";
+"macMenuQuit" = "Quit";
 
 // Mac manage tunnels window
 

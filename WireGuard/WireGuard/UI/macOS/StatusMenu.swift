@@ -41,6 +41,8 @@ class StatusMenu: NSMenu {
             addItem(NSMenuItem.separator())
         }
         addTunnelManagementItems()
+        addItem(NSMenuItem.separator())
+        addApplicationItems()
     }
 
     required init(coder decoder: NSCoder) {
@@ -116,6 +118,12 @@ class StatusMenu: NSMenu {
         let importItem = NSMenuItem(title: tr("macMenuImportTunnels"), action: #selector(importTunnelsClicked), keyEquivalent: "")
         importItem.target = self
         addItem(importItem)
+    }
+
+    func addApplicationItems() {
+        let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(NSApplication.terminate), keyEquivalent: "")
+        quitItem.target = NSApp
+        addItem(quitItem)
     }
 
     @objc func tunnelClicked(sender: AnyObject) {
