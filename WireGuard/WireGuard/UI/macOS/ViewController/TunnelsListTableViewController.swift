@@ -127,7 +127,8 @@ class TunnelsListTableViewController: NSViewController {
     }
 
     @objc func addEmptyTunnelClicked() {
-        print("addEmptyTunnelClicked")
+        let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: nil)
+        presentAsSheet(tunnelEditVC)
     }
 
     @objc func importTunnelClicked() {

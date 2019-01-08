@@ -81,8 +81,10 @@ class TunnelEditViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func loadView() {
-        if let tunnel = tunnel, let tunnelConfiguration = tunnel.tunnelConfiguration {
+    func populateTextFields() {
+        if let tunnel = tunnel {
+            // Editing an existing tunnel
+            let tunnelConfiguration = tunnel.tunnelConfiguration!
             nameRow.value = tunnel.name
             textView.string = tunnelConfiguration.asWgQuickConfig()
             publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64EncodedString()
@@ -97,7 +99,21 @@ class TunnelEditViewController: NSViewController {
                     publicKeyRow?.value = ""
                 }
             }
+        } else {
+            // Creating a new tunnel
+            let privateKey = Curve25519.generatePrivateKey()
+            let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
+            let bootstrappingText = """
+            [Interface]
+            PrivateKey = \(privateKey.base64EncodedString())
+            """
+            publicKeyRow.value = publicKey.base64EncodedString()
+            textView.string = bootstrappingText
         }
+    }
+
+    override func loadView() {
+        populateTextFields()
 
         scrollView.documentView = textView
 
@@ -157,6 +173,29 @@ class TunnelEditViewController: NSViewController {
                     }
                     self?.dismiss(self)
                     self?.delegate?.tunnelSaved(tunnel: tunnel)
+                }
+            } catch let error as WireGuardAppError {
+                ErrorPresenter.showErrorAlert(error: error, from: self)
+            } catch {
+                fatalError()
+            }
+        } else {
+            // We're creating a new tunnel
+            if tunnelsManager.tunnel(named: name) != nil {
+                ErrorPresenter.showErrorAlert(title: tr(format: "macAlertDuplicateName (%@)", name), message: "", from: self)
+                return
+            }
+            do {
+                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
+                let onDemandSetting = ActivateOnDemandSetting.defaultSetting
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
+                    if let error = result.error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                    } else {
+                        let tunnel: TunnelContainer = result.value!
+                        self?.dismiss(self)
+                        self?.delegate?.tunnelSaved(tunnel: tunnel)
+                    }
                 }
             } catch let error as WireGuardAppError {
                 ErrorPresenter.showErrorAlert(error: error, from: self)
