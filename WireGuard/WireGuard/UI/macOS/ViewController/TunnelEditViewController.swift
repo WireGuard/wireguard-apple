@@ -3,6 +3,11 @@
 
 import Cocoa
 
+protocol TunnelEditViewControllerDelegate: class {
+    func tunnelSaved(tunnel: TunnelContainer)
+    func tunnelEditingCancelled()
+}
+
 class TunnelEditViewController: NSViewController {
 
     let nameRow: EditableKeyValueRow = {
@@ -61,6 +66,8 @@ class TunnelEditViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
+
+    weak var delegate: TunnelEditViewControllerDelegate?
 
     var textViewObservationToken: AnyObject?
 
@@ -149,6 +156,7 @@ class TunnelEditViewController: NSViewController {
                         return
                     }
                     self?.dismiss(self)
+                    self?.delegate?.tunnelSaved(tunnel: tunnel)
                 }
             } catch let error as WireGuardAppError {
                 ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -159,6 +167,7 @@ class TunnelEditViewController: NSViewController {
     }
 
     @objc func discardButtonClicked() {
+        delegate?.tunnelEditingCancelled()
         dismiss(self)
     }
 }
