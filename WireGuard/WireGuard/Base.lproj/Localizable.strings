@@ -243,6 +243,7 @@
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
 
 "macButtonImportTunnels" = "Import tunnel(s) from file";
+"macSheetButtonImport" = "Import";
 
 // Mac detail/edit view fields
 
