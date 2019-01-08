@@ -192,6 +192,7 @@ class TunnelDetailTableViewController: NSViewController {
 
     @objc func editButtonClicked() {
         let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+        tunnelEditVC.delegate = self
         presentAsSheet(tunnelEditVC)
     }
 
@@ -232,5 +233,16 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         case .spacerRow:
             return NSView()
         }
+    }
+}
+
+extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
+    func tunnelSaved(tunnel: TunnelContainer) {
+        tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        tableView.reloadData()
+    }
+
+    func tunnelEditingCancelled() {
+        // Nothing to do
     }
 }
