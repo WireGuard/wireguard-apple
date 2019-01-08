@@ -8,6 +8,7 @@ class ConfTextView: NSTextView {
     private let confTextStorage = ConfTextStorage()
 
     var hasError: Bool { return confTextStorage.hasError }
+    @objc dynamic var privateKeyString: String?
 
     override var string: String {
         didSet {
@@ -51,6 +52,9 @@ extension ConfTextView: NSTextViewDelegate {
 
     func textDidChange(_ notification: Notification) {
         confTextStorage.highlightSyntax()
+        if privateKeyString != confTextStorage.privateKeyString {
+            privateKeyString = confTextStorage.privateKeyString
+        }
         needsDisplay = true
     }
 

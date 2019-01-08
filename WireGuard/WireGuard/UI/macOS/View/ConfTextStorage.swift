@@ -27,6 +27,7 @@ class ConfTextStorage: NSTextStorage {
 
     private let backingStore: NSMutableAttributedString
     private(set) var hasError = false
+    private(set) var privateKeyString: String?
 
     override init() {
         backingStore = NSMutableAttributedString(string: "")
@@ -129,6 +130,7 @@ class ConfTextStorage: NSTextStorage {
 
     func highlightSyntax() {
         hasError = false
+        privateKeyString = nil
 
         backingStore.beginEditing()
         var spans = highlight_config(backingStore.string.cString(using: String.Encoding.utf8))!
@@ -141,6 +143,10 @@ class ConfTextStorage: NSTextStorage {
 
             if span.type == HighlightError {
                 hasError = true
+            }
+
+            if span.type == HighlightPrivateKey {
+                privateKeyString = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string
             }
 
             spans = spans.successor()

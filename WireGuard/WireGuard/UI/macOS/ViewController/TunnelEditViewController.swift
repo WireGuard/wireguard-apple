@@ -17,7 +17,7 @@ class TunnelEditViewController: NSViewController {
         return publicKeyRow
     }()
 
-    let textView: NSTextView = {
+    let textView: ConfTextView = {
         let textView = ConfTextView()
         let minWidth: CGFloat = 120
         let minHeight: CGFloat = 60
@@ -62,6 +62,8 @@ class TunnelEditViewController: NSViewController {
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
 
+    var textViewObservationToken: AnyObject?
+
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
@@ -75,8 +77,19 @@ class TunnelEditViewController: NSViewController {
     override func loadView() {
         if let tunnel = tunnel, let tunnelConfiguration = tunnel.tunnelConfiguration {
             nameRow.value = tunnel.name
-            publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64EncodedString()
             textView.string = tunnelConfiguration.asWgQuickConfig()
+            publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64EncodedString()
+            textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64EncodedString()
+            textViewObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
+                if let privateKeyString = textView.privateKeyString,
+                    let privateKey = Data(base64Encoded: privateKeyString),
+                    privateKey.count == TunnelConfiguration.keyLength {
+                    let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
+                    publicKeyRow?.value = publicKey.base64EncodedString()
+                } else {
+                    publicKeyRow?.value = ""
+                }
+            }
         }
 
         scrollView.documentView = textView
