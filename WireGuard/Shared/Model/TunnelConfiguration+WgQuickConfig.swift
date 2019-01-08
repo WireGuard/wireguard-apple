@@ -30,6 +30,7 @@ extension TunnelConfiguration {
         case peerHasInvalidPersistentKeepAlive(String)
         case peerHasUnrecognizedKey(String)
         case multiplePeersWithSamePublicKey
+        case multipleEntriesForKey(String)
     }
 
     //swiftlint:disable:next function_body_length cyclomatic_complexity
@@ -61,8 +62,12 @@ extension TunnelConfiguration {
                 let key = keyWithCase.lowercased()
                 let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
                 let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
-                if let presentValue = attributes[key], keysWithMultipleEntriesAllowed.contains(key) {
-                    attributes[key] = presentValue + "," + value
+                if let presentValue = attributes[key] {
+                    if keysWithMultipleEntriesAllowed.contains(key) {
+                        attributes[key] = presentValue + "," + value
+                    } else {
+                        throw ParseError.multipleEntriesForKey(keyWithCase)
+                    }
                 } else {
                     attributes[key] = value
                 }

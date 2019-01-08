@@ -281,3 +281,5 @@
 
 "macAlertUnrecognizedPeerKey (%@)" = "Peer contains unrecognized key '%@'";
 "macAlertInfoUnrecognizedPeerKey" = "Valid keys are: 'PublicKey', 'PresharedKey', 'AllowedIPs', 'Endpoint' and 'PersistentKeepalive'";
+
+"macAlertMultipleEntriesForKey (%@)" = "There should be only one entry per section for key '%@'";

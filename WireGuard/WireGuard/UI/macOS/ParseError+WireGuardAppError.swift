@@ -45,6 +45,8 @@ extension TunnelConfiguration.ParseError: WireGuardAppError {
             return (tr(format: "macAlertUnrecognizedPeerKey (%@)", value), tr("macAlertInfoUnrecognizedPeerKey"))
         case .multiplePeersWithSamePublicKey:
             return (tr("alertInvalidPeerMessagePublicKeyDuplicated"), "")
+        case .multipleEntriesForKey(let value):
+            return (tr(format: "macAlertMultipleEntriesForKey (%@)", value), "")
         }
     }
 }
