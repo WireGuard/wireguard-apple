@@ -256,3 +256,25 @@
 
 "macEditDiscard" = "Discard";
 "macEditSave" = "Save";
+
+"macAlertInvalidLine (%@)" = "Invalid line: '%@'.";
+
+"macAlertNoInterface" = "Configuration must have an 'Interface' section.";
+"macAlertMultipleInterfaces" = "Configuration must have only one 'Interface' section.";
+"macAlertPrivateKeyInvalid" = "Private key is invalid.";
+"macAlertListenPortInvalid (%@)" = "Listen port '%@' is invalid.";
+"macAlertAddressInvalid (%@)" = "Address '%@' is invalid.";
+"macAlertDNSInvalid (%@)" = "DNS '%@' is invalid.";
+"macAlertMTUInvalid (%@)" = "MTU '%@' is invalid.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Interface contains unrecognized key '%@'";
+"macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: 'PrivateKey', 'ListenPort', 'Address', 'DNS' and 'MTU'.";
+
+"macAlertPublicKeyInvalid" = "Public key is invalid";
+"macAlertPreSharedKeyInvalid" = "Preshared key is invalid";
+"macAlertAllowedIPInvalid (%@)" = "Allowed IP '%@' is invalid";
+"macAlertEndpointInvalid (%@)" = "Endpoint '%@' is invalid";
+"macAlertPersistentKeepliveInvalid (%@)" = "Persistent keepalive value '%@' is invalid";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Peer contains unrecognized key '%@'";
+"macAlertInfoUnrecognizedPeerKey" = "Valid keys are: 'PublicKey', 'PresharedKey', 'AllowedIPs', 'Endpoint' and 'PersistentKeepalive'";
