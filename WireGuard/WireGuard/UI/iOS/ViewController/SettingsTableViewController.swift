@@ -129,12 +129,12 @@ class SettingsTableViewController: UITableViewController {
             }
 
             let isWritten = Logger.global?.writeLog(called: "APP", mergedWith: networkExtensionLogFilePath, called: "NET", to: destinationURL.path) ?? false
-            guard isWritten else {
-                ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
-                return
-            }
 
             DispatchQueue.main.async {
+                guard isWritten else {
+                    ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
+                    return
+                }
                 let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
                 activityVC.popoverPresentationController?.sourceView = sourceView
                 activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
