@@ -86,12 +86,16 @@ class StatusMenu: NSMenu {
 
         statusMenuItem.title = tr(format: "macStatus (%@)", statusText)
 
-        let addresses = tunnel.tunnelConfiguration?.interface.addresses ?? []
-        let addressesString = addresses.map { $0.stringRepresentation }.joined(separator: ", ")
-        if addressesString.isEmpty {
-            networksMenuItem.title = tr("macMenuNetworksNone")
+        if tunnel.status == .inactive {
+            networksMenuItem.title = tr("macMenuNetworksInactive")
         } else {
-            networksMenuItem.title = tr(format: "macMenuNetworks (%@)", addressesString)
+            let addresses = tunnel.tunnelConfiguration?.interface.addresses ?? []
+            let addressesString = addresses.map { $0.stringRepresentation }.joined(separator: ", ")
+            if addressesString.isEmpty {
+                networksMenuItem.title = tr("macMenuNetworksNone")
+            } else {
+                networksMenuItem.title = tr(format: "macMenuNetworks (%@)", addressesString)
+            }
         }
         return true
     }
