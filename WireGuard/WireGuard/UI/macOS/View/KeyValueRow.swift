@@ -61,9 +61,16 @@ class EditableKeyValueRow: NSView {
             keyLabel.firstBaselineAnchor.constraint(equalTo: valueLabel.firstBaselineAnchor),
             self.leadingAnchor.constraint(equalTo: keyLabel.leadingAnchor),
             keyLabel.trailingAnchor.constraint(equalTo: valueLabel.leadingAnchor, constant: -5),
-            valueLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            keyLabel.widthAnchor.constraint(equalToConstant: 120)
+            valueLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
+
+        keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
+        keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        valueLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        let widthConstraint = keyLabel.widthAnchor.constraint(equalToConstant: 150)
+        widthConstraint.priority = .defaultHigh + 1
+        widthConstraint.isActive = true
     }
 
     required init?(coder decoder: NSCoder) {
