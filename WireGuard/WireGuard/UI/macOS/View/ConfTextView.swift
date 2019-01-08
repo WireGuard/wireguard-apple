@@ -38,9 +38,9 @@ class ConfTextView: NSTextView {
         let theme: ConfTextStorage.TextColorTheme
         switch effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) ?? .aqua {
         case .darkAqua:
-            theme = ConfTextStorage.TextColorTheme(black: NSColor(hex: "#c7c7c7"), red: NSColor(hex: "#dc322f"), green: NSColor(hex: "#859900"), yellow: NSColor(hex: "#c7c400"), blue: NSColor(hex: "#268bd2"), magenta: NSColor(hex: "#d33682"), cyan: NSColor(hex: "#2aa198"), white: NSColor(hex: "#383838"), default: NSColor(hex: "#c7c7c7"))
+            theme = ConfTextStorage.TextColorTheme(plainText: NSColor(hex: "#FFFFFF"), sections: NSColor(hex: "#91D462"), key: NSColor(hex: "#FC5FA3"), url: NSColor(hex: "#53A5FB"), urlAttribute: NSColor(hex: "#75B492"), comments: NSColor(hex: "#6C7986"), number: NSColor(hex: "#9686F5"), error: NSColor(hex: "#FC6A5D"))
         default:
-            theme = ConfTextStorage.TextColorTheme(black: NSColor(hex: "#000000"), red: NSColor(hex: "#c91b00"), green: NSColor(hex: "#00c200"), yellow: NSColor(hex: "#c7c400"), blue: NSColor(hex: "#0225c7"), magenta: NSColor(hex: "#c930c7"), cyan: NSColor(hex: "#00c5c7"), white: NSColor(hex: "#c7c7c7"), default: NSColor(hex: "#000000"))
+            theme = ConfTextStorage.TextColorTheme(plainText: NSColor(hex: "#000000"), sections: NSColor(hex: "#326D74"), key: NSColor(hex: "#9B2393"), url: NSColor(hex: "#0E0EFF"), urlAttribute: NSColor(hex: "#815F03"), comments: NSColor(hex: "#536579"), number: NSColor(hex: "#1C00CF"), error: NSColor(hex: "#C41A16"))
         }
         confTextStorage.updateAttributes(for: theme)
     }

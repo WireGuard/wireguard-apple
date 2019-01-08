@@ -3,22 +3,24 @@
 
 import Cocoa
 
+private let fontSize: CGFloat = 15
+
 class ConfTextStorage: NSTextStorage {
 
     struct TextColorTheme {
-        let black: NSColor
-        let red: NSColor
-        let green: NSColor
-        let yellow: NSColor
-        let blue: NSColor
-        let magenta: NSColor
-        let cyan: NSColor
-        let white: NSColor
-        let `default`: NSColor
+        let plainText: NSColor
+        let sections: NSColor
+        let key: NSColor
+        let url: NSColor
+        let urlAttribute: NSColor
+        let comments: NSColor
+        let number: NSColor
+        let error: NSColor
     }
 
-    let defaultFont = NSFont.systemFont(ofSize: 16)
-    private let boldFont = NSFont.boldSystemFont(ofSize: 16)
+    let defaultFont = NSFontManager.shared.convertWeight(true, of: NSFont.systemFont(ofSize: fontSize))
+    private let boldFont = NSFont.boldSystemFont(ofSize: fontSize)
+    private lazy var italicFont = NSFontManager.shared.convert(defaultFont, toHaveTrait: .italicFontMask)
 
     private var defaultAttributes: [NSAttributedString.Key: Any]! //swiftlint:disable:this implicitly_unwrapped_optional
     private var highlightAttributes: [UInt32: [NSAttributedString.Key: Any]]! //swiftlint:disable:this implicitly_unwrapped_optional
@@ -39,76 +41,59 @@ class ConfTextStorage: NSTextStorage {
         fatalError("init(pasteboardPropertyList:ofType:) has not been implemented")
     }
 
-    //swiftlint:disable:next function_body_length
     func updateAttributes(for theme: TextColorTheme) {
         self.defaultAttributes = [
-            .foregroundColor: theme.default,
+            .foregroundColor: theme.plainText,
             .font: defaultFont
         ]
 
         self.highlightAttributes = [
             HighlightSection.rawValue: [
-                .foregroundColor: theme.black,
+                .foregroundColor: theme.sections,
                 .font: boldFont
             ],
             HighlightKeytype.rawValue: [
-                .foregroundColor: theme.blue,
+                .foregroundColor: theme.key,
                 .font: boldFont
             ],
             HighlightKey.rawValue: [
-                .foregroundColor: theme.yellow,
-                .font: boldFont
-            ],
-            HighlightCmd.rawValue: [
-                .foregroundColor: theme.white,
+                .foregroundColor: theme.plainText,
                 .font: defaultFont
             ],
             HighlightIP.rawValue: [
-                .foregroundColor: theme.green,
+                .foregroundColor: theme.url,
                 .font: defaultFont
             ],
             HighlightCidr.rawValue: [
-                .foregroundColor: theme.yellow,
+                .foregroundColor: theme.urlAttribute,
                 .font: defaultFont
             ],
             HighlightHost.rawValue: [
-                .foregroundColor: theme.green,
-                .font: boldFont
+                .foregroundColor: theme.url,
+                .font: defaultFont
             ],
             HighlightPort.rawValue: [
-                .foregroundColor: theme.magenta,
-                .font: defaultFont
-            ],
-            HighlightTable.rawValue: [
-                .foregroundColor: theme.blue,
-                .font: defaultFont
-            ],
-            HighlightFwMark.rawValue: [
-                .foregroundColor: theme.blue,
+                .foregroundColor: theme.urlAttribute,
                 .font: defaultFont
             ],
             HighlightMTU.rawValue: [
-                .foregroundColor: theme.blue,
-                .font: defaultFont
-            ],
-            HighlightSaveConfig.rawValue: [
-                .foregroundColor: theme.blue,
+                .foregroundColor: theme.number,
                 .font: defaultFont
             ],
             HighlightKeepalive.rawValue: [
-                .foregroundColor: theme.blue,
+                .foregroundColor: theme.number,
                 .font: defaultFont
             ],
             HighlightComment.rawValue: [
-                .foregroundColor: theme.cyan,
-                .font: defaultFont
+                .foregroundColor: theme.comments,
+                .font: italicFont
             ],
             HighlightDelimiter.rawValue: [
-                .foregroundColor: theme.cyan,
+                .foregroundColor: theme.plainText,
                 .font: defaultFont
             ],
             HighlightError.rawValue: [
-                .foregroundColor: theme.red,
+                .foregroundColor: theme.error,
                 .font: defaultFont,
                 .underlineStyle: 1
             ]
