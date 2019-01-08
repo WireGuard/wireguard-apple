@@ -56,10 +56,6 @@ class ConfTextStorage: NSTextStorage {
                 .foregroundColor: theme.key,
                 .font: boldFont
             ],
-            HighlightKey.rawValue: [
-                .foregroundColor: theme.plainText,
-                .font: defaultFont
-            ],
             HighlightIP.rawValue: [
                 .foregroundColor: theme.url,
                 .font: defaultFont
