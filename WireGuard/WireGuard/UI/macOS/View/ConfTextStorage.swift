@@ -10,6 +10,7 @@ class ConfTextStorage: NSTextStorage {
     struct TextColorTheme {
         let plainText: NSColor
         let sections: NSColor
+        let keyType: NSColor
         let key: NSColor
         let url: NSColor
         let urlAttribute: NSColor
@@ -54,8 +55,20 @@ class ConfTextStorage: NSTextStorage {
                 .font: boldFont
             ],
             HighlightKeytype.rawValue: [
-                .foregroundColor: theme.key,
+                .foregroundColor: theme.keyType,
                 .font: boldFont
+            ],
+            HighlightPublicKey.rawValue: [
+                .foregroundColor: theme.key,
+                .font: defaultFont
+            ],
+            HighlightPrivateKey.rawValue: [
+                .foregroundColor: theme.key,
+                .font: defaultFont
+            ],
+            HighlightPresharedKey.rawValue: [
+                .foregroundColor: theme.key,
+                .font: defaultFont
             ],
             HighlightIP.rawValue: [
                 .foregroundColor: theme.url,
