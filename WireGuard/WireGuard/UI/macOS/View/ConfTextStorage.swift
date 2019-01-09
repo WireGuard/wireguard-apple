@@ -54,7 +54,7 @@ class ConfTextStorage: NSTextStorage {
                 .foregroundColor: theme.sections,
                 .font: boldFont
             ],
-            HighlightKeytype.rawValue: [
+            HighlightField.rawValue: [
                 .foregroundColor: theme.keyType,
                 .font: boldFont
             ],

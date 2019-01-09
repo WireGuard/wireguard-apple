@@ -120,47 +120,15 @@ static bool is_valid_ipv6(string_span_t s)
 	return true;
 }
 
-static bool is_valid_u16(string_span_t s)
-{
-	uint32_t val = 0;
-
-	if (s.len > 5 || !s.len)
-		return false;
-
-	for (size_t i = 0; i < s.len; ++i) {
-		if (!isdigit(s.s[i]))
-			return false;
-		val = 10 * val + s.s[i] - '0';
-	}
-	return val <= 65535;
-}
-
-static bool is_valid_port(string_span_t s)
-{
-	return is_valid_u16(s);
-}
-
-static bool is_valid_mtu(string_span_t s)
-{
-	return is_valid_u16(s);
-}
-
-static bool is_valid_persistentkeepalive(string_span_t s)
-{
-	if (s.len == 3 && !memcmp(s.s, "off", 3))
-		return true;
-	return is_valid_u16(s);
-}
-
-#ifndef MOBILE_WGQUICK_SUBSET
-static bool is_valid_u32(string_span_t s)
+static bool is_valid_uint(string_span_t s, bool support_hex, uint64_t min, uint64_t max)
 {
 	uint64_t val = 0;
 
+	/* Bound this around 32 bits, so that we don't have to write overflow logic. */
 	if (s.len > 10 || !s.len)
 		return false;
 
-	if (s.len > 2 && s.s[0] == '0' && s.s[1] == 'x') {
+	if (support_hex && s.len > 2 && s.s[0] == '0' && s.s[1] == 'x') {
 		for (size_t i = 2; i < s.len; ++i) {
 			if (s.s[i] - '0' < 10)
 				val = 16 * val + (s.s[i] - '0');
@@ -176,14 +144,33 @@ static bool is_valid_u32(string_span_t s)
 			val = 10 * val + s.s[i] - '0';
 		}
 	}
-	return val <= 4294967295U;
+	return val <= max && val >= min;
 }
+
+static bool is_valid_port(string_span_t s)
+{
+	return is_valid_uint(s, false, 0, 65535);
+}
+
+static bool is_valid_mtu(string_span_t s)
+{
+	return is_valid_uint(s, false, 576, 65535);
+}
+
+static bool is_valid_persistentkeepalive(string_span_t s)
+{
+	if (s.len == 3 && !memcmp(s.s, "off", 3))
+		return true;
+	return is_valid_uint(s, false, 0, 65535);
+}
+
+#ifndef MOBILE_WGQUICK_SUBSET
 
 static bool is_valid_fwmark(string_span_t s)
 {
 	if (s.len == 3 && !memcmp(s.s, "off", 3))
 		return true;
-	return is_valid_u32(s);
+	return is_valid_uint(s, true, 0, 4294967295);
 }
 
 static bool is_valid_table(string_span_t s)
@@ -196,7 +183,7 @@ static bool is_valid_table(string_span_t s)
 	 * fread_id_name does no validation aside from this. */
 	if (s.len < 512)
 		return true;
-	return is_valid_u32(s);
+	return is_valid_uint(s, false, 0, 4294967295);
 }
 
 static bool is_valid_saveconfig(string_span_t s)
@@ -301,7 +288,7 @@ static bool is_valid_dns(string_span_t s)
 	return is_valid_ipv4(s) || is_valid_ipv6(s);
 }
 
-enum keytype {
+enum field {
 	InterfaceSection,
 	PrivateKey,
 	ListenPort,
@@ -325,7 +312,7 @@ enum keytype {
 	Invalid
 };
 
-static enum keytype section_for_keytype(enum keytype t)
+static enum field section_for_field(enum field t)
 {
 	if (t > InterfaceSection && t < PeerSection)
 		return InterfaceSection;
@@ -334,7 +321,7 @@ static enum keytype section_for_keytype(enum keytype t)
 	return Invalid;
 }
 
-static enum keytype get_keytype(string_span_t s)
+static enum field get_field(string_span_t s)
 {
 #define check_enum(t) do { if (s.len == strlen(#t) && !strncasecmp(#t, s.s, s.len)) return t; } while (0)
 	check_enum(PrivateKey);
@@ -360,7 +347,7 @@ static enum keytype get_keytype(string_span_t s)
 #undef check_enum
 }
 
-static enum keytype get_sectiontype(string_span_t s)
+static enum field get_sectiontype(string_span_t s)
 {
 	if (s.len == 6 && !strncasecmp("[Peer]", s.s, 6))
 		return PeerSection;
@@ -406,7 +393,7 @@ static bool append_highlight_span(struct highlight_span_array *a, const char *o,
 	return true;
 }
 
-static void highlight_multivalue_value(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum keytype section)
+static void highlight_multivalue_value(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum field section)
 {
 	switch (section) {
 	case DNS:
@@ -438,7 +425,7 @@ static void highlight_multivalue_value(struct highlight_span_array *ret, const s
 	}
 }
 
-static void highlight_multivalue(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum keytype section)
+static void highlight_multivalue(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum field section)
 {
 	string_span_t current_span = { s.s, 0 };
 	size_t len_at_last_space = 0;
@@ -466,7 +453,7 @@ static void highlight_multivalue(struct highlight_span_array *ret, const string_
 		ret->spans[ret->len - 1].type = HighlightError;
 }
 
-static void highlight_value(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum keytype section)
+static void highlight_value(struct highlight_span_array *ret, const string_span_t parent, const string_span_t s, enum field section)
 {
 	switch (section) {
 	case PrivateKey:
@@ -535,7 +522,7 @@ struct highlight_span *highlight_config(const char *config)
 	struct highlight_span_array ret = { 0 };
 	const string_span_t s = { config, strlen(config) };
 	string_span_t current_span = { s.s, 0 };
-	enum keytype current_section = Invalid, current_keytype = Invalid;
+	enum field current_section = Invalid, current_field = Invalid;
 	enum { OnNone, OnKey, OnValue, OnComment, OnSection } state = OnNone;
 	size_t len_at_last_space = 0, equals_location = 0;
 
@@ -548,7 +535,7 @@ struct highlight_span *highlight_config(const char *config)
 				if (current_span.len) {
 					append_highlight_span(&ret, s.s, (string_span_t){ s.s + equals_location, 1 }, HighlightDelimiter);
 					current_span.len = len_at_last_space;
-					highlight_value(&ret, s, current_span, current_keytype);
+					highlight_value(&ret, s, current_span, current_field);
 				} else {
 					append_highlight_span(&ret, s.s, (string_span_t){ s.s + equals_location, 1 }, HighlightError);
 				}
@@ -562,7 +549,7 @@ struct highlight_span *highlight_config(const char *config)
 			if (i == s.len)
 				break;
 			len_at_last_space = 0;
-			current_keytype = Invalid;
+			current_field = Invalid;
 			if (s.s[i] == '#') {
 				current_span = (string_span_t){ s.s + i, 1 };
 				state = OnComment;
@@ -579,12 +566,12 @@ struct highlight_span *highlight_config(const char *config)
 				++current_span.len;
 		} else if (s.s[i] == '=' && state == OnKey) {
 			current_span.len = len_at_last_space;
-			current_keytype = get_keytype(current_span);
-			enum keytype section = section_for_keytype(current_keytype);
-			if (section == Invalid || current_keytype == Invalid || section != current_section)
+			current_field = get_field(current_span);
+			enum field section = section_for_field(current_field);
+			if (section == Invalid || current_field == Invalid || section != current_section)
 				append_highlight_span(&ret, s.s, current_span, HighlightError);
 			else
-				append_highlight_span(&ret, s.s, current_span, HighlightKeytype);
+				append_highlight_span(&ret, s.s, current_span, HighlightField);
 			equals_location = i;
 			current_span = (string_span_t){ s.s + i + 1, 0 };
 			state = OnValue;
