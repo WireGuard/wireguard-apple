@@ -4,10 +4,11 @@
  */
 
 #include <sys/types.h>
+#define MOBILE_WGQUICK_SUBSET
 
 enum highlight_type {
 	HighlightSection,
-	HighlightKeytype,
+	HighlightField,
 	HighlightPrivateKey,
 	HighlightPublicKey,
 	HighlightPresharedKey,
