@@ -43,6 +43,7 @@ class ConfTextStorage: NSTextStorage {
         fatalError("init(pasteboardPropertyList:ofType:) has not been implemented")
     }
 
+    //swiftlint:disable:next function_body_length
     func updateAttributes(for theme: TextColorTheme) {
         self.defaultAttributes = [
             .foregroundColor: theme.plainText,
