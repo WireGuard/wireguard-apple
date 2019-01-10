@@ -24,8 +24,8 @@ class TunnelEditViewController: NSViewController {
 
     let textView: ConfTextView = {
         let textView = ConfTextView()
-        let minWidth: CGFloat = 120
-        let minHeight: CGFloat = 60
+        let minWidth: CGFloat = 550
+        let minHeight: CGFloat = 310
         textView.minSize = NSSize(width: 0, height: minHeight)
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.autoresizingMask = [.width, .height]
