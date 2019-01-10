@@ -10,8 +10,8 @@ class StatusMenu: NSMenu {
 
     var statusMenuItem: NSMenuItem?
     var networksMenuItem: NSMenuItem?
-    var firstTunnelMenuItemIndex: Int = 0
-    var numberOfTunnelMenuItems: Int = 0
+    var firstTunnelMenuItemIndex = 0
+    var numberOfTunnelMenuItems = 0
 
     var manageTunnelsRootVC: ManageTunnelsRootViewController?
     lazy var manageTunnelsWindow: NSWindow = {
@@ -62,6 +62,7 @@ class StatusMenu: NSMenu {
     }
 
     @discardableResult
+    //swiftlint:disable:next cyclomatic_complexity
     func updateStatusMenuItems(with tunnel: TunnelContainer, ignoreInactive: Bool) -> Bool {
         guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem else { return false }
         var statusText: String
