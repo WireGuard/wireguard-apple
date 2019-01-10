@@ -23,6 +23,14 @@ class ConfTextView: NSTextView {
         confTextStorage.addLayoutManager(layoutManager)
         super.init(frame: CGRect(x: 0, y: 0, width: 1, height: 60), textContainer: textContainer)
         font = confTextStorage.defaultFont
+        allowsUndo = true
+        isAutomaticSpellingCorrectionEnabled = false
+        isAutomaticDataDetectionEnabled = false
+        isAutomaticLinkDetectionEnabled = false
+        isAutomaticTextCompletionEnabled = false
+        isAutomaticTextReplacementEnabled = false
+        isAutomaticDashSubstitutionEnabled = false
+        isAutomaticQuoteSubstitutionEnabled = false
         updateTheme()
         delegate = self
     }
