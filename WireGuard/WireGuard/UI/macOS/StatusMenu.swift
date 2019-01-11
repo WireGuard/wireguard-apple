@@ -123,6 +123,9 @@ class StatusMenu: NSMenu {
     }
 
     func addApplicationItems() {
+        let aboutItem = NSMenuItem(title: tr("macMenuAbout"), action: #selector(aboutClicked), keyEquivalent: "")
+        aboutItem.target = self
+        addItem(aboutItem)
         let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(NSApplication.terminate), keyEquivalent: "")
         quitItem.target = NSApp
         addItem(quitItem)
@@ -147,6 +150,21 @@ class StatusMenu: NSMenu {
         NSApp.activate(ignoringOtherApps: true)
         manageTunnelsWindow.makeKeyAndOrderFront(self)
         ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: manageTunnelsRootVC!)
+    }
+
+    @objc func aboutClicked() {
+        var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            appVersion += " (\(appBuild))"
+        }
+        let appVersionString = [
+            tr(format: "macAppVersion (%@)", appVersion),
+            tr(format: "macGoBackendVersion (%@)", WIREGUARD_GO_VERSION)
+        ].joined(separator: "\n")
+        NSApp.orderFrontStandardAboutPanel(options: [
+            .applicationVersion: appVersionString,
+            .version: ""
+        ])
     }
 }
 
