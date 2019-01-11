@@ -51,6 +51,7 @@ class TunnelEditViewController: NSViewController {
     let scrollView: NSScrollView = {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
+        scrollView.autohidesScrollers = true
         scrollView.borderType = .bezelBorder
         return scrollView
     }()
