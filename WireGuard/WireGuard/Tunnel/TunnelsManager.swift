@@ -222,6 +222,10 @@ class TunnelsManager {
         return tunnels.first { $0.name == tunnelName }
     }
 
+    func waitingTunnel() -> TunnelContainer? {
+        return tunnels.first { $0.status == .waiting }
+    }
+
     func startActivation(of tunnel: TunnelContainer) {
         guard tunnels.contains(tunnel) else { return } // Ensure it's not deleted
         guard tunnel.status == .inactive else {
