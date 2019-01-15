@@ -63,6 +63,7 @@ class StatusMenu: NSMenu {
         addItem(statusMenuItem)
         let networksMenuItem = NSMenuItem(title: tr("macMenuNetworksInactive"), action: #selector(manageTunnelsClicked), keyEquivalent: "")
         networksMenuItem.isEnabled = false
+        networksMenuItem.isHidden = true
         addItem(networksMenuItem)
         self.statusMenuItem = statusMenuItem
         self.networksMenuItem = networksMenuItem
@@ -98,14 +99,15 @@ class StatusMenu: NSMenu {
 
         if tunnel.status == .inactive {
             networksMenuItem.title = tr("macMenuNetworksInactive")
+            networksMenuItem.isHidden = true
         } else {
-            let addresses = tunnel.tunnelConfiguration?.interface.addresses ?? []
-            let addressesString = addresses.map { $0.stringRepresentation }.joined(separator: ", ")
-            if addressesString.isEmpty {
-                networksMenuItem.title = tr("macMenuNetworksNone")
+            let allowedIPs = tunnel.tunnelConfiguration?.peers.flatMap { $0.allowedIPs }.map { $0.stringRepresentation }.joined(separator: ", ") ?? ""
+            if !allowedIPs.isEmpty {
+                networksMenuItem.title = tr(format: "macMenuNetworks (%@)", allowedIPs)
             } else {
-                networksMenuItem.title = tr(format: "macMenuNetworks (%@)", addressesString)
+                networksMenuItem.title = tr("macMenuNetworksNone")
             }
+            networksMenuItem.isHidden = false
         }
         return true
     }
