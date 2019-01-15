@@ -70,7 +70,7 @@ class PacketTunnelSettingsGenerator {
         dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
         networkSettings.dnsSettings = dnsSettings
 
-        var mtu = tunnelConfiguration.interface.mtu ?? 0
+        let mtu = tunnelConfiguration.interface.mtu ?? 0
 
         /* 0 means automatic MTU. In theory, we should just do
          * `networkSettings.tunnelOverheadBytes = 80` but in
@@ -79,10 +79,14 @@ class PacketTunnelSettingsGenerator {
          * add a nob, maybe, or iOS will do probing for us.
          */
         if mtu == 0 {
-            mtu = 1280
+            #if os(iOS)
+            networkSettings.mtu = NSNumber(value: 1280)
+            #elseif os(OSX)
+            networkSettings.tunnelOverheadBytes = 80
+            #endif
+        } else {
+            networkSettings.mtu = NSNumber(value: mtu)
         }
-
-        networkSettings.mtu = NSNumber(value: mtu)
 
         let (ipv4Routes, ipv6Routes) = routes()
         let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
