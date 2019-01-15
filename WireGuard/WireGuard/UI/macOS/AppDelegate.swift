@@ -6,7 +6,8 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    var statusItem: NSStatusItem?
+    var statusItemController: StatusItemController?
+    var currentTunnelStatusObserver: AnyObject?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
@@ -19,21 +20,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             let tunnelsManager: TunnelsManager = result.value!
+            let statusItemController = StatusItemController()
+
             let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
-            self.statusItem = createStatusBarItem(with: statusMenu)
+
+            statusItemController.statusItem.menu = statusMenu
+            statusItemController.currentTunnel = statusMenu.currentTunnel
+            self.currentTunnelStatusObserver = statusMenu.observe(\.currentTunnel) { statusMenu, _ in
+                statusItemController.currentTunnel = statusMenu.currentTunnel
+            }
+            self.statusItemController = statusItemController
 
             tunnelsManager.tunnelsListDelegate = statusMenu
             tunnelsManager.activationDelegate = statusMenu
         }
     }
-}
-
-func createStatusBarItem(with statusMenu: StatusMenu) -> NSStatusItem {
-    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    if let statusBarImage = NSImage(named: "WireGuardMacStatusBarIcon") {
-        statusBarImage.isTemplate = true
-        statusItem.button?.image = statusBarImage
-    }
-    statusItem.menu = statusMenu
-    return statusItem
 }

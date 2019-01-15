@@ -13,6 +13,8 @@ class StatusMenu: NSMenu {
     var firstTunnelMenuItemIndex = 0
     var numberOfTunnelMenuItems = 0
 
+    @objc dynamic var currentTunnel: TunnelContainer?
+
     var manageTunnelsRootVC: ManageTunnelsRootViewController?
     lazy var manageTunnelsWindow: NSWindow = {
         manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
@@ -30,7 +32,11 @@ class StatusMenu: NSMenu {
         addStatusMenuItems()
         addItem(NSMenuItem.separator())
         for index in 0 ..< tunnelsManager.numberOfTunnels() {
-            let isUpdated = updateStatusMenuItems(with: tunnelsManager.tunnel(at: index), ignoreInactive: true)
+            let tunnel = tunnelsManager.tunnel(at: index)
+            if tunnel.status != .inactive {
+                currentTunnel = tunnel
+            }
+            let isUpdated = updateStatusMenuItems(with: tunnel, ignoreInactive: true)
             if isUpdated {
                 break
             }
@@ -176,6 +182,13 @@ extension StatusMenu {
         updateTunnelMenuItem(menuItem)
         let statusObservationToken = tunnel.observe(\.status) { [weak self] tunnel, _ in
             updateTunnelMenuItem(menuItem)
+            if tunnel.status == .deactivating || tunnel.status == .inactive {
+                if self?.currentTunnel == tunnel {
+                    self?.currentTunnel = self?.tunnelsManager.waitingTunnel()
+                }
+            } else {
+                self?.currentTunnel = tunnel
+            }
             self?.updateStatusMenuItems(with: tunnel, ignoreInactive: false)
         }
         tunnelStatusObservers.insert(statusObservationToken, at: tunnelIndex)
