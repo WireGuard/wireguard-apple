@@ -145,10 +145,10 @@ class TunnelEditViewController: NSViewController {
         scrollView.documentView = textView
 
         saveButton.target = self
-        saveButton.action = #selector(saveButtonClicked)
+        saveButton.action = #selector(handleSaveAction)
 
         discardButton.target = self
-        discardButton.action = #selector(discardButtonClicked)
+        discardButton.action = #selector(handleDiscardAction)
 
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
@@ -178,7 +178,7 @@ class TunnelEditViewController: NSViewController {
         self.view = containerView
     }
 
-    @objc func saveButtonClicked() {
+    @objc func handleSaveAction() {
         let name = nameRow.value
         guard !name.isEmpty else {
             ErrorPresenter.showErrorAlert(title: tr("macAlertNameIsEmpty"), message: "", from: self)
@@ -237,7 +237,7 @@ class TunnelEditViewController: NSViewController {
         }
     }
 
-    @objc func discardButtonClicked() {
+    @objc func handleDiscardAction() {
         delegate?.tunnelEditingCancelled()
         dismiss(self)
     }
