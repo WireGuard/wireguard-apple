@@ -5,13 +5,16 @@ import Cocoa
 
 class Application: NSApplication {
 
-    private let editorCommands = [
+    private let characterKeyCommands = [
         "x": #selector(NSText.cut(_:)),
         "c": #selector(NSText.copy(_:)),
         "v": #selector(NSText.paste(_:)),
         "z": #selector(UndoActionRespondable.undo(_:)),
         "a": #selector(NSResponder.selectAll(_:)),
-        "Z": #selector(UndoActionRespondable.redo(_:))
+        "Z": #selector(UndoActionRespondable.redo(_:)),
+        "w": #selector(NSWindow.performClose(_:)),
+        "m": #selector(NSWindow.performMiniaturize(_:)),
+        "q": #selector(NSApplication.terminate(_:))
     ]
 
     private var appDelegate: AppDelegate? //swiftlint:disable:this weak_delegate
@@ -33,7 +36,7 @@ class Application: NSApplication {
 
         if event.type == .keyDown,
             (modifierFlags == NSEvent.ModifierFlags.command.rawValue || modifierFlags == NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue),
-            let selector = editorCommands[event.charactersIgnoringModifiers ?? ""] {
+            let selector = characterKeyCommands[event.charactersIgnoringModifiers ?? ""] {
             sendAction(selector, to: nil, from: self)
         } else {
             super.sendEvent(event)
