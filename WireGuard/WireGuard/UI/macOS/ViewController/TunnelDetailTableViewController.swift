@@ -201,6 +201,14 @@ class TunnelDetailTableViewController: NSViewController {
         presentAsSheet(tunnelEditVC)
     }
 
+    @objc func handleToggleActiveStatusAction() {
+        if tunnel.status == .inactive {
+            tunnelsManager.startActivation(of: tunnel)
+        } else if tunnel.status == .active {
+            tunnelsManager.startDeactivation(of: tunnel)
+        }
+    }
+
     @objc func statusCheckboxToggled(sender: AnyObject?) {
         guard let statusCheckbox = sender as? NSButton else { return }
         if statusCheckbox.state == .on {

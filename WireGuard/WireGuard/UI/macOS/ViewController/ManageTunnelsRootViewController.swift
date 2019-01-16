@@ -7,6 +7,7 @@ class ManageTunnelsRootViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
     var tunnelsListVC: TunnelsListTableViewController?
+    var tunnelDetailVC: TunnelDetailTableViewController?
     let tunnelDetailContainerView = NSView()
     var tunnelDetailContentVC: NSViewController?
 
@@ -80,10 +81,36 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
     func tunnelSelected(tunnel: TunnelContainer) {
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
         setTunnelDetailContentVC(tunnelDetailVC)
+        self.tunnelDetailVC = tunnelDetailVC
     }
 
     func tunnelsListEmpty() {
         let noTunnelsVC = NoTunnelsDetailViewController(tunnelsManager: tunnelsManager)
         setTunnelDetailContentVC(noTunnelsVC)
+        self.tunnelDetailVC = nil
+    }
+}
+
+extension ManageTunnelsRootViewController {
+    override func keyDown(with event: NSEvent) {
+        let modifierFlags = event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue
+        let isCmdOrCmdShiftDown = (modifierFlags == NSEvent.ModifierFlags.command.rawValue || modifierFlags == NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
+
+        if event.specialKey == .delete {
+            tunnelsListVC?.handleRemoveTunnelAction()
+        } else if isCmdOrCmdShiftDown {
+            switch event.charactersIgnoringModifiers {
+            case "n":
+                tunnelsListVC?.handleAddEmptyTunnelAction()
+            case "i":
+                tunnelsListVC?.handleImportTunnelAction()
+            case "t":
+                tunnelDetailVC?.handleToggleActiveStatusAction()
+            case "e":
+                tunnelDetailVC?.handleEditTunnelAction()
+            default:
+                break
+            }
+        }
     }
 }
