@@ -107,7 +107,7 @@ class TunnelDetailTableViewController: NSViewController {
         statusCheckbox.action = #selector(statusCheckboxToggled(sender:))
 
         editButton.target = self
-        editButton.action = #selector(editButtonClicked)
+        editButton.action = #selector(handleEditTunnelAction)
 
         let clipView = NSClipView()
         clipView.documentView = tableView
@@ -195,7 +195,7 @@ class TunnelDetailTableViewController: NSViewController {
         statusCheckbox.isEnabled = shouldBeEnabled
     }
 
-    @objc func editButtonClicked() {
+    @objc func handleEditTunnelAction() {
         let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
         tunnelEditVC.delegate = self
         presentAsSheet(tunnelEditVC)
