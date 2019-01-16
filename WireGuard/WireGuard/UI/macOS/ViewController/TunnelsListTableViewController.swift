@@ -37,8 +37,8 @@ class TunnelsListTableViewController: NSViewController {
 
     let addMenu: NSMenu = {
         let addMenu = NSMenu(title: "TunnelsListAdd")
-        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(handleAddEmptyTunnelAction), keyEquivalent: "")
-        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(handleImportTunnelAction), keyEquivalent: "")
+        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(handleAddEmptyTunnelAction), keyEquivalent: "n")
+        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(handleImportTunnelAction), keyEquivalent: "i")
         return addMenu
     }()
 
