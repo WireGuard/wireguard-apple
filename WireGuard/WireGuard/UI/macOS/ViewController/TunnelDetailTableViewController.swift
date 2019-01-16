@@ -55,6 +55,7 @@ class TunnelDetailTableViewController: NSViewController {
         checkbox.title = ""
         checkbox.setButtonType(.switch)
         checkbox.state = .off
+        checkbox.toolTip = "Toggle status (⌘T)"
         return checkbox
     }()
 
@@ -63,6 +64,7 @@ class TunnelDetailTableViewController: NSViewController {
         button.title = tr("Edit")
         button.setButtonType(.momentaryPushIn)
         button.bezelStyle = .rounded
+        button.toolTip = "Edit tunnel (⌘E)"
         return button
     }()
 
