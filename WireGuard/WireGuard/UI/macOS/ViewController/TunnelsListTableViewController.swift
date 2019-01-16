@@ -37,15 +37,15 @@ class TunnelsListTableViewController: NSViewController {
 
     let addMenu: NSMenu = {
         let addMenu = NSMenu(title: "TunnelsListAdd")
-        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(addEmptyTunnelClicked), keyEquivalent: "")
-        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(importTunnelClicked), keyEquivalent: "")
+        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(handleAddEmptyTunnelAction), keyEquivalent: "")
+        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(handleImportTunnelAction), keyEquivalent: "")
         return addMenu
     }()
 
     let actionMenu: NSMenu = {
         let actionMenu = NSMenu(title: "TunnelsListAction")
-        actionMenu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(exportLogClicked), keyEquivalent: "")
-        actionMenu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(exportTunnelsClicked), keyEquivalent: "")
+        actionMenu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(handleExportLogAction), keyEquivalent: "")
+        actionMenu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(handleExportTunnelsAction), keyEquivalent: "")
         return actionMenu
     }()
 
@@ -119,23 +119,23 @@ class TunnelsListTableViewController: NSViewController {
             let segmentBottomLeft = NSPoint(x: 0, y: buttonBar.bounds.height + 2)
             addMenu.popUp(positioning: nil, at: segmentBottomLeft, in: buttonBar)
         } else if buttonBar.selectedSegment == 1 {
-            removeTunnelClicked()
+            handleRemoveTunnelAction()
         } else if buttonBar.selectedSegment == 2 {
             let segmentBottomLeft = NSPoint(x: buttonBar.bounds.width * 0.66, y: buttonBar.bounds.height + 2)
             actionMenu.popUp(positioning: nil, at: segmentBottomLeft, in: buttonBar)
         }
     }
 
-    @objc func addEmptyTunnelClicked() {
+    @objc func handleAddEmptyTunnelAction() {
         let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: nil)
         presentAsSheet(tunnelEditVC)
     }
 
-    @objc func importTunnelClicked() {
+    @objc func handleImportTunnelAction() {
         ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: self)
     }
 
-    @objc func removeTunnelClicked() {
+    @objc func handleRemoveTunnelAction() {
         guard let window = view.window else { return }
         let selectedTunnelIndex = tableView.selectedRow
         guard selectedTunnelIndex >= 0 && selectedTunnelIndex < tunnelsManager.numberOfTunnels() else { return }
@@ -163,7 +163,7 @@ class TunnelsListTableViewController: NSViewController {
         }
     }
 
-    @objc func exportLogClicked() {
+    @objc func handleExportLogAction() {
         guard let window = view.window else { return }
         let savePanel = NSSavePanel()
         savePanel.prompt = tr("macSheetButtonExportLog")
@@ -196,7 +196,7 @@ class TunnelsListTableViewController: NSViewController {
         }
     }
 
-    @objc func exportTunnelsClicked() {
+    @objc func handleExportTunnelsAction() {
         guard let window = view.window else { return }
         let savePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["zip"]
