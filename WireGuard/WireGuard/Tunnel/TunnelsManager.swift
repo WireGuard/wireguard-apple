@@ -365,7 +365,6 @@ class TunnelContainer: NSObject {
     var activationTimer: Timer?
 
     fileprivate var tunnelProvider: NETunnelProviderManager
-    private var lastTunnelConnectionStatus: NEVPNStatus?
 
     var tunnelConfiguration: TunnelConfiguration? {
         return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(called: tunnelProvider.localizedDescription)
