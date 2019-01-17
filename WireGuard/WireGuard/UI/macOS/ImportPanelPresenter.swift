@@ -4,8 +4,8 @@
 import Cocoa
 
 class ImportPanelPresenter {
-    static func presentImportPanel(tunnelsManager: TunnelsManager, sourceVC: NSViewController) {
-        guard let window = sourceVC.view.window else { return }
+    static func presentImportPanel(tunnelsManager: TunnelsManager, sourceVC: NSViewController?) {
+        guard let window = sourceVC?.view.window else { return }
         let openPanel = NSOpenPanel()
         openPanel.prompt = tr("macSheetButtonImport")
         openPanel.allowedFileTypes = ["conf", "zip"]
