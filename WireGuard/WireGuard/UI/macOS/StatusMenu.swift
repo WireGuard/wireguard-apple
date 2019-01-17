@@ -169,6 +169,7 @@ class StatusMenu: NSMenu {
             tr(format: "macAppVersion (%@)", appVersion),
             tr(format: "macGoBackendVersion (%@)", WIREGUARD_GO_VERSION)
         ].joined(separator: "\n")
+        NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(options: [
             .applicationVersion: appVersionString,
             .version: ""
