@@ -142,9 +142,9 @@ class TunnelDetailTableViewController: NSViewController {
             scrollView.bottomAnchor.constraint(equalTo: bottomControlsContainer.topAnchor),
             bottomControlsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             statusCheckbox.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
-            statusCheckbox.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor),
+            bottomControlsContainer.bottomAnchor.constraint(equalTo: statusCheckbox.bottomAnchor, constant: 4),
             editButton.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
-            editButton.centerYAnchor.constraint(equalTo: bottomControlsContainer.centerYAnchor)
+            bottomControlsContainer.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 4)
         ])
 
         NSLayoutConstraint.activate([
