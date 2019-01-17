@@ -25,7 +25,7 @@ class TunnelEditViewController: NSViewController {
     let textView: ConfTextView = {
         let textView = ConfTextView()
         let minWidth: CGFloat = 120
-        let minHeight: CGFloat = 60
+        let minHeight: CGFloat = 0
         textView.minSize = NSSize(width: 0, height: minHeight)
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.autoresizingMask = [.width] // Width should be based on superview width
@@ -124,10 +124,7 @@ class TunnelEditViewController: NSViewController {
             // Creating a new tunnel
             let privateKey = Curve25519.generatePrivateKey()
             let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-            let bootstrappingText = """
-            [Interface]
-            PrivateKey = \(privateKey.base64EncodedString())
-            """
+            let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64EncodedString())\n"
             publicKeyRow.value = publicKey.base64EncodedString()
             textView.string = bootstrappingText
             selectedActivateOnDemandOption = .none
