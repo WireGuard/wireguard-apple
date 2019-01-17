@@ -19,12 +19,10 @@ class Application: NSApplication {
 
     private var appDelegate: AppDelegate? //swiftlint:disable:this weak_delegate
 
-    // We use a custom Application class to be able to set the app delegate
-    // before app.run() gets called in NSApplicationMain().
     override init() {
         super.init()
         appDelegate = AppDelegate() // Keep a strong reference to the app delegate
-        delegate = appDelegate
+        delegate = appDelegate // Set delegate before app.run() gets called in NSApplicationMain()
     }
 
     required init?(coder: NSCoder) {
