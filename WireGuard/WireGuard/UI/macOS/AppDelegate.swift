@@ -6,8 +6,12 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+    var tunnelsManager: TunnelsManager?
+    var tunnelsTracker: TunnelsTracker?
     var statusItemController: StatusItemController?
-    var currentTunnelStatusObserver: AnyObject?
+
+    var manageTunnelsRootVC: ManageTunnelsRootViewController?
+    var manageTunnelsWindowObject: NSWindow?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
@@ -20,19 +24,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             let tunnelsManager: TunnelsManager = result.value!
-            let statusItemController = StatusItemController()
 
             let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
+            statusMenu.windowDelegate = self
 
+            let statusItemController = StatusItemController()
             statusItemController.statusItem.menu = statusMenu
-            statusItemController.currentTunnel = statusMenu.currentTunnel
-            self.currentTunnelStatusObserver = statusMenu.observe(\.currentTunnel) { statusMenu, _ in
-                statusItemController.currentTunnel = statusMenu.currentTunnel
-            }
-            self.statusItemController = statusItemController
 
-            tunnelsManager.tunnelsListDelegate = statusMenu
-            tunnelsManager.activationDelegate = statusMenu
+            let tunnelsTracker = TunnelsTracker(tunnelsManager: tunnelsManager)
+            tunnelsTracker.statusMenu = statusMenu
+            tunnelsTracker.statusItemController = statusItemController
+
+            self.tunnelsManager = tunnelsManager
+            self.tunnelsTracker = tunnelsTracker
+            self.statusItemController = statusItemController
         }
+    }
+}
+
+extension AppDelegate: StatusMenuWindowDelegate {
+    func manageTunnelsWindow() -> NSWindow {
+        if manageTunnelsWindowObject == nil {
+            manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager!)
+            let window = NSWindow(contentViewController: manageTunnelsRootVC!)
+            window.title = tr("macWindowTitleManageTunnels")
+            window.setContentSize(NSSize(width: 800, height: 480))
+            window.setFrameAutosaveName(NSWindow.FrameAutosaveName("ManageTunnelsWindow")) // Auto-save window position and size
+            manageTunnelsWindowObject = window
+            tunnelsTracker?.manageTunnelsRootVC = manageTunnelsRootVC
+        }
+        return manageTunnelsWindowObject!
     }
 }
