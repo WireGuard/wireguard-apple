@@ -3,12 +3,10 @@
  * Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
  */
 
-#include <string.h>
-#include <strings.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <string.h>
 #include <errno.h>
 #include "highlighter.h"
 
@@ -17,16 +15,56 @@ typedef struct {
 	size_t len;
 } string_span_t;
 
+static bool is_decimal(char c)
+{
+	return c >= '0' && c <= '9';
+}
+
+static bool is_hexadecimal(char c)
+{
+	return is_decimal(c) || ((c | 32) >= 'a' && (c | 32) <= 'f');
+}
+
+static bool is_alphabet(char c)
+{
+	return (c | 32) >= 'a' && (c | 32) <= 'z';
+}
+
+static bool is_same(string_span_t s, const char *c)
+{
+	size_t len = strlen(c);
+
+	if (len != s.len)
+		return false;
+	return !memcmp(s.s, c, len);
+}
+
+static bool is_caseless_same(string_span_t s, const char *c)
+{
+	size_t len = strlen(c);
+
+	if (len != s.len)
+		return false;
+	for (size_t i = 0; i < len; ++i) {
+		char a = c[i], b = s.s[i];
+		if ((unsigned)a - 'a' < 26)
+			a &= 95;
+		if ((unsigned)b - 'a' < 26)
+			b &= 95;
+		if (a != b)
+			return false;
+	}
+	return true;
+}
+
 static bool is_valid_key(string_span_t s)
 {
 	if (s.len != 44 || s.s[43] != '=')
 		return false;
 
 	for (size_t i = 0; i < 43; ++i) {
-		if (!((s.s[i] >= '/' && s.s[i] <= '9') ||
-		      (s.s[i] >= 'A' && s.s[i] <= 'Z') ||
-		      (s.s[i] >= 'a' && s.s[i] <= 'z') ||
-		      s.s[i] == '+'))
+		if (!is_decimal(s.s[i]) && !is_alphabet(s.s[i]) &&
+		    s.s[i] != '/' && s.s[i] != '+')
 			return false;
 	}
 	return true;
@@ -44,7 +82,7 @@ static bool is_valid_hostname(string_span_t s)
 		return false;
 
 	for (size_t i = 0; i < s.len; ++i) {
-		if (isdigit(s.s[i])) {
+		if (is_decimal(s.s[i])) {
 			++num_digit;
 			continue;
 		}
@@ -53,9 +91,7 @@ static bool is_valid_hostname(string_span_t s)
 			continue;
 		}
 
-		if (!((s.s[i] >= 'A' && s.s[i] <= 'Z') ||
-		      (s.s[i] >= 'a' && s.s[i] <= 'z') ||
-		      s.s[i] == '-'))
+		if (!is_alphabet(s.s[i]) && s.s[i] != '-')
 			return false;
 
 		if (i && s.s[i] == '.' && s.s[i - 1] == '.')
@@ -69,7 +105,7 @@ static bool is_valid_ipv4(string_span_t s)
 	for (size_t j, i = 0, pos = 0; i < 4 && pos < s.len; ++i) {
 		uint32_t val = 0;
 
-		for (j = 0; j < 3 && pos + j < s.len && isdigit(s.s[pos + j]); ++j)
+		for (j = 0; j < 3 && pos + j < s.len && is_decimal(s.s[pos + j]); ++j)
 			val = 10 * val + s.s[pos + j] - '0';
 		if (j == 0 || (j > 1 && s.s[pos] == '0') || val > 255)
 			return false;
@@ -103,7 +139,7 @@ static bool is_valid_ipv6(string_span_t s)
 				return false;
 			continue;
 		}
-		for (j = 0; j < 4 && pos + j < s.len && isxdigit(s.s[pos + j]); ++j);
+		for (j = 0; j < 4 && pos + j < s.len && is_hexadecimal(s.s[pos + j]); ++j);
 		if (j == 0)
 			return false;
 		if (pos + j == s.len && (seen_colon || i == 7))
@@ -139,7 +175,7 @@ static bool is_valid_uint(string_span_t s, bool support_hex, uint64_t min, uint6
 		}
 	} else {
 		for (size_t i = 0; i < s.len; ++i) {
-			if (!isdigit(s.s[i]))
+			if (!is_decimal(s.s[i]))
 				return false;
 			val = 10 * val + s.s[i] - '0';
 		}
@@ -159,7 +195,7 @@ static bool is_valid_mtu(string_span_t s)
 
 static bool is_valid_persistentkeepalive(string_span_t s)
 {
-	if (s.len == 3 && !memcmp(s.s, "off", 3))
+	if (is_same(s, "off"))
 		return true;
 	return is_valid_uint(s, false, 0, 65535);
 }
@@ -168,16 +204,16 @@ static bool is_valid_persistentkeepalive(string_span_t s)
 
 static bool is_valid_fwmark(string_span_t s)
 {
-	if (s.len == 3 && !memcmp(s.s, "off", 3))
+	if (is_same(s, "off"))
 		return true;
 	return is_valid_uint(s, true, 0, 4294967295);
 }
 
 static bool is_valid_table(string_span_t s)
 {
-	if (s.len == 4 && !memcmp(s.s, "auto", 3))
+	if (is_same(s, "auto"))
 		return true;
-	if (s.len == 3 && !memcmp(s.s, "off", 3))
+	if (is_same(s, "off"))
 		return true;
 	/* This pretty much invalidates the other checks, but rt_names.c's
 	 * fread_id_name does no validation aside from this. */
@@ -188,8 +224,7 @@ static bool is_valid_table(string_span_t s)
 
 static bool is_valid_saveconfig(string_span_t s)
 {
-	return (s.len == 4 && !memcmp(s.s, "true", 4)) ||
-	       (s.len == 5 && !memcmp(s.s, "false", 5));
+	return is_same(s, "true") || is_same(s, "false");
 }
 
 static bool is_valid_prepostupdown(string_span_t s)
@@ -205,11 +240,9 @@ static bool is_valid_scope(string_span_t s)
 	if (s.len > 64 || !s.len)
 		return false;
 	for (size_t i = 0; i < s.len; ++i) {
-		if (!((s.s[i] >= 'A' && s.s[i] <= 'Z') ||
-		      (s.s[i] >= 'a' && s.s[i] <= 'z') ||
-		      isdigit(s.s[i]) || s.s[i] == '_' ||
-		      s.s[i] == '=' || s.s[i] == '+' ||
-		      s.s[i] == '.' || s.s[i] == '-'))
+		if (!is_alphabet(s.s[i]) && !is_decimal(s.s[i]) &&
+		    s.s[i] != '_' && s.s[i] != '=' && s.s[i] != '+' &&
+		    s.s[i] != '.' && s.s[i] != '-')
 			return false;
 	}
 	return true;
@@ -269,7 +302,7 @@ static bool is_valid_network(string_span_t s)
 				return false;
 
 			for (size_t j = 0; j < cidr.len; ++j) {
-				if (!isdigit(cidr.s[j]))
+				if (!is_decimal(cidr.s[j]))
 					return false;
 				cidrval = 10 * cidrval + cidr.s[j] - '0';
 			}
@@ -323,7 +356,7 @@ static enum field section_for_field(enum field t)
 
 static enum field get_field(string_span_t s)
 {
-#define check_enum(t) do { if (s.len == strlen(#t) && !strncasecmp(#t, s.s, s.len)) return t; } while (0)
+#define check_enum(t) do { if (is_caseless_same(s, #t)) return t; } while (0)
 	check_enum(PrivateKey);
 	check_enum(ListenPort);
 	check_enum(Address);
@@ -349,9 +382,9 @@ static enum field get_field(string_span_t s)
 
 static enum field get_sectiontype(string_span_t s)
 {
-	if (s.len == 6 && !strncasecmp("[Peer]", s.s, 6))
+	if (is_caseless_same(s, "[Peer]"))
 		return PeerSection;
-	if (s.len == 11 && !strncasecmp("[Interface]", s.s, 11))
+	if (is_caseless_same(s, "[Interface]"))
 		return InterfaceSection;
 	return Invalid;
 }
