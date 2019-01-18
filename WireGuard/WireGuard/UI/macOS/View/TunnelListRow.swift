@@ -61,10 +61,10 @@ class TunnelListRow: NSView {
         switch status {
         case .active, .restarting, .reasserting:
             return NSImage(named: NSImage.statusAvailableName)
-        case .activating, .waiting:
+        case .activating, .waiting, .deactivating:
             return NSImage(named: NSImage.statusPartiallyAvailableName)
-        case .deactivating, .inactive:
-            return nil
+        case .inactive:
+            return NSImage(named: NSImage.statusNoneName)
         }
     }
 
