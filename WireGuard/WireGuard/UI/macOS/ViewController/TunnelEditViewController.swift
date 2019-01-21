@@ -218,11 +218,11 @@ class TunnelEditViewController: NSViewController {
             tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
                 if let error = result.error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
-                } else {
-                    let tunnel: TunnelContainer = result.value!
-                    self?.dismiss(self)
-                    self?.delegate?.tunnelSaved(tunnel: tunnel)
+                    return
                 }
+                let tunnel: TunnelContainer = result.value!
+                self?.dismiss(self)
+                self?.delegate?.tunnelSaved(tunnel: tunnel)
             }
         }
     }
