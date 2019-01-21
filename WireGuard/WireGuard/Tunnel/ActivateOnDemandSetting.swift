@@ -14,9 +14,11 @@ enum ActivateOnDemandOption {
     #if os(iOS)
     case useOnDemandOverWiFiOrCellular
     case useOnDemandOverCellularOnly
-    #elseif os(OSX)
+    #elseif os(macOS)
     case useOnDemandOverWiFiOrEthernet
     case useOnDemandOverEthernetOnly
+    #else
+    #error("Unimplemented")
     #endif
 }
 
@@ -40,7 +42,7 @@ extension ActivateOnDemandSetting {
             connectRule.interfaceTypeMatch = .cellular
             disconnectRule.interfaceTypeMatch = .wiFi
             rules = [connectRule, disconnectRule]
-        #elseif os(OSX)
+        #elseif os(macOS)
         case .useOnDemandOverWiFiOrEthernet:
             rules = [connectRule]
         case .useOnDemandOverWiFiOnly:
@@ -51,6 +53,8 @@ extension ActivateOnDemandSetting {
             connectRule.interfaceTypeMatch = .ethernet
             disconnectRule.interfaceTypeMatch = .wiFi
             rules = [connectRule, disconnectRule]
+        #else
+        #error("Unimplemented")
         #endif
         }
         tunnelProviderManager.onDemandRules = rules
@@ -62,10 +66,12 @@ extension ActivateOnDemandSetting {
         let otherInterfaceType: NEOnDemandRuleInterfaceType = .cellular
         let useWiFiOrOtherOption: ActivateOnDemandOption = .useOnDemandOverWiFiOrCellular
         let useOtherOnlyOption: ActivateOnDemandOption = .useOnDemandOverCellularOnly
-        #elseif os(OSX)
+        #elseif os(macOS)
         let otherInterfaceType: NEOnDemandRuleInterfaceType = .ethernet
         let useWiFiOrOtherOption: ActivateOnDemandOption = .useOnDemandOverWiFiOrEthernet
         let useOtherOnlyOption: ActivateOnDemandOption = .useOnDemandOverEthernetOnly
+        #else
+        #error("Unimplemented")
         #endif
         let activateOnDemandOption: ActivateOnDemandOption
         switch rules.count {
