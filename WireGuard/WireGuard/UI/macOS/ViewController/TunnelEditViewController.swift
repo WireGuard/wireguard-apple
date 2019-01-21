@@ -105,16 +105,6 @@ class TunnelEditViewController: NSViewController {
             textView.string = tunnelConfiguration.asWgQuickConfig()
             publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64EncodedString()
             textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64EncodedString()
-            textViewObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
-                if let privateKeyString = textView.privateKeyString,
-                    let privateKey = Data(base64Encoded: privateKeyString),
-                    privateKey.count == TunnelConfiguration.keyLength {
-                    let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-                    publicKeyRow?.value = publicKey.base64EncodedString()
-                } else {
-                    publicKeyRow?.value = ""
-                }
-            }
             if tunnel.activateOnDemandSetting.isActivateOnDemandEnabled {
                 selectedActivateOnDemandOption = tunnel.activateOnDemandSetting.activateOnDemandOption
             } else {
@@ -128,6 +118,16 @@ class TunnelEditViewController: NSViewController {
             publicKeyRow.value = publicKey.base64EncodedString()
             textView.string = bootstrappingText
             selectedActivateOnDemandOption = .none
+        }
+        textViewObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
+            if let privateKeyString = textView.privateKeyString,
+                let privateKey = Data(base64Encoded: privateKeyString),
+                privateKey.count == TunnelConfiguration.keyLength {
+                let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
+                publicKeyRow?.value = publicKey.base64EncodedString()
+            } else {
+                publicKeyRow?.value = ""
+            }
         }
 
         onDemandRow.valueOptions = activateOnDemandOptions.map { TunnelViewModel.activateOnDemandOptionText(for: $0) }
