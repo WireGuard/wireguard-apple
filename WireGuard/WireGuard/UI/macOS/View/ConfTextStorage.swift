@@ -7,24 +7,11 @@ private let fontSize: CGFloat = 15
 
 class ConfTextStorage: NSTextStorage {
 
-    struct TextColorTheme {
-        let plainText: NSColor
-        let sections: NSColor
-        let keyType: NSColor
-        let key: NSColor
-        let url: NSColor
-        let urlAttribute: NSColor
-        let comments: NSColor
-        let number: NSColor
-        let error: NSColor
-    }
-
     let defaultFont = NSFontManager.shared.convertWeight(true, of: NSFont.systemFont(ofSize: fontSize))
     private let boldFont = NSFont.boldSystemFont(ofSize: fontSize)
     private lazy var italicFont = NSFontManager.shared.convert(defaultFont, toHaveTrait: .italicFontMask)
 
-    private var defaultAttributes: [NSAttributedString.Key: Any]! //swiftlint:disable:this implicitly_unwrapped_optional
-    private var highlightAttributes: [UInt32: [NSAttributedString.Key: Any]]! //swiftlint:disable:this implicitly_unwrapped_optional
+    private var textColorTheme: ConfTextColorTheme?
 
     private let backingStore: NSMutableAttributedString
     private(set) var hasError = false
@@ -43,73 +30,25 @@ class ConfTextStorage: NSTextStorage {
         fatalError("init(pasteboardPropertyList:ofType:) has not been implemented")
     }
 
-    //swiftlint:disable:next function_body_length
-    func updateAttributes(for theme: TextColorTheme) {
-        self.defaultAttributes = [
-            .foregroundColor: theme.plainText,
-            .font: defaultFont
-        ]
+    func nonColorAttributes(for highlightType: highlight_type) -> [NSAttributedString.Key: Any] {
+        switch highlightType.rawValue {
+        case HighlightSection.rawValue, HighlightField.rawValue:
+            return [.font: boldFont]
+        case HighlightPublicKey.rawValue, HighlightPrivateKey.rawValue, HighlightPresharedKey.rawValue,
+             HighlightIP.rawValue, HighlightCidr.rawValue, HighlightHost.rawValue, HighlightPort.rawValue,
+             HighlightMTU.rawValue, HighlightKeepalive.rawValue, HighlightDelimiter.rawValue:
+            return [.font: defaultFont]
+        case HighlightComment.rawValue:
+            return [.font: italicFont]
+        case HighlightError.rawValue:
+            return [.font: defaultFont, .underlineStyle: 1]
+        default:
+            return [:]
+        }
+    }
 
-        self.highlightAttributes = [
-            HighlightSection.rawValue: [
-                .foregroundColor: theme.sections,
-                .font: boldFont
-            ],
-            HighlightField.rawValue: [
-                .foregroundColor: theme.keyType,
-                .font: boldFont
-            ],
-            HighlightPublicKey.rawValue: [
-                .foregroundColor: theme.key,
-                .font: defaultFont
-            ],
-            HighlightPrivateKey.rawValue: [
-                .foregroundColor: theme.key,
-                .font: defaultFont
-            ],
-            HighlightPresharedKey.rawValue: [
-                .foregroundColor: theme.key,
-                .font: defaultFont
-            ],
-            HighlightIP.rawValue: [
-                .foregroundColor: theme.url,
-                .font: defaultFont
-            ],
-            HighlightCidr.rawValue: [
-                .foregroundColor: theme.urlAttribute,
-                .font: defaultFont
-            ],
-            HighlightHost.rawValue: [
-                .foregroundColor: theme.url,
-                .font: defaultFont
-            ],
-            HighlightPort.rawValue: [
-                .foregroundColor: theme.urlAttribute,
-                .font: defaultFont
-            ],
-            HighlightMTU.rawValue: [
-                .foregroundColor: theme.number,
-                .font: defaultFont
-            ],
-            HighlightKeepalive.rawValue: [
-                .foregroundColor: theme.number,
-                .font: defaultFont
-            ],
-            HighlightComment.rawValue: [
-                .foregroundColor: theme.comments,
-                .font: italicFont
-            ],
-            HighlightDelimiter.rawValue: [
-                .foregroundColor: theme.plainText,
-                .font: defaultFont
-            ],
-            HighlightError.rawValue: [
-                .foregroundColor: theme.error,
-                .font: defaultFont,
-                .underlineStyle: 1
-            ]
-        ]
-
+    func updateAttributes(for textColorTheme: ConfTextColorTheme) {
+        self.textColorTheme = textColorTheme
         highlightSyntax()
     }
 
@@ -152,8 +91,12 @@ class ConfTextStorage: NSTextStorage {
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
 
-            let attributes = self.highlightAttributes[span.type.rawValue] ?? defaultAttributes
-            backingStore.setAttributes(attributes, range: NSRange(location: span.start, length: span.len))
+            let range = NSRange(location: span.start, length: span.len)
+            backingStore.setAttributes(nonColorAttributes(for: span.type), range: range)
+            if let textColorTheme = textColorTheme {
+                let color = textColorTheme.color(for: span.type)
+                backingStore.addAttribute(.foregroundColor, value: color, range: range)
+            }
 
             if span.type == HighlightError {
                 hasError = true
