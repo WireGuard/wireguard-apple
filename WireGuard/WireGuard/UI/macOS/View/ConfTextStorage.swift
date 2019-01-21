@@ -11,7 +11,7 @@ class ConfTextStorage: NSTextStorage {
     private let boldFont = NSFont.boldSystemFont(ofSize: fontSize)
     private lazy var italicFont = NSFontManager.shared.convert(defaultFont, toHaveTrait: .italicFontMask)
 
-    private var textColorTheme: ConfTextColorTheme?
+    private var textColorTheme: ConfTextColorTheme.Type?
 
     private let backingStore: NSMutableAttributedString
     private(set) var hasError = false
@@ -47,7 +47,7 @@ class ConfTextStorage: NSTextStorage {
         }
     }
 
-    func updateAttributes(for textColorTheme: ConfTextColorTheme) {
+    func updateAttributes(for textColorTheme: ConfTextColorTheme.Type) {
         self.textColorTheme = textColorTheme
         highlightSyntax()
     }
@@ -82,19 +82,18 @@ class ConfTextStorage: NSTextStorage {
     }
 
     func highlightSyntax() {
+        guard let textColorTheme = textColorTheme else { return }
         hasError = false
         privateKeyString = nil
 
         let fullTextRange = NSRange(location: 0, length: (backingStore.string as NSString).length)
 
         backingStore.beginEditing()
-        if let textColorTheme = textColorTheme {
-            let defaultAttributes: [NSAttributedString.Key: Any] = [
-                .foregroundColor: textColorTheme.defaultColor,
-                .font: defaultFont
-            ]
-            backingStore.setAttributes(defaultAttributes, range: fullTextRange)
-        }
+        let defaultAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: textColorTheme.defaultColor,
+            .font: defaultFont
+        ]
+        backingStore.setAttributes(defaultAttributes, range: fullTextRange)
         var spans = highlight_config(backingStore.string.cString(using: String.Encoding.utf8))!
 
         while spans.pointee.type != HighlightEnd {
@@ -102,10 +101,8 @@ class ConfTextStorage: NSTextStorage {
 
             let range = NSRange(location: span.start, length: span.len)
             backingStore.setAttributes(nonColorAttributes(for: span.type), range: range)
-            if let textColorTheme = textColorTheme {
-                let color = textColorTheme.colorMap[span.type.rawValue] ?? textColorTheme.defaultColor
-                backingStore.addAttribute(.foregroundColor, value: color, range: range)
-            }
+            let color = textColorTheme.colorMap[span.type.rawValue] ?? textColorTheme.defaultColor
+            backingStore.addAttribute(.foregroundColor, value: color, range: range)
 
             if span.type == HighlightError {
                 hasError = true
