@@ -186,48 +186,43 @@ class TunnelEditViewController: NSViewController {
         } else {
             onDemandSetting = ActivateOnDemandSetting(isActivateOnDemandEnabled: true, activateOnDemandOption: onDemandOption)
         }
+
+        let isTunnelModifiedWithoutChangingName = (tunnel != nil && tunnel!.name == name)
+        guard isTunnelModifiedWithoutChangingName || tunnelsManager.tunnel(named: name) == nil else {
+            ErrorPresenter.showErrorAlert(title: tr(format: "macAlertDuplicateName (%@)", name), message: "", from: self)
+            return
+        }
+
+        let tunnelConfiguration: TunnelConfiguration
+        do {
+            tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
+        } catch let error as WireGuardAppError {
+            ErrorPresenter.showErrorAlert(error: error, from: self)
+            return
+        } catch {
+            fatalError()
+        }
+
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
-            if name != tunnel.name && tunnelsManager.tunnel(named: name) != nil {
-                ErrorPresenter.showErrorAlert(title: tr(format: "macAlertDuplicateName (%@)", name), message: "", from: self)
-                return
-            }
-            do {
-                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
-                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
-                    if let error = error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self)
-                        return
-                    }
-                    self?.dismiss(self)
-                    self?.delegate?.tunnelSaved(tunnel: tunnel)
+            tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
                 }
-            } catch let error as WireGuardAppError {
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-            } catch {
-                fatalError()
+                self?.dismiss(self)
+                self?.delegate?.tunnelSaved(tunnel: tunnel)
             }
         } else {
             // We're creating a new tunnel
-            if tunnelsManager.tunnel(named: name) != nil {
-                ErrorPresenter.showErrorAlert(title: tr(format: "macAlertDuplicateName (%@)", name), message: "", from: self)
-                return
-            }
-            do {
-                let tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
-                    if let error = result.error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self)
-                    } else {
-                        let tunnel: TunnelContainer = result.value!
-                        self?.dismiss(self)
-                        self?.delegate?.tunnelSaved(tunnel: tunnel)
-                    }
+            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
+                if let error = result.error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                } else {
+                    let tunnel: TunnelContainer = result.value!
+                    self?.dismiss(self)
+                    self?.delegate?.tunnelSaved(tunnel: tunnel)
                 }
-            } catch let error as WireGuardAppError {
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-            } catch {
-                fatalError()
             }
         }
     }
