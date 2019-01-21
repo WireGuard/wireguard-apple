@@ -85,7 +85,16 @@ class ConfTextStorage: NSTextStorage {
         hasError = false
         privateKeyString = nil
 
+        let fullTextRange = NSRange(location: 0, length: (backingStore.string as NSString).length)
+
         backingStore.beginEditing()
+        if let textColorTheme = textColorTheme {
+            let defaultAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: textColorTheme.defaultColor,
+                .font: defaultFont
+            ]
+            backingStore.setAttributes(defaultAttributes, range: fullTextRange)
+        }
         var spans = highlight_config(backingStore.string.cString(using: String.Encoding.utf8))!
 
         while spans.pointee.type != HighlightEnd {
@@ -111,7 +120,7 @@ class ConfTextStorage: NSTextStorage {
         backingStore.endEditing()
 
         beginEditing()
-        edited(.editedAttributes, range: NSRange(location: 0, length: (backingStore.string as NSString).length), changeInLength: 0)
+        edited(.editedAttributes, range: fullTextRange, changeInLength: 0)
         endEditing()
     }
 
