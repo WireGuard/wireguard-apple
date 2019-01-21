@@ -4,10 +4,16 @@
 import Cocoa
 
 protocol ConfTextColorTheme {
+    var defaultColor: NSColor { get }
+
     func color(for: highlight_type) -> NSColor
 }
 
 struct ConfTextAquaColorTheme: ConfTextColorTheme {
+    var defaultColor: NSColor {
+        return NSColor(hex: "#000000") // Plain text in Xcode
+    }
+
     func color(for highlightType: highlight_type) -> NSColor {
         switch highlightType.rawValue {
         case HighlightSection.rawValue:
@@ -27,12 +33,16 @@ struct ConfTextAquaColorTheme: ConfTextColorTheme {
         case HighlightError.rawValue:
             return NSColor(hex: "#C41A16") // Strings in Xcode
         default:
-            return NSColor(hex: "#000000") // Plain text in Xcode
+            return defaultColor
         }
     }
 }
 
 struct ConfTextDarkAquaColorTheme: ConfTextColorTheme {
+    var defaultColor: NSColor {
+        return NSColor(hex: "#FFFFFF") // Plain text in Xcode
+    }
+
     func color(for highlightType: highlight_type) -> NSColor {
         switch highlightType.rawValue {
         case HighlightSection.rawValue:
@@ -52,7 +62,7 @@ struct ConfTextDarkAquaColorTheme: ConfTextColorTheme {
         case HighlightError.rawValue:
             return NSColor(hex: "#FF4C4C") // Strings in Xcode
         default:
-            return NSColor(hex: "#FFFFFF") // Plain text in Xcode
+            return defaultColor
         }
     }
 }
