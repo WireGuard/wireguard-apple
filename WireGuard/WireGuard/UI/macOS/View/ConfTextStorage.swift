@@ -101,7 +101,7 @@ class ConfTextStorage: NSTextStorage {
 
             let range = NSRange(location: span.start, length: span.len)
             backingStore.setAttributes(nonColorAttributes(for: span.type), range: range)
-            let color = textColorTheme.colorMap[span.type.rawValue] ?? textColorTheme.defaultColor
+            let color = textColorTheme.colorMap[span.type.rawValue, default: textColorTheme.defaultColor]
             backingStore.addAttribute(.foregroundColor, value: color, range: range)
 
             if span.type == HighlightError {

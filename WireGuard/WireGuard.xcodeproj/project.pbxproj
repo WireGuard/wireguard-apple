@@ -391,6 +391,8 @@
 		6F4DD16921DA556600690EAE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				5F52D0C021E378C000283CEA /* highlighter.h */,
+				5F52D0C121E378C000283CEA /* highlighter.c */,
 				6F4DD16A21DA558800690EAE /* TunnelListRow.swift */,
 				6F613D9A21DE33B8004B217A /* KeyValueRow.swift */,
 				5F52D0BA21E3781B00283CEA /* ConfTextView.swift */,
@@ -529,8 +531,6 @@
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
 				6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */,
 				5F52D0BE21E3788900283CEA /* NSColor+Hex.swift */,
-				5F52D0C021E378C000283CEA /* highlighter.h */,
-				5F52D0C121E378C000283CEA /* highlighter.c */,
 				6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */,
 			);
 			path = macOS;
