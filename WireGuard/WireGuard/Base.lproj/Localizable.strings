@@ -97,23 +97,23 @@
 
 /* Any one of the following alert messages can go with the above title */
 "alertInvalidInterfaceMessageNameRequired" = "Interface name is required";
-"alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface's private key is required";
-"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Interface's private key must be a 32-byte key in base64 encoding";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface’s private key is required";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Interface’s private key must be a 32-byte key in base64 encoding";
 "alertInvalidInterfaceMessageAddressInvalid" = "Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation";
-"alertInvalidInterfaceMessageListenPortInvalid" = "Interface's listen port must be between 0 and 65535, or unspecified";
-"alertInvalidInterfaceMessageMTUInvalid" = "Interface's MTU must be between 576 and 65535, or unspecified";
-"alertInvalidInterfaceMessageDNSInvalid" = "Interface's DNS servers must be a list of comma-separated IP addresses";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Interface’s listen port must be between 0 and 65535, or unspecified";
+"alertInvalidInterfaceMessageMTUInvalid" = "Interface’s MTU must be between 576 and 65535, or unspecified";
+"alertInvalidInterfaceMessageDNSInvalid" = "Interface’s DNS servers must be a list of comma-separated IP addresses";
 
 /* Alert title for error in the peer data */
 "alertInvalidPeerTitle" = "Invalid peer";
 
 /* Any one of the following alert messages can go with the above title */
-"alertInvalidPeerMessagePublicKeyRequired" = "Peer's public key is required";
-"alertInvalidPeerMessagePublicKeyInvalid" = "Peer's public key must be a 32-byte key in base64 encoding";
-"alertInvalidPeerMessagePreSharedKeyInvalid" = "Peer's preshared key must be a 32-byte key in base64 encoding";
-"alertInvalidPeerMessageAllowedIPsInvalid" = "Peer's allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation";
-"alertInvalidPeerMessageEndpointInvalid" = "Peer's endpoint must be of the form 'host:port' or '[host]:port'";
-"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Peer's persistent keepalive must be between 0 to 65535, or unspecified";
+"alertInvalidPeerMessagePublicKeyRequired" = "Peer’s public key is required";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Peer’s public key must be a 32-byte key in base64 encoding";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Peer’s preshared key must be a 32-byte key in base64 encoding";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Peer’s allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation";
+"alertInvalidPeerMessageEndpointInvalid" = "Peer’s endpoint must be of the form ‘host:port’ or ‘[host]:port’";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Peer’s persistent keepalive must be between 0 to 65535, or unspecified";
 "alertInvalidPeerMessagePublicKeyDuplicated" = "Two or more peers cannot have the same public key";
 
 // Scanning QR code UI
@@ -238,8 +238,8 @@
 
 "macWindowTitleManageTunnels" = "Manage WireGuard Tunnels";
 
-"macDeleteTunnelConfirmationAlertMessage (%@)" = "Are you sure you want to delete tunnel \"%@\"?";
-"macDeleteTunnelConfirmationAlertInfo" = "You can't undo this action";
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Are you sure you want to delete ‘%@’?";
+"macDeleteTunnelConfirmationAlertInfo" = "You cannot undo this action.";
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
 
@@ -267,31 +267,31 @@
 "macEditSave" = "Save";
 
 "macAlertNameIsEmpty" = "Name is required";
-"macAlertDuplicateName (%@)" = "Another tunnel already exists with the name '%@'.";
+"macAlertDuplicateName (%@)" = "Another tunnel already exists with the name ‘%@’.";
 
-"macAlertInvalidLine (%@)" = "Invalid line: '%@'.";
+"macAlertInvalidLine (%@)" = "Invalid line: ‘%@’.";
 
-"macAlertNoInterface" = "Configuration must have an 'Interface' section.";
-"macAlertMultipleInterfaces" = "Configuration must have only one 'Interface' section.";
+"macAlertNoInterface" = "Configuration must have an ‘Interface’ section.";
+"macAlertMultipleInterfaces" = "Configuration must have only one ‘Interface’ section.";
 "macAlertPrivateKeyInvalid" = "Private key is invalid.";
-"macAlertListenPortInvalid (%@)" = "Listen port '%@' is invalid.";
-"macAlertAddressInvalid (%@)" = "Address '%@' is invalid.";
-"macAlertDNSInvalid (%@)" = "DNS '%@' is invalid.";
-"macAlertMTUInvalid (%@)" = "MTU '%@' is invalid.";
+"macAlertListenPortInvalid (%@)" = "Listen port ‘%@’ is invalid.";
+"macAlertAddressInvalid (%@)" = "Address ‘%@’ is invalid.";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ is invalid.";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ is invalid.";
 
-"macAlertUnrecognizedInterfaceKey (%@)" = "Interface contains unrecognized key '%@'";
-"macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: 'PrivateKey', 'ListenPort', 'Address', 'DNS' and 'MTU'.";
+"macAlertUnrecognizedInterfaceKey (%@)" = "Interface contains unrecognized key ‘%@’";
+"macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ and ‘MTU’.";
 
 "macAlertPublicKeyInvalid" = "Public key is invalid";
 "macAlertPreSharedKeyInvalid" = "Preshared key is invalid";
-"macAlertAllowedIPInvalid (%@)" = "Allowed IP '%@' is invalid";
-"macAlertEndpointInvalid (%@)" = "Endpoint '%@' is invalid";
-"macAlertPersistentKeepliveInvalid (%@)" = "Persistent keepalive value '%@' is invalid";
+"macAlertAllowedIPInvalid (%@)" = "Allowed IP ‘%@’ is invalid";
+"macAlertEndpointInvalid (%@)" = "Endpoint ‘%@’ is invalid";
+"macAlertPersistentKeepliveInvalid (%@)" = "Persistent keepalive value ‘%@’ is invalid";
 
-"macAlertUnrecognizedPeerKey (%@)" = "Peer contains unrecognized key '%@'";
-"macAlertInfoUnrecognizedPeerKey" = "Valid keys are: 'PublicKey', 'PresharedKey', 'AllowedIPs', 'Endpoint' and 'PersistentKeepalive'";
+"macAlertUnrecognizedPeerKey (%@)" = "Peer contains unrecognized key ‘%@’";
+"macAlertInfoUnrecognizedPeerKey" = "Valid keys are: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ and ‘PersistentKeepalive’";
 
-"macAlertMultipleEntriesForKey (%@)" = "There should be only one entry per section for key '%@'";
+"macAlertMultipleEntriesForKey (%@)" = "There should be only one entry per section for key ‘%@’";
 
 // Mac about dialog
 
