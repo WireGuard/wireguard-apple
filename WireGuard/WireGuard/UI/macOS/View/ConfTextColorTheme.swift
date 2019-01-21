@@ -4,13 +4,13 @@
 import Cocoa
 
 protocol ConfTextColorTheme {
-    var defaultColor: NSColor { get }
-    var colorMap: [UInt32: NSColor] { get }
+    static var defaultColor: NSColor { get }
+    static var colorMap: [UInt32: NSColor] { get }
 }
 
 struct ConfTextAquaColorTheme: ConfTextColorTheme {
-    var defaultColor = NSColor(hex: "#000000")
-    var colorMap: [UInt32: NSColor] = [
+    static let defaultColor = NSColor(hex: "#000000")
+    static let colorMap: [UInt32: NSColor] = [
         HighlightSection.rawValue: NSColor(hex: "#326D74"), // Class name in Xcode
         HighlightField.rawValue: NSColor(hex: "#9B2393"), // Keywords in Xcode
         HighlightPublicKey.rawValue: NSColor(hex: "#643820"), // Preprocessor directives in Xcode
@@ -28,8 +28,8 @@ struct ConfTextAquaColorTheme: ConfTextColorTheme {
 }
 
 struct ConfTextDarkAquaColorTheme: ConfTextColorTheme {
-    var defaultColor = NSColor(hex: "#FFFFFF") // Plain text in Xcode
-    var colorMap: [UInt32: NSColor] = [
+    static let defaultColor = NSColor(hex: "#FFFFFF") // Plain text in Xcode
+    static let colorMap: [UInt32: NSColor] = [
         HighlightSection.rawValue: NSColor(hex: "#91D462"), // Class name in Xcode
         HighlightField.rawValue: NSColor(hex: "#FC5FA3"), // Keywords in Xcode
         HighlightPublicKey.rawValue: NSColor(hex: "#FD8F3F"), // Preprocessor directives in Xcode

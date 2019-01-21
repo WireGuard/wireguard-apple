@@ -46,9 +46,9 @@ class ConfTextView: NSTextView {
     private func updateTheme() {
         switch effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) ?? .aqua {
         case .darkAqua:
-            confTextStorage.updateAttributes(for: ConfTextDarkAquaColorTheme())
+            confTextStorage.updateAttributes(for: ConfTextDarkAquaColorTheme.self)
         default:
-            confTextStorage.updateAttributes(for: ConfTextAquaColorTheme())
+            confTextStorage.updateAttributes(for: ConfTextAquaColorTheme.self)
         }
     }
 
