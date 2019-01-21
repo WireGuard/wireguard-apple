@@ -227,10 +227,10 @@
 "macMenuNetworksNone" = "Networks: None";
 
 "macMenuManageTunnels" = "Manage tunnels";
-"macMenuImportTunnels" = "Import tunnel(s) from file...";
-"macMenuAddEmptyTunnel" = "Add empty tunnel...";
-"macMenuExportLog" = "Export log to file...";
-"macMenuExportTunnels" = "Export tunnels to zip...";
+"macMenuImportTunnels" = "Import tunnel(s) from file…";
+"macMenuAddEmptyTunnel" = "Add empty tunnel…";
+"macMenuExportLog" = "Export log to file…";
+"macMenuExportTunnels" = "Export tunnels to zip…";
 "macMenuAbout" = "About WireGuard";
 "macMenuQuit" = "Quit";
 
