@@ -8,8 +8,10 @@ extension FileManager {
     private static var sharedFolderURL: URL? {
         #if os(iOS)
         let appGroupIdInfoDictionaryKey = "com.wireguard.ios.app_group_id"
-        #elseif os(OSX)
+        #elseif os(macOS)
         let appGroupIdInfoDictionaryKey = "com.wireguard.macos.app_group_id"
+        #else
+        #error("Unimplemented")
         #endif
         guard let appGroupId = Bundle.main.object(forInfoDictionaryKey: appGroupIdInfoDictionaryKey) as? String else {
             os_log("Cannot obtain app group ID from bundle", log: OSLog.default, type: .error)
