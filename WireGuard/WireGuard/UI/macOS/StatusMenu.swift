@@ -25,7 +25,7 @@ class StatusMenu: NSMenu {
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
-        super.init(title: "WireGuard Status Bar Menu")
+        super.init(title: "")
 
         addStatusMenuItems()
         addItem(NSMenuItem.separator())
