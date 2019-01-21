@@ -46,10 +46,10 @@ class StatusMenu: NSMenu {
 
     func addStatusMenuItems() {
         let statusTitle = tr(format: "macStatus (%@)", tr("tunnelStatusInactive"))
-        let statusMenuItem = NSMenuItem(title: statusTitle, action: #selector(manageTunnelsClicked), keyEquivalent: "")
+        let statusMenuItem = NSMenuItem(title: statusTitle, action: nil, keyEquivalent: "")
         statusMenuItem.isEnabled = false
         addItem(statusMenuItem)
-        let networksMenuItem = NSMenuItem(title: tr("macMenuNetworksInactive"), action: #selector(manageTunnelsClicked), keyEquivalent: "")
+        let networksMenuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
         networksMenuItem.isEnabled = false
         networksMenuItem.isHidden = true
         addItem(networksMenuItem)
