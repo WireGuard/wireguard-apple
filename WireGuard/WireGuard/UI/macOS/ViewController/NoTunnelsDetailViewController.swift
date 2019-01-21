@@ -40,6 +40,7 @@ class NoTunnelsDetailViewController: NSViewController {
     }
 
     @objc func importTunnelClicked() {
-        ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: self)
+        // We pass sourceVC as parent instead of self because this VC will not be visible when the import completes
+        ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: parent)
     }
 }
