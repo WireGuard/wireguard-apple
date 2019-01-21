@@ -130,9 +130,7 @@ class TunnelEditViewController: NSViewController {
             selectedActivateOnDemandOption = .none
         }
 
-        onDemandRow.valueOptions = activateOnDemandOptions.map {
-            return TunnelViewModel.activateOnDemandOptionText(for: $0)
-        }
+        onDemandRow.valueOptions = activateOnDemandOptions.map { TunnelViewModel.activateOnDemandOptionText(for: $0) }
         onDemandRow.selectedOptionIndex = activateOnDemandOptions.firstIndex(of: selectedActivateOnDemandOption)!
     }
 

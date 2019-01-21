@@ -243,7 +243,7 @@ extension TunnelEditTableViewController {
             cell.placeholderText = tr("tunnelEditPlaceholderTextStronglyRecommended")
             cell.keyboardType = .numbersAndPunctuation
         case .dns:
-            cell.placeholderText = tunnelViewModel.peersData.contains(where: { return $0.shouldStronglyRecommendDNS }) ? tr("tunnelEditPlaceholderTextStronglyRecommended") : tr("tunnelEditPlaceholderTextOptional")
+            cell.placeholderText = tunnelViewModel.peersData.contains(where: { $0.shouldStronglyRecommendDNS }) ? tr("tunnelEditPlaceholderTextStronglyRecommended") : tr("tunnelEditPlaceholderTextOptional")
             cell.keyboardType = .numbersAndPunctuation
         case .listenPort, .mtu:
             cell.placeholderText = tr("tunnelEditPlaceholderTextAutomatic")
