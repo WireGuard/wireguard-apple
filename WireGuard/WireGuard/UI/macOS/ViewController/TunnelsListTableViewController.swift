@@ -155,10 +155,6 @@ class TunnelsListTableViewController: NSViewController {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
-                let tunnelIndex = min(selectedTunnelIndex, self.tunnelsManager.numberOfTunnels() - 1)
-                if tunnelIndex >= 0 {
-                    self.selectTunnel(at: tunnelIndex)
-                }
             }
         }
     }
@@ -249,9 +245,14 @@ extension TunnelsListTableViewController {
     }
 
     func tunnelRemoved(at index: Int) {
+        let selectedTunnelIndex = tableView.selectedRow
         tableView.removeRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
         if tunnelsManager.numberOfTunnels() == 0 {
             delegate?.tunnelsListEmpty()
+        }
+        let tunnelIndex = min(selectedTunnelIndex, self.tunnelsManager.numberOfTunnels() - 1)
+        if tunnelIndex >= 0 {
+            self.selectTunnel(at: tunnelIndex)
         }
     }
 }
