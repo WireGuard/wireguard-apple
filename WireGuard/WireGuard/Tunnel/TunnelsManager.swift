@@ -294,7 +294,7 @@ class TunnelsManager {
             guard let self = self,
                 let session = statusChangeNotification.object as? NETunnelProviderSession,
                 let tunnelProvider = session.manager as? NETunnelProviderManager,
-                let tunnelConfiguration = TunnelContainer(tunnel: tunnelProvider).tunnelConfiguration,
+                let tunnelConfiguration = tunnelProvider.tunnelConfiguration,
                 let tunnel = self.tunnels.first(where: { $0.tunnelConfiguration == tunnelConfiguration }) else { return }
             if tunnel.tunnelProvider != tunnelProvider {
                 tunnel.tunnelProvider = tunnelProvider
