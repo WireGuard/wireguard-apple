@@ -84,6 +84,7 @@ class TunnelDetailTableViewController: NSViewController {
     }
     private var tableViewModelRows = [TableViewModelRow]()
     private var statusObservationToken: AnyObject?
+    private var tunnelEditVC: TunnelEditViewController?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -201,6 +202,7 @@ class TunnelDetailTableViewController: NSViewController {
         let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
         tunnelEditVC.delegate = self
         presentAsSheet(tunnelEditVC)
+        self.tunnelEditVC = tunnelEditVC
     }
 
     @objc func handleToggleActiveStatusAction() {
@@ -217,6 +219,13 @@ class TunnelDetailTableViewController: NSViewController {
             tunnelsManager.startActivation(of: tunnel)
         } else if statusCheckbox.state == .off {
             tunnelsManager.startDeactivation(of: tunnel)
+        }
+    }
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        if let tunnelEditVC = tunnelEditVC {
+            dismiss(tunnelEditVC)
         }
     }
 }
@@ -264,6 +273,6 @@ extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
     }
 
     func tunnelEditingCancelled() {
-        // Nothing to do
+        self.tunnelEditVC = nil
     }
 }
