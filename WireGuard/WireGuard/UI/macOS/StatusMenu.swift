@@ -25,7 +25,7 @@ class StatusMenu: NSMenu {
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
-        super.init(title: "")
+        super.init(title: tr("macMenuTitle"))
 
         addStatusMenuItems()
         addItem(NSMenuItem.separator())
