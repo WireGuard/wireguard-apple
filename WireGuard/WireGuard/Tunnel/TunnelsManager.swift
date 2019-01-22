@@ -73,6 +73,7 @@ class TunnelsManager {
             for loadedTunnelProvider in loadedTunnelProviders {
                 if let matchingTunnel = self.tunnels.first(where: { $0.tunnelConfiguration == loadedTunnelProvider.tunnelConfiguration }) {
                     matchingTunnel.tunnelProvider = loadedTunnelProvider
+                    matchingTunnel.refreshStatus()
                 } else {
                     // Tunnel was added outside the app
                     let tunnel = TunnelContainer(tunnel: loadedTunnelProvider)
