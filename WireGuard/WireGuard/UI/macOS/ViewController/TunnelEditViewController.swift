@@ -84,7 +84,8 @@ class TunnelEditViewController: NSViewController {
 
     weak var delegate: TunnelEditViewControllerDelegate?
 
-    var textViewObservationToken: AnyObject?
+    var privateKeyObservationToken: AnyObject?
+    var hasErrorObservationToken: AnyObject?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
@@ -119,7 +120,7 @@ class TunnelEditViewController: NSViewController {
             textView.string = bootstrappingText
             selectedActivateOnDemandOption = .none
         }
-        textViewObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
+        privateKeyObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
             if let privateKeyString = textView.privateKeyString,
                 let privateKey = Data(base64Encoded: privateKeyString),
                 privateKey.count == TunnelConfiguration.keyLength {
@@ -128,6 +129,9 @@ class TunnelEditViewController: NSViewController {
             } else {
                 publicKeyRow?.value = ""
             }
+        }
+        hasErrorObservationToken = textView.observe(\.hasError) { [weak saveButton] textView, _ in
+            saveButton?.isEnabled = !textView.hasError
         }
 
         onDemandRow.valueOptions = activateOnDemandOptions.map { TunnelViewModel.activateOnDemandOptionText(for: $0) }
