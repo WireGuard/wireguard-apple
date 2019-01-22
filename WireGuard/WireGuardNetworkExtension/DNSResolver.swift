@@ -107,6 +107,7 @@ class DNSResolver {
 
 extension Endpoint {
     func withReresolvedIP() -> Endpoint {
+        #if os(iOS)
         var ret = self
         let hostname: String
         switch host {
@@ -148,5 +149,10 @@ extension Endpoint {
             wg_log(.debug, message: "DNS64: mapped \(host) to itself.")
         }
         return ret
+        #elseif os(macOS)
+        return self
+        #else
+        #error("Unimplemented")
+        #endif
     }
 }

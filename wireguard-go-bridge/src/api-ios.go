@@ -68,6 +68,11 @@ func init() {
 	}()
 }
 
+//export wgEnableRoaming
+func wgEnableRoaming(enabled bool) {
+	roamingDisabled = !enabled
+}
+
 //export wgSetLogger
 func wgSetLogger(loggerFn uintptr) {
 	loggerFunc = unsafe.Pointer(loggerFn)
