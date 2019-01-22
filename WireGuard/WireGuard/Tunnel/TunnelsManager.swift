@@ -61,13 +61,11 @@ class TunnelsManager {
 
             let loadedTunnelProviders = managers ?? []
 
-            var numberOfRemovedTunnels = 0
-            for (index, currentTunnel) in self.tunnels.enumerated() {
+            for (index, currentTunnel) in self.tunnels.enumerated().reversed() {
                 if !loadedTunnelProviders.contains(where: { $0.tunnelConfiguration == currentTunnel.tunnelConfiguration }) {
                     // Tunnel was deleted outside the app
-                    self.tunnels.remove(at: index - numberOfRemovedTunnels)
-                    self.tunnelsListDelegate?.tunnelRemoved(at: index - numberOfRemovedTunnels)
-                    numberOfRemovedTunnels += 1
+                    self.tunnels.remove(at: index)
+                    self.tunnelsListDelegate?.tunnelRemoved(at: index)
                 }
             }
             for loadedTunnelProvider in loadedTunnelProviders {
