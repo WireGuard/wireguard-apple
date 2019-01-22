@@ -30,6 +30,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
 
         configureLogger()
+        #if os(macOS)
+        wgEnableRoaming(true)
+        #endif
 
         wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
 
@@ -114,9 +117,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     private func pathUpdate(path: Network.NWPath) {
-        guard let handle = handle, let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator else { return }
+        guard let handle = handle else { return }
         wg_log(.debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
-        _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
+        #if os(iOS)
+        if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
+            _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
+        }
+        #endif
         var interfaces = path.availableInterfaces
         if let ifname = ifname {
             interfaces = interfaces.filter { $0.name != ifname }
