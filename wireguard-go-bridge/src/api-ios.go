@@ -15,10 +15,10 @@ import "C"
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
-	"io/ioutil"
 	"log"
 	"math"
 	"os"
@@ -94,8 +94,7 @@ func wgTurnOn(settings string, tunFd int32) int32 {
 	logger.Info.Println("Attaching to interface")
 	device := NewDevice(tun, logger)
 
-	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
-	setError := ipcSetOperation(device, bufferedSettings)
+	setError := ipcSetOperation(device, bufio.NewReader(strings.NewReader(settings)))
 	if setError != nil {
 		logger.Error.Println(setError)
 		return -1
@@ -133,13 +132,28 @@ func wgSetConfig(tunnelHandle int32, settings string) int64 {
 	if !ok {
 		return 0
 	}
-	bufferedSettings := bufio.NewReadWriter(bufio.NewReader(strings.NewReader(settings)), bufio.NewWriter(ioutil.Discard))
-	err := ipcSetOperation(device, bufferedSettings)
+	err := ipcSetOperation(device, bufio.NewReader(strings.NewReader(settings)))
 	if err != nil {
 		device.log.Error.Println(err)
-		return err.Code
+		return err.int64
 	}
 	return 0
+}
+
+//export wgGetConfig
+func wgGetConfig(tunnelHandle int32) *C.char {
+	device, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return nil
+	}
+	settings := new(bytes.Buffer)
+	writer := bufio.NewWriter(settings)
+	err := ipcGetOperation(device, writer)
+	if err != nil {
+		return nil
+	}
+	writer.Flush()
+	return C.CString(settings.String())
 }
 
 //export wgBindInterfaceScope
