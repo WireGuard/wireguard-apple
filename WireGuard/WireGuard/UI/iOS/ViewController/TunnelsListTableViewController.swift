@@ -252,7 +252,21 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
     }
 
     func tunnelRemoved(at index: Int) {
+        let selectedIndex = tableView.indexPathForSelectedRow?.row
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton.isHidden = tunnelsManager?.numberOfTunnels() ?? 0 > 0
+        if let selectedIndex = selectedIndex, selectedIndex == index, let splitViewController = splitViewController {
+            if splitViewController.isCollapsed != false {
+                (splitViewController.viewControllers[0] as? UINavigationController)?.popViewController(animated: false)
+            } else {
+                let detailVC = UIViewController()
+                detailVC.view.backgroundColor = .white
+                let detailNC = UINavigationController(rootViewController: detailVC)
+                splitViewController.showDetailViewController(detailNC, sender: self)
+            }
+            if let presentedNavController = self.presentedViewController as? UINavigationController, presentedNavController.viewControllers.first is TunnelEditTableViewController {
+                self.presentedViewController?.dismiss(animated: false, completion: nil)
+            }
+        }
     }
 }
