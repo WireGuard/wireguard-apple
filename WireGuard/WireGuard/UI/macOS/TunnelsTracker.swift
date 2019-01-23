@@ -91,7 +91,7 @@ extension TunnelsTracker: TunnelsManagerListDelegate {
         manageTunnelsRootVC?.tunnelsListVC?.tunnelMoved(from: oldIndex, to: newIndex)
     }
 
-    func tunnelRemoved(at index: Int) {
+    func tunnelRemoved(at index: Int, tunnel: TunnelContainer) {
         tunnelStatusObservers.remove(at: index)
 
         statusMenu?.removeTunnelMenuItem(at: index)
