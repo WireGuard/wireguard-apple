@@ -397,6 +397,23 @@ class TunnelContainer: NSObject {
         super.init()
     }
 
+    func getRuntimeTunnelConfiguration(completionHandler: @escaping ((TunnelConfiguration?) -> Void)) {
+        guard status != .inactive, let session = tunnelProvider.connection as? NETunnelProviderSession else {
+            completionHandler(tunnelConfiguration)
+            return
+        }
+        guard nil != (try? session.sendProviderMessage(Data(bytes: [ 0 ]), responseHandler: {
+            guard self.status != .inactive, let data = $0, let base = self.tunnelConfiguration, let settings = String(data: data, encoding: .utf8) else {
+                completionHandler(self.tunnelConfiguration)
+                return
+            }
+            completionHandler((try? TunnelConfiguration(fromUapiConfig: settings, basedOn: base)) ?? self.tunnelConfiguration)
+        })) else {
+            completionHandler(tunnelConfiguration)
+            return
+        }
+    }
+
     func refreshStatus() {
         let status = TunnelStatus(from: tunnelProvider.connection.status)
         self.status = status

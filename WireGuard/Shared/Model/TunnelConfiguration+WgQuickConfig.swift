@@ -28,6 +28,8 @@ extension TunnelConfiguration {
         case peerHasInvalidAllowedIP(String)
         case peerHasInvalidEndpoint(String)
         case peerHasInvalidPersistentKeepAlive(String)
+        case peerHasInvalidTransferBytes(String)
+        case peerHasInvalidLastHandshakeTime(String)
         case peerHasUnrecognizedKey(String)
         case multiplePeersWithSamePublicKey
         case multipleEntriesForKey(String)

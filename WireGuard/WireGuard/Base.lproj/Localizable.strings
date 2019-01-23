@@ -62,6 +62,9 @@
 "tunnelPeerEndpoint" = "Endpoint";
 "tunnelPeerPersistentKeepalive" = "Persistent keepalive";
 "tunnelPeerAllowedIPs" = "Allowed IPs";
+"tunnelPeerRxBytes" = "Data received";
+"tunnelPeerTxBytes" = "Data sent";
+"tunnelPeerLastHandshakeTime" = "Latest handshake";
 "tunnelPeerExcludePrivateIPs" = "Exclude private IPs";
 
 "tunnelSectionTitleOnDemand" = "On-Demand Activation";
