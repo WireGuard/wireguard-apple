@@ -40,6 +40,9 @@ class TunnelViewModel {
         case endpoint
         case persistentKeepAlive
         case allowedIPs
+        case rxBytes
+        case txBytes
+        case lastHandshakeTime
         case excludePrivateIPs
         case deletePeer
 
@@ -50,6 +53,9 @@ class TunnelViewModel {
             case .endpoint: return tr("tunnelPeerEndpoint")
             case .persistentKeepAlive: return tr("tunnelPeerPersistentKeepalive")
             case .allowedIPs: return tr("tunnelPeerAllowedIPs")
+            case .rxBytes: return tr("tunnelPeerRxBytes")
+            case .txBytes: return tr("tunnelPeerTxBytes")
+            case .lastHandshakeTime: return tr("tunnelPeerLastHandshakeTime")
             case .excludePrivateIPs: return tr("tunnelPeerExcludePrivateIPs")
             case .deletePeer: return tr("deletePeerButtonTitle")
             }
@@ -247,6 +253,18 @@ class TunnelViewModel {
             }
             if let persistentKeepAlive = config.persistentKeepAlive {
                 scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
+            }
+            // TODO(roopc): These next 3 fields should be prettier
+            // - bytes() in https://git.zx2c4.com/WireGuard/tree/src/tools/show.c#n185
+            // - ago() in https://git.zx2c4.com/WireGuard/tree/src/tools/show.c#n158
+            if let rxBytes = config.rxBytes {
+                scratchpad[.rxBytes] = String(rxBytes)
+            }
+            if let txBytes = config.txBytes {
+                scratchpad[.txBytes] = String(txBytes)
+            }
+            if let lastHandshakeTime = config.lastHandshakeTime {
+                scratchpad[.lastHandshakeTime] = lastHandshakeTime.description
             }
             updateExcludePrivateIPsFieldState()
         }

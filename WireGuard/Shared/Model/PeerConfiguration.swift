@@ -17,6 +17,9 @@ struct PeerConfiguration {
     var allowedIPs = [IPAddressRange]()
     var endpoint: Endpoint?
     var persistentKeepAlive: UInt16?
+    var rxBytes: UInt64?
+    var txBytes: UInt64?
+    var lastHandshakeTime: Date?
 
     init(publicKey: Data) {
         self.publicKey = publicKey

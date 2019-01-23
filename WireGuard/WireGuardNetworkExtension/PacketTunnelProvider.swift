@@ -97,6 +97,24 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         completionHandler()
     }
 
+    override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)? = nil) {
+        guard let completionHandler = completionHandler else { return }
+        guard let handle = handle else {
+            completionHandler(nil)
+            return
+        }
+        if messageData.count == 1 && messageData[0] == 0 {
+            guard let settings = wgGetConfig(handle) else {
+                completionHandler(nil)
+                return
+            }
+            completionHandler(String(cString: settings).data(using: .utf8)!)
+            free(settings)
+        } else {
+            completionHandler(nil)
+        }
+    }
+
     private func configureLogger() {
         Logger.configureGlobal(withFilePath: FileManager.networkExtensionLogFileURL?.path)
         wgSetLogger { level, msgC in
