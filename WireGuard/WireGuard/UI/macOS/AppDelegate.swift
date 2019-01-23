@@ -40,6 +40,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItemController = statusItemController
         }
     }
+
+    func applicationWillTerminate(_ notification: Notification) {
+        if let currentTunnel = tunnelsTracker?.currentTunnel {
+            tunnelsManager?.startDeactivation(of: currentTunnel)
+        }
+    }
 }
 
 extension AppDelegate: StatusMenuWindowDelegate {
