@@ -16,7 +16,7 @@ class TunnelsTracker {
 
     private var tunnelsManager: TunnelsManager
     private var tunnelStatusObservers = [AnyObject]()
-    private var currentTunnel: TunnelContainer? {
+    private(set) var currentTunnel: TunnelContainer? {
         didSet {
             statusMenu?.currentTunnel = currentTunnel
             statusItemController?.currentTunnel = currentTunnel
