@@ -9,7 +9,7 @@ protocol TunnelsManagerListDelegate: class {
     func tunnelAdded(at index: Int)
     func tunnelModified(at index: Int)
     func tunnelMoved(from oldIndex: Int, to newIndex: Int)
-    func tunnelRemoved(at index: Int)
+    func tunnelRemoved(at index: Int, tunnel: TunnelContainer)
 }
 
 protocol TunnelsManagerActivationDelegate: class {
@@ -65,7 +65,7 @@ class TunnelsManager {
                 if !loadedTunnelProviders.contains(where: { $0.tunnelConfiguration == currentTunnel.tunnelConfiguration }) {
                     // Tunnel was deleted outside the app
                     self.tunnels.remove(at: index)
-                    self.tunnelsListDelegate?.tunnelRemoved(at: index)
+                    self.tunnelsListDelegate?.tunnelRemoved(at: index, tunnel: currentTunnel)
                 }
             }
             for loadedTunnelProvider in loadedTunnelProviders {
@@ -212,7 +212,7 @@ class TunnelsManager {
             if let self = self {
                 let index = self.tunnels.firstIndex(of: tunnel)!
                 self.tunnels.remove(at: index)
-                self.tunnelsListDelegate?.tunnelRemoved(at: index)
+                self.tunnelsListDelegate?.tunnelRemoved(at: index, tunnel: tunnel)
             }
             completionHandler(nil)
         }

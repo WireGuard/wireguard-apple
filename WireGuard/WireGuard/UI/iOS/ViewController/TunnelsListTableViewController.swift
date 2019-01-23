@@ -31,6 +31,8 @@ class TunnelsListTableViewController: UIViewController {
         return busyIndicator
     }()
 
+    var detailDisplayedTunnel: TunnelContainer?
+
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
@@ -217,6 +219,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
         tunnelDetailNC.restorationIdentifier = "DetailNC"
         showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
+        detailDisplayedTunnel = tunnel
     }
 
     func tableView(_ tableView: UITableView,
@@ -251,19 +254,19 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
         tableView.moveRow(at: IndexPath(row: oldIndex, section: 0), to: IndexPath(row: newIndex, section: 0))
     }
 
-    func tunnelRemoved(at index: Int) {
-        let selectedIndex = tableView.indexPathForSelectedRow?.row
+    func tunnelRemoved(at index: Int, tunnel: TunnelContainer) {
         tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         centeredAddButton.isHidden = tunnelsManager?.numberOfTunnels() ?? 0 > 0
-        if let selectedIndex = selectedIndex, selectedIndex == index, let splitViewController = splitViewController {
+        if detailDisplayedTunnel == tunnel, let splitViewController = splitViewController {
             if splitViewController.isCollapsed != false {
-                (splitViewController.viewControllers[0] as? UINavigationController)?.popViewController(animated: false)
+                (splitViewController.viewControllers[0] as? UINavigationController)?.popToRootViewController(animated: false)
             } else {
                 let detailVC = UIViewController()
                 detailVC.view.backgroundColor = .white
                 let detailNC = UINavigationController(rootViewController: detailVC)
                 splitViewController.showDetailViewController(detailNC, sender: self)
             }
+            detailDisplayedTunnel = nil
             if let presentedNavController = self.presentedViewController as? UINavigationController, presentedNavController.viewControllers.first is TunnelEditTableViewController {
                 self.presentedViewController?.dismiss(animated: false, completion: nil)
             }
