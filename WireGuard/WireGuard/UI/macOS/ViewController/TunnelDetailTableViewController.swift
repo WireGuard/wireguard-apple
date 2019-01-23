@@ -270,6 +270,7 @@ extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         tableView.reloadData()
+        self.tunnelEditVC = nil
     }
 
     func tunnelEditingCancelled() {
