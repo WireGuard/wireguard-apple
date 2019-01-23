@@ -239,14 +239,6 @@ extension TunnelDetailTableViewController {
                         return
                     }
                 }
-                if self.splitViewController?.isCollapsed != false {
-                    self.navigationController?.navigationController?.popToRootViewController(animated: true)
-                } else {
-                    let detailVC = UIViewController()
-                    detailVC.view.backgroundColor = .white
-                    let detailNC = UINavigationController(rootViewController: detailVC)
-                    self.showDetailViewController(detailNC, sender: self)
-                }
             }
         }
         return cell
