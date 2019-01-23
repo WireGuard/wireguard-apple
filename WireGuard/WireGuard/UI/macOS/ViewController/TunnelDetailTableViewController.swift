@@ -37,7 +37,8 @@ class TunnelDetailTableViewController: NSViewController {
 
     let peerFields: [TunnelViewModel.PeerField] = [
         .publicKey, .preSharedKey, .endpoint,
-        .allowedIPs, .persistentKeepAlive
+        .allowedIPs, .persistentKeepAlive,
+        .rxBytes, .txBytes, .lastHandshakeTime
     ]
 
     let tableView: NSTableView = {
@@ -96,6 +97,8 @@ class TunnelDetailTableViewController: NSViewController {
         statusObservationToken = tunnel.observe(\TunnelContainer.status) { [weak self] _, _ in
             self?.updateStatus()
         }
+
+        // TODO(roopc): call reloadRuntimeConfiguration() once per second
     }
 
     required init?(coder: NSCoder) {
@@ -196,6 +199,7 @@ class TunnelDetailTableViewController: NSViewController {
         let shouldBeEnabled = (tunnel.status == .active || tunnel.status == .inactive)
         statusCheckbox.state = shouldBeChecked ? .on : .off
         statusCheckbox.isEnabled = shouldBeEnabled
+        reloadRuntimeConfiguration()
     }
 
     @objc func handleEditTunnelAction() {
@@ -227,6 +231,19 @@ class TunnelDetailTableViewController: NSViewController {
         if let tunnelEditVC = tunnelEditVC {
             dismiss(tunnelEditVC)
         }
+    }
+
+    private func reloadRuntimeConfiguration() {
+        tunnel.getRuntimeTunnelConfiguration(completionHandler: {
+            guard let tunnelConfiguration = $0 else { return }
+            if tunnelConfiguration == self.tunnel.tunnelConfiguration {
+                return
+            }
+            self.tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+            // TODO(roopc): make this not loose scroll position
+            self.tableView.reloadData()
+            self.tunnelEditVC = nil
+        })
     }
 }
 
@@ -271,6 +288,7 @@ extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         tableView.reloadData()
         self.tunnelEditVC = nil
+        updateStatus()
     }
 
     func tunnelEditingCancelled() {
