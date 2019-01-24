@@ -226,6 +226,10 @@ class TunnelsManager {
         return tunnels[index]
     }
 
+    func index(of tunnel: TunnelContainer) -> Int? {
+        return tunnels.firstIndex(of: tunnel)
+    }
+
     func tunnel(named tunnelName: String) -> TunnelContainer? {
         return tunnels.first { $0.name == tunnelName }
     }
