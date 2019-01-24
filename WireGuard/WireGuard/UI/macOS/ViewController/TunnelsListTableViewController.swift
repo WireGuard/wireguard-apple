@@ -61,7 +61,8 @@ class TunnelsListTableViewController: NSViewController {
     override func loadView() {
         tableView.dataSource = self
         tableView.delegate = self
-        let isSelected = selectTunnel(at: 0)
+
+        let isSelected = selectTunnelInOperation() || selectTunnel(at: 0)
         if !isSelected {
             delegate?.tunnelsListEmpty()
         }
@@ -108,6 +109,18 @@ class TunnelsListTableViewController: NSViewController {
         actionMenu.items.forEach { $0.target = self }
 
         view = containerView
+    }
+
+    override func viewWillAppear() {
+        selectTunnelInOperation()
+    }
+
+    @discardableResult
+    func selectTunnelInOperation() -> Bool {
+        if let currentTunnel = tunnelsManager.tunnelInOperation(), let indexToSelect = tunnelsManager.index(of: currentTunnel) {
+            return selectTunnel(at: indexToSelect)
+        }
+        return false
     }
 
     @objc func buttonBarClicked(sender: AnyObject?) {
