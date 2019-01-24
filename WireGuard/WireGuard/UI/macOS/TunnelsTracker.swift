@@ -33,18 +33,7 @@ class TunnelsTracker {
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
-
-        if let waitingTunnel = tunnelsManager.waitingTunnel() {
-            currentTunnel = waitingTunnel
-        } else {
-            for index in 0 ..< tunnelsManager.numberOfTunnels() {
-                let tunnel = tunnelsManager.tunnel(at: index)
-                if tunnel.status != .inactive {
-                    currentTunnel = tunnel
-                    break
-                }
-            }
-        }
+        currentTunnel = tunnelsManager.tunnelInOperation()
 
         for index in 0 ..< tunnelsManager.numberOfTunnels() {
             let tunnel = tunnelsManager.tunnel(at: index)
@@ -61,11 +50,7 @@ class TunnelsTracker {
             guard let self = self else { return }
             if tunnel.status == .deactivating || tunnel.status == .inactive {
                 if self.currentTunnel == tunnel {
-                    if let waitingTunnel = self.tunnelsManager.waitingTunnel() {
-                        self.currentTunnel = waitingTunnel
-                    } else if tunnel.status == .inactive {
-                        self.currentTunnel = nil
-                    }
+                    self.currentTunnel = self.tunnelsManager.tunnelInOperation()
                 }
             } else {
                 self.currentTunnel = tunnel
