@@ -10,8 +10,16 @@ import Cocoa
 
 class TunnelsTracker {
 
-    weak var statusMenu: StatusMenu?
-    weak var statusItemController: StatusItemController?
+    weak var statusMenu: StatusMenu? {
+        didSet {
+            statusMenu?.currentTunnel = currentTunnel
+        }
+    }
+    weak var statusItemController: StatusItemController? {
+        didSet {
+            statusItemController?.currentTunnel = currentTunnel
+        }
+    }
     weak var manageTunnelsRootVC: ManageTunnelsRootViewController?
 
     private var tunnelsManager: TunnelsManager
