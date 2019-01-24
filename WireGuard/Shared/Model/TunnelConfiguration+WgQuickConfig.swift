@@ -54,38 +54,38 @@ extension TunnelConfiguration {
             }
 
             trimmedLine = trimmedLine.trimmingCharacters(in: .whitespaces)
+            let lowercasedLine = trimmedLine.lowercased()
 
-            guard !trimmedLine.isEmpty else { continue }
-            let lowercasedLine = line.lowercased()
-
-            if let equalsIndex = line.firstIndex(of: "=") {
-                // Line contains an attribute
-                let keyWithCase = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
-                let key = keyWithCase.lowercased()
-                let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
-                let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
-                if let presentValue = attributes[key] {
-                    if keysWithMultipleEntriesAllowed.contains(key) {
-                        attributes[key] = presentValue + "," + value
+            if !trimmedLine.isEmpty {
+                if let equalsIndex = line.firstIndex(of: "=") {
+                    // Line contains an attribute
+                    let keyWithCase = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
+                    let key = keyWithCase.lowercased()
+                    let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
+                    let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
+                    if let presentValue = attributes[key] {
+                        if keysWithMultipleEntriesAllowed.contains(key) {
+                            attributes[key] = presentValue + "," + value
+                        } else {
+                            throw ParseError.multipleEntriesForKey(keyWithCase)
+                        }
                     } else {
-                        throw ParseError.multipleEntriesForKey(keyWithCase)
+                        attributes[key] = value
                     }
-                } else {
-                    attributes[key] = value
+                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
+                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
+                    if parserState == .inInterfaceSection {
+                        guard interfaceSectionKeys.contains(key) else {
+                            throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
+                        }
+                    } else if parserState == .inPeerSection {
+                        guard peerSectionKeys.contains(key) else {
+                            throw ParseError.peerHasUnrecognizedKey(keyWithCase)
+                        }
+                    }
+                } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
+                    throw ParseError.invalidLine(line)
                 }
-                let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
-                let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
-                if parserState == .inInterfaceSection {
-                    guard interfaceSectionKeys.contains(key) else {
-                        throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
-                    }
-                } else if parserState == .inPeerSection {
-                    guard peerSectionKeys.contains(key) else {
-                        throw ParseError.peerHasUnrecognizedKey(keyWithCase)
-                    }
-                }
-            } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
-                throw ParseError.invalidLine(line)
             }
 
             let isLastLine = lineIndex == lines.count - 1
