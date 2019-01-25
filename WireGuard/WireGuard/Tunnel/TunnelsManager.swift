@@ -388,6 +388,7 @@ class TunnelContainer: NSObject {
     }
     var activationAttemptId: String?
     var activationTimer: Timer?
+    var deactivationTimer: Timer?
 
     fileprivate var tunnelProvider: NETunnelProviderManager
 
@@ -426,8 +427,22 @@ class TunnelContainer: NSObject {
     }
 
     func refreshStatus() {
-        let status = TunnelStatus(from: tunnelProvider.connection.status)
-        self.status = status
+        #if os(macOS)
+        // In macOS, we wait for a few seconds after deactivation to work around a system bug.
+        // If a tunnel gets activated in this time interval, it's stopped by the system automatically in ~25 seconds.
+        if self.status == .deactivating && tunnelProvider.connection.status == .disconnected {
+            self.deactivationTimer?.invalidate()
+            let deactivationTimer = Timer(timeInterval: 5 /* seconds */, repeats: false) { [weak self] _ in
+                guard let self = self else { return }
+                self.status = TunnelStatus(from: self.tunnelProvider.connection.status)
+                self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
+            }
+            self.deactivationTimer = deactivationTimer
+            RunLoop.main.add(deactivationTimer, forMode: .default)
+            return
+        }
+        #endif
+        status = TunnelStatus(from: tunnelProvider.connection.status)
         isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
     }
 
