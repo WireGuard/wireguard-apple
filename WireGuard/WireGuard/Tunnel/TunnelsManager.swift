@@ -340,7 +340,13 @@ class TunnelsManager {
 
     func startObservingTunnelConfigurations() {
         configurationsObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNConfigurationChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
-            self?.reload()
+            DispatchQueue.main.async { [weak self] in
+                // We schedule reload() in a subsequent runloop to ensure that the completion handler of loadAllFromPreferences
+                // (reload() calls loadAllFromPreferences) is called after the completion handler of the saveToPreferences or
+                // removeFromPreferences call, if any, that caused this notification to fire. This notification can also fire
+                // as a result of a tunnel getting added or removed outside of the app.
+                self?.reload()
+            }
         }
     }
 
