@@ -94,6 +94,19 @@
 "tunnelEditPlaceholderTextOff" = "Off";
 
 "tunnelPeerPersistentKeepaliveValue (%d)" = "every %d seconds";
+"tunnelHandshakeTimestampNow" = "Now";
+"tunnelHandshakeTimestampSystemClockBackward" = "(System clock is backward)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ ago";
+"tunnelHandshakeTimestampYear (%d)" = "%d year";
+"tunnelHandshakeTimestampYears (%d)" = "%d years";
+"tunnelHandshakeTimestampDay (%d)" = "%d day";
+"tunnelHandshakeTimestampDays (%d)" = "%d days";
+"tunnelHandshakeTimestampHour (%d)" = "%d hour";
+"tunnelHandshakeTimestampHours (%d)" = "%d hours";
+"tunnelHandshakeTimestampMinute (%d)" = "%d minute";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d minutes";
+"tunnelHandshakeTimestampSecond (%d)" = "%d second";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d seconds";
 
 // Error alerts while creating / editing a tunnel configuration
 

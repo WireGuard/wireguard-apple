@@ -254,17 +254,14 @@ class TunnelViewModel {
             if let persistentKeepAlive = config.persistentKeepAlive {
                 scratchpad[.persistentKeepAlive] = tr(format: "tunnelPeerPersistentKeepaliveValue (%d)", persistentKeepAlive)
             }
-            // TODO(roopc): These next 3 fields should be prettier
-            // - bytes() in https://git.zx2c4.com/WireGuard/tree/src/tools/show.c#n185
-            // - ago() in https://git.zx2c4.com/WireGuard/tree/src/tools/show.c#n158
             if let rxBytes = config.rxBytes {
-                scratchpad[.rxBytes] = String(rxBytes)
+                scratchpad[.rxBytes] = prettyBytes(rxBytes)
             }
             if let txBytes = config.txBytes {
-                scratchpad[.txBytes] = String(txBytes)
+                scratchpad[.txBytes] = prettyBytes(txBytes)
             }
             if let lastHandshakeTime = config.lastHandshakeTime {
-                scratchpad[.lastHandshakeTime] = lastHandshakeTime.description
+                scratchpad[.lastHandshakeTime] = prettyTimeAgo(timestamp: lastHandshakeTime)
             }
             updateExcludePrivateIPsFieldState()
         }
@@ -511,4 +508,59 @@ extension TunnelViewModel {
         #error("Unimplemented")
         #endif
     }
+}
+
+private func prettyBytes(_ bytes: UInt64) -> String {
+    switch bytes {
+    case 0..<1024:
+        return "\(bytes) B"
+    case 1024 ..< (1024 * 1024):
+        return String(format: "%.2f", Double(bytes) / 1024) + " KiB"
+    case 1024 ..< (1024 * 1024 * 1024):
+        return String(format: "%.2f", Double(bytes) / (1024 * 1024)) + " MiB"
+    case 1024 ..< (1024 * 1024 * 1024 * 1024):
+        return String(format: "%.2f", Double(bytes) / (1024 * 1024 * 1024)) + " GiB"
+    default:
+        return String(format: "%.2f", Double(bytes) / (1024 * 1024 * 1024 * 1024)) + " TiB"
+    }
+}
+
+private func prettyTimeAgo(timestamp: Date) -> String {
+    let now = Date()
+    let timeInterval = Int64(now.timeIntervalSince(timestamp))
+    switch timeInterval {
+    case ..<0: return tr("tunnelHandshakeTimestampSystemClockBackward")
+    case 0: return tr("tunnelHandshakeTimestampNow")
+    default:
+        return tr(format: "tunnelHandshakeTimestampAgo (%@)", prettyTime(secondsLeft: timeInterval))
+    }
+}
+
+private func prettyTime(secondsLeft: Int64) -> String {
+    var left = secondsLeft
+    var timeStrings = [String]()
+    let years = left / (365 * 24 * 60 * 60)
+    left = left % (365 * 24 * 60 * 60)
+    let days = left / (24 * 60 * 60)
+    left = left % (24 * 60 * 60)
+    let hours = left / (60 * 60)
+    left = left % (60 * 60)
+    let minutes = left / 60
+    let seconds = left % 60
+    if years > 0 {
+        timeStrings.append(years == 1 ? tr(format: "tunnelHandshakeTimestampYear (%d)", years) : tr(format: "tunnelHandshakeTimestampYears (%d)", years))
+    }
+    if days > 0 {
+        timeStrings.append(days == 1 ? tr(format: "tunnelHandshakeTimestampDay (%d)", days) : tr(format: "tunnelHandshakeTimestampDays (%d)", days))
+    }
+    if hours > 0 {
+        timeStrings.append(hours == 1 ? tr(format: "tunnelHandshakeTimestampHour (%d)", hours) : tr(format: "tunnelHandshakeTimestampHours (%d)", hours))
+    }
+    if minutes > 0 {
+        timeStrings.append(minutes == 1 ? tr(format: "tunnelHandshakeTimestampMinute (%d)", minutes) : tr(format: "tunnelHandshakeTimestampMinutes (%d)", minutes))
+    }
+    if seconds > 0 {
+        timeStrings.append(seconds == 1 ? tr(format: "tunnelHandshakeTimestampSecond (%d)", seconds) : tr(format: "tunnelHandshakeTimestampSeconds (%d)", seconds))
+    }
+    return timeStrings.joined(separator: ", ")
 }
