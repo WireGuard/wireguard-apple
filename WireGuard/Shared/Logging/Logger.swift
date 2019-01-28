@@ -41,12 +41,11 @@ public class Logger {
             os_log("Unable to determine log destination path. Log will not be saved to file.", log: OSLog.default, type: .error)
             return
         }
-        do {
-            try Logger.global = Logger(withFilePath: filePath)
-        } catch {
+        guard let logger = try? Logger(withFilePath: filePath) else {
             os_log("Unable to open log file for writing. Log will not be saved to file.", log: OSLog.default, type: .error)
             return
         }
+        Logger.global = logger
         var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
         if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             appVersion += " (\(appBuild))"
