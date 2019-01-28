@@ -93,6 +93,8 @@
 "tunnelEditPlaceholderTextStronglyRecommended" = "Strongly recommended";
 "tunnelEditPlaceholderTextOff" = "Off";
 
+"tunnelPeerPersistentKeepaliveValue (%d)" = "every %d seconds";
+
 // Error alerts while creating / editing a tunnel configuration
 
 /* Alert title for error in the interface data */

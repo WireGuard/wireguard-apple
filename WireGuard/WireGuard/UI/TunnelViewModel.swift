@@ -252,7 +252,7 @@ class TunnelViewModel {
                 scratchpad[.endpoint] = endpoint.stringRepresentation
             }
             if let persistentKeepAlive = config.persistentKeepAlive {
-                scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
+                scratchpad[.persistentKeepAlive] = tr(format: "tunnelPeerPersistentKeepaliveValue (%d)", persistentKeepAlive)
             }
             // TODO(roopc): These next 3 fields should be prettier
             // - bytes() in https://git.zx2c4.com/WireGuard/tree/src/tools/show.c#n185
