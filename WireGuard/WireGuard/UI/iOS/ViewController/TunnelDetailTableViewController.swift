@@ -20,7 +20,8 @@ class TunnelDetailTableViewController: UITableViewController {
 
     let peerFields: [TunnelViewModel.PeerField] = [
         .publicKey, .preSharedKey, .endpoint,
-        .allowedIPs, .persistentKeepAlive
+        .allowedIPs, .persistentKeepAlive,
+        .rxBytes, .txBytes, .lastHandshakeTime
     ]
 
     let tunnelsManager: TunnelsManager
@@ -30,6 +31,7 @@ class TunnelDetailTableViewController: UITableViewController {
     private weak var statusCell: SwitchCell?
     private var onDemandStatusObservationToken: AnyObject?
     private var statusObservationToken: AnyObject?
+    private var reloadRuntimeConfigurationTimer: Timer?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -38,8 +40,15 @@ class TunnelDetailTableViewController: UITableViewController {
         super.init(style: .grouped)
         loadSections()
         statusObservationToken = tunnel.observe(\.status) { [weak self] _, _ in
-            if let cell = self?.statusCell {
-                self?.updateStatus(statusCell: cell)
+            guard let self = self else { return }
+            if let cell = self.statusCell {
+                self.updateStatus(statusCell: cell)
+            }
+            if tunnel.status == .active {
+                self.startUpdatingRuntimeConfiguration()
+            } else if tunnel.status == .inactive {
+                self.reloadRuntimeConfiguration()
+                self.stopUpdatingRuntimeConfiguration()
             }
         }
     }
@@ -70,6 +79,16 @@ class TunnelDetailTableViewController: UITableViewController {
         tunnelViewModel.peersData.forEach { sections.append(.peer($0)) }
         sections.append(.onDemand)
         sections.append(.delete)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        if tunnel.status == .active {
+            self.startUpdatingRuntimeConfiguration()
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        stopUpdatingRuntimeConfiguration()
     }
 
     @objc func editTapped() {
@@ -120,6 +139,30 @@ class TunnelDetailTableViewController: UITableViewController {
             cell?.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
         }
         cell.isEnabled = status == .active || status == .inactive
+    }
+
+    func startUpdatingRuntimeConfiguration() {
+        reloadRuntimeConfiguration()
+        reloadRuntimeConfigurationTimer?.invalidate()
+        let reloadTimer = Timer(timeInterval: 1 /* second */, repeats: true) { [weak self] _ in
+            self?.reloadRuntimeConfiguration()
+        }
+        reloadRuntimeConfigurationTimer = reloadTimer
+        RunLoop.main.add(reloadTimer, forMode: .common)
+    }
+
+    func stopUpdatingRuntimeConfiguration() {
+        reloadRuntimeConfigurationTimer?.invalidate()
+        reloadRuntimeConfigurationTimer = nil
+    }
+
+    private func reloadRuntimeConfiguration() {
+        tunnel.getRuntimeTunnelConfiguration(completionHandler: {
+            guard let tunnelConfiguration = $0 else { return }
+            self.tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+            self.loadSections()
+            self.tableView.reloadData()
+        })
     }
 }
 
