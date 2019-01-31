@@ -254,7 +254,7 @@ class TunnelDetailTableViewController: NSViewController {
             self?.reloadRuntimeConfiguration()
         }
         reloadRuntimeConfigurationTimer = reloadTimer
-        RunLoop.main.add(reloadTimer, forMode: .default)
+        RunLoop.main.add(reloadTimer, forMode: .common)
     }
 
     func stopUpdatingRuntimeConfiguration() {

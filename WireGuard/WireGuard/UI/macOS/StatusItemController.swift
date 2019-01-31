@@ -53,7 +53,7 @@ class StatusItemController {
             self.statusItem.button?.image = self.animationImages[self.animationImageIndex]
             self.animationImageIndex = (self.animationImageIndex + 1) % self.animationImages.count
         }
-        RunLoop.main.add(timer, forMode: .default)
+        RunLoop.main.add(timer, forMode: .common)
         animationTimer = timer
     }
 
