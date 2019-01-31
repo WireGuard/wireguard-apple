@@ -286,7 +286,11 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
             cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
-            cell.value = peerData[field]
+            if field == .persistentKeepAlive {
+                cell.value = tr(format: "tunnelPeerPersistentKeepaliveValue (%@)", peerData[field])
+            } else {
+                cell.value = peerData[field]
+            }
             cell.isKeyInBold = modelRow.isTitleRow()
             return cell
         case .spacerRow:

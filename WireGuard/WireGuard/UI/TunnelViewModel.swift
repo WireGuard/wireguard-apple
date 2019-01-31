@@ -252,7 +252,7 @@ class TunnelViewModel {
                 scratchpad[.endpoint] = endpoint.stringRepresentation
             }
             if let persistentKeepAlive = config.persistentKeepAlive {
-                scratchpad[.persistentKeepAlive] = tr(format: "tunnelPeerPersistentKeepaliveValue (%d)", persistentKeepAlive)
+                scratchpad[.persistentKeepAlive] = String(persistentKeepAlive)
             }
             if let rxBytes = config.rxBytes {
                 scratchpad[.rxBytes] = prettyBytes(rxBytes)

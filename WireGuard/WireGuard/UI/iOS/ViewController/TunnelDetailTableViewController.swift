@@ -211,7 +211,11 @@ extension TunnelDetailTableViewController {
         let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.localizedUIString
-        cell.value = peerData[field]
+        if field == .persistentKeepAlive {
+            cell.value = tr(format: "tunnelPeerPersistentKeepaliveValue (%@)", peerData[field])
+        } else {
+            cell.value = peerData[field]
+        }
         return cell
     }
 
