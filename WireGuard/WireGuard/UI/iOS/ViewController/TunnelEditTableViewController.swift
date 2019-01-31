@@ -351,6 +351,8 @@ extension TunnelEditTableViewController {
             cell.keyboardType = .numberPad
         case .excludePrivateIPs, .deletePeer:
             cell.keyboardType = .default
+        case .rxBytes, .txBytes, .lastHandshakeTime:
+            fatalError()
         }
 
         cell.isValueValid = !peerData.fieldsWithError.contains(field)
