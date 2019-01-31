@@ -27,6 +27,7 @@ class TunnelDetailTableViewController: UITableViewController {
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
     private var sections = [Section]()
+    private weak var statusCell: SwitchCell?
     private var onDemandStatusObservationToken: AnyObject?
     private var statusObservationToken: AnyObject?
 
@@ -36,6 +37,11 @@ class TunnelDetailTableViewController: UITableViewController {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         super.init(style: .grouped)
         loadSections()
+        statusObservationToken = tunnel.observe(\.status) { [weak self] _, _ in
+            if let cell = self?.statusCell {
+                self?.updateStatus(statusCell: cell)
+            }
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -87,6 +93,33 @@ class TunnelDetailTableViewController: UITableViewController {
         alert.popoverPresentationController?.sourceRect = sourceView.bounds
 
         present(alert, animated: true, completion: nil)
+    }
+
+    func updateStatus(statusCell cell: SwitchCell) {
+        let status = tunnel.status
+        let text: String
+        switch status {
+        case .inactive:
+            text = tr("tunnelStatusInactive")
+        case .activating:
+            text = tr("tunnelStatusActivating")
+        case .active:
+            text = tr("tunnelStatusActive")
+        case .deactivating:
+            text = tr("tunnelStatusDeactivating")
+        case .reasserting:
+            text = tr("tunnelStatusReasserting")
+        case .restarting:
+            text = tr("tunnelStatusRestarting")
+        case .waiting:
+            text = tr("tunnelStatusWaiting")
+        }
+        cell.textLabel?.text = text
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak cell] in
+            cell?.switchView.isOn = !(status == .deactivating || status == .inactive)
+            cell?.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
+        }
+        cell.isEnabled = status == .active || status == .inactive
     }
 }
 
@@ -155,39 +188,7 @@ extension TunnelDetailTableViewController {
 
     private func statusCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
-
-        let statusUpdate: (SwitchCell, TunnelStatus) -> Void = { cell, status in
-            let text: String
-            switch status {
-            case .inactive:
-                text = tr("tunnelStatusInactive")
-            case .activating:
-                text = tr("tunnelStatusActivating")
-            case .active:
-                text = tr("tunnelStatusActive")
-            case .deactivating:
-                text = tr("tunnelStatusDeactivating")
-            case .reasserting:
-                text = tr("tunnelStatusReasserting")
-            case .restarting:
-                text = tr("tunnelStatusRestarting")
-            case .waiting:
-                text = tr("tunnelStatusWaiting")
-            }
-            cell.textLabel?.text = text
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak cell] in
-                cell?.switchView.isOn = !(status == .deactivating || status == .inactive)
-                cell?.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
-            }
-            cell.isEnabled = status == .active || status == .inactive
-        }
-
-        statusUpdate(cell, tunnel.status)
-        statusObservationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
-            guard let cell = cell else { return }
-            statusUpdate(cell, tunnel.status)
-        }
-
+        updateStatus(statusCell: cell)
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
             if isOn {
@@ -196,6 +197,7 @@ extension TunnelDetailTableViewController {
                 self.tunnelsManager.startDeactivation(of: self.tunnel)
             }
         }
+        self.statusCell = cell
         return cell
     }
 
