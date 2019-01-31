@@ -86,6 +86,7 @@ class TunnelDetailTableViewController: NSViewController {
     private var tableViewModelRows = [TableViewModelRow]()
     private var statusObservationToken: AnyObject?
     private var tunnelEditVC: TunnelEditViewController?
+    private var reloadRuntimeConfigurationTimer: Timer?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
@@ -97,8 +98,6 @@ class TunnelDetailTableViewController: NSViewController {
         statusObservationToken = tunnel.observe(\TunnelContainer.status) { [weak self] _, _ in
             self?.updateStatus()
         }
-
-        // TODO(roopc): call reloadRuntimeConfiguration() once per second
     }
 
     required init?(coder: NSCoder) {
@@ -199,7 +198,11 @@ class TunnelDetailTableViewController: NSViewController {
         let shouldBeEnabled = (tunnel.status == .active || tunnel.status == .inactive)
         statusCheckbox.state = shouldBeChecked ? .on : .off
         statusCheckbox.isEnabled = shouldBeEnabled
-        reloadRuntimeConfiguration()
+        if tunnel.status == .active {
+            startUpdatingRuntimeConfiguration()
+        } else if tunnel.status == .inactive {
+            stopUpdatingRuntimeConfiguration()
+        }
     }
 
     @objc func handleEditTunnelAction() {
@@ -231,20 +234,35 @@ class TunnelDetailTableViewController: NSViewController {
         if let tunnelEditVC = tunnelEditVC {
             dismiss(tunnelEditVC)
         }
+        stopUpdatingRuntimeConfiguration()
     }
 
     private func reloadRuntimeConfiguration() {
         tunnel.getRuntimeTunnelConfiguration(completionHandler: {
             guard let tunnelConfiguration = $0 else { return }
-            if tunnelConfiguration == self.tunnel.tunnelConfiguration {
-                return
-            }
             self.tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
             // TODO(roopc): make this not loose scroll position
             self.tableView.reloadData()
             self.tunnelEditVC = nil
         })
     }
+
+    func startUpdatingRuntimeConfiguration() {
+        reloadRuntimeConfiguration()
+        reloadRuntimeConfigurationTimer?.invalidate()
+        let reloadTimer = Timer(timeInterval: 1 /* second */, repeats: true) { [weak self] _ in
+            self?.reloadRuntimeConfiguration()
+        }
+        reloadRuntimeConfigurationTimer = reloadTimer
+        RunLoop.main.add(reloadTimer, forMode: .default)
+    }
+
+    func stopUpdatingRuntimeConfiguration() {
+        reloadRuntimeConfiguration()
+        reloadRuntimeConfigurationTimer?.invalidate()
+        reloadRuntimeConfigurationTimer = nil
+    }
+
 }
 
 extension TunnelDetailTableViewController: NSTableViewDataSource {
