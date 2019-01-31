@@ -388,7 +388,7 @@ class TunnelContainer: NSObject {
                     self.refreshStatus()
                 }
                 self.activationTimer = activationTimer
-                RunLoop.main.add(activationTimer, forMode: .default)
+                RunLoop.main.add(activationTimer, forMode: .common)
             }
         }
     }
@@ -444,7 +444,7 @@ class TunnelContainer: NSObject {
                 self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
             }
             self.deactivationTimer = deactivationTimer
-            RunLoop.main.add(deactivationTimer, forMode: .default)
+            RunLoop.main.add(deactivationTimer, forMode: .common)
             return
         }
         #endif
