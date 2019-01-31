@@ -93,7 +93,7 @@
 "tunnelEditPlaceholderTextStronglyRecommended" = "Strongly recommended";
 "tunnelEditPlaceholderTextOff" = "Off";
 
-"tunnelPeerPersistentKeepaliveValue (%d)" = "every %d seconds";
+"tunnelPeerPersistentKeepaliveValue (%@)" = "every %@ seconds";
 "tunnelHandshakeTimestampNow" = "Now";
 "tunnelHandshakeTimestampSystemClockBackward" = "(System clock is backward)";
 "tunnelHandshakeTimestampAgo (%@)" = "%@ ago";
