@@ -13,12 +13,12 @@ class TunnelDetailTableViewController: UITableViewController {
         case delete
     }
 
-    let interfaceFields: [TunnelViewModel.InterfaceField] = [
+    static let interfaceFields: [TunnelViewModel.InterfaceField] = [
         .name, .publicKey, .addresses,
         .listenPort, .mtu, .dns
     ]
 
-    let peerFields: [TunnelViewModel.PeerField] = [
+    static let peerFields: [TunnelViewModel.PeerField] = [
         .publicKey, .preSharedKey, .endpoint,
         .allowedIPs, .persistentKeepAlive,
         .rxBytes, .txBytes, .lastHandshakeTime
@@ -89,11 +89,11 @@ class TunnelDetailTableViewController: UITableViewController {
     }
 
     private func loadVisibleFields() {
-        let visibleInterfaceFields = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)
-        interfaceFieldIsVisible = interfaceFields.map { visibleInterfaceFields.contains($0) }
+        let visibleInterfaceFields = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: TunnelDetailTableViewController.interfaceFields)
+        interfaceFieldIsVisible = TunnelDetailTableViewController.interfaceFields.map { visibleInterfaceFields.contains($0) }
         peerFieldIsVisible = tunnelViewModel.peersData.map { peer in
-            let visiblePeerFields = peer.filterFieldsWithValueOrControl(peerFields: peerFields)
-            return peerFields.map { visiblePeerFields.contains($0) }
+            let visiblePeerFields = peer.filterFieldsWithValueOrControl(peerFields: TunnelDetailTableViewController.peerFields)
+            return TunnelDetailTableViewController.peerFields.map { visiblePeerFields.contains($0) }
         }
     }
 
@@ -172,13 +172,79 @@ class TunnelDetailTableViewController: UITableViewController {
         reloadRuntimeConfigurationTimer = nil
     }
 
+    func applyTunnelConfiguration(tunnelConfiguration: TunnelConfiguration) {
+        // Incorporates changes from tunnelConfiguation. Ignores any changes in peer ordering.
+        guard let tableView = self.tableView else { return }
+        let sections = self.sections
+        let interfaceSectionIndex = sections.firstIndex(where: { if case .interface = $0 { return true } else { return false }})!
+        let firstPeerSectionIndex = interfaceSectionIndex + 1
+        var interfaceFieldIsVisible = self.interfaceFieldIsVisible
+        var peerFieldIsVisible = self.peerFieldIsVisible
+
+        func sectionChanged<T>(fields: [T], fieldIsVisible fieldIsVisibleInput: [Bool], tableView: UITableView, section: Int, changes: [T: TunnelViewModel.ChangeHandlers.FieldChange]) {
+            var fieldIsVisible = fieldIsVisibleInput
+            var modifiedIndexPaths = [IndexPath]()
+            for (index, field) in fields.enumerated() where changes[field] == .modified {
+                let row = fieldIsVisible[0 ..< index].filter { $0 }.count
+                modifiedIndexPaths.append(IndexPath(row: row, section: section))
+            }
+            if !modifiedIndexPaths.isEmpty {
+                tableView.reloadRows(at: modifiedIndexPaths, with: .automatic)
+            }
+
+            var removedIndexPaths = [IndexPath]()
+            for (index, field) in fields.enumerated().reversed() where changes[field] == .removed {
+                let row = fieldIsVisible[0 ..< index].filter { $0 }.count
+                removedIndexPaths.append(IndexPath(row: row, section: section))
+                fieldIsVisible[index] = false
+            }
+            if !removedIndexPaths.isEmpty {
+                tableView.deleteRows(at: removedIndexPaths, with: .automatic)
+            }
+
+            var addedIndexPaths = [IndexPath]()
+            for (index, field) in fields.enumerated() where changes[field] == .added {
+                let row = fieldIsVisible[0 ..< index].filter { $0 }.count
+                addedIndexPaths.append(IndexPath(row: row, section: section))
+                fieldIsVisible[index] = true
+            }
+            if !addedIndexPaths.isEmpty {
+                tableView.insertRows(at: addedIndexPaths, with: .automatic)
+            }
+        }
+
+        let changeHandlers = TunnelViewModel.ChangeHandlers(
+            interfaceChanged: { changes in
+                sectionChanged(fields: TunnelDetailTableViewController.interfaceFields, fieldIsVisible: interfaceFieldIsVisible,
+                               tableView: tableView, section: interfaceSectionIndex, changes: changes)
+            },
+            peerChangedAt: { peerIndex, changes in
+                sectionChanged(fields: TunnelDetailTableViewController.peerFields, fieldIsVisible: peerFieldIsVisible[peerIndex],
+                               tableView: tableView, section: firstPeerSectionIndex + peerIndex, changes: changes)
+            },
+            peersRemovedAt: { peerIndices in
+                let sectionIndices = peerIndices.map { firstPeerSectionIndex + $0 }
+                tableView.deleteSections(IndexSet(sectionIndices), with: .automatic)
+            },
+            peersInsertedAt: { peerIndices in
+                let sectionIndices = peerIndices.map { firstPeerSectionIndex + $0 }
+                tableView.insertSections(IndexSet(sectionIndices), with: .automatic)
+            }
+        )
+
+        tableView.beginUpdates()
+        self.tunnelViewModel.applyConfiguration(other: tunnelConfiguration, changeHandlers: changeHandlers)
+        self.loadSections()
+        self.loadVisibleFields()
+        tableView.endUpdates()
+    }
+
     private func reloadRuntimeConfiguration() {
-        tunnel.getRuntimeTunnelConfiguration(completionHandler: {
-            guard let tunnelConfiguration = $0 else { return }
-            self.tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
-            self.loadSections()
-            self.tableView.reloadData()
-        })
+        tunnel.getRuntimeTunnelConfiguration { [weak self] tunnelConfiguration in
+            guard let tunnelConfiguration = tunnelConfiguration else { return }
+            guard let self = self else { return }
+            self.applyTunnelConfiguration(tunnelConfiguration: tunnelConfiguration)
+        }
     }
 }
 
@@ -261,7 +327,7 @@ extension TunnelDetailTableViewController {
     }
 
     private func interfaceCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let visibleInterfaceFields = interfaceFields.enumerated().filter { interfaceFieldIsVisible[$0.offset] }.map { $0.element }
+        let visibleInterfaceFields = TunnelDetailTableViewController.interfaceFields.enumerated().filter { interfaceFieldIsVisible[$0.offset] }.map { $0.element }
         let field = visibleInterfaceFields[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.localizedUIString
@@ -270,7 +336,7 @@ extension TunnelDetailTableViewController {
     }
 
     private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData, peerIndex: Int) -> UITableViewCell {
-        let visiblePeerFields = peerFields.enumerated().filter { peerFieldIsVisible[peerIndex][$0.offset] }.map { $0.element }
+        let visiblePeerFields = TunnelDetailTableViewController.peerFields.enumerated().filter { peerFieldIsVisible[peerIndex][$0.offset] }.map { $0.element }
         let field = visiblePeerFields[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.localizedUIString
