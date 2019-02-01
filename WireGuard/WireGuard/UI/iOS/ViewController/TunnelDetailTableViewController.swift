@@ -8,7 +8,7 @@ class TunnelDetailTableViewController: UITableViewController {
     private enum Section {
         case status
         case interface
-        case peer(_ peer: TunnelViewModel.PeerData)
+        case peer(index: Int, peer: TunnelViewModel.PeerData)
         case onDemand
         case delete
     }
@@ -27,7 +27,11 @@ class TunnelDetailTableViewController: UITableViewController {
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
+
     private var sections = [Section]()
+    private var interfaceFieldIsVisible = [Bool]()
+    private var peerFieldIsVisible = [[Bool]]()
+
     private weak var statusCell: SwitchCell?
     private var onDemandStatusObservationToken: AnyObject?
     private var statusObservationToken: AnyObject?
@@ -39,6 +43,7 @@ class TunnelDetailTableViewController: UITableViewController {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         super.init(style: .grouped)
         loadSections()
+        loadVisibleFields()
         statusObservationToken = tunnel.observe(\.status) { [weak self] _, _ in
             guard let self = self else { return }
             if let cell = self.statusCell {
@@ -76,9 +81,20 @@ class TunnelDetailTableViewController: UITableViewController {
         sections.removeAll()
         sections.append(.status)
         sections.append(.interface)
-        tunnelViewModel.peersData.forEach { sections.append(.peer($0)) }
+        for (index, peer) in tunnelViewModel.peersData.enumerated() {
+            sections.append(.peer(index: index, peer: peer))
+        }
         sections.append(.onDemand)
         sections.append(.delete)
+    }
+
+    private func loadVisibleFields() {
+        let visibleInterfaceFields = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)
+        interfaceFieldIsVisible = interfaceFields.map { visibleInterfaceFields.contains($0) }
+        peerFieldIsVisible = tunnelViewModel.peersData.map { peer in
+            let visiblePeerFields = peer.filterFieldsWithValueOrControl(peerFields: peerFields)
+            return peerFields.map { visiblePeerFields.contains($0) }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -189,9 +205,9 @@ extension TunnelDetailTableViewController {
         case .status:
             return 1
         case .interface:
-             return tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields).count
-        case .peer(let peerData):
-            return peerData.filterFieldsWithValueOrControl(peerFields: peerFields).count
+            return interfaceFieldIsVisible.filter { $0 }.count
+        case .peer(let peerIndex, _):
+            return peerFieldIsVisible[peerIndex].filter { $0 }.count
         case .onDemand:
             return 1
         case .delete:
@@ -220,8 +236,8 @@ extension TunnelDetailTableViewController {
             return statusCell(for: tableView, at: indexPath)
         case .interface:
             return interfaceCell(for: tableView, at: indexPath)
-        case .peer(let peer):
-            return peerCell(for: tableView, at: indexPath, with: peer)
+        case .peer(let index, let peer):
+            return peerCell(for: tableView, at: indexPath, with: peer, peerIndex: index)
         case .onDemand:
             return onDemandCell(for: tableView, at: indexPath)
         case .delete:
@@ -245,15 +261,17 @@ extension TunnelDetailTableViewController {
     }
 
     private func interfaceCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let field = tunnelViewModel.interfaceData.filterFieldsWithValueOrControl(interfaceFields: interfaceFields)[indexPath.row]
+        let visibleInterfaceFields = interfaceFields.enumerated().filter { interfaceFieldIsVisible[$0.offset] }.map { $0.element }
+        let field = visibleInterfaceFields[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.localizedUIString
         cell.value = tunnelViewModel.interfaceData[field]
         return cell
     }
 
-    private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData) -> UITableViewCell {
-        let field = peerData.filterFieldsWithValueOrControl(peerFields: peerFields)[indexPath.row]
+    private func peerCell(for tableView: UITableView, at indexPath: IndexPath, with peerData: TunnelViewModel.PeerData, peerIndex: Int) -> UITableViewCell {
+        let visiblePeerFields = peerFields.enumerated().filter { peerFieldIsVisible[peerIndex][$0.offset] }.map { $0.element }
+        let field = visiblePeerFields[indexPath.row]
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = field.localizedUIString
         if field == .persistentKeepAlive {
