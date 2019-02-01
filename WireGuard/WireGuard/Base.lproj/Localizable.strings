@@ -95,7 +95,7 @@
 
 "tunnelPeerPersistentKeepaliveValue (%@)" = "every %@ seconds";
 "tunnelHandshakeTimestampNow" = "Now";
-"tunnelHandshakeTimestampSystemClockBackward" = "(System clock is backward)";
+"tunnelHandshakeTimestampSystemClockBackward" = "(System clock wound backwards)";
 "tunnelHandshakeTimestampAgo (%@)" = "%@ ago";
 "tunnelHandshakeTimestampYear (%d)" = "%d year";
 "tunnelHandshakeTimestampYears (%d)" = "%d years";
