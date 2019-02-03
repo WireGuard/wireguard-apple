@@ -33,7 +33,6 @@ class TunnelDetailTableViewController: UITableViewController {
     private var peerFieldIsVisible = [[Bool]]()
 
     private weak var statusCell: SwitchCell?
-    private var onDemandStatusObservationToken: AnyObject?
     private var statusObservationToken: AnyObject?
     private var reloadRuntimeConfigurationTimer: Timer?
 
@@ -352,7 +351,7 @@ extension TunnelDetailTableViewController {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         cell.key = tr("tunnelOnDemandKey")
         cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
-        onDemandStatusObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
+        cell.observationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
             cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
         }
         return cell
