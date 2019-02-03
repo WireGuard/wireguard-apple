@@ -22,6 +22,8 @@ class SwitchCell: UITableViewCell {
 
     var onSwitchToggled: ((Bool) -> Void)?
 
+    var observationToken: AnyObject?
+
     let switchView = UISwitch()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -45,5 +47,6 @@ class SwitchCell: UITableViewCell {
         isEnabled = true
         message = ""
         isOn = false
+        observationToken = nil
     }
 }
