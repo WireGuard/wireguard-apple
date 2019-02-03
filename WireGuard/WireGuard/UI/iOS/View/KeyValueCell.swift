@@ -71,6 +71,8 @@ class KeyValueCell: UITableViewCell {
     var onValueChanged: ((String) -> Void)?
     var onValueBeingEdited: ((String) -> Void)?
 
+    var observationToken: AnyObject?
+
     private var textFieldValueOnBeginEditing: String = ""
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -187,6 +189,7 @@ class KeyValueCell: UITableViewCell {
         keyboardType = .default
         onValueChanged = nil
         onValueBeingEdited = nil
+        observationToken = nil
         key = ""
         value = ""
         configureForContentSize()
