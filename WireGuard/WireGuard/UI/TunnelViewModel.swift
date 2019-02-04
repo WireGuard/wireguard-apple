@@ -462,7 +462,9 @@ class TunnelViewModel {
                 }
             }
             scratchpad = otherScratchPad
-            changeHandler(peerIndex, changes)
+            if !changes.isEmpty {
+                changeHandler(peerIndex, changes)
+            }
         }
     }
 
