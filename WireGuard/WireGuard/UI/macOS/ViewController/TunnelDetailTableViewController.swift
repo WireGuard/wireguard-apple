@@ -78,12 +78,15 @@ class TunnelDetailTableViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
+
     var tunnelViewModel: TunnelViewModel {
-        didSet {
-            updateTableViewModelRows()
-        }
+        didSet { updateTableViewModelRowsBySection() }
+    }
+    private var tableViewModelRowsBySection = [[(isVisible: Bool, modelRow: TableViewModelRow)]]() {
+        didSet { updateTableViewModelRows() }
     }
     private var tableViewModelRows = [TableViewModelRow]()
+
     private var statusObservationToken: AnyObject?
     private var tunnelEditVC: TunnelEditViewController?
     private var reloadRuntimeConfigurationTimer: Timer?
@@ -160,19 +163,34 @@ class TunnelDetailTableViewController: NSViewController {
         view = containerView
     }
 
-    func updateTableViewModelRows() {
-        tableViewModelRows = []
-        for field in interfaceFields where !tunnelViewModel.interfaceData[field].isEmpty {
-            tableViewModelRows.append(.interfaceFieldRow(field))
+    func updateTableViewModelRowsBySection() {
+        var modelRowsBySection = [[(isVisible: Bool, modelRow: TableViewModelRow)]]()
+
+        var interfaceSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
+        for field in interfaceFields {
+            interfaceSection.append((isVisible: !tunnelViewModel.interfaceData[field].isEmpty, modelRow: .interfaceFieldRow(field)))
         }
+        interfaceSection.append((isVisible: true, modelRow: .spacerRow))
+        modelRowsBySection.append(interfaceSection)
+
         for peerData in tunnelViewModel.peersData {
-            tableViewModelRows.append(.spacerRow)
-            for field in peerFields where !peerData[field].isEmpty {
-                tableViewModelRows.append(.peerFieldRow(peer: peerData, field: field))
+            var peerSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
+            for field in peerFields {
+                peerSection.append((isVisible: !peerData[field].isEmpty, modelRow: .peerFieldRow(peer: peerData, field: field)))
             }
+            peerSection.append((isVisible: true, modelRow: .spacerRow))
+            modelRowsBySection.append(peerSection)
         }
-        tableViewModelRows.append(.spacerRow)
-        tableViewModelRows.append(.onDemandRow)
+
+        var onDemandSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
+        onDemandSection.append((isVisible: true, modelRow: .onDemandRow))
+        modelRowsBySection.append(onDemandSection)
+
+        tableViewModelRowsBySection = modelRowsBySection
+    }
+
+    func updateTableViewModelRows() {
+        tableViewModelRows = tableViewModelRowsBySection.flatMap { $0.filter { $0.isVisible }.map { $0.modelRow } }
     }
 
     func updateStatus() {
