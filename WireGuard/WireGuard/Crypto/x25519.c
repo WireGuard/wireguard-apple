@@ -7,6 +7,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
 #include <CommonCrypto/CommonRandom.h>
 
 #include "x25519.h"
@@ -171,7 +172,7 @@ void curve25519_derive_public_key(uint8_t public_key[32], const uint8_t private_
 
 void curve25519_generate_private_key(uint8_t private_key[32])
 {
-    CCRandomGenerateBytes(private_key, 32);
+    assert(CCRandomGenerateBytes(private_key, 32) == kCCSuccess);
     private_key[31] = (private_key[31] & 127) | 64;
     private_key[0] &= 248;
 }
