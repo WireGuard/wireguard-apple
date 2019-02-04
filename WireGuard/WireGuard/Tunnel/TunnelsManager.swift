@@ -526,7 +526,15 @@ class TunnelContainer: NSObject {
 }
 
 extension NETunnelProviderManager {
+    private static var cachedConfigKey: UInt8 = 0
     var tunnelConfiguration: TunnelConfiguration? {
-        return (protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(called: localizedDescription)
+        if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey) as? TunnelConfiguration {
+            return cached
+        }
+        let config = (protocolConfiguration as? NETunnelProviderProtocol)?.asTunnelConfiguration(called: localizedDescription)
+        if config != nil {
+            objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, config, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        return config
     }
 }
