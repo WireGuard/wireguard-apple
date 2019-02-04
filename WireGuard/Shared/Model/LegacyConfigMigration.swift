@@ -174,20 +174,32 @@ final class LegacyTunnelConfiguration: LegacyModel {
 extension NETunnelProviderProtocol {
 
     @discardableResult
-    func migrateConfigurationIfNeeded() -> Bool {
-        guard let configurationVersion = providerConfiguration?["tunnelConfigurationVersion"] as? Int else { return false }
-        if configurationVersion == 1 {
-            migrateFromConfigurationV1()
-        } else {
-            fatalError("No migration from configuration version \(configurationVersion) exists.")
+    func migrateConfigurationIfNeeded(called name: String) -> Bool {
+        var ret = false
+        if migrateFromConfigurationV1() {
+            ret = true
         }
+        if migrateFromConfigurationV2(called: name) {
+            ret = true
+        }
+        return ret
+    }
+
+    private func migrateFromConfigurationV1() -> Bool {
+        guard let configurationVersion = providerConfiguration?["tunnelConfigurationVersion"] as? Int else { return false }
+        guard configurationVersion == 1 else { return false }
+        guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return false }
+        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return false }
+        providerConfiguration = ["WgQuickConfig": configuration.migrated.asWgQuickConfig()]
         return true
     }
 
-    private func migrateFromConfigurationV1() {
-        guard let serializedTunnelConfiguration = providerConfiguration?["tunnelConfiguration"] as? Data else { return }
-        guard let configuration = try? JSONDecoder().decode(LegacyTunnelConfiguration.self, from: serializedTunnelConfiguration) else { return }
-        providerConfiguration = [Keys.wgQuickConfig.rawValue: configuration.migrated.asWgQuickConfig()]
+    private func migrateFromConfigurationV2(called name: String) -> Bool {
+        guard let oldConfig = providerConfiguration?["WgQuickConfig"] as? String else { return false }
+        providerConfiguration = nil
+        guard passwordReference == nil else { return true }
+        passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
+        return true
     }
 
 }

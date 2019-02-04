@@ -44,12 +44,21 @@ class TunnelsManager {
                 return
             }
 
-            let tunnelManagers = managers ?? []
-            tunnelManagers.forEach { tunnelManager in
-                if (tunnelManager.protocolConfiguration as? NETunnelProviderProtocol)?.migrateConfigurationIfNeeded() == true {
+            var tunnelManagers = managers ?? []
+            var refs: Set<Data> = []
+            for (index, tunnelManager) in tunnelManagers.enumerated().reversed() {
+                let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol
+                if proto?.migrateConfigurationIfNeeded(called: tunnelManager.localizedDescription ?? "unknown") ?? false {
                     tunnelManager.saveToPreferences { _ in }
                 }
+                if let ref = proto?.verifyConfigurationReference() {
+                    refs.insert(ref)
+                } else {
+                    tunnelManager.removeFromPreferences { _ in }
+                    tunnelManagers.remove(at: index)
+                }
             }
+            Keychain.deleteReferences(except: refs)
             completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
         }
         #endif
@@ -105,6 +114,7 @@ class TunnelsManager {
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Add: Saving configuration failed: \(error!)")
+                (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
                 completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error!)))
                 return
             }
@@ -153,7 +163,7 @@ class TunnelsManager {
             tunnel.name = tunnelName
         }
 
-        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
+        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: tunnelProviderManager.protocolConfiguration)
         tunnelProviderManager.localizedDescription = tunnelConfiguration.name
         tunnelProviderManager.isEnabled = true
 
@@ -162,6 +172,7 @@ class TunnelsManager {
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
+                //TODO: the passwordReference for the old one has already been removed at this point and we can't easily roll back!
                 wg_log(.error, message: "Modify: Saving configuration failed: \(error!)")
                 completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error!))
                 return
@@ -202,6 +213,7 @@ class TunnelsManager {
 
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
+        (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
 
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
