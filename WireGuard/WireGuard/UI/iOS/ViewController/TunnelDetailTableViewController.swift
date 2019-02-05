@@ -220,6 +220,7 @@ extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         loadSections()
+        loadVisibleFields()
         title = tunnel.name
         restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
         tableView.reloadData()
