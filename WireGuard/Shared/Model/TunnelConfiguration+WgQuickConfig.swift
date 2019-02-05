@@ -57,11 +57,11 @@ extension TunnelConfiguration {
             let lowercasedLine = trimmedLine.lowercased()
 
             if !trimmedLine.isEmpty {
-                if let equalsIndex = line.firstIndex(of: "=") {
+                if let equalsIndex = trimmedLine.firstIndex(of: "=") {
                     // Line contains an attribute
-                    let keyWithCase = line[..<equalsIndex].trimmingCharacters(in: .whitespaces)
+                    let keyWithCase = trimmedLine[..<equalsIndex].trimmingCharacters(in: .whitespaces)
                     let key = keyWithCase.lowercased()
-                    let value = line[line.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
+                    let value = trimmedLine[trimmedLine.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
                     let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
                     if let presentValue = attributes[key] {
                         if keysWithMultipleEntriesAllowed.contains(key) {
