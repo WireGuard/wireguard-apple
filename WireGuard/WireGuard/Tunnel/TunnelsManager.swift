@@ -438,7 +438,7 @@ class TunnelContainer: NSObject {
         // If a tunnel gets activated in this time interval, it's stopped by the system automatically in ~25 seconds.
         if self.status == .deactivating && tunnelProvider.connection.status == .disconnected {
             self.deactivationTimer?.invalidate()
-            let deactivationTimer = Timer(timeInterval: 5 /* seconds */, repeats: false) { [weak self] _ in
+            let deactivationTimer = Timer(timeInterval: 6 /* seconds */, repeats: false) { [weak self] _ in
                 guard let self = self else { return }
                 self.status = TunnelStatus(from: self.tunnelProvider.connection.status)
                 self.isActivateOnDemandEnabled = self.tunnelProvider.isOnDemandEnabled
