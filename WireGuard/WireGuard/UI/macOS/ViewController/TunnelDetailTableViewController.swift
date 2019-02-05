@@ -399,9 +399,11 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
 extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        updateTableViewModelRowsBySection()
+        updateTableViewModelRows()
+        updateStatus()
         tableView.reloadData()
         self.tunnelEditVC = nil
-        updateStatus()
     }
 
     func tunnelEditingCancelled() {
