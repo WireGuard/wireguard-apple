@@ -141,6 +141,7 @@ class TunnelsListTableViewController: NSViewController {
 
     @objc func handleAddEmptyTunnelAction() {
         let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: nil)
+        tunnelEditVC.delegate = self
         presentAsSheet(tunnelEditVC)
     }
 
@@ -234,6 +235,18 @@ class TunnelsListTableViewController: NSViewController {
             return true
         }
         return false
+    }
+}
+
+extension TunnelsListTableViewController: TunnelEditViewControllerDelegate {
+    func tunnelSaved(tunnel: TunnelContainer) {
+        if let tunnelIndex = tunnelsManager.index(of: tunnel), tunnelIndex >= 0 {
+            self.selectTunnel(at: tunnelIndex)
+        }
+    }
+
+    func tunnelEditingCancelled() {
+        // Nothing to do
     }
 }
 
