@@ -41,7 +41,7 @@ extension NETunnelProviderProtocol {
         // until finally the app is open. Would it be possible to call saveToPreferences here? Or is
         // that generally not available to network extensions? In which case, what should our
         // behavior be?
-        
+
         guard let passwordReference = passwordReference else { return nil }
         guard let config = Keychain.openReference(called: passwordReference) else { return nil }
         return try? TunnelConfiguration(fromWgQuickConfig: config, called: name)
@@ -56,7 +56,7 @@ extension NETunnelProviderProtocol {
         guard let ref = passwordReference else { return nil }
         return Keychain.verifyReference(called: ref) ? ref : nil
     }
-    
+
     @discardableResult
     func migrateConfigurationIfNeeded(called name: String) -> Bool {
         /* This is how we did things before we switched to putting items

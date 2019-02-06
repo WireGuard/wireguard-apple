@@ -316,3 +316,10 @@
 
 "macAppVersion (%@)" = "App version: %@";
 "macGoBackendVersion (%@)" = "Go backend version: %@";
+
+// Privacy
+
+"macExportPrivateData" = "export tunnel private keys";
+"macViewPrivateData" = "view tunnel private keys";
+"iosExportPrivateData" = "Authenticate to export tunnel private keys.";
+"iosViewPrivateData" = "Authenticate to view tunnel private keys.";

@@ -86,22 +86,25 @@ class SettingsTableViewController: UITableViewController {
     }
 
     func exportConfigurationsAsZipFile(sourceView: UIView) {
-        guard let tunnelsManager = tunnelsManager else { return }
-        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        PrivateDataConfirmation.confirmAccess(to: tr("iosExportPrivateData")) { [weak self] in
+            guard let self = self else { return }
+            guard let tunnelsManager = self.tunnelsManager else { return }
+            guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
 
-        let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
-        _ = FileManager.deleteFile(at: destinationURL)
+            let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
+            _ = FileManager.deleteFile(at: destinationURL)
 
-        let count = tunnelsManager.numberOfTunnels()
-        let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration }
-        ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
-            if let error = error {
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-                return
+            let count = tunnelsManager.numberOfTunnels()
+            let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration }
+            ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
+                }
+
+                let fileExportVC = UIDocumentPickerViewController(url: destinationURL, in: .exportToService)
+                self?.present(fileExportVC, animated: true, completion: nil)
             }
-
-            let fileExportVC = UIDocumentPickerViewController(url: destinationURL, in: .exportToService)
-            self?.present(fileExportVC, animated: true, completion: nil)
         }
     }
 
