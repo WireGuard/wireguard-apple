@@ -56,4 +56,17 @@ extension NETunnelProviderProtocol {
         guard let ref = passwordReference else { return nil }
         return Keychain.verifyReference(called: ref) ? ref : nil
     }
+    
+    @discardableResult
+    func migrateConfigurationIfNeeded(called name: String) -> Bool {
+        /* This is how we did things before we switched to putting items
+         * in the keychain. But it's still useful to keep the migration
+         * around so that .mobileconfig files are easier.
+         */
+        guard let oldConfig = providerConfiguration?["WgQuickConfig"] as? String else { return false }
+        providerConfiguration = nil
+        guard passwordReference == nil else { return true }
+        passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
+        return true
+    }
 }

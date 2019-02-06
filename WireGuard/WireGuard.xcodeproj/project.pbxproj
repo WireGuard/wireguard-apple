@@ -21,8 +21,6 @@
 		5F52D0BD21E3785C00283CEA /* ConfTextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F52D0BC21E3785C00283CEA /* ConfTextStorage.swift */; };
 		5F52D0BF21E3788900283CEA /* NSColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F52D0BE21E3788900283CEA /* NSColor+Hex.swift */; };
 		5F52D0C221E378C000283CEA /* highlighter.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F52D0C121E378C000283CEA /* highlighter.c */; };
-		5F9696AA21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
-		5F9696AB21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
 		5F9696AE21CD6F72008063FE /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
 		5F9696B021CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */; };
 		5F9696B121CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */; };
@@ -78,7 +76,6 @@
 		6FB1BDA521D4F53300A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */; };
 		6FB1BDA621D4F53300A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 		6FB1BDA721D4F53300A991BF /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
-		6FB1BDA821D4F53300A991BF /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
 		6FB1BDA921D4F53300A991BF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */; };
 		6FB1BDAA21D4F53300A991BF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E9217229DB006A79B3 /* IPAddressRange.swift */; };
 		6FB1BDAB21D4F53300A991BF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
@@ -98,7 +95,6 @@
 		6FB1BDBF21D50F0200A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */; };
 		6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 		6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
-		6FB1BDC221D50F0300A991BF /* LegacyConfigMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */; };
 		6FB1BDC321D50F0300A991BF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */; };
 		6FB1BDC421D50F0300A991BF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E9217229DB006A79B3 /* IPAddressRange.swift */; };
 		6FB1BDC521D50F0300A991BF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
@@ -238,7 +234,6 @@
 		5F52D0BE21E3788900283CEA /* NSColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Hex.swift"; sourceTree = "<group>"; };
 		5F52D0C021E378C000283CEA /* highlighter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = highlighter.h; sourceTree = "<group>"; };
 		5F52D0C121E378C000283CEA /* highlighter.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = highlighter.c; sourceTree = "<group>"; };
-		5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyConfigMigration.swift; sourceTree = "<group>"; };
 		5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TunnelConfiguration+WgQuickConfig.swift"; sourceTree = "<group>"; };
 		5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceConfiguration.swift; sourceTree = "<group>"; };
 		5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
@@ -481,7 +476,6 @@
 				5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */,
 				6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */,
 				5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */,
-				5F9696A921CD6AE6008063FE /* LegacyConfigMigration.swift */,
 				6F7774E72172020C006A79B3 /* TunnelConfiguration.swift */,
 				6F7774E9217229DB006A79B3 /* IPAddressRange.swift */,
 				6F693A552179E556008551C1 /* Endpoint.swift */,
@@ -1091,7 +1085,6 @@
 				5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */,
 				6FFA5D9321943BC90001E2F7 /* DNSResolver.swift in Sources */,
 				6FFA5D912194370D0001E2F7 /* DNSServer.swift in Sources */,
-				5F9696AB21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */,
 				6FFA5D8921942F320001E2F7 /* PacketTunnelSettingsGenerator.swift in Sources */,
 				6F5D0C1D218352EF000F85AD /* PacketTunnelProvider.swift in Sources */,
 			);
@@ -1146,7 +1139,6 @@
 				6F613D9B21DE33B8004B217A /* KeyValueRow.swift in Sources */,
 				6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */,
 				5F52D0BB21E3781B00283CEA /* ConfTextView.swift in Sources */,
-				6FB1BDC221D50F0300A991BF /* LegacyConfigMigration.swift in Sources */,
 				6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */,
 				6FCD99AA21E0E14700BA4C82 /* NoTunnelsDetailViewController.swift in Sources */,
 				6FB1BDC321D50F0300A991BF /* TunnelConfiguration.swift in Sources */,
@@ -1175,7 +1167,6 @@
 				6FB1BDA521D4F53300A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				6FB1BDA621D4F53300A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6FB1BDA721D4F53300A991BF /* String+ArrayConversion.swift in Sources */,
-				6FB1BDA821D4F53300A991BF /* LegacyConfigMigration.swift in Sources */,
 				6FB1BDA921D4F53300A991BF /* TunnelConfiguration.swift in Sources */,
 				6FB1BDAA21D4F53300A991BF /* IPAddressRange.swift in Sources */,
 				6FB1BDAB21D4F53300A991BF /* Endpoint.swift in Sources */,
@@ -1216,7 +1207,6 @@
 				5F45419821C2D60500994C13 /* KeyValueCell.swift in Sources */,
 				6FBA103E21D6B6D70051C35F /* TunnelImporter.swift in Sources */,
 				6F919EC3218A2AE90023B400 /* ErrorPresenter.swift in Sources */,
-				5F9696AA21CD6AE6008063FE /* LegacyConfigMigration.swift in Sources */,
 				6F5A2B4821AFF49A0081EDD8 /* FileManager+Extension.swift in Sources */,
 				5F45418C21C2D48200994C13 /* TunnelEditKeyValueCell.swift in Sources */,
 				6FE254FB219C10800028284D /* ZipImporter.swift in Sources */,
