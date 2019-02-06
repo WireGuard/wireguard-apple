@@ -227,10 +227,13 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     @objc func handleEditTunnelAction() {
-        let tunnelEditVC = TunnelEditViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
-        tunnelEditVC.delegate = self
-        presentAsSheet(tunnelEditVC)
-        self.tunnelEditVC = tunnelEditVC
+        PrivateDataConfirmation.confirmAccess(to: tr("macViewPrivateData")) { [weak self] in
+            guard let self = self else { return }
+            let tunnelEditVC = TunnelEditViewController(tunnelsManager: self.tunnelsManager, tunnel: self.tunnel)
+            tunnelEditVC.delegate = self
+            self.presentAsSheet(tunnelEditVC)
+            self.tunnelEditVC = tunnelEditVC
+        }
     }
 
     @objc func handleToggleActiveStatusAction() {

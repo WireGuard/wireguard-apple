@@ -103,11 +103,14 @@ class TunnelDetailTableViewController: UITableViewController {
     }
 
     @objc func editTapped() {
-        let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
-        editVC.delegate = self
-        let editNC = UINavigationController(rootViewController: editVC)
-        editNC.modalPresentationStyle = .formSheet
-        present(editNC, animated: true)
+        PrivateDataConfirmation.confirmAccess(to: tr("iosViewPrivateData")) { [weak self] in
+            guard let self = self else { return }
+            let editVC = TunnelEditTableViewController(tunnelsManager: self.tunnelsManager, tunnel: self.tunnel)
+            editVC.delegate = self
+            let editNC = UINavigationController(rootViewController: editVC)
+            editNC.modalPresentationStyle = .formSheet
+            self.present(editNC, animated: true)
+        }
     }
 
     func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView, onConfirmed: @escaping (() -> Void)) {

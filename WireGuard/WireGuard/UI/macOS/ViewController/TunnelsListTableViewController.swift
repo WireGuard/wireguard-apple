@@ -207,22 +207,26 @@ class TunnelsListTableViewController: NSViewController {
     }
 
     @objc func handleExportTunnelsAction() {
-        guard let window = view.window else { return }
-        let savePanel = NSSavePanel()
-        savePanel.allowedFileTypes = ["zip"]
-        savePanel.prompt = tr("macSheetButtonExportZip")
-        savePanel.nameFieldLabel = tr("macNameFieldExportZip")
-        savePanel.nameFieldStringValue = "wireguard-export.zip"
-        savePanel.beginSheetModal(for: window) { [weak tunnelsManager] response in
-            guard let tunnelsManager = tunnelsManager else { return }
-            guard response == .OK else { return }
-            guard let destinationURL = savePanel.url else { return }
-            let count = tunnelsManager.numberOfTunnels()
-            let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration }
-            ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
-                if let error = error {
-                    ErrorPresenter.showErrorAlert(error: error, from: self)
-                    return
+        PrivateDataConfirmation.confirmAccess(to: tr("macExportPrivateData")) { [weak self] in
+            guard let self = self else { return }
+            guard let window = self.view.window else { return }
+            let savePanel = NSSavePanel()
+            savePanel.allowedFileTypes = ["zip"]
+            savePanel.prompt = tr("macSheetButtonExportZip")
+            savePanel.nameFieldLabel = tr("macNameFieldExportZip")
+            savePanel.nameFieldStringValue = "wireguard-export.zip"
+            let tunnelsManager = self.tunnelsManager
+            savePanel.beginSheetModal(for: window) { [weak tunnelsManager] response in
+                guard let tunnelsManager = tunnelsManager else { return }
+                guard response == .OK else { return }
+                guard let destinationURL = savePanel.url else { return }
+                let count = tunnelsManager.numberOfTunnels()
+                let tunnelConfigurations = (0 ..< count).compactMap { tunnelsManager.tunnel(at: $0).tunnelConfiguration }
+                ZipExporter.exportConfigFiles(tunnelConfigurations: tunnelConfigurations, to: destinationURL) { [weak self] error in
+                    if let error = error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                        return
+                    }
                 }
             }
         }
