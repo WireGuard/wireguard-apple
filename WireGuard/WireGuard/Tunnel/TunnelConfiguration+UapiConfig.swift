@@ -88,7 +88,7 @@ extension TunnelConfiguration {
         guard let privateKeyString = attributes["private_key"] else {
             throw ParseError.interfaceHasNoPrivateKey
         }
-        guard let privateKey = Data(hexEncoded: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
+        guard let privateKey = Data(hexKey: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
             throw ParseError.interfaceHasInvalidPrivateKey(privateKeyString)
         }
         var interface = InterfaceConfiguration(privateKey: privateKey)
@@ -108,12 +108,12 @@ extension TunnelConfiguration {
         guard let publicKeyString = attributes["public_key"] else {
             throw ParseError.peerHasNoPublicKey
         }
-        guard let publicKey = Data(hexEncoded: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
+        guard let publicKey = Data(hexKey: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
             throw ParseError.peerHasInvalidPublicKey(publicKeyString)
         }
         var peer = PeerConfiguration(publicKey: publicKey)
         if let preSharedKeyString = attributes["preshared_key"] {
-            guard let preSharedKey = Data(hexEncoded: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else {
+            guard let preSharedKey = Data(hexKey: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else {
                 throw ParseError.peerHasInvalidPreSharedKey(preSharedKeyString)
             }
             // TODO(zx2c4): does the compiler optimize this away?
@@ -182,26 +182,5 @@ extension TunnelConfiguration {
             }
         }
         return peer
-    }
-}
-
-extension Data {
-    //swiftlint:disable identifier_name
-    init?(hexEncoded hexString: String) {
-        if hexString.count % 2 != 0 {
-            return nil
-        }
-        let len = hexString.count / 2
-        self.init(capacity: len)
-        for i in 0..<len {
-            let j = hexString.index(hexString.startIndex, offsetBy: i * 2)
-            let k = hexString.index(j, offsetBy: 2)
-            let bytes = hexString[j..<k]
-            if var num = UInt8(bytes, radix: 16) {
-                append(&num, count: 1)
-            } else {
-                return nil
-            }
-        }
     }
 }

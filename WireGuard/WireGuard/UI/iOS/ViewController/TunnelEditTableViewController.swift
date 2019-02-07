@@ -213,7 +213,7 @@ extension TunnelEditTableViewController {
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
 
-            self.tunnelViewModel.interfaceData[.privateKey] = Curve25519.generatePrivateKey().base64EncodedString()
+            self.tunnelViewModel.interfaceData[.privateKey] = Curve25519.generatePrivateKey().base64Key() ?? ""
             if let privateKeyRow = self.interfaceFieldsBySection[indexPath.section].firstIndex(of: .privateKey),
                 let publicKeyRow = self.interfaceFieldsBySection[indexPath.section].firstIndex(of: .publicKey) {
                 let privateKeyIndex = IndexPath(row: privateKeyRow, section: indexPath.section)
