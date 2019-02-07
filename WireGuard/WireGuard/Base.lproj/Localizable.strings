@@ -323,3 +323,8 @@
 "macViewPrivateData" = "view tunnel private keys";
 "iosExportPrivateData" = "Authenticate to export tunnel private keys.";
 "iosViewPrivateData" = "Authenticate to view tunnel private keys.";
+
+// Mac alert
+
+"macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
+"macAppExitingWithActiveTunnelInfo" = "The tunnel will remain active after exiting. You may disable it by reopening this application or through the Network panel in System Preferences.";
