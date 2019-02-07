@@ -336,10 +336,8 @@ class TunnelsManager {
                 }
             }
 
-            if (tunnel.status == .restarting) && (session.status == .disconnected || session.status == .disconnecting) {
-                if session.status == .disconnected {
-                    tunnel.startActivation(activationDelegate: self.activationDelegate)
-                }
+            if tunnel.status == .restarting && session.status == .disconnected {
+                tunnel.startActivation(activationDelegate: self.activationDelegate)
                 return
             }
 
@@ -442,6 +440,9 @@ class TunnelContainer: NSObject {
     }
 
     func refreshStatus() {
+        if (status == .restarting) && (tunnelProvider.connection.status == .disconnected || tunnelProvider.connection.status == .disconnecting) {
+            return
+        }
         status = TunnelStatus(from: tunnelProvider.connection.status)
         isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
     }
