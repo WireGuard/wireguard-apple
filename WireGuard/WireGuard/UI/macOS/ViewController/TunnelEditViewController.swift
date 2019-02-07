@@ -104,8 +104,8 @@ class TunnelEditViewController: NSViewController {
             let tunnelConfiguration = tunnel.tunnelConfiguration!
             nameRow.value = tunnel.name
             textView.string = tunnelConfiguration.asWgQuickConfig()
-            publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64EncodedString()
-            textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64EncodedString()
+            publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64Key() ?? ""
+            textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64Key() ?? ""
             if tunnel.activateOnDemandSetting.isActivateOnDemandEnabled {
                 selectedActivateOnDemandOption = tunnel.activateOnDemandSetting.activateOnDemandOption
             } else {
@@ -115,17 +115,17 @@ class TunnelEditViewController: NSViewController {
             // Creating a new tunnel
             let privateKey = Curve25519.generatePrivateKey()
             let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-            let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64EncodedString())\n"
-            publicKeyRow.value = publicKey.base64EncodedString()
+            let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64Key() ?? "")\n"
+            publicKeyRow.value = publicKey.base64Key() ?? ""
             textView.string = bootstrappingText
             selectedActivateOnDemandOption = .none
         }
         privateKeyObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
             if let privateKeyString = textView.privateKeyString,
-                let privateKey = Data(base64Encoded: privateKeyString),
+                let privateKey = Data(base64Key: privateKeyString),
                 privateKey.count == TunnelConfiguration.keyLength {
                 let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-                publicKeyRow?.value = publicKey.base64EncodedString()
+                publicKeyRow?.value = publicKey.base64Key() ?? ""
             } else {
                 publicKeyRow?.value = ""
             }
