@@ -28,6 +28,7 @@
 		5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */; };
 		5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
 		5FF7B96621CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
+		6B586C51220CACB600427C51 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
 		6B5C5E27220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
 		6B5C5E28220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
 		6B5C5E29220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
@@ -337,6 +338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */,
+				6B586C51220CACB600427C51 /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
