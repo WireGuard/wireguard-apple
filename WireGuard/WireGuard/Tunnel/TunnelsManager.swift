@@ -105,8 +105,7 @@ class TunnelsManager {
         }
 
         let tunnelProviderManager = NETunnelProviderManager()
-        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelConfiguration.name
+        tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
         tunnelProviderManager.isEnabled = true
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
@@ -163,8 +162,7 @@ class TunnelsManager {
             tunnel.name = tunnelName
         }
 
-        tunnelProviderManager.protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: tunnelProviderManager.protocolConfiguration)
-        tunnelProviderManager.localizedDescription = tunnelConfiguration.name
+        tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
         tunnelProviderManager.isEnabled = true
 
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
@@ -178,7 +176,6 @@ class TunnelsManager {
                 return
             }
             guard let self = self else { return }
-
             if isNameChanged {
                 let oldIndex = self.tunnels.firstIndex(of: tunnel)!
                 self.tunnels.sort { $0.name < $1.name }
@@ -548,5 +545,10 @@ extension NETunnelProviderManager {
             objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, config, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return config
+    }
+    func setTunnelConfiguration(_ tunnelConfiguration: TunnelConfiguration) {
+        protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
+        localizedDescription = tunnelConfiguration.name
+        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 }
