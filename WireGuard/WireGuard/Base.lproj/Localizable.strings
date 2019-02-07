@@ -108,6 +108,9 @@
 "tunnelHandshakeTimestampSecond (%d)" = "%d second";
 "tunnelHandshakeTimestampSeconds (%d)" = "%d seconds";
 
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ hours";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minutes";
+
 // Error alerts while creating / editing a tunnel configuration
 
 /* Alert title for error in the interface data */
