@@ -160,7 +160,7 @@ class TunnelDetailTableViewController: UITableViewController {
                 modifiedIndexPaths.append(IndexPath(row: row, section: section))
             }
             if !modifiedIndexPaths.isEmpty {
-                tableView.reloadRows(at: modifiedIndexPaths, with: .automatic)
+                tableView.reloadRows(at: modifiedIndexPaths, with: .none)
             }
 
             var removedIndexPaths = [IndexPath]()
