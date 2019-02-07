@@ -515,6 +515,7 @@ class TunnelContainer: NSObject {
     }
 
     fileprivate func startDeactivation() {
+        wg_log(.debug, message: "startDeactivation: Tunnel: \(name)")
         (tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
     }
 }
