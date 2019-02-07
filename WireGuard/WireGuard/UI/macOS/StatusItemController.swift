@@ -39,10 +39,8 @@ class StatusItemController {
         case .active:
             stopActivatingAnimation()
             statusItem.button?.image = statusBarImageWhenActive
-        case .activating, .waiting, .reasserting, .restarting:
+        case .activating, .waiting, .reasserting, .restarting, .deactivating:
             startActivatingAnimation()
-        case .deactivating:
-            break
         }
     }
 
