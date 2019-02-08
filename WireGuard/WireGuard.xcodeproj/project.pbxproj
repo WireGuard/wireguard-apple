@@ -28,7 +28,6 @@
 		5FF7B96321CC95DE00A7DD74 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96121CC95DE00A7DD74 /* InterfaceConfiguration.swift */; };
 		5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
 		5FF7B96621CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF7B96421CC95FA00A7DD74 /* PeerConfiguration.swift */; };
-		6B586C51220CACB600427C51 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
 		6B586C53220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B586C52220CBA6D00427C51 /* Data+KeyEncoding.swift */; };
 		6B586C54220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B586C52220CBA6D00427C51 /* Data+KeyEncoding.swift */; };
 		6B586C55220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B586C52220CBA6D00427C51 /* Data+KeyEncoding.swift */; };
@@ -37,8 +36,11 @@
 		6B5C5E28220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
 		6B5C5E29220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
 		6B5C5E2A220A48D30024272E /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
+		6B5CA6B1220DE4E900F126CF /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
+		6B5CA6B2220DE4F400F126CF /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB1BDB621D4F8B800A991BF /* NetworkExtension.framework */; };
 		6B62E45F220A6FA900EF34A6 /* PrivateDataConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B62E45E220A6FA900EF34A6 /* PrivateDataConfirmation.swift */; };
 		6B62E460220A6FA900EF34A6 /* PrivateDataConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B62E45E220A6FA900EF34A6 /* PrivateDataConfirmation.swift */; };
+		6B653B86220DE2960050E69C /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
 		6B707D8421F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */; };
 		6B707D8621F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */; };
 		6BD5C97B220D1AE200784E08 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5C979220D1AE100784E08 /* key.c */; };
@@ -98,7 +100,6 @@
 		6FB1BDB121D4F55700A991BF /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C472183C6A3000F85AD /* PacketTunnelSettingsGenerator.swift */; };
 		6FB1BDB221D4F55700A991BF /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5D0C1421832391000F85AD /* DNSResolver.swift */; };
 		6FB1BDB321D4F55700A991BF /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
-		6FB1BDB721D4F8B800A991BF /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FB1BDB621D4F8B800A991BF /* NetworkExtension.framework */; };
 		6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */ = {isa = PBXBuildFile; fileRef = 6FE1765421C90BBE002690EA /* Localizable.strings */; };
 		6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526C21C23F960008484E /* ringlogger.c */; };
 		6FB1BDBD21D50F0200A991BF /* ringlogger.h in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526B21C23F960008484E /* ringlogger.h */; };
@@ -348,8 +349,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B5CA6B1220DE4E900F126CF /* NetworkExtension.framework in Frameworks */,
 				6FDEF7E421846C1A00D8FBF6 /* libwg-go.a in Frameworks */,
-				6B586C51220CACB600427C51 /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,8 +366,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B5CA6B2220DE4F400F126CF /* NetworkExtension.framework in Frameworks */,
 				6FB1BDA121D4E00A00A991BF /* libwg-go.a in Frameworks */,
-				6FB1BDB721D4F8B800A991BF /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +375,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B653B86220DE2960050E69C /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1311,6 +1313,7 @@
 		6F5D0C23218352EF000F85AD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1332,6 +1335,7 @@
 		6F5D0C24218352EF000F85AD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1391,6 +1395,7 @@
 		6FB1BD9A21D4BFE700A991BF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension_macOS.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
@@ -1411,6 +1416,7 @@
 		6FB1BD9B21D4BFE700A991BF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_ENTITLEMENTS = WireGuardNetworkExtension/WireGuardNetworkExtension_macOS.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				INFOPLIST_FILE = WireGuardNetworkExtension/Info.plist;
