@@ -29,7 +29,8 @@ version-header: $(DESTDIR)/wireguard-go-version.h
 GOBUILDARCH := $(GOARCH_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
 GOBUILDVERSION := 1.11.5
-GOBUILDTARBALL := https://dl.google.com/go/go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
+GOBUILDTARBALL := go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
+GOBUILDTARBALLURL := https://dl.google.com/go/$(GOBUILDTARBALL)
 GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)
 export GOROOT := $(BUILDDIR)/goroot
 export GOPATH := $(BUILDDIR)/gopath
@@ -38,10 +39,14 @@ GOBUILDVERSION_CURRENT := $(shell $(GOROOT)/bin/go version 2>/dev/null)
 ifneq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
 $(shell rm -f $(GOROOT)/bin/go)
 endif
-$(GOROOT)/bin/go:
+.cache/$(GOBUILDTARBALL):
+	mkdir -p $(dir $@)
+	curl -o $@ $(GOBUILDTARBALLURL) || { rm -f $@; exit 1; }
+
+$(GOROOT)/bin/go: .cache/$(GOBUILDTARBALL)
 	rm -rf "$(GOROOT)"
 	mkdir -p "$(GOROOT)"
-	curl "$(GOBUILDTARBALL)" | tar -C "$(GOROOT)" --strip-components=1 -xzf - || { rm -rf "$(GOROOT)"; exit 1; }
+	tar -C "$(GOROOT)" --strip-components=1 -xzf - < .cache/$(GOBUILDTARBALL) || { rm -rf "$(GOROOT)"; exit 1; }
 	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff || { rm -rf "$(GOROOT)"; exit 1; }
 
 $(shell test "$$(cat "$(BUILDDIR)/.gobuildversion" 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.a")
@@ -84,6 +89,9 @@ $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
 clean:
 	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
 
+distclean: clean
+	rm -rf .cache
+
 install: build
 
-.PHONY: clean build version-header install
+.PHONY: distclean clean build version-header install
