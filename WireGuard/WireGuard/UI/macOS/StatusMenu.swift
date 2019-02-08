@@ -57,7 +57,6 @@ class StatusMenu: NSMenu {
         self.networksMenuItem = networksMenuItem
     }
 
-    //swiftlint:disable:next cyclomatic_complexity
     func updateStatusMenuItems(with tunnel: TunnelContainer?) {
         guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem else { return }
         guard let tunnel = tunnel else {

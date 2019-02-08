@@ -147,7 +147,13 @@ class TunnelDetailTableViewController: UITableViewController {
         // Incorporates changes from tunnelConfiguation. Ignores any changes in peer ordering.
         guard let tableView = self.tableView else { return }
         let sections = self.sections
-        let interfaceSectionIndex = sections.firstIndex(where: { if case .interface = $0 { return true } else { return false }})!
+        let interfaceSectionIndex = sections.firstIndex {
+            if case .interface = $0 {
+                return true
+            } else {
+                return false
+            }
+        }!
         let firstPeerSectionIndex = interfaceSectionIndex + 1
         var interfaceFieldIsVisible = self.interfaceFieldIsVisible
         var peerFieldIsVisible = self.peerFieldIsVisible

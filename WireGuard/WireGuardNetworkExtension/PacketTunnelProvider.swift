@@ -17,7 +17,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor?.cancel()
     }
 
-    //swiftlint:disable:next function_body_length
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)

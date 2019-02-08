@@ -3,7 +3,6 @@
 
 import Foundation
 
-//swiftlint:disable:next type_body_length
 class TunnelViewModel {
 
     enum InterfaceField: CaseIterable {
@@ -74,6 +73,7 @@ class TunnelViewModel {
             case removed
             case modified
         }
+
         var interfaceChanged: ([InterfaceField: FieldChange]) -> Void
         var peerChangedAt: (Int, [PeerField: FieldChange]) -> Void
         var peersRemovedAt: ([Int]) -> Void
@@ -141,7 +141,6 @@ class TunnelViewModel {
             return scratchpad
         }
 
-        //swiftlint:disable:next cyclomatic_complexity function_body_length
         func save() -> SaveResult<(String, InterfaceConfiguration)> {
             if let config = validatedConfiguration, let name = validatedName {
                 return .saved((name, config))
@@ -327,7 +326,6 @@ class TunnelViewModel {
             return scratchpad
         }
 
-        //swiftlint:disable:next cyclomatic_complexity
         func save() -> SaveResult<PeerConfiguration> {
             if let validatedConfiguration = validatedConfiguration {
                 return .saved(validatedConfiguration)

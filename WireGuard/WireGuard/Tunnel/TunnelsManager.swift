@@ -446,7 +446,6 @@ class TunnelContainer: NSObject {
         isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
     }
 
-    //swiftlint:disable:next function_body_length
     fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, activationDelegate: TunnelsManagerActivationDelegate?) {
         if recursionCount >= 8 {
             wg_log(.error, message: "startActivation: Failed after 8 attempts. Giving up with \(lastError!)")
@@ -532,6 +531,7 @@ extension NETunnelProviderManager {
         }
         return config
     }
+
     func setTunnelConfiguration(_ tunnelConfiguration: TunnelConfiguration) {
         protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
         localizedDescription = tunnelConfiguration.name

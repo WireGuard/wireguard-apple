@@ -4,7 +4,6 @@
 import Foundation
 
 extension TunnelConfiguration {
-    //swiftlint:disable:next function_body_length cyclomatic_complexity
     convenience init(fromUapiConfig uapiConfig: String, basedOn base: TunnelConfiguration? = nil) throws {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
@@ -103,7 +102,6 @@ extension TunnelConfiguration {
         return interface
     }
 
-    //swiftlint:disable:next cyclomatic_complexity
     private static func collate(peerAttributes attributes: [String: String]) throws -> PeerConfiguration {
         guard let publicKeyString = attributes["public_key"] else {
             throw ParseError.peerHasNoPublicKey
