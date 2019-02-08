@@ -30,6 +30,8 @@
 	<string>Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string>WireGuard.Application</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
 	<key>com.wireguard.macos.app_group_id</key>
 	<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 </dict>
