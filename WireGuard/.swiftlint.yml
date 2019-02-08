@@ -2,6 +2,11 @@ disabled_rules:
  - line_length
  - trailing_whitespace
  - todo
+ - cyclomatic_complexity
+ - file_length
+ - type_body_length
+ - function_body_length
+ - nesting
 opt_in_rules:
  - empty_count
  - empty_string
@@ -14,14 +19,7 @@ opt_in_rules:
  - toggle_bool
  - unneeded_parentheses_in_closure_argument
  - unused_import
-# - trailing_closure
-file_length:
-  warning: 500
-cyclomatic_complexity:
-  warning: 10
-  error: 25
-function_body_length:
-  warning: 45
+ - trailing_closure
 variable_name:
   min_length:
     warning: 0

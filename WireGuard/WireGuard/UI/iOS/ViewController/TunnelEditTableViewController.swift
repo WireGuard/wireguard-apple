@@ -302,6 +302,8 @@ extension TunnelEditTableViewController {
                 guard let self = self else { return }
                 let removedSectionIndices = self.deletePeer(peer: peerData)
                 let shouldShowExcludePrivateIPs = (self.tunnelViewModel.peersData.count == 1 && self.tunnelViewModel.peersData[0].shouldAllowExcludePrivateIPsControl)
+
+                //swiftlint:disable:next trailing_closure
                 tableView.performBatchUpdates({
                     self.tableView.deleteSections(removedSectionIndices, with: .fade)
                     if shouldShowExcludePrivateIPs {
@@ -309,7 +311,6 @@ extension TunnelEditTableViewController {
                             let rowIndexPath = IndexPath(row: row, section: self.interfaceFieldsBySection.count /* First peer section */)
                             self.tableView.insertRows(at: [rowIndexPath], with: .fade)
                         }
-
                     }
                 })
             }
@@ -359,9 +360,9 @@ extension TunnelEditTableViewController {
         cell.value = peerData[field]
 
         if field == .allowedIPs {
-            let firstInterfaceSection = sections.firstIndex(where: { $0 == .interface })!
-            let interfaceSubSection = interfaceFieldsBySection.firstIndex(where: { $0.contains(.dns) })!
-            let dnsRow = interfaceFieldsBySection[interfaceSubSection].firstIndex(where: { $0 == .dns })!
+            let firstInterfaceSection = sections.firstIndex { $0 == .interface }!
+            let interfaceSubSection = interfaceFieldsBySection.firstIndex { $0.contains(.dns) }!
+            let dnsRow = interfaceFieldsBySection[interfaceSubSection].firstIndex { $0 == .dns }!
 
             cell.onValueBeingEdited = { [weak self, weak peerData] value in
                 guard let self = self, let peerData = peerData else { return }
@@ -419,7 +420,7 @@ extension TunnelEditTableViewController {
                 self.activateOnDemandSetting.isActivateOnDemandEnabled = isOn
                 self.loadSections()
 
-                let section = self.sections.firstIndex(where: { $0 == .onDemand })!
+                let section = self.sections.firstIndex { $0 == .onDemand }!
                 let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: section) }
                 if isOn {
                     if self.activateOnDemandSetting.activateOnDemandOption == .none {
