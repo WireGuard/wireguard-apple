@@ -23,9 +23,6 @@ extension Data {
     }
 
     init?(hexKey hexString: String) {
-        if hexString.utf8.count != WG_KEY_LEN_HEX - 1 {
-            return nil
-        }
         self.init(repeating: 0, count: Int(WG_KEY_LEN))
 
         if !self.withUnsafeMutableBytes { key_from_hex($0, hexString) } {
@@ -48,9 +45,6 @@ extension Data {
     }
 
     init?(base64Key base64String: String) {
-        if base64String.utf8.count != WG_KEY_LEN_BASE64 - 1 {
-            return nil
-        }
         self.init(repeating: 0, count: Int(WG_KEY_LEN))
 
         if !self.withUnsafeMutableBytes { key_from_base64($0, base64String) } {
