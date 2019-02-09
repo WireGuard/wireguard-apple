@@ -158,16 +158,21 @@ class TunnelDetailTableViewController: UITableViewController {
         var interfaceFieldIsVisible = self.interfaceFieldIsVisible
         var peerFieldIsVisible = self.peerFieldIsVisible
 
-        func sectionChanged<T>(fields: [T], fieldIsVisible fieldIsVisibleInput: [Bool], tableView: UITableView, section: Int, changes: [T: TunnelViewModel.ChangeHandlers.FieldChange]) {
+        func handleSectionFieldsModified<T>(fields: [T], fieldIsVisible: [Bool], section: Int, changes: [T: TunnelViewModel.Changes.FieldChange]) {
+            for (index, field) in fields.enumerated() {
+                guard let change = changes[field] else { continue }
+                if case .modified(let newValue) = change {
+                    let row = fieldIsVisible[0 ..< index].filter { $0 }.count
+                    let indexPath = IndexPath(row: row, section: section)
+                    if let cell = tableView.cellForRow(at: indexPath) as? KeyValueCell {
+                        cell.value = newValue
+                    }
+                }
+            }
+        }
+
+        func handleSectionRowsInsertedOrRemoved<T>(fields: [T], fieldIsVisible fieldIsVisibleInput: [Bool], section: Int, changes: [T: TunnelViewModel.Changes.FieldChange]) {
             var fieldIsVisible = fieldIsVisibleInput
-            var modifiedIndexPaths = [IndexPath]()
-            for (index, field) in fields.enumerated() where changes[field] == .modified {
-                let row = fieldIsVisible[0 ..< index].filter { $0 }.count
-                modifiedIndexPaths.append(IndexPath(row: row, section: section))
-            }
-            if !modifiedIndexPaths.isEmpty {
-                tableView.reloadRows(at: modifiedIndexPaths, with: .none)
-            }
 
             var removedIndexPaths = [IndexPath]()
             for (index, field) in fields.enumerated().reversed() where changes[field] == .removed {
@@ -190,30 +195,44 @@ class TunnelDetailTableViewController: UITableViewController {
             }
         }
 
-        let changeHandlers = TunnelViewModel.ChangeHandlers(
-            interfaceChanged: { changes in
-                sectionChanged(fields: TunnelDetailTableViewController.interfaceFields, fieldIsVisible: interfaceFieldIsVisible,
-                               tableView: tableView, section: interfaceSectionIndex, changes: changes)
-            },
-            peerChangedAt: { peerIndex, changes in
-                sectionChanged(fields: TunnelDetailTableViewController.peerFields, fieldIsVisible: peerFieldIsVisible[peerIndex],
-                               tableView: tableView, section: firstPeerSectionIndex + peerIndex, changes: changes)
-            },
-            peersRemovedAt: { peerIndices in
-                let sectionIndices = peerIndices.map { firstPeerSectionIndex + $0 }
-                tableView.deleteSections(IndexSet(sectionIndices), with: .automatic)
-            },
-            peersInsertedAt: { peerIndices in
-                let sectionIndices = peerIndices.map { firstPeerSectionIndex + $0 }
-                tableView.insertSections(IndexSet(sectionIndices), with: .automatic)
-            }
-        )
+        let changes = self.tunnelViewModel.applyConfiguration(other: tunnelConfiguration)
 
-        tableView.beginUpdates()
-        self.tunnelViewModel.applyConfiguration(other: tunnelConfiguration, changeHandlers: changeHandlers)
-        self.loadSections()
-        self.loadVisibleFields()
-        tableView.endUpdates()
+        if !changes.interfaceChanges.isEmpty {
+            handleSectionFieldsModified(fields: TunnelDetailTableViewController.interfaceFields, fieldIsVisible: interfaceFieldIsVisible,
+                                        section: interfaceSectionIndex, changes: changes.interfaceChanges)
+        }
+        for (peerIndex, peerChanges) in changes.peerChanges {
+            handleSectionFieldsModified(fields: TunnelDetailTableViewController.peerFields, fieldIsVisible: peerFieldIsVisible[peerIndex], section: firstPeerSectionIndex + peerIndex, changes: peerChanges)
+        }
+
+        let isAnyInterfaceFieldAddedOrRemoved = changes.interfaceChanges.contains { $0.value == .added || $0.value == .removed }
+        let isAnyPeerFieldAddedOrRemoved = changes.peerChanges.contains { $0.changes.contains { $0.value == .added || $0.value == .removed } }
+        let peersRemovedSectionIndices = changes.peersRemovedIndices.map { firstPeerSectionIndex + $0 }
+        let peersInsertedSectionIndices = changes.peersInsertedIndices.map { firstPeerSectionIndex + $0 }
+
+        if isAnyInterfaceFieldAddedOrRemoved || isAnyPeerFieldAddedOrRemoved || !peersRemovedSectionIndices.isEmpty || !peersInsertedSectionIndices.isEmpty {
+            tableView.beginUpdates()
+            if isAnyInterfaceFieldAddedOrRemoved {
+                handleSectionRowsInsertedOrRemoved(fields: TunnelDetailTableViewController.interfaceFields, fieldIsVisible: interfaceFieldIsVisible, section: interfaceSectionIndex, changes: changes.interfaceChanges)
+            }
+            if isAnyPeerFieldAddedOrRemoved {
+                for (peerIndex, peerChanges) in changes.peerChanges {
+                    handleSectionRowsInsertedOrRemoved(fields: TunnelDetailTableViewController.peerFields, fieldIsVisible: peerFieldIsVisible[peerIndex], section: firstPeerSectionIndex + peerIndex, changes: peerChanges)
+                }
+            }
+            if !peersRemovedSectionIndices.isEmpty {
+                tableView.deleteSections(IndexSet(peersRemovedSectionIndices), with: .automatic)
+            }
+            if !peersInsertedSectionIndices.isEmpty {
+                tableView.insertSections(IndexSet(peersInsertedSectionIndices), with: .automatic)
+            }
+            self.loadSections()
+            self.loadVisibleFields()
+            tableView.endUpdates()
+        } else {
+            self.loadSections()
+            self.loadVisibleFields()
+        }
     }
 
     private func reloadRuntimeConfiguration() {

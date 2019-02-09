@@ -67,17 +67,17 @@ class TunnelViewModel {
 
     static let keyLengthInBase64 = 44
 
-    struct ChangeHandlers {
-        enum FieldChange {
+    struct Changes {
+        enum FieldChange: Equatable {
             case added
             case removed
-            case modified
+            case modified(newValue: String)
         }
 
-        var interfaceChanged: ([InterfaceField: FieldChange]) -> Void
-        var peerChangedAt: (Int, [PeerField: FieldChange]) -> Void
-        var peersRemovedAt: ([Int]) -> Void
-        var peersInsertedAt: ([Int]) -> Void
+        var interfaceChanges: [InterfaceField: FieldChange]
+        var peerChanges: [(peerIndex: Int, changes: [PeerField: FieldChange])]
+        var peersRemovedIndices: [Int]
+        var peersInsertedIndices: [Int]
     }
 
     class InterfaceData {
@@ -217,12 +217,12 @@ class TunnelViewModel {
             }
         }
 
-        func applyConfiguration(other: InterfaceConfiguration, otherName: String, changeHandler: ([InterfaceField: ChangeHandlers.FieldChange]) -> Void) {
+        func applyConfiguration(other: InterfaceConfiguration, otherName: String) -> [InterfaceField: Changes.FieldChange] {
             if scratchpad.isEmpty {
                 populateScratchpad()
             }
             let otherScratchPad = InterfaceData.createScratchPad(from: other, name: otherName)
-            var changes = [InterfaceField: ChangeHandlers.FieldChange]()
+            var changes = [InterfaceField: Changes.FieldChange]()
             for field in InterfaceField.allCases {
                 switch (scratchpad[field] ?? "", otherScratchPad[field] ?? "") {
                 case ("", ""):
@@ -233,14 +233,12 @@ class TunnelViewModel {
                     changes[field] = .removed
                 case (let this, let other):
                     if this != other {
-                        changes[field] = .modified
+                        changes[field] = .modified(newValue: other)
                     }
                 }
             }
             scratchpad = otherScratchPad
-            if !changes.isEmpty {
-                changeHandler(changes)
-            }
+            return changes
         }
     }
 
@@ -441,12 +439,12 @@ class TunnelViewModel {
             excludePrivateIPsValue = isOn
         }
 
-        func applyConfiguration(other: PeerConfiguration, peerIndex: Int, changeHandler: (Int, [PeerField: ChangeHandlers.FieldChange]) -> Void) {
+        func applyConfiguration(other: PeerConfiguration) -> [PeerField: Changes.FieldChange] {
             if scratchpad.isEmpty {
                 populateScratchpad()
             }
             let otherScratchPad = PeerData.createScratchPad(from: other)
-            var changes = [PeerField: ChangeHandlers.FieldChange]()
+            var changes = [PeerField: Changes.FieldChange]()
             for field in PeerField.allCases {
                 switch (scratchpad[field] ?? "", otherScratchPad[field] ?? "") {
                 case ("", ""):
@@ -457,14 +455,12 @@ class TunnelViewModel {
                     changes[field] = .removed
                 case (let this, let other):
                     if this != other {
-                        changes[field] = .modified
+                        changes[field] = .modified(newValue: other)
                     }
                 }
             }
             scratchpad = otherScratchPad
-            if !changes.isEmpty {
-                changeHandler(peerIndex, changes)
-            }
+            return changes
         }
     }
 
@@ -548,21 +544,20 @@ class TunnelViewModel {
         }
     }
 
-    func applyConfiguration(other: TunnelConfiguration, changeHandlers: ChangeHandlers) {
+    @discardableResult
+    func applyConfiguration(other: TunnelConfiguration) -> Changes {
         // Replaces current data with data from other TunnelConfiguration, ignoring any changes in peer ordering.
-        // Change handler callbacks are processed in the following order, which is designed to work with both the
-        // UITableView way (modify - delete - insert) and the NSTableView way (indices are based on past operations):
-        //   - interfaceChanged
-        //   - peerChangedAt
-        //   - peersRemovedAt
-        //   - peersInsertedAt
 
-        interfaceData.applyConfiguration(other: other.interface, otherName: other.name ?? "", changeHandler: changeHandlers.interfaceChanged)
+        let interfaceChanges = interfaceData.applyConfiguration(other: other.interface, otherName: other.name ?? "")
 
+        var peerChanges = [(peerIndex: Int, changes: [PeerField: Changes.FieldChange])]()
         for otherPeer in other.peers {
             if let peersDataIndex = peersData.firstIndex(where: { $0.publicKey == otherPeer.publicKey }) {
                 let peerData = peersData[peersDataIndex]
-                peerData.applyConfiguration(other: otherPeer, peerIndex: peersDataIndex, changeHandler: changeHandlers.peerChangedAt)
+                let changes = peerData.applyConfiguration(other: otherPeer)
+                if !changes.isEmpty {
+                    peerChanges.append((peerIndex: peersDataIndex, changes: changes))
+                }
             }
         }
 
@@ -572,9 +567,6 @@ class TunnelViewModel {
                 removedPeerIndices.append(index)
                 peersData.remove(at: index)
             }
-        }
-        if !removedPeerIndices.isEmpty {
-            changeHandlers.peersRemovedAt(removedPeerIndices)
         }
 
         var addedPeerIndices = [Int]()
@@ -586,15 +578,14 @@ class TunnelViewModel {
                 peersData.append(peerData)
             }
         }
-        if !addedPeerIndices.isEmpty {
-            changeHandlers.peersInsertedAt(addedPeerIndices)
-        }
 
         for (index, peer) in peersData.enumerated() {
             peer.index = index
             peer.numberOfPeers = peersData.count
             peer.updateExcludePrivateIPsFieldState()
         }
+
+        return Changes(interfaceChanges: interfaceChanges, peerChanges: peerChanges, peersRemovedIndices: removedPeerIndices, peersInsertedIndices: addedPeerIndices)
     }
 }
 
