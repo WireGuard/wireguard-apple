@@ -148,7 +148,7 @@ extension TunnelConfiguration {
             if let publicKey = peer.publicKey.base64Key() {
                 output.append("PublicKey = \(publicKey)\n")
             }
-            if let preSharedKey = peer.preSharedKey?.base64Key {
+            if let preSharedKey = peer.preSharedKey?.base64Key() {
                 output.append("PresharedKey = \(preSharedKey)\n")
             }
             if !peer.allowedIPs.isEmpty {
