@@ -263,7 +263,24 @@ class TunnelDetailTableViewController: NSViewController {
 
     func applyTunnelConfiguration(tunnelConfiguration: TunnelConfiguration) {
         // Incorporates changes from tunnelConfiguation. Ignores any changes in peer ordering.
-        func sectionChanged<T>(fields: [T], modelRowsInSection: inout [(isVisible: Bool, modelRow: TableViewModelRow)], tableView: NSTableView, rowOffset: Int, changes: [T: TunnelViewModel.ChangeHandlers.FieldChange]) {
+
+        let tableView = self.tableView
+
+        func handleSectionFieldsModified<T>(fields: [T], modelRowsInSection: [(isVisible: Bool, modelRow: TableViewModelRow)], rowOffset: Int, changes: [T: TunnelViewModel.Changes.FieldChange]) {
+            var modifiedRowIndices = IndexSet()
+            for (index, field) in fields.enumerated() {
+                guard let change = changes[field] else { continue }
+                if case .modified(_) = change {
+                    let row = modelRowsInSection[0 ..< index].filter { $0.isVisible }.count
+                    modifiedRowIndices.insert(rowOffset + row)
+                }
+            }
+            if !modifiedRowIndices.isEmpty {
+                tableView.reloadData(forRowIndexes: modifiedRowIndices, columnIndexes: IndexSet(integer: 0))
+            }
+        }
+
+        func handleSectionFieldsAddedOrRemoved<T>(fields: [T], modelRowsInSection: inout [(isVisible: Bool, modelRow: TableViewModelRow)], rowOffset: Int, changes: [T: TunnelViewModel.Changes.FieldChange]) {
             for (index, field) in fields.enumerated() {
                 guard let change = changes[field] else { continue }
                 let row = modelRowsInSection[0 ..< index].filter { $0.isVisible }.count
@@ -275,42 +292,54 @@ class TunnelDetailTableViewController: NSViewController {
                     tableView.removeRows(at: IndexSet(integer: rowOffset + row), withAnimation: .effectFade)
                     modelRowsInSection[index].isVisible = false
                 case .modified:
-                    tableView.removeRows(at: IndexSet(integer: rowOffset + row), withAnimation: [])
-                    tableView.insertRows(at: IndexSet(integer: rowOffset + row), withAnimation: [])
+                    break
                 }
             }
         }
 
-        var isChanged = false
-        let changeHandlers = TunnelViewModel.ChangeHandlers(
-            interfaceChanged: { [weak self] changes in
-                guard let self = self else { return }
-                sectionChanged(fields: TunnelDetailTableViewController.interfaceFields, modelRowsInSection: &self.tableViewModelRowsBySection[0],
-                               tableView: self.tableView, rowOffset: 0, changes: changes)
-                isChanged = true
-            },
-            peerChangedAt: { [weak self] peerIndex, changes in
-                guard let self = self else { return }
-                let sectionIndex = 1 + peerIndex
-                let rowOffset = self.tableViewModelRowsBySection[0 ..< sectionIndex].flatMap { $0.filter { $0.isVisible } }.count
-                sectionChanged(fields: TunnelDetailTableViewController.peerFields, modelRowsInSection: &self.tableViewModelRowsBySection[sectionIndex],
-                               tableView: self.tableView, rowOffset: rowOffset, changes: changes)
-                isChanged = true
-            },
-            peersRemovedAt: { [weak self] peerIndices in
-                guard let self = self else { return }
-                for peerIndex in peerIndices {
+        let changes = self.tunnelViewModel.applyConfiguration(other: tunnelConfiguration)
+
+        if !changes.interfaceChanges.isEmpty {
+            handleSectionFieldsModified(fields: TunnelDetailTableViewController.interfaceFields,
+                                        modelRowsInSection: self.tableViewModelRowsBySection[0],
+                                        rowOffset: 0, changes: changes.interfaceChanges)
+        }
+        for (peerIndex, peerChanges) in changes.peerChanges {
+            let sectionIndex = 1 + peerIndex
+            let rowOffset = self.tableViewModelRowsBySection[0 ..< sectionIndex].flatMap { $0.filter { $0.isVisible } }.count
+            handleSectionFieldsModified(fields: TunnelDetailTableViewController.peerFields,
+                                        modelRowsInSection: self.tableViewModelRowsBySection[sectionIndex],
+                                        rowOffset: rowOffset, changes: peerChanges)
+        }
+
+        let isAnyInterfaceFieldAddedOrRemoved = changes.interfaceChanges.contains { $0.value == .added || $0.value == .removed }
+        let isAnyPeerFieldAddedOrRemoved = changes.peerChanges.contains { $0.changes.contains { $0.value == .added || $0.value == .removed } }
+
+        if isAnyInterfaceFieldAddedOrRemoved || isAnyPeerFieldAddedOrRemoved || !changes.peersRemovedIndices.isEmpty || !changes.peersInsertedIndices.isEmpty {
+            tableView.beginUpdates()
+            if isAnyInterfaceFieldAddedOrRemoved {
+                handleSectionFieldsAddedOrRemoved(fields: TunnelDetailTableViewController.interfaceFields,
+                                                  modelRowsInSection: &self.tableViewModelRowsBySection[0],
+                                                  rowOffset: 0, changes: changes.interfaceChanges)
+            }
+            if isAnyPeerFieldAddedOrRemoved {
+                for (peerIndex, peerChanges) in changes.peerChanges {
+                    let sectionIndex = 1 + peerIndex
+                    let rowOffset = self.tableViewModelRowsBySection[0 ..< sectionIndex].flatMap { $0.filter { $0.isVisible } }.count
+                    handleSectionFieldsAddedOrRemoved(fields: TunnelDetailTableViewController.peerFields, modelRowsInSection: &self.tableViewModelRowsBySection[sectionIndex], rowOffset: rowOffset, changes: peerChanges)
+                }
+            }
+            if !changes.peersRemovedIndices.isEmpty {
+                for peerIndex in changes.peersRemovedIndices {
                     let sectionIndex = 1 + peerIndex
                     let rowOffset = self.tableViewModelRowsBySection[0 ..< sectionIndex].flatMap { $0.filter { $0.isVisible } }.count
                     let count = self.tableViewModelRowsBySection[sectionIndex].filter { $0.isVisible }.count
                     self.tableView.removeRows(at: IndexSet(integersIn: rowOffset ..< rowOffset + count), withAnimation: .effectFade)
                     self.tableViewModelRowsBySection.remove(at: sectionIndex)
                 }
-                isChanged = true
-            },
-            peersInsertedAt: { [weak self] peerIndices in
-                guard let self = self else { return }
-                for peerIndex in peerIndices {
+            }
+            if !changes.peersInsertedIndices.isEmpty {
+                for peerIndex in changes.peersInsertedIndices {
                     let peerData = self.tunnelViewModel.peersData[peerIndex]
                     let sectionIndex = 1 + peerIndex
                     let rowOffset = self.tableViewModelRowsBySection[0 ..< sectionIndex].flatMap { $0.filter { $0.isVisible } }.count
@@ -322,16 +351,10 @@ class TunnelDetailTableViewController: NSViewController {
                     self.tableView.insertRows(at: IndexSet(integersIn: rowOffset ..< rowOffset + count), withAnimation: .effectFade)
                     self.tableViewModelRowsBySection.insert(modelRowsInSection, at: sectionIndex)
                 }
-                isChanged = true
             }
-        )
-
-        tableView.beginUpdates()
-        self.tunnelViewModel.applyConfiguration(other: tunnelConfiguration, changeHandlers: changeHandlers)
-        if isChanged {
             updateTableViewModelRows()
+            tableView.endUpdates()
         }
-        tableView.endUpdates()
     }
 
     private func reloadRuntimeConfiguration() {
