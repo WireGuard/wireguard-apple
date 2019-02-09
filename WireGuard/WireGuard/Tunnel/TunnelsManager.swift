@@ -313,11 +313,7 @@ class TunnelsManager {
             guard let self = self,
                 let session = statusChangeNotification.object as? NETunnelProviderSession,
                 let tunnelProvider = session.manager as? NETunnelProviderManager,
-                let tunnelConfiguration = tunnelProvider.tunnelConfiguration,
-                let tunnel = self.tunnels.first(where: { $0.tunnelConfiguration == tunnelConfiguration }) else { return }
-            if tunnel.tunnelProvider != tunnelProvider {
-                return
-            }
+                let tunnel = self.tunnels.first(where: { $0.tunnelProvider == tunnelProvider }) else { return }
 
             wg_log(.debug, message: "Tunnel '\(tunnel.name)' connection status changed to '\(tunnel.tunnelProvider.connection.status)'")
 
