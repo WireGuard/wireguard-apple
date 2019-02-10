@@ -102,7 +102,7 @@ extension ManageTunnelsRootViewController {
             switch event.charactersIgnoringModifiers {
             case "n":
                 tunnelsListVC?.handleAddEmptyTunnelAction()
-            case "i":
+            case "o":
                 tunnelsListVC?.handleImportTunnelAction()
             case "t":
                 tunnelDetailVC?.handleToggleActiveStatusAction()
