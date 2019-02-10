@@ -63,6 +63,8 @@
 		6F6899A62180447E0012E523 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
 		6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
 		6F693A562179E556008551C1 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
+		6F70E20E221058E1008BDFB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F70E20C221058DF008BDFB4 /* InfoPlist.strings */; };
+		6F70E20F221058E1008BDFB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F70E20C221058DF008BDFB4 /* InfoPlist.strings */; };
 		6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774DF217181B1006A79B3 /* MainViewController.swift */; };
 		6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E0217181B1006A79B3 /* AppDelegate.swift */; };
 		6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */; };
@@ -277,6 +279,7 @@
 		6F6899A52180447E0012E523 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
 		6F6899A7218044FC0012E523 /* Curve25519.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Curve25519.swift; sourceTree = "<group>"; };
 		6F693A552179E556008551C1 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		6F70E20D221058DF008BDFB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = WireGuard/Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6F7774DF217181B1006A79B3 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6F7774E0217181B1006A79B3 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F7774E321718281006A79B3 /* TunnelsListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelsListTableViewController.swift; sourceTree = "<group>"; };
@@ -619,6 +622,7 @@
 		6FF4AC0B211EC46F002C96EB = {
 			isa = PBXGroup;
 			children = (
+				6F70E20C221058DF008BDFB4 /* InfoPlist.strings */,
 				6FE1765421C90BBE002690EA /* Localizable.strings */,
 				6F5D0C432183B4A4000F85AD /* Shared */,
 				6FF4AC16211EC46F002C96EB /* WireGuard */,
@@ -874,6 +878,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */,
+				6F70E20F221058E1008BDFB4 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -889,6 +894,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F919ED9218C65C50023B400 /* wireguard_doc_logo_22x29.png in Resources */,
+				6F70E20E221058E1008BDFB4 /* InfoPlist.strings in Resources */,
 				6FE1765621C90BBE002690EA /* Localizable.strings in Resources */,
 				6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */,
 				6F919EDA218C65C50023B400 /* wireguard_doc_logo_44x58.png in Resources */,
@@ -1291,6 +1297,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		6F70E20C221058DF008BDFB4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6F70E20D221058DF008BDFB4 /* Base */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		6FE1765421C90BBE002690EA /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

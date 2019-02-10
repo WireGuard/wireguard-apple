@@ -77,7 +77,7 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera is used for scanning QR codes for importing WireGuard configurations</string>
+	<string>Localized</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -123,7 +123,7 @@
 		</dict>
 	</array>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Face ID is used for authenticating viewing and exporting of private keys</string>
+	<string>Localized</string>
 	<key>com.wireguard.ios.app_group_id</key>
 	<string>group.$(APP_ID_IOS)</string>
 </dict>
