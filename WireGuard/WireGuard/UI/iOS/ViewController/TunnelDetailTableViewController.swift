@@ -370,6 +370,8 @@ extension TunnelDetailTableViewController {
         cell.key = field.localizedUIString
         if field == .persistentKeepAlive {
             cell.value = tr(format: "tunnelPeerPersistentKeepaliveValue (%@)", peerData[field])
+        } else if field == .preSharedKey {
+            cell.value = tr("tunnelPeerPresharedKeyEnabled")
         } else {
             cell.value = peerData[field]
         }

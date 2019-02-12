@@ -111,6 +111,8 @@
 "tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ hours";
 "tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minutes";
 
+"tunnelPeerPresharedKeyEnabled" = "enabled";
+
 // Error alerts while creating / editing a tunnel configuration
 
 /* Alert title for error in the interface data */
