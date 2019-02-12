@@ -63,6 +63,7 @@ extension NETunnelProviderProtocol {
         guard let oldConfig = providerConfiguration?["WgQuickConfig"] as? String else { return false }
         providerConfiguration = nil
         guard passwordReference == nil else { return true }
+        wg_log(.debug, message: "Migrating tunnel configuration '\(name)'")
         passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
         return true
     }
