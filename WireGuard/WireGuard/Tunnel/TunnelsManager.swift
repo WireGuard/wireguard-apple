@@ -83,6 +83,11 @@ class TunnelsManager {
                     matchingTunnel.refreshStatus()
                 } else {
                     // Tunnel was added outside the app
+                    if let proto = loadedTunnelProvider.protocolConfiguration as? NETunnelProviderProtocol {
+                        if proto.migrateConfigurationIfNeeded(called: loadedTunnelProvider.localizedDescription ?? "unknown") {
+                            loadedTunnelProvider.saveToPreferences { _ in }
+                        }
+                    }
                     let tunnel = TunnelContainer(tunnel: loadedTunnelProvider)
                     self.tunnels.append(tunnel)
                     self.tunnels.sort { $0.name < $1.name }
