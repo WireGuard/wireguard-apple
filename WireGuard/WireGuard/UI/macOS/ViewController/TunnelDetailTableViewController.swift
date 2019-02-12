@@ -405,6 +405,8 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
             if field == .persistentKeepAlive {
                 cell.value = tr(format: "tunnelPeerPersistentKeepaliveValue (%@)", peerData[field])
+            } else if field == .preSharedKey {
+                cell.value = tr("tunnelPeerPresharedKeyEnabled")
             } else {
                 cell.value = peerData[field]
             }
