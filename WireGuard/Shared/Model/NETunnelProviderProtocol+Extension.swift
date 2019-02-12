@@ -34,17 +34,14 @@ extension NETunnelProviderProtocol {
     }
 
     func asTunnelConfiguration(called name: String? = nil) -> TunnelConfiguration? {
-        migrateConfigurationIfNeeded(called: name ?? "unknown")
-        //TODO: in the case where migrateConfigurationIfNeeded is called by the network extension,
-        // before the app has started, and when there is, in fact, configuration that needs to be
-        // put into the keychain, this will generate one new keychain item every time it is started,
-        // until finally the app is open. Would it be possible to call saveToPreferences here? Or is
-        // that generally not available to network extensions? In which case, what should our
-        // behavior be?
-
-        guard let passwordReference = passwordReference else { return nil }
-        guard let config = Keychain.openReference(called: passwordReference) else { return nil }
-        return try? TunnelConfiguration(fromWgQuickConfig: config, called: name)
+        if let passwordReference = passwordReference,
+            let config = Keychain.openReference(called: passwordReference) {
+            return try? TunnelConfiguration(fromWgQuickConfig: config, called: name)
+        }
+        if let oldConfig = providerConfiguration?["WgQuickConfig"] as? String {
+            return try? TunnelConfiguration(fromWgQuickConfig: oldConfig, called: name)
+        }
+        return nil
     }
 
     func destroyConfigurationReference() {
