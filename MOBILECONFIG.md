@@ -27,7 +27,7 @@ A .mobileconfig file is a plist file in XML format. The top-level XML item is a 
 
 Here's an example .mobileconfig with the above fields filled in:
 
-~~~
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -48,7 +48,7 @@ Here's an example .mobileconfig with the above fields filled in:
 	</array>
 </dict>
 </plist>
-~~~
+```
 
 ### WireGuard payload entries
 
@@ -93,49 +93,49 @@ keys:
 
 Here's an example WireGuard configuration payload dictionary:
 
-~~~
-        <!-- A WireGuard configuration payload dictionary -->
-        <dict>
-            <key>PayloadDisplayName</key>
-            <string>VPN</string>
-            <key>PayloadType</key>
-            <string>com.apple.vpn.managed</string>
-            <key>PayloadVersion</key>
-            <integer>1</integer>
-            <key>PayloadIdentifier</key>
-            <string>com.your-org.wireguard.demo-profile-1.demo-tunnel</string>
-            <key>PayloadUUID</key>
-            <string>44CDFE9F-4DC7-472A-956F-61C68055117C</string>
-            <key>UserDefinedName</key>
-            <string>Demo from MobileConfig file</string>
-            <key>VPNType</key>
-            <string>VPN</string>
-            <key>VPNSubType</key>
-            <string>com.wireguard.ios</string>
-            <key>VendorConfig</key>
-            <dict>
-                <key>WgQuickConfig</key>
-                <string>
-                [Interface]
-                PrivateKey = mInDaw06K0NgfULRObHJjkWD3ahUC8XC1tVjIf6W+Vo=
-                Address = 10.10.1.0/24
-                DNS = 1.1.1.1, 1.0.0.1
+```xml
+<!-- A WireGuard configuration payload dictionary -->
+<dict>
+    <key>PayloadDisplayName</key>
+    <string>VPN</string>
+    <key>PayloadType</key>
+    <string>com.apple.vpn.managed</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadIdentifier</key>
+    <string>com.your-org.wireguard.demo-profile-1.demo-tunnel</string>
+    <key>PayloadUUID</key>
+    <string>44CDFE9F-4DC7-472A-956F-61C68055117C</string>
+    <key>UserDefinedName</key>
+    <string>Demo from MobileConfig file</string>
+    <key>VPNType</key>
+    <string>VPN</string>
+    <key>VPNSubType</key>
+    <string>com.wireguard.ios</string>
+    <key>VendorConfig</key>
+    <dict>
+        <key>WgQuickConfig</key>
+        <string>
+        [Interface]
+        PrivateKey = mInDaw06K0NgfULRObHJjkWD3ahUC8XC1tVjIf6W+Vo=
+        Address = 10.10.1.0/24
+        DNS = 1.1.1.1, 1.0.0.1
 
-                [Peer]
-                PublicKey = JRI8Xc0zKP9kXk8qP84NdUQA04h6DLfFbwJn4g+/PFs=
-                Endpoint = demo.wireguard.com:12912
-                AllowedIPs = 0.0.0.0/0
-                </string>
-            </dict>
-            <key>VPN</key>
-             <dict>
-                <key>RemoteAddress</key>
-                <string>demo.wireguard.com:12912</string>
-                <key>AuthenticationMethod</key>
-                <string>Password</string>
-            </dict>
-        </dict>
-~~~
+        [Peer]
+        PublicKey = JRI8Xc0zKP9kXk8qP84NdUQA04h6DLfFbwJn4g+/PFs=
+        Endpoint = demo.wireguard.com:12912
+        AllowedIPs = 0.0.0.0/0
+        </string>
+    </dict>
+    <key>VPN</key>
+     <dict>
+        <key>RemoteAddress</key>
+        <string>demo.wireguard.com:12912</string>
+        <key>AuthenticationMethod</key>
+        <string>Password</string>
+    </dict>
+</dict>
+```
 
 ### Caveats
 
