@@ -17,8 +17,8 @@ class ConfTextStorage: NSTextStorage {
     private(set) var privateKeyString: String?
 
     private(set) var hasOnePeer: Bool = false
-    private(set) var lastOnePeerAllowedIPs: [IPAddressRange] = []
-    private(set) var lastOnePeerDNSServers: [DNSServer] = []
+    private(set) var lastOnePeerAllowedIPs = [String]()
+    private(set) var lastOnePeerDNSServers = [String]()
 
     override init() {
         backingStore = NSMutableAttributedString(string: "")
@@ -117,9 +117,7 @@ class ConfTextStorage: NSTextStorage {
             } else if span.type == HighlightField {
                 fieldType = FieldType(rawValue: substring.lowercased())
             } else if span.type == HighlightIP && fieldType == .dns {
-                if let parsed = DNSServer(from: substring) {
-                    lastOnePeerDNSServers.append(parsed)
-                }
+                lastOnePeerDNSServers.append(substring)
             } else if span.type == HighlightIP && fieldType == .allowedips {
                 let next = spans.successor()
                 let nextnext = next.successor()
@@ -127,9 +125,7 @@ class ConfTextStorage: NSTextStorage {
                     substring += backingStore.attributedSubstring(from: NSRange(location: next.pointee.start, length: next.pointee.len)).string +
                                  backingStore.attributedSubstring(from: NSRange(location: nextnext.pointee.start, length: nextnext.pointee.len)).string
                 }
-                if let parsed = IPAddressRange(from: substring) {
-                    lastOnePeerAllowedIPs.append(parsed)
-                }
+                lastOnePeerAllowedIPs.append(substring)
             }
             spans = spans.successor()
         }
