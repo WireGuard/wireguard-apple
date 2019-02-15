@@ -401,39 +401,42 @@ class TunnelViewModel {
             "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
         ]
 
+        static func excludePrivateIPsFieldStates(isSinglePeer: Bool, allowedIPs: Set<String>) -> (shouldAllowExcludePrivateIPsControl: Bool, excludePrivateIPsValue: Bool) {
+            guard isSinglePeer else {
+                return (shouldAllowExcludePrivateIPsControl: false, excludePrivateIPsValue: false)
+            }
+            let allowedIPStrings = Set<String>(allowedIPs)
+            if allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) {
+                return (shouldAllowExcludePrivateIPsControl: true, excludePrivateIPsValue: false)
+            } else if allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String) {
+                return (shouldAllowExcludePrivateIPsControl: true, excludePrivateIPsValue: true)
+            } else {
+                return (shouldAllowExcludePrivateIPsControl: false, excludePrivateIPsValue: false)
+            }
+        }
+
         func updateExcludePrivateIPsFieldState() {
             if scratchpad.isEmpty {
                 populateScratchpad()
             }
             let allowedIPStrings = Set<String>(scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+            (shouldAllowExcludePrivateIPsControl, excludePrivateIPsValue) = TunnelViewModel.PeerData.excludePrivateIPsFieldStates(isSinglePeer: numberOfPeers == 1, allowedIPs: allowedIPStrings)
             shouldStronglyRecommendDNS = allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) || allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String)
-            guard numberOfPeers == 1 else {
-                shouldAllowExcludePrivateIPsControl = false
-                excludePrivateIPsValue = false
-                return
-            }
-            if allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) {
-                shouldAllowExcludePrivateIPsControl = true
-                excludePrivateIPsValue = false
-            } else if allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String) {
-                shouldAllowExcludePrivateIPsControl = true
-                excludePrivateIPsValue = true
+        }
+
+        static func modifiedAllowedIPs(currentAllowedIPs: [String], excludePrivateIPs: Bool, dnsServers: [String]) -> [String] {
+            let ipv6Addresses = currentAllowedIPs.filter { $0.contains(":") }
+            if excludePrivateIPs {
+                return ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServers
             } else {
-                shouldAllowExcludePrivateIPsControl = false
-                excludePrivateIPsValue = false
+                return ipv6Addresses + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
         }
 
         func excludePrivateIPsValueChanged(isOn: Bool, dnsServers: String) {
             let allowedIPStrings = scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines)
             let dnsServerStrings = dnsServers.splitToArray(trimmingCharacters: .whitespacesAndNewlines)
-            let ipv6Addresses = allowedIPStrings.filter { $0.contains(":") }
-            let modifiedAllowedIPStrings: [String]
-            if isOn {
-                modifiedAllowedIPStrings = ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServerStrings
-            } else {
-                modifiedAllowedIPStrings = ipv6Addresses + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
-            }
+            let modifiedAllowedIPStrings = TunnelViewModel.PeerData.modifiedAllowedIPs(currentAllowedIPs: allowedIPStrings, excludePrivateIPs: isOn, dnsServers: dnsServerStrings)
             scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
             validatedConfiguration = nil
             excludePrivateIPsValue = isOn
