@@ -219,14 +219,16 @@ class TunnelEditViewController: NSViewController {
             }
         } else {
             // We're creating a new tunnel
-            tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
-                if let error = result.error {
-                    ErrorPresenter.showErrorAlert(error: error, from: self)
-                    return
+            AppStorePrivacyNotice.show(from: self, into: tunnelsManager) { [weak self] in
+                self?.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
+                    if let error = result.error {
+                        ErrorPresenter.showErrorAlert(error: error, from: self)
+                        return
+                    }
+                    let tunnel: TunnelContainer = result.value!
+                    self?.dismiss(self)
+                    self?.delegate?.tunnelSaved(tunnel: tunnel)
                 }
-                let tunnel: TunnelContainer = result.value!
-                self?.dismiss(self)
-                self?.delegate?.tunnelSaved(tunnel: tunnel)
             }
         }
     }
