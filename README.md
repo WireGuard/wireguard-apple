@@ -1,4 +1,4 @@
-# [WireGuard](https://www.wireguard.com/) for iOS
+# [WireGuard](https://www.wireguard.com/) for iOS and macOS
 
 ## Building
 
