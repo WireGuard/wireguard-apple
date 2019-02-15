@@ -333,3 +333,5 @@
 
 "macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
 "macAppExitingWithActiveTunnelInfo" = "The tunnel will remain active after exiting. You may disable it by reopening this application or through the Network panel in System Preferences.";
+"macPrivacyNoticeMessage" = "Privacy notice: be sure you trust this configuration file";
+"macPrivacyNoticeInfo" = "You will be prompted by the system to allow or disallow adding a VPN configuration. While this application does not send any information to the WireGuard project, information is by design sent to the servers specified inside of the configuration file you have just added, which configures your computer to use those servers as a VPN. Be certain that you trust this configuration before clicking “Allow” in the following dialog.";

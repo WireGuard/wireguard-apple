@@ -13,7 +13,9 @@ class ImportPanelPresenter {
             guard let tunnelsManager = tunnelsManager else { return }
             guard response == .OK else { return }
             guard let url = openPanel.url else { return }
-            TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: sourceVC, errorPresenterType: ErrorPresenter.self)
+            AppStorePrivacyNotice.show(from: sourceVC, into: tunnelsManager) {
+                TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: sourceVC, errorPresenterType: ErrorPresenter.self)
+            }
         }
     }
 }
