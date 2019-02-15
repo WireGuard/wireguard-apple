@@ -14,14 +14,12 @@ A .mobileconfig file is a plist file in XML format. The top-level XML item is a 
   - `PayloadVersion` (integer): Should be `1`
 
   - `PayloadIdentifier` (string): A reverse-DNS style unique identifier for the profile file.
-
     If you install another .mobileconfig file with the same identifier, the new one
     overwrites the old one.
 
   - `PayloadUUID` (string): A randomly generated UUID for this payload
 
   - `PayloadContent` (array): Should contain an array of payload dictionaries.
-
     Each of these payload dictionaries can represent a WireGuard tunnel
     configuration.
 
@@ -66,7 +64,6 @@ keys:
   - `PayloadUUID` (string): A randomly generated UUID for this payload
 
   - `UserDefinedName` (string): The name of the WireGuard tunnel.
-
     This name shall be used to represent the tunnel in the WireGuard app, and in the System UI for VPNs (Settings > VPN on iOS, System Preferences > Network on macOS).
 
   - `VPNType` (string): Should be `VPN`
@@ -79,13 +76,11 @@ keys:
   - `VendorConfig` (dict): Should be a dictionary with the following key:
 
     - `WgQuickConfig` (string): Should be a WireGuard configuration in [wg-quick(8)] / [wg(8)] format.
-
       The keys 'FwMark', 'Table', 'PreUp', 'PostUp', 'PreDown', 'PostDown' and 'SaveConfig' are not supported.
 
   - `VPN` (dict): Should be a dictionary with the following keys:
 
     - `RemoteAddress` (string): A non-empty string.
-
       This string is displayed as the server name in the System UI for
       VPNs (Settings > VPN on iOS, System Preferences > Network on macOS).
 
