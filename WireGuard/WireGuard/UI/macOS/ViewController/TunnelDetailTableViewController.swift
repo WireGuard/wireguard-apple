@@ -162,6 +162,11 @@ class TunnelDetailTableViewController: NSViewController {
             scrollView.trailingAnchor.constraint(equalTo: box.trailingAnchor)
         ])
 
+        NSLayoutConstraint.activate([
+            containerView.widthAnchor.constraint(greaterThanOrEqualToConstant: 320),
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+        ])
+
         view = containerView
     }
 
