@@ -92,7 +92,11 @@ class ConfTextStorage: NSTextStorage {
 
     func evaluateExcludePrivateIPs(highlightSpans: UnsafePointer<highlight_span>) {
         var spans = highlightSpans
-        var fieldType = 0
+        enum FieldType: String {
+            case dns
+            case allowedips
+        }
+        var fieldType: FieldType?
         resetLastPeer()
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
@@ -111,19 +115,12 @@ class ConfTextStorage: NSTextStorage {
                     hasOnePeer = true
                 }
             } else if span.type == HighlightField {
-                let field = substring.lowercased()
-                if field == "dns" {
-                    fieldType = 1
-                } else if field == "allowedips" {
-                    fieldType = 2
-                } else {
-                    fieldType = 0
-                }
-            } else if span.type == HighlightIP && fieldType == 1 {
+                fieldType = FieldType(rawValue: substring.lowercased())
+            } else if span.type == HighlightIP && fieldType == .dns {
                 if let parsed = DNSServer(from: substring) {
                     lastOnePeerDNSServers.append(parsed)
                 }
-            } else if span.type == HighlightIP && fieldType == 2 {
+            } else if span.type == HighlightIP && fieldType == .allowedips {
                 let next = spans.successor()
                 let nextnext = next.successor()
                 if next.pointee.type == HighlightDelimiter && nextnext.pointee.type == HighlightCidr {
