@@ -100,14 +100,13 @@ class ConfTextStorage: NSTextStorage {
         resetLastPeer()
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
-            var substring = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string
+            var substring = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string.lowercased()
 
             if span.type == HighlightError {
                 resetLastPeer()
                 return
-            }
-            if span.type == HighlightSection {
-                if substring.lowercased() == "[peer]" {
+            } else if span.type == HighlightSection {
+                if substring == "[peer]" {
                     if hasOnePeer {
                         resetLastPeer()
                         return
@@ -115,7 +114,7 @@ class ConfTextStorage: NSTextStorage {
                     hasOnePeer = true
                 }
             } else if span.type == HighlightField {
-                fieldType = FieldType(rawValue: substring.lowercased())
+                fieldType = FieldType(rawValue: substring)
             } else if span.type == HighlightIP && fieldType == .dns {
                 lastOnePeerDNSServers.append(substring)
             } else if span.type == HighlightIP && fieldType == .allowedips {
