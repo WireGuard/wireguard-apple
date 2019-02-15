@@ -29,13 +29,13 @@ $ vim WireGuard/WireGuard/Config/Developer.xcconfig
 $ brew install swiftlint
 ```
 
-- Open project in XCode:
+- Open project in Xcode:
 
 ```
 $ open ./WireGuard/WireGuard.xcodeproj
 ```
 
-- Flip switches, press buttons, and make whirling noises until XCode builds it.
+- Flip switches, press buttons, and make whirling noises until Xcode builds it.
 
 ## MIT License
 
