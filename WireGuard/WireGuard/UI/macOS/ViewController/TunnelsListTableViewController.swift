@@ -100,7 +100,7 @@ class TunnelsListTableViewController: NSViewController {
         ])
 
         NSLayoutConstraint.activate([
-            containerView.widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
+            containerView.widthAnchor.constraint(equalToConstant: 180),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
         ])
 

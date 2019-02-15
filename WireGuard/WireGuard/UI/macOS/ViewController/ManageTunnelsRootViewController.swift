@@ -54,8 +54,7 @@ class ManageTunnelsRootViewController: NSViewController {
             tunnelDetailContainerView.topAnchor.constraint(equalTo: container.topAnchor),
             tunnelDetailContainerView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
             tunnelDetailContainerView.leadingAnchor.constraint(equalTo: tunnelsListView.trailingAnchor, constant: centralSpacing),
-            tunnelDetailContainerView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            tunnelsListView.widthAnchor.constraint(equalTo: container.widthAnchor, multiplier: 0.3)
+            tunnelDetailContainerView.trailingAnchor.constraint(equalTo: container.trailingAnchor)
         ])
     }
 
