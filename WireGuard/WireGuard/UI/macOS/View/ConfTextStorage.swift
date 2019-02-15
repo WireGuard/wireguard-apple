@@ -6,7 +6,6 @@ import Cocoa
 private let fontSize: CGFloat = 15
 
 class ConfTextStorage: NSTextStorage {
-
     let defaultFont = NSFontManager.shared.convertWeight(true, of: NSFont.systemFont(ofSize: fontSize))
     private let boldFont = NSFont.boldSystemFont(ofSize: fontSize)
     private lazy var italicFont = NSFontManager.shared.convert(defaultFont, toHaveTrait: .italicFontMask)
@@ -16,6 +15,10 @@ class ConfTextStorage: NSTextStorage {
     private let backingStore: NSMutableAttributedString
     private(set) var hasError = false
     private(set) var privateKeyString: String?
+
+    private(set) var hasOnePeer: Bool = false
+    private(set) var lastOnePeerAllowedIPs: [IPAddressRange] = []
+    private(set) var lastOnePeerDNSServers: [DNSServer] = []
 
     override init() {
         backingStore = NSMutableAttributedString(string: "")
@@ -81,6 +84,60 @@ class ConfTextStorage: NSTextStorage {
         endEditing()
     }
 
+    func resetLastPeer() {
+        hasOnePeer = false
+        lastOnePeerAllowedIPs = []
+        lastOnePeerDNSServers = []
+    }
+
+    func evaluateExcludePrivateIPs(highlightSpans: UnsafePointer<highlight_span>) {
+        var spans = highlightSpans
+        var fieldType = 0
+        resetLastPeer()
+        while spans.pointee.type != HighlightEnd {
+            let span = spans.pointee
+            var substring = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string
+
+            if span.type == HighlightError {
+                resetLastPeer()
+                return
+            }
+            if span.type == HighlightSection {
+                if substring.lowercased() == "[peer]" {
+                    if hasOnePeer {
+                        resetLastPeer()
+                        return
+                    }
+                    hasOnePeer = true
+                }
+            } else if span.type == HighlightField {
+                let field = substring.lowercased()
+                if field == "dns" {
+                    fieldType = 1
+                } else if field == "allowedips" {
+                    fieldType = 2
+                } else {
+                    fieldType = 0
+                }
+            } else if span.type == HighlightIP && fieldType == 1 {
+                if let parsed = DNSServer(from: substring) {
+                    lastOnePeerDNSServers.append(parsed)
+                }
+            } else if span.type == HighlightIP && fieldType == 2 {
+                let next = spans.successor()
+                let nextnext = next.successor()
+                if next.pointee.type == HighlightDelimiter && nextnext.pointee.type == HighlightCidr {
+                    substring += backingStore.attributedSubstring(from: NSRange(location: next.pointee.start, length: next.pointee.len)).string +
+                                 backingStore.attributedSubstring(from: NSRange(location: nextnext.pointee.start, length: nextnext.pointee.len)).string
+                }
+                if let parsed = IPAddressRange(from: substring) {
+                    lastOnePeerAllowedIPs.append(parsed)
+                }
+            }
+            spans = spans.successor()
+        }
+    }
+
     func highlightSyntax() {
         guard let textColorTheme = textColorTheme else { return }
         hasError = false
@@ -95,6 +152,7 @@ class ConfTextStorage: NSTextStorage {
         ]
         backingStore.setAttributes(defaultAttributes, range: fullTextRange)
         var spans = highlight_config(backingStore.string.cString(using: String.Encoding.utf8))!
+        evaluateExcludePrivateIPs(highlightSpans: spans)
 
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
