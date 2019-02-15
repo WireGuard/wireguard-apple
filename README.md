@@ -2,18 +2,11 @@
 
 ## Building
 
-- Clone this repo:
+- Clone this repo recursively:
 
 ```
-$ git clone https://git.zx2c4.com/wireguard-ios
+$ git clone --recursive https://git.zx2c4.com/wireguard-ios
 $ cd wireguard-ios
-```
-
-- Init and update submodule:
-
-```
-$ git submodule init
-$ git submodule update
 ```
 
 - Rename and populate developer team ID file:
