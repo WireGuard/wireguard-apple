@@ -424,12 +424,17 @@ class TunnelViewModel {
             shouldStronglyRecommendDNS = allowedIPStrings.contains(TunnelViewModel.PeerData.ipv4DefaultRouteString) || allowedIPStrings.isSuperset(of: TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String)
         }
 
+        static func normalizedIPAddressRangeStrings(_ list: [String]) -> [String] {
+            return list.compactMap { IPAddressRange(from: $0) }.map { $0.stringRepresentation }
+        }
+
         static func modifiedAllowedIPs(currentAllowedIPs: [String], excludePrivateIPs: Bool, dnsServers: [String]) -> [String] {
-            let ipv6Addresses = currentAllowedIPs.filter { $0.contains(":") }
+            let normalizedDNSServers = normalizedIPAddressRangeStrings(dnsServers)
+            let ipv6Addresses = normalizedIPAddressRangeStrings(currentAllowedIPs.filter { $0.contains(":") })
             if excludePrivateIPs {
                 return ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServers
             } else {
-                return ipv6Addresses + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
+                return ipv6Addresses.filter { !normalizedDNSServers.contains($0) } + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
         }
 
