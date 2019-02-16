@@ -9,6 +9,7 @@ class ConfTextView: NSTextView {
 
     @objc dynamic var hasError: Bool = false
     @objc dynamic var privateKeyString: String?
+    @objc dynamic var singlePeerAllowedIPs: [String]?
 
     override var string: String {
         didSet {
@@ -52,6 +53,13 @@ class ConfTextView: NSTextView {
         }
     }
 
+    func setConfText(_ text: String) {
+        let fullTextRange = NSRange(location: 0, length: (string as NSString).length)
+        if shouldChangeText(in: fullTextRange, replacementString: text) {
+            replaceCharacters(in: fullTextRange, with: text)
+            didChangeText()
+        }
+    }
 }
 
 extension ConfTextView: NSTextViewDelegate {
@@ -63,6 +71,10 @@ extension ConfTextView: NSTextViewDelegate {
         }
         if privateKeyString != confTextStorage.privateKeyString {
             privateKeyString = confTextStorage.privateKeyString
+        }
+        let updatedSinglePeerAllowedIPs = confTextStorage.hasOnePeer && !confTextStorage.hasError ? confTextStorage.lastOnePeerAllowedIPs : nil
+        if singlePeerAllowedIPs != updatedSinglePeerAllowedIPs {
+            singlePeerAllowedIPs = updatedSinglePeerAllowedIPs
         }
         needsDisplay = true
     }

@@ -547,6 +547,14 @@ class TunnelViewModel {
         }
     }
 
+    func asWgQuickConfig() -> String? {
+        let saveResult = save()
+        if case .saved(let tunnelConfiguration) = saveResult {
+            return tunnelConfiguration.asWgQuickConfig()
+        }
+        return nil
+    }
+
     @discardableResult
     func applyConfiguration(other: TunnelConfiguration) -> Changes {
         // Replaces current data with data from other TunnelConfiguration, ignoring any changes in peer ordering.
