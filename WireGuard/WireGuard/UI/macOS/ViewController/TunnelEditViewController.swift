@@ -56,6 +56,14 @@ class TunnelEditViewController: NSViewController {
         return scrollView
     }()
 
+    let excludePrivateIPsCheckbox: NSButton = {
+        let checkbox = NSButton()
+        checkbox.title = tr("tunnelPeerExcludePrivateIPs")
+        checkbox.setButtonType(.switch)
+        checkbox.state = .off
+        return checkbox
+    }()
+
     let discardButton: NSButton = {
         let button = NSButton()
         button.title = tr("macEditDiscard")
@@ -86,6 +94,7 @@ class TunnelEditViewController: NSViewController {
 
     var privateKeyObservationToken: AnyObject?
     var hasErrorObservationToken: AnyObject?
+    var singlePeerAllowedIPsObservationToken: AnyObject?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
@@ -111,6 +120,8 @@ class TunnelEditViewController: NSViewController {
             } else {
                 selectedActivateOnDemandOption = .none
             }
+            let singlePeer = tunnelConfiguration.peers.count == 1 ? tunnelConfiguration.peers.first : nil
+            updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: singlePeer?.allowedIPs.map { $0.stringRepresentation })
         } else {
             // Creating a new tunnel
             let privateKey = Curve25519.generatePrivateKey()
@@ -133,6 +144,9 @@ class TunnelEditViewController: NSViewController {
         hasErrorObservationToken = textView.observe(\.hasError) { [weak saveButton] textView, _ in
             saveButton?.isEnabled = !textView.hasError
         }
+        singlePeerAllowedIPsObservationToken = textView.observe(\.singlePeerAllowedIPs) { [weak self] textView, _ in
+            self?.updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: textView.singlePeerAllowedIPs)
+        }
 
         onDemandRow.valueOptions = activateOnDemandOptions.map { TunnelViewModel.activateOnDemandOptionText(for: $0) }
         onDemandRow.selectedOptionIndex = activateOnDemandOptions.firstIndex(of: selectedActivateOnDemandOption)!
@@ -149,6 +163,9 @@ class TunnelEditViewController: NSViewController {
         discardButton.target = self
         discardButton.action = #selector(handleDiscardAction)
 
+        excludePrivateIPsCheckbox.target = self
+        excludePrivateIPsCheckbox.action = #selector(excludePrivateIPsCheckboxToggled(sender:))
+
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
 
@@ -159,6 +176,7 @@ class TunnelEditViewController: NSViewController {
 
         let buttonRowStackView = NSStackView()
         buttonRowStackView.setViews([discardButton, saveButton], in: .trailing)
+        buttonRowStackView.addView(excludePrivateIPsCheckbox, in: .leading)
         buttonRowStackView.orientation = .horizontal
         buttonRowStackView.spacing = internalSpacing
 
@@ -236,5 +254,28 @@ class TunnelEditViewController: NSViewController {
     @objc func handleDiscardAction() {
         delegate?.tunnelEditingCancelled()
         dismiss(self)
+    }
+
+    func updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: [String]?) {
+        let shouldAllowExcludePrivateIPsControl: Bool
+        let excludePrivateIPsValue: Bool
+        if let singlePeerAllowedIPs = singlePeerAllowedIPs {
+            (shouldAllowExcludePrivateIPsControl, excludePrivateIPsValue) = TunnelViewModel.PeerData.excludePrivateIPsFieldStates(isSinglePeer: true, allowedIPs: Set<String>(singlePeerAllowedIPs))
+        } else {
+            (shouldAllowExcludePrivateIPsControl, excludePrivateIPsValue) = TunnelViewModel.PeerData.excludePrivateIPsFieldStates(isSinglePeer: false, allowedIPs: Set<String>())
+        }
+        excludePrivateIPsCheckbox.isHidden = !shouldAllowExcludePrivateIPsControl
+        excludePrivateIPsCheckbox.state = excludePrivateIPsValue ? .on : .off
+    }
+
+    @objc func excludePrivateIPsCheckboxToggled(sender: AnyObject?) {
+        guard let excludePrivateIPsCheckbox = sender as? NSButton else { return }
+        guard let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value) else { return }
+        let isOn = excludePrivateIPsCheckbox.state == .on
+        let tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+        tunnelViewModel.peersData.first?.excludePrivateIPsValueChanged(isOn: isOn, dnsServers: tunnelViewModel.interfaceData[.dns])
+        if let modifiedConfig = tunnelViewModel.asWgQuickConfig() {
+            textView.setConfText(modifiedConfig)
+        }
     }
 }
