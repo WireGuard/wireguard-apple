@@ -2,6 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Cocoa
+import ServiceManagement
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -15,6 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
+        registerLoginItem(shouldLaunchAtLogin: true)
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
@@ -42,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func quit() {
+        registerLoginItem(shouldLaunchAtLogin: false)
         guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
             NSApp.terminate(nil)
             return
@@ -73,4 +76,11 @@ extension AppDelegate: StatusMenuWindowDelegate {
         }
         return manageTunnelsWindowObject!
     }
+}
+
+@discardableResult
+func registerLoginItem(shouldLaunchAtLogin: Bool) -> Bool {
+    let appId = Bundle.main.bundleIdentifier!
+    let helperBundleId = "\(appId).login-item-helper"
+    return SMLoginItemSetEnabled(helperBundleId as CFString, shouldLaunchAtLogin)
 }
