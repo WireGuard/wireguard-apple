@@ -199,6 +199,11 @@
 "alertNoTunnelsInImportedZipArchiveTitle" = "No tunnels in zip archive";
 "alertNoTunnelsInImportedZipArchiveMessage" = "No .conf tunnel files were found inside the zip archive.";
 
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "Unable to import from file";
+"alertCantOpenInputConfFileMessage (%@)" = "The file ‘%@’ could not be read.";
+
 // Tunnel management error alerts
 
 "alertTunnelActivationFailureTitle" = "Activation failure";

@@ -23,9 +23,16 @@ class TunnelImporter {
                 }
             }
         } else /* if (url.pathExtension == "conf") -- we assume everything else is a conf */ {
+            let fileName = url.lastPathComponent
             let fileBaseName = url.deletingPathExtension().lastPathComponent.trimmingCharacters(in: .whitespacesAndNewlines)
-            if let fileContents = try? String(contentsOf: url),
-                let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName) {
+            let fileContents: String
+            do {
+                fileContents = try String(contentsOf: url)
+            } catch {
+                errorPresenterType.showErrorAlert(title: tr("alertCantOpenInputConfFileTitle"), message: tr(format: "alertCantOpenInputConfFileMessage (%@)", fileName), from: sourceVC, onPresented: completionHandler)
+                return
+            }
+            if let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName) {
                 tunnelsManager.add(tunnelConfiguration: tunnelConfiguration) { result in
                     if let error = result.error {
                         errorPresenterType.showErrorAlert(error: error, from: sourceVC, onPresented: completionHandler)
