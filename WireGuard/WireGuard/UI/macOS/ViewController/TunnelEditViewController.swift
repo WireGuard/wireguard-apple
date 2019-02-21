@@ -96,6 +96,8 @@ class TunnelEditViewController: NSViewController {
     var hasErrorObservationToken: AnyObject?
     var singlePeerAllowedIPsObservationToken: AnyObject?
 
+    var dnsServersAddedToAllowedIPs: String?
+
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
@@ -122,6 +124,7 @@ class TunnelEditViewController: NSViewController {
             }
             let singlePeer = tunnelConfiguration.peers.count == 1 ? tunnelConfiguration.peers.first : nil
             updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: singlePeer?.allowedIPs.map { $0.stringRepresentation })
+            dnsServersAddedToAllowedIPs = excludePrivateIPsCheckbox.state == .on ? tunnelConfiguration.interface.dns.map { $0.stringRepresentation }.joined(separator: ", ") : nil
         } else {
             // Creating a new tunnel
             let privateKey = Curve25519.generatePrivateKey()
@@ -215,7 +218,7 @@ class TunnelEditViewController: NSViewController {
             return
         }
 
-        let tunnelConfiguration: TunnelConfiguration
+        var tunnelConfiguration: TunnelConfiguration
         do {
             tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value)
         } catch let error as WireGuardAppError {
@@ -223,6 +226,20 @@ class TunnelEditViewController: NSViewController {
             return
         } catch {
             fatalError()
+        }
+
+        if excludePrivateIPsCheckbox.state == .on, tunnelConfiguration.peers.count == 1, let dnsServersAddedToAllowedIPs = dnsServersAddedToAllowedIPs {
+            // Update the DNS servers in the AllowedIPs
+            let tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
+            let originalAllowedIPs = tunnelViewModel.peersData[0][.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines)
+            let dnsServersInAllowedIPs =  TunnelViewModel.PeerData.normalizedIPAddressRangeStrings(dnsServersAddedToAllowedIPs.splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+            let dnsServersCurrent =  TunnelViewModel.PeerData.normalizedIPAddressRangeStrings(tunnelViewModel.interfaceData[.dns].splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+            let modifiedAllowedIPs = originalAllowedIPs.filter { !dnsServersInAllowedIPs.contains($0) } + dnsServersCurrent
+            tunnelViewModel.peersData[0][.allowedIPs] = modifiedAllowedIPs.joined(separator: ", ")
+            let saveResult = tunnelViewModel.save()
+            if case .saved(let modifiedTunnelConfiguration) = saveResult {
+                tunnelConfiguration = modifiedTunnelConfiguration
+            }
         }
 
         if let tunnel = tunnel {
@@ -276,6 +293,7 @@ class TunnelEditViewController: NSViewController {
         tunnelViewModel.peersData.first?.excludePrivateIPsValueChanged(isOn: isOn, dnsServers: tunnelViewModel.interfaceData[.dns])
         if let modifiedConfig = tunnelViewModel.asWgQuickConfig() {
             textView.setConfText(modifiedConfig)
+            dnsServersAddedToAllowedIPs = isOn ? tunnelViewModel.interfaceData[.dns] : nil
         }
     }
 }
