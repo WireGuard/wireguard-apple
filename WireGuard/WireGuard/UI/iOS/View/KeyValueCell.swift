@@ -68,7 +68,7 @@ class KeyValueCell: UITableViewCell {
     var isStackedVertically = false
     var contentSizeBasedConstraints = [NSLayoutConstraint]()
 
-    var onValueChanged: ((String) -> Void)?
+    var onValueChanged: ((String, String) -> Void)?
     var onValueBeingEdited: ((String) -> Void)?
 
     var observationToken: AnyObject?
@@ -206,7 +206,7 @@ extension KeyValueCell: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         let isModified = textField.text ?? "" != textFieldValueOnBeginEditing
         guard isModified else { return }
-        onValueChanged?(textField.text ?? "")
+        onValueChanged?(textFieldValueOnBeginEditing, textField.text ?? "")
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
