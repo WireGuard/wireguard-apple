@@ -122,8 +122,8 @@ class StatusMenu: NSMenu {
         let aboutItem = NSMenuItem(title: tr("macMenuAbout"), action: #selector(aboutClicked), keyEquivalent: "")
         aboutItem.target = self
         addItem(aboutItem)
-        let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(NSApplication.terminate), keyEquivalent: "")
-        quitItem.target = NSApp
+        let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(AppDelegate.quit), keyEquivalent: "")
+        quitItem.target = NSApp.delegate
         addItem(quitItem)
     }
 

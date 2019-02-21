@@ -14,7 +14,7 @@ class Application: NSApplication {
         "Z": #selector(UndoActionRespondable.redo(_:)),
         "w": #selector(NSWindow.performClose(_:)),
         "m": #selector(NSWindow.performMiniaturize(_:)),
-        "q": #selector(NSApplication.terminate(_:))
+        "q": #selector(AppDelegate.quit)
     ]
 
     private var appDelegate: AppDelegate? //swiftlint:disable:this weak_delegate

@@ -12,7 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var manageTunnelsRootVC: ManageTunnelsRootViewController?
     var manageTunnelsWindowObject: NSWindow?
-    var isTerminationAlertShown = false
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
@@ -42,25 +41,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+    @objc func quit() {
         guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
-            return .terminateNow
-        }
-        if isTerminationAlertShown {
-            return .terminateNow
+            NSApp.terminate(nil)
+            return
         }
         let alert = NSAlert()
         alert.messageText = tr("macAppExitingWithActiveTunnelMessage")
         alert.informativeText = tr("macAppExitingWithActiveTunnelInfo")
         if let window = manageTunnelsWindowObject {
-            alert.beginSheetModal(for: window) { [weak self] _ in
-                self?.isTerminationAlertShown = true
+            alert.beginSheetModal(for: window) { _ in
                 NSApp.terminate(nil)
             }
-            return .terminateCancel
         } else {
             alert.runModal()
-            return .terminateNow
+            NSApp.terminate(nil)
         }
     }
 }
