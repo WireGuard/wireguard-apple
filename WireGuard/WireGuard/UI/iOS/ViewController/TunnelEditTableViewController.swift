@@ -259,8 +259,18 @@ extension TunnelEditTableViewController {
             cell.onValueBeingEdited = { [weak self] value in
                 self?.tunnelViewModel.interfaceData[field] = value
             }
+            cell.onValueChanged = { [weak self] oldValue, newValue in
+                guard let self = self else { return }
+                let isAllowedIPsChanged = self.tunnelViewModel.updateDNSServersInAllowedIPsIfRequired(oldDNSServers: oldValue, newDNSServers: newValue)
+                if isAllowedIPsChanged {
+                    let section = self.sections.firstIndex { if case .peer(_) = $0 { return true } else { return false } }
+                    if let section = section, let row = self.peerFields.firstIndex(of: .allowedIPs) {
+                        self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
+                    }
+                }
+            }
         } else {
-            cell.onValueChanged = { [weak self] value in
+            cell.onValueChanged = { [weak self] _, value in
                 self?.tunnelViewModel.interfaceData[field] = value
             }
         }
@@ -380,7 +390,7 @@ extension TunnelEditTableViewController {
                 tableView.reloadRows(at: [IndexPath(row: dnsRow, section: firstInterfaceSection + interfaceSubSection)], with: .none)
             }
         } else {
-            cell.onValueChanged = { [weak peerData] value in
+            cell.onValueChanged = { [weak peerData] _, value in
                 peerData?[field] = value
             }
         }

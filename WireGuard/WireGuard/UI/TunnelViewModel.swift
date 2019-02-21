@@ -432,7 +432,7 @@ class TunnelViewModel {
             let normalizedDNSServers = normalizedIPAddressRangeStrings(dnsServers)
             let ipv6Addresses = normalizedIPAddressRangeStrings(currentAllowedIPs.filter { $0.contains(":") })
             if excludePrivateIPs {
-                return ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + dnsServers
+                return ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + normalizedDNSServers
             } else {
                 return ipv6Addresses.filter { !normalizedDNSServers.contains($0) } + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
@@ -521,6 +521,17 @@ class TunnelViewModel {
             peer.numberOfPeers = peersData.count
             peer.updateExcludePrivateIPsFieldState()
         }
+    }
+
+    func updateDNSServersInAllowedIPsIfRequired(oldDNSServers: String, newDNSServers: String) -> Bool {
+        guard peersData.count == 1, let firstPeer = peersData.first else { return false }
+        guard firstPeer.shouldAllowExcludePrivateIPsControl && firstPeer.excludePrivateIPsValue else { return false }
+        let allowedIPStrings = firstPeer[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines)
+        let oldDNSServerStrings = TunnelViewModel.PeerData.normalizedIPAddressRangeStrings(oldDNSServers.splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+        let newDNSServerStrings = TunnelViewModel.PeerData.normalizedIPAddressRangeStrings(newDNSServers.splitToArray(trimmingCharacters: .whitespacesAndNewlines))
+        let updatedAllowedIPStrings = allowedIPStrings.filter { !oldDNSServerStrings.contains($0) } + newDNSServerStrings
+        firstPeer[.allowedIPs] = updatedAllowedIPStrings.joined(separator: ", ")
+        return true
     }
 
     func save() -> SaveResult<TunnelConfiguration> {
