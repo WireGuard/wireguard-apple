@@ -428,20 +428,22 @@ class TunnelViewModel {
             return list.compactMap { IPAddressRange(from: $0) }.map { $0.stringRepresentation }
         }
 
-        static func modifiedAllowedIPs(currentAllowedIPs: [String], excludePrivateIPs: Bool, dnsServers: [String]) -> [String] {
+        static func modifiedAllowedIPs(currentAllowedIPs: [String], excludePrivateIPs: Bool, dnsServers: [String], oldDNSServers: [String]?) -> [String] {
             let normalizedDNSServers = normalizedIPAddressRangeStrings(dnsServers)
+            let normalizedOldDNSServers = oldDNSServers == nil ? normalizedDNSServers : normalizedIPAddressRangeStrings(oldDNSServers!)
             let ipv6Addresses = normalizedIPAddressRangeStrings(currentAllowedIPs.filter { $0.contains(":") })
             if excludePrivateIPs {
                 return ipv6Addresses + TunnelViewModel.PeerData.ipv4DefaultRouteModRFC1918String + normalizedDNSServers
             } else {
-                return ipv6Addresses.filter { !normalizedDNSServers.contains($0) } + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
+                return ipv6Addresses.filter { !normalizedOldDNSServers.contains($0) } + [TunnelViewModel.PeerData.ipv4DefaultRouteString]
             }
         }
 
-        func excludePrivateIPsValueChanged(isOn: Bool, dnsServers: String) {
+        func excludePrivateIPsValueChanged(isOn: Bool, dnsServers: String, oldDNSServers: String? = nil) {
             let allowedIPStrings = scratchpad[.allowedIPs].splitToArray(trimmingCharacters: .whitespacesAndNewlines)
             let dnsServerStrings = dnsServers.splitToArray(trimmingCharacters: .whitespacesAndNewlines)
-            let modifiedAllowedIPStrings = TunnelViewModel.PeerData.modifiedAllowedIPs(currentAllowedIPs: allowedIPStrings, excludePrivateIPs: isOn, dnsServers: dnsServerStrings)
+            let oldDNSServerStrings = oldDNSServers?.splitToArray(trimmingCharacters: .whitespacesAndNewlines)
+            let modifiedAllowedIPStrings = TunnelViewModel.PeerData.modifiedAllowedIPs(currentAllowedIPs: allowedIPStrings, excludePrivateIPs: isOn, dnsServers: dnsServerStrings, oldDNSServers: oldDNSServerStrings)
             scratchpad[.allowedIPs] = modifiedAllowedIPStrings.joined(separator: ", ")
             validatedConfiguration = nil
             excludePrivateIPsValue = isOn

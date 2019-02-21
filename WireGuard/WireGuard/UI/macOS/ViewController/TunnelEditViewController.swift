@@ -290,7 +290,7 @@ class TunnelEditViewController: NSViewController {
         guard let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: textView.string, called: nameRow.value) else { return }
         let isOn = excludePrivateIPsCheckbox.state == .on
         let tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnelConfiguration)
-        tunnelViewModel.peersData.first?.excludePrivateIPsValueChanged(isOn: isOn, dnsServers: tunnelViewModel.interfaceData[.dns])
+        tunnelViewModel.peersData.first?.excludePrivateIPsValueChanged(isOn: isOn, dnsServers: tunnelViewModel.interfaceData[.dns], oldDNSServers: dnsServersAddedToAllowedIPs)
         if let modifiedConfig = tunnelViewModel.asWgQuickConfig() {
             textView.setConfText(modifiedConfig)
             dnsServersAddedToAllowedIPs = isOn ? tunnelViewModel.interfaceData[.dns] : nil
