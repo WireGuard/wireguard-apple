@@ -242,6 +242,7 @@ class TunnelsListTableViewController: NSViewController {
     @discardableResult
     private func selectTunnel(at index: Int) -> Bool {
         if index < tunnelsManager.numberOfTunnels() {
+            tableView.scrollRowToVisible(index)
             tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
             return true
         }
