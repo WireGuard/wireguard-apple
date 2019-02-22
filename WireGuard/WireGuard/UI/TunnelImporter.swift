@@ -41,7 +41,7 @@ class TunnelImporter {
                     }
                 }
             } else {
-                errorPresenterType.showErrorAlert(title: tr("alertUnableToImportTitle"), message: tr("alertUnableToImportMessage"),
+                errorPresenterType.showErrorAlert(title: tr("alertBadConfigImportTitle"), message: tr(format: "alertBadConfigImportMessage (%@)", fileName),
                                               from: sourceVC, onPresented: completionHandler)
             }
         }

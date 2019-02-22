@@ -26,8 +26,8 @@
 "alertImportedFromZipTitle (%d)" = "Created %d tunnels";
 "alertImportedFromZipMessage (%1$d of %2$d)" = "Created %1$d of %2$d tunnels from zip archive";
 
-"alertUnableToImportTitle" = "Unable to import tunnel";
-"alertUnableToImportMessage" = "An error occured when importing the tunnel configuration.";
+"alertBadConfigImportTitle" = "Unable to import tunnel";
+"alertBadConfigImportMessage (%@)" = "The file ‘%@’ does not contain a valid WireGuard configuration";
 
 // Tunnel detail and edit UI
 
