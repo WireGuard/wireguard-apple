@@ -21,32 +21,46 @@ class TunnelsListTableViewController: NSViewController {
         return tableView
     }()
 
-    let buttonBar: NSSegmentedControl = {
-        let addButtonImage = NSImage(named: NSImage.addTemplateName)!
-        let removeButtonImage = NSImage(named: NSImage.removeTemplateName)!
-        let actionButtonImage = NSImage(named: NSImage.actionTemplateName)!
-        let buttonBar = NSSegmentedControl(images: [addButtonImage, removeButtonImage, actionButtonImage],
-                                           trackingMode: .momentary, target: nil, action: #selector(buttonBarClicked(sender:)))
-        buttonBar.segmentStyle = .smallSquare
-        buttonBar.segmentDistribution = .fit
-        buttonBar.setShowsMenuIndicator(true, forSegment: 0)
-        buttonBar.setShowsMenuIndicator(false, forSegment: 1)
-        buttonBar.setShowsMenuIndicator(true, forSegment: 2)
-        return buttonBar
+    let addButton: NSPopUpButton = {
+        let imageItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        imageItem.image = NSImage(named: NSImage.addTemplateName)!
+
+        let menu = NSMenu()
+        menu.addItem(imageItem)
+        menu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(handleAddEmptyTunnelAction), keyEquivalent: "n")
+        menu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(handleImportTunnelAction), keyEquivalent: "o")
+        menu.autoenablesItems = false
+
+        let button = NSPopUpButton(frame: NSRect.zero, pullsDown: true)
+        button.menu = menu
+        button.bezelStyle = .smallSquare
+        (button.cell as? NSPopUpButtonCell)?.arrowPosition = .arrowAtBottom
+        return button
     }()
 
-    let addMenu: NSMenu = {
-        let addMenu = NSMenu(title: "TunnelsListAdd")
-        addMenu.addItem(withTitle: tr("macMenuAddEmptyTunnel"), action: #selector(handleAddEmptyTunnelAction), keyEquivalent: "n")
-        addMenu.addItem(withTitle: tr("macMenuImportTunnels"), action: #selector(handleImportTunnelAction), keyEquivalent: "o")
-        return addMenu
+    let removeButton: NSButton = {
+        let image = NSImage(named: NSImage.removeTemplateName)!
+        let button = NSButton(image: image, target: self, action: #selector(handleRemoveTunnelAction))
+        button.bezelStyle = .smallSquare
+        button.imagePosition = .imageOnly
+        return button
     }()
 
-    let actionMenu: NSMenu = {
-        let actionMenu = NSMenu(title: "TunnelsListAction")
-        actionMenu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(handleExportLogAction), keyEquivalent: "")
-        actionMenu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(handleExportTunnelsAction), keyEquivalent: "")
-        return actionMenu
+    let actionButton: NSPopUpButton = {
+        let imageItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        imageItem.image = NSImage(named: NSImage.actionTemplateName)!
+
+        let menu = NSMenu()
+        menu.addItem(imageItem)
+        menu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(handleExportLogAction), keyEquivalent: "")
+        menu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(handleExportTunnelsAction), keyEquivalent: "")
+        menu.autoenablesItems = false
+
+        let button = NSPopUpButton(frame: NSRect.zero, pullsDown: true)
+        button.menu = menu
+        button.bezelStyle = .smallSquare
+        (button.cell as? NSPopUpButtonCell)?.arrowPosition = .arrowAtBottom
+        return button
     }()
 
     init(tunnelsManager: TunnelsManager) {
@@ -76,6 +90,16 @@ class TunnelsListTableViewController: NSViewController {
         clipView.documentView = tableView
         scrollView.contentView = clipView
 
+        let buttonBar = NSStackView(views: [addButton, removeButton, actionButton])
+        buttonBar.orientation = .horizontal
+        buttonBar.spacing = -1
+
+        NSLayoutConstraint.activate([
+            removeButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 26),
+            removeButton.topAnchor.constraint(equalTo: buttonBar.topAnchor),
+            removeButton.bottomAnchor.constraint(equalTo: buttonBar.bottomAnchor)
+        ])
+
         let fillerButton = FillerButton()
 
         let containerView = NSView()
@@ -104,9 +128,8 @@ class TunnelsListTableViewController: NSViewController {
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
         ])
 
-        buttonBar.target = self
-        addMenu.items.forEach { $0.target = self }
-        actionMenu.items.forEach { $0.target = self }
+        addButton.menu?.items.forEach { $0.target = self }
+        actionButton.menu?.items.forEach { $0.target = self }
 
         view = containerView
     }
@@ -121,22 +144,6 @@ class TunnelsListTableViewController: NSViewController {
             return selectTunnel(at: indexToSelect)
         }
         return false
-    }
-
-    @objc func buttonBarClicked(sender: AnyObject?) {
-        guard let buttonBar = sender as? NSSegmentedControl else { return }
-        // We have to resort to explicitly showing the menu instead of using NSSegmentedControl.setMenu()
-        // because we have a mix of menu and non-menu segments.
-        // See: http://openradar.appspot.com/radar?id=61419
-        if buttonBar.selectedSegment == 0 {
-            let segmentBottomLeft = NSPoint(x: 0, y: buttonBar.bounds.height + 2)
-            addMenu.popUp(positioning: nil, at: segmentBottomLeft, in: buttonBar)
-        } else if buttonBar.selectedSegment == 1 {
-            handleRemoveTunnelAction()
-        } else if buttonBar.selectedSegment == 2 {
-            let segmentBottomLeft = NSPoint(x: buttonBar.bounds.width * 0.66, y: buttonBar.bounds.height + 2)
-            actionMenu.popUp(positioning: nil, at: segmentBottomLeft, in: buttonBar)
-        }
     }
 
     @objc func handleAddEmptyTunnelAction() {
@@ -161,10 +168,10 @@ class TunnelsListTableViewController: NSViewController {
         alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleCancel"))
         alert.beginSheetModal(for: window) { [weak self] response in
             guard response == .alertFirstButtonReturn else { return }
-            self?.buttonBar.setEnabled(false, forSegment: 1)
+            self?.removeButton.isEnabled = false
             self?.tunnelsManager.remove(tunnel: selectedTunnel) { [weak self] error in
                 guard let self = self else { return }
-                defer { self.buttonBar.setEnabled(true, forSegment: 1) }
+                defer { self.removeButton.isEnabled = true }
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
