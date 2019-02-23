@@ -10,17 +10,18 @@ struct ActivateOnDemandSetting {
 
 enum ActivateOnDemandOption {
     case none // Valid only when isActivateOnDemandEnabled is false
-    case useOnDemandOverWiFiOnly
-    #if os(iOS)
-    case useOnDemandOverWiFiOrCellular
-    case useOnDemandOverCellularOnly
-    #elseif os(macOS)
-    case useOnDemandOverWiFiOrEthernet
-    case useOnDemandOverEthernetOnly
-    #else
-    #error("Unimplemented")
-    #endif
+    case wiFiInterfaceOnly
+    case nonWiFiInterfaceOnly
+    case anyInterface
 }
+
+#if os(iOS)
+private let nonWiFiInterfaceType: NEOnDemandRuleInterfaceType = .cellular
+#elseif os(macOS)
+private let nonWiFiInterfaceType: NEOnDemandRuleInterfaceType = .ethernet
+#else
+#error("Unimplemented")
+#endif
 
 extension ActivateOnDemandSetting {
     func apply(on tunnelProviderManager: NETunnelProviderManager) {
@@ -31,48 +32,22 @@ extension ActivateOnDemandSetting {
         switch activateOnDemandOption {
         case .none:
             rules = nil
-        #if os(iOS)
-        case .useOnDemandOverWiFiOrCellular:
-            rules = [connectRule]
-        case .useOnDemandOverWiFiOnly:
+        case .wiFiInterfaceOnly:
             connectRule.interfaceTypeMatch = .wiFi
-            disconnectRule.interfaceTypeMatch = .cellular
+            disconnectRule.interfaceTypeMatch = nonWiFiInterfaceType
             rules = [connectRule, disconnectRule]
-        case .useOnDemandOverCellularOnly:
-            connectRule.interfaceTypeMatch = .cellular
+        case .nonWiFiInterfaceOnly:
+            connectRule.interfaceTypeMatch = nonWiFiInterfaceType
             disconnectRule.interfaceTypeMatch = .wiFi
             rules = [connectRule, disconnectRule]
-        #elseif os(macOS)
-        case .useOnDemandOverWiFiOrEthernet:
+        case .anyInterface:
             rules = [connectRule]
-        case .useOnDemandOverWiFiOnly:
-            connectRule.interfaceTypeMatch = .wiFi
-            disconnectRule.interfaceTypeMatch = .ethernet
-            rules = [connectRule, disconnectRule]
-        case .useOnDemandOverEthernetOnly:
-            connectRule.interfaceTypeMatch = .ethernet
-            disconnectRule.interfaceTypeMatch = .wiFi
-            rules = [connectRule, disconnectRule]
-        #else
-        #error("Unimplemented")
-        #endif
         }
         tunnelProviderManager.onDemandRules = rules
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {
         let rules = tunnelProviderManager.onDemandRules ?? []
-        #if os(iOS)
-        let otherInterfaceType: NEOnDemandRuleInterfaceType = .cellular
-        let useWiFiOrOtherOption: ActivateOnDemandOption = .useOnDemandOverWiFiOrCellular
-        let useOtherOnlyOption: ActivateOnDemandOption = .useOnDemandOverCellularOnly
-        #elseif os(macOS)
-        let otherInterfaceType: NEOnDemandRuleInterfaceType = .ethernet
-        let useWiFiOrOtherOption: ActivateOnDemandOption = .useOnDemandOverWiFiOrEthernet
-        let useOtherOnlyOption: ActivateOnDemandOption = .useOnDemandOverEthernetOnly
-        #else
-        #error("Unimplemented")
-        #endif
         let activateOnDemandOption: ActivateOnDemandOption
         switch rules.count {
         case 0:
@@ -80,14 +55,14 @@ extension ActivateOnDemandSetting {
         case 1:
             let rule = rules[0]
             precondition(rule.action == .connect)
-            activateOnDemandOption = useWiFiOrOtherOption
+            activateOnDemandOption = .anyInterface
         case 2:
             let connectRule = rules.first(where: { $0.action == .connect })!
             let disconnectRule = rules.first(where: { $0.action == .disconnect })!
-            if connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == otherInterfaceType {
-                activateOnDemandOption = .useOnDemandOverWiFiOnly
-            } else if connectRule.interfaceTypeMatch == otherInterfaceType && disconnectRule.interfaceTypeMatch == .wiFi {
-                activateOnDemandOption = useOtherOnlyOption
+            if connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == nonWiFiInterfaceType {
+                activateOnDemandOption = .wiFiInterfaceOnly
+            } else if connectRule.interfaceTypeMatch == nonWiFiInterfaceType && disconnectRule.interfaceTypeMatch == .wiFi {
+                activateOnDemandOption = .nonWiFiInterfaceOnly
             } else {
                 fatalError("Unexpected onDemandRules set on tunnel provider manager")
             }
