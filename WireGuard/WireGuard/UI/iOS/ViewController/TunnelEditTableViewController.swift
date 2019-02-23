@@ -44,8 +44,8 @@ class TunnelEditTableViewController: UITableViewController {
     ]
 
     let activateOnDemandOptions: [ActivateOnDemandOption] = [
-        .anyInterface,
-        .wiFiInterfaceOnly,
+        .anyInterface(.anySSID),
+        .wiFiInterfaceOnly(.anySSID),
         .nonWiFiInterfaceOnly
     ]
 
