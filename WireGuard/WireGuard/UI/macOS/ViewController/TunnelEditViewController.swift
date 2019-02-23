@@ -82,8 +82,8 @@ class TunnelEditViewController: NSViewController {
 
     let activateOnDemandOptions: [ActivateOnDemandOption] = [
         .none,
-        .anyInterface,
-        .wiFiInterfaceOnly,
+        .anyInterface(.anySSID),
+        .wiFiInterfaceOnly(.anySSID),
         .nonWiFiInterfaceOnly
     ]
 

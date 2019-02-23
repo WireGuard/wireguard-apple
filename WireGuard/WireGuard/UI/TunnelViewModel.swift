@@ -661,7 +661,7 @@ extension TunnelViewModel {
     }
 
     static func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
-        return .anyInterface
+        return .anyInterface(.anySSID)
     }
 }
 
