@@ -82,9 +82,9 @@ class TunnelEditViewController: NSViewController {
 
     let activateOnDemandOptions: [ActivateOnDemandOption] = [
         .none,
-        .useOnDemandOverWiFiOrEthernet,
-        .useOnDemandOverWiFiOnly,
-        .useOnDemandOverEthernetOnly
+        .anyInterface,
+        .wiFiInterfaceOnly,
+        .nonWiFiInterfaceOnly
     ]
 
     let tunnelsManager: TunnelsManager

@@ -627,21 +627,24 @@ extension TunnelViewModel {
         switch activateOnDemandOption {
         case .none:
             return tr("tunnelOnDemandOptionOff")
-        case .useOnDemandOverWiFiOnly:
+        case .wiFiInterfaceOnly:
             return tr("tunnelOnDemandOptionWiFiOnly")
-        #if os(iOS)
-        case .useOnDemandOverWiFiOrCellular:
-            return tr("tunnelOnDemandOptionWiFiOrCellular")
-        case .useOnDemandOverCellularOnly:
+        case .nonWiFiInterfaceOnly:
+            #if os(iOS)
             return tr("tunnelOnDemandOptionCellularOnly")
-        #elseif os(macOS)
-        case .useOnDemandOverWiFiOrEthernet:
-            return tr("tunnelOnDemandOptionWiFiOrEthernet")
-        case .useOnDemandOverEthernetOnly:
+            #elseif os(macOS)
             return tr("tunnelOnDemandOptionEthernetOnly")
-        #else
-        #error("Unimplemented")
-        #endif
+            #else
+            #error("Unimplemented")
+            #endif
+        case .anyInterface:
+            #if os(iOS)
+            return tr("tunnelOnDemandOptionWiFiOrCellular")
+            #elseif os(macOS)
+            return tr("tunnelOnDemandOptionWiFiOrEthernet")
+            #else
+            #error("Unimplemented")
+            #endif
         }
     }
 
@@ -658,13 +661,7 @@ extension TunnelViewModel {
     }
 
     static func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
-        #if os(iOS)
-        return .useOnDemandOverWiFiOrCellular
-        #elseif os(macOS)
-        return .useOnDemandOverWiFiOrEthernet
-        #else
-        #error("Unimplemented")
-        #endif
+        return .anyInterface
     }
 }
 

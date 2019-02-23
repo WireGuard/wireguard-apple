@@ -44,9 +44,9 @@ class TunnelEditTableViewController: UITableViewController {
     ]
 
     let activateOnDemandOptions: [ActivateOnDemandOption] = [
-        .useOnDemandOverWiFiOrCellular,
-        .useOnDemandOverWiFiOnly,
-        .useOnDemandOverCellularOnly
+        .anyInterface,
+        .wiFiInterfaceOnly,
+        .nonWiFiInterfaceOnly
     ]
 
     let tunnelsManager: TunnelsManager
