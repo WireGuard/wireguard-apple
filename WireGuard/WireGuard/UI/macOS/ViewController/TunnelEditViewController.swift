@@ -108,7 +108,7 @@ class TunnelEditViewController: NSViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func populateTextFields() {
+    func populateFields() {
         let selectedActivateOnDemandOption: ActivateOnDemandOption
         if let tunnel = tunnel {
             // Editing an existing tunnel
@@ -156,7 +156,7 @@ class TunnelEditViewController: NSViewController {
     }
 
     override func loadView() {
-        populateTextFields()
+        populateFields()
 
         scrollView.documentView = textView
 
