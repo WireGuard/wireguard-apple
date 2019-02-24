@@ -198,6 +198,12 @@ class TunnelEditViewController: NSViewController {
         self.view = containerView
     }
 
+    func setUserInteractionEnabled(_ enabled: Bool) {
+        view.window?.ignoresMouseEvents = !enabled
+        nameRow.valueLabel.isEditable = enabled
+        textView.isEditable = enabled
+    }
+
     @objc func handleSaveAction() {
         let name = nameRow.value
         guard !name.isEmpty else {
@@ -242,9 +248,12 @@ class TunnelEditViewController: NSViewController {
             }
         }
 
+        setUserInteractionEnabled(false)
+
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
             tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
+                self?.setUserInteractionEnabled(true)
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
@@ -256,6 +265,7 @@ class TunnelEditViewController: NSViewController {
             // We're creating a new tunnel
             AppStorePrivacyNotice.show(from: self, into: tunnelsManager) { [weak self] in
                 self?.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
+                    self?.setUserInteractionEnabled(true)
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                         return
