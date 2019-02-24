@@ -115,6 +115,8 @@ class TunnelsManager {
 
         activateOnDemandSetting.apply(on: tunnelProviderManager)
 
+        let activeTunnel = tunnels.first { $0.status == .active || $0.status == .activating }
+
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Add: Saving configuration failed: \(error!)")
@@ -124,6 +126,19 @@ class TunnelsManager {
             }
 
             guard let self = self else { return }
+
+            #if os(iOS)
+            // HACK: In iOS, adding a tunnel causes deactivation of any currently active tunnel.
+            // This is an ugly hack to reactivate the tunnel that has been deactivated like that.
+            if let activeTunnel = activeTunnel {
+                if activeTunnel.status == .inactive || activeTunnel.status == .deactivating {
+                    self.startActivation(of: activeTunnel)
+                }
+                if activeTunnel.status == .active || activeTunnel.status == .activating {
+                    activeTunnel.status = .restarting
+                }
+            }
+            #endif
 
             let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
             self.tunnels.append(tunnel)
@@ -440,7 +455,7 @@ class TunnelContainer: NSObject {
     }
 
     func refreshStatus() {
-        if (status == .restarting) && (tunnelProvider.connection.status == .disconnected || tunnelProvider.connection.status == .disconnecting) {
+        if status == .restarting {
             return
         }
         status = TunnelStatus(from: tunnelProvider.connection.status)
