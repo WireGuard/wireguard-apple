@@ -28,8 +28,14 @@ class TunnelImporter {
             let fileContents: String
             do {
                 fileContents = try String(contentsOf: url)
-            } catch {
-                errorPresenterType.showErrorAlert(title: tr("alertCantOpenInputConfFileTitle"), message: tr(format: "alertCantOpenInputConfFileMessage (%@)", fileName), from: sourceVC, onPresented: completionHandler)
+            } catch let error {
+                let message: String
+                if let cocoaError = error as? CocoaError, cocoaError.isFileError {
+                    message = error.localizedDescription
+                } else {
+                    message = tr(format: "alertCantOpenInputConfFileMessage (%@)", fileName)
+                }
+                errorPresenterType.showErrorAlert(title: tr("alertCantOpenInputConfFileTitle"), message: message, from: sourceVC, onPresented: completionHandler)
                 return
             }
             if let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName) {
