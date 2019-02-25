@@ -5,7 +5,7 @@ import Foundation
 
 class TunnelImporter {
     static func importFromFile(url: URL, into tunnelsManager: TunnelsManager, sourceVC: AnyObject?, errorPresenterType: ErrorPresenterProtocol.Type, completionHandler: (() -> Void)? = nil) {
-        if url.pathExtension == "zip" {
+        if url.pathExtension.lowercased() == "zip" {
             ZipImporter.importConfigFiles(from: url) { result in
                 if let error = result.error {
                     errorPresenterType.showErrorAlert(error: error, from: sourceVC)
