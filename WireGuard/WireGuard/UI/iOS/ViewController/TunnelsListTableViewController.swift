@@ -164,9 +164,7 @@ class TunnelsListTableViewController: UIViewController {
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let tunnelsManager = tunnelsManager else { return }
-        urls.forEach { url in
-            TunnelImporter.importFromFile(url: url, into: tunnelsManager, sourceVC: self, errorPresenterType: ErrorPresenter.self)
-        }
+        TunnelImporter.importFromFile(urls: urls, into: tunnelsManager, sourceVC: self, errorPresenterType: ErrorPresenter.self)
     }
 }
 
