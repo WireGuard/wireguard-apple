@@ -23,6 +23,9 @@
 
 // Tunnels list alerts
 
+"alertImportedFromMultipleFilesTitle (%d)" = "Created %d tunnels";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "Created %1$d of %2$d tunnels from imported files";
+
 "alertImportedFromZipTitle (%d)" = "Created %d tunnels";
 "alertImportedFromZipMessage (%1$d of %2$d)" = "Created %1$d of %2$d tunnels from zip archive";
 
