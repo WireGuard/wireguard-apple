@@ -132,3 +132,13 @@ private func ssidOnDemandRules(option: ActivateOnDemandSSIDOption) -> [NEOnDeman
                 NEOnDemandRuleConnect(interfaceType: .wiFi)]
     }
 }
+
+extension ActivateOnDemandSetting {
+    init(with option: ActivateOnDemandOption) {
+        if option == .none {
+            self = ActivateOnDemandSetting(isActivateOnDemandEnabled: false, activateOnDemandOption: option)
+        } else {
+            self = ActivateOnDemandSetting(isActivateOnDemandEnabled: true, activateOnDemandOption: option)
+        }
+    }
+}

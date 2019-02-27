@@ -92,6 +92,11 @@
 "tunnelOnDemandOnlySelectedSSIDs" = "Only selected SSIDs";
 "tunnelOnDemandExceptSelectedSSIDs" = "Except selected SSIDs";
 
+"tunnelOnDemandSelectionViewTitle" = "Select SSIDs";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "Selected SSIDs";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Add SSIDs";
+"tunnelOnDemandAddMessageAddNew" = "Add manually";
+
 "tunnelOnDemandKey" = "Activate on demand";
 "tunnelOnDemandOptionOff" = "Off";
 "tunnelOnDemandOptionWiFiOnly" = "Wi-Fi only";

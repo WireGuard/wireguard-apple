@@ -43,16 +43,16 @@ class TunnelEditTableViewController: UITableViewController {
         .deletePeer
     ]
 
-    let activateOnDemandOptions: [ActivateOnDemandOption] = [
-        .anyInterface(.anySSID),
-        .wiFiInterfaceOnly(.anySSID),
-        .nonWiFiInterfaceOnly
+    let onDemandFields: [ActivateOnDemandViewModel.OnDemandField] = [
+        .nonWiFiInterface,
+        .wiFiInterface,
+        .ssidEdit
     ]
 
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
     let tunnelViewModel: TunnelViewModel
-    var activateOnDemandSetting: ActivateOnDemandSetting
+    var onDemandViewModel: ActivateOnDemandViewModel
     private var sections = [Section]()
 
     // Use this initializer to edit an existing tunnel.
@@ -60,7 +60,8 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        activateOnDemandSetting = tunnel.activateOnDemandSetting
+        let onDemandOption = tunnel.activateOnDemandSetting.isActivateOnDemandEnabled ? tunnel.activateOnDemandSetting.activateOnDemandOption : .none
+        onDemandViewModel = ActivateOnDemandViewModel(from: onDemandOption)
         super.init(style: .grouped)
         loadSections()
     }
@@ -70,7 +71,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         tunnel = nil
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
-        activateOnDemandSetting = ActivateOnDemandSetting.defaultSetting
+        onDemandViewModel = ActivateOnDemandViewModel()
         super.init(style: .grouped)
         loadSections()
     }
@@ -92,7 +93,7 @@ class TunnelEditTableViewController: UITableViewController {
         tableView.register(TunnelEditEditableKeyValueCell.self)
         tableView.register(ButtonCell.self)
         tableView.register(SwitchCell.self)
-        tableView.register(CheckmarkCell.self)
+        tableView.register(ChevronCell.self)
     }
 
     private func loadSections() {
@@ -113,6 +114,7 @@ class TunnelEditTableViewController: UITableViewController {
             ErrorPresenter.showErrorAlert(title: alertTitle, message: errorMessage, from: self)
             tableView.reloadData() // Highlight erroring fields
         case .saved(let tunnelConfiguration):
+            let activateOnDemandSetting = ActivateOnDemandSetting(with: onDemandViewModel.toOnDemandOption())
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
                 tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: activateOnDemandSetting) { [weak self] error in
@@ -161,10 +163,10 @@ extension TunnelEditTableViewController {
         case .addPeer:
             return 1
         case .onDemand:
-            if activateOnDemandSetting.isActivateOnDemandEnabled {
-                return 4
+            if onDemandViewModel.isWiFiInterfaceEnabled {
+                return 3
             } else {
-                return 1
+                return 2
             }
         }
     }
@@ -419,36 +421,28 @@ extension TunnelEditTableViewController {
     }
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == 0 {
+        let field = onDemandFields[indexPath.row]
+        if indexPath.row < 2 {
             let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.message = tr("tunnelOnDemandKey")
-            cell.isOn = activateOnDemandSetting.isActivateOnDemandEnabled
+            cell.message = field.localizedUIString
+            cell.isOn = onDemandViewModel.isEnabled(field: field)
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self else { return }
-                guard isOn != self.activateOnDemandSetting.isActivateOnDemandEnabled else { return }
-
-                self.activateOnDemandSetting.isActivateOnDemandEnabled = isOn
-                self.loadSections()
-
+                self.onDemandViewModel.setEnabled(field: field, isEnabled: isOn)
                 let section = self.sections.firstIndex { $0 == .onDemand }!
-                let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: section) }
-                if isOn {
-                    if self.activateOnDemandSetting.activateOnDemandOption == .none {
-                        self.activateOnDemandSetting.activateOnDemandOption = TunnelViewModel.defaultActivateOnDemandOption()
+                let indexPath = IndexPath(row: 2, section: section)
+                if field == .wiFiInterface {
+                    if isOn {
+                        tableView.insertRows(at: [indexPath], with: .fade)
+                    } else {
+                        tableView.deleteRows(at: [indexPath], with: .fade)
                     }
-                    self.tableView.insertRows(at: indexPaths, with: .fade)
-                } else {
-                    self.tableView.deleteRows(at: indexPaths, with: .fade)
                 }
             }
             return cell
         } else {
-            let cell: CheckmarkCell = tableView.dequeueReusableCell(for: indexPath)
-            let rowOption = activateOnDemandOptions[indexPath.row - 1]
-            let selectedOption = activateOnDemandSetting.activateOnDemandOption
-            assert(selectedOption != .none)
-            cell.message = TunnelViewModel.activateOnDemandOptionText(for: rowOption)
-            cell.isChecked = selectedOption == rowOption
+            let cell: ChevronCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.message = field.localizedUIString
             return cell
         }
     }
@@ -484,7 +478,7 @@ extension TunnelEditTableViewController {
 
 extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if case .onDemand = sections[indexPath.section], indexPath.row > 0 {
+        if case .onDemand = sections[indexPath.section], indexPath.row == 2 {
             return indexPath
         } else {
             return nil
@@ -494,16 +488,21 @@ extension TunnelEditTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch sections[indexPath.section] {
         case .onDemand:
-            let option = activateOnDemandOptions[indexPath.row - 1]
-            assert(option != .none)
-            activateOnDemandSetting.activateOnDemandOption = option
-
-            let indexPaths = (1 ..< 4).map { IndexPath(row: $0, section: indexPath.section) }
-            UIView.performWithoutAnimation {
-                tableView.reloadRows(at: indexPaths, with: .none)
-            }
+            assert(indexPath.row == 2)
+            tableView.deselectRow(at: indexPath, animated: true)
+            let ssidOptionVC = SSIDOptionEditTableViewController(option: onDemandViewModel.ssidOption, ssids: onDemandViewModel.selectedSSIDs)
+            ssidOptionVC.delegate = self
+            navigationController?.pushViewController(ssidOptionVC, animated: true)
         default:
             assertionFailure()
         }
+    }
+}
+
+extension TunnelEditTableViewController: SSIDOptionEditTableViewControllerDelegate {
+    func ssidOptionSaved(option: ActivateOnDemandViewModel.OnDemandSSIDOption, ssids: [String]) {
+        let validSSIDs = ssids.filter { !$0.isEmpty }
+        onDemandViewModel.selectedSSIDs = validSSIDs
+        onDemandViewModel.ssidOption = validSSIDs.isEmpty ? .anySSID : option
     }
 }
