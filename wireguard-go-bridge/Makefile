@@ -28,7 +28,7 @@ version-header: $(DESTDIR)/wireguard-go-version.h
 
 GOBUILDARCH := $(GOARCH_$(shell uname -m))
 GOBUILDOS := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOBUILDVERSION := 1.11.5
+GOBUILDVERSION := 1.12
 GOBUILDTARBALL := go$(GOBUILDVERSION).$(GOBUILDOS)-$(GOBUILDARCH).tar.gz
 GOBUILDTARBALLURL := https://dl.google.com/go/$(GOBUILDTARBALL)
 GOBUILDVERSION_NEEDED := go version go$(GOBUILDVERSION) $(GOBUILDOS)/$(GOBUILDARCH)

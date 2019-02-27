@@ -17,8 +17,8 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"git.zx2c4.com/wireguard-go/tun"
 	"golang.org/x/sys/unix"
+	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"math"
 	"os"
@@ -61,7 +61,7 @@ func init() {
 				n := runtime.Stack(buf, true)
 				buf[n] = 0
 				if uintptr(loggerFunc) != 0 {
-					C.callLogger(loggerFunc, 0, (*_Ctype_char)(unsafe.Pointer(&buf[0])))
+					C.callLogger(loggerFunc, 0, (*C.char)(unsafe.Pointer(&buf[0])))
 				}
 			}
 		}
