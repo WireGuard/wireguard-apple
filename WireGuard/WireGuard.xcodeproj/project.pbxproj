@@ -77,6 +77,8 @@
 		6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */; };
 		6F89E17A21EDEB0E00C97BB9 /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */; };
 		6F89E17C21F090CC00C97BB9 /* TunnelsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */; };
+		6F8F0D7122258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */; };
+		6F8F0D7222258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */; };
 		6F919EC3218A2AE90023B400 /* ErrorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */; };
 		6F919ED9218C65C50023B400 /* wireguard_doc_logo_22x29.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED5218C65C50023B400 /* wireguard_doc_logo_22x29.png */; };
 		6F919EDA218C65C50023B400 /* wireguard_doc_logo_44x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED6218C65C50023B400 /* wireguard_doc_logo_44x58.png */; };
@@ -294,6 +296,7 @@
 		6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelErrors.swift; sourceTree = "<group>"; };
 		6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 		6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsTracker.swift; sourceTree = "<group>"; };
+		6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandViewModel.swift; sourceTree = "<group>"; };
 		6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		6F919ED5218C65C50023B400 /* wireguard_doc_logo_22x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_22x29.png; sourceTree = "<group>"; };
 		6F919ED6218C65C50023B400 /* wireguard_doc_logo_44x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_44x58.png; sourceTree = "<group>"; };
@@ -474,6 +477,7 @@
 				6FB1BD5E21D2607A00A991BF /* macOS */,
 				6F7774DE217181B1006A79B3 /* iOS */,
 				6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */,
+				6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */,
 				6FBA103D21D6B6D70051C35F /* TunnelImporter.swift */,
 				6FBA103A21D6B4280051C35F /* ErrorPresenterProtocol.swift */,
 				6B62E45E220A6FA900EF34A6 /* PrivateDataConfirmation.swift */,
@@ -1132,6 +1136,7 @@
 			files = (
 				6FBA101521D613F90051C35F /* Application.swift in Sources */,
 				6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */,
+				6F8F0D7222258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */,
 				6FB1BDCD21D50F5300A991BF /* ActivateOnDemandSetting.swift in Sources */,
 				6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */,
 				6FB1BDD021D50F5300A991BF /* TunnelErrors.swift in Sources */,
@@ -1232,6 +1237,7 @@
 				5F45417D21C1B23600994C13 /* UITableViewCell+Reuse.swift in Sources */,
 				5F45419221C2D55800994C13 /* CheckmarkCell.swift in Sources */,
 				6FE254FF219C60290028284D /* ZipExporter.swift in Sources */,
+				6F8F0D7122258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */,
 				6B586C53220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */,
 				6F693A562179E556008551C1 /* Endpoint.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
