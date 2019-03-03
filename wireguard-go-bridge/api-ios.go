@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-2.0
+/* SPDX-License-Identifier: MIT
  *
  * Copyright (C) 2018-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
  */
@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"errors"
 	"golang.org/x/sys/unix"
+	"golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"math"
@@ -45,12 +46,16 @@ func (l *CLogger) Write(p []byte) (int, error) {
 	return len(p), nil
 }
 
-var tunnelHandles map[int32]*Device
+type tunnelHandle struct {
+	*device.Device
+	*device.Logger
+}
+
+var tunnelHandles = make(map[int32]tunnelHandle)
 
 func init() {
-	versionString = C.CString(WireGuardGoVersion)
-	roamingDisabled = true
-	tunnelHandles = make(map[int32]*Device)
+	versionString = C.CString(device.WireGuardGoVersion)
+	device.RoamingDisabled = true
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
 	go func() {
@@ -70,7 +75,7 @@ func init() {
 
 //export wgEnableRoaming
 func wgEnableRoaming(enabled bool) {
-	roamingDisabled = !enabled
+	device.RoamingDisabled = !enabled
 }
 
 //export wgSetLogger
@@ -80,21 +85,26 @@ func wgSetLogger(loggerFn uintptr) {
 
 //export wgTurnOn
 func wgTurnOn(settings string, tunFd int32) int32 {
-	logger := &Logger{
+	logger := &device.Logger{
 		Debug: log.New(&CLogger{level: 0}, "", 0),
 		Info:  log.New(&CLogger{level: 1}, "", 0),
 		Error: log.New(&CLogger{level: 2}, "", 0),
 	}
 
-	tun, _, err := tun.CreateTUNFromFD(int(tunFd))
+	err := unix.SetNonblock(int(tunFd), true)
+	if err != nil {
+		logger.Error.Println(err)
+		return -1
+	}
+	tun, err := tun.CreateTUNFromFile(os.NewFile(uintptr(tunFd), "/dev/tun"), 0)
 	if err != nil {
 		logger.Error.Println(err)
 		return -1
 	}
 	logger.Info.Println("Attaching to interface")
-	device := NewDevice(tun, logger)
+	device := device.NewDevice(tun, logger)
 
-	setError := ipcSetOperation(device, bufio.NewReader(strings.NewReader(settings)))
+	setError := device.IpcSetOperation(bufio.NewReader(strings.NewReader(settings)))
 	if setError != nil {
 		logger.Error.Println(setError)
 		return -1
@@ -112,7 +122,7 @@ func wgTurnOn(settings string, tunFd int32) int32 {
 	if i == math.MaxInt32 {
 		return -1
 	}
-	tunnelHandles[i] = device
+	tunnelHandles[i] = tunnelHandle{device, logger}
 	return i
 }
 
@@ -132,10 +142,10 @@ func wgSetConfig(tunnelHandle int32, settings string) int64 {
 	if !ok {
 		return 0
 	}
-	err := ipcSetOperation(device, bufio.NewReader(strings.NewReader(settings)))
+	err := device.IpcSetOperation(bufio.NewReader(strings.NewReader(settings)))
 	if err != nil {
-		device.log.Error.Println(err)
-		return err.int64
+		device.Error.Println(err)
+		return err.ErrorCode()
 	}
 	return 0
 }
@@ -148,7 +158,7 @@ func wgGetConfig(tunnelHandle int32) *C.char {
 	}
 	settings := new(bytes.Buffer)
 	writer := bufio.NewWriter(settings)
-	err := ipcGetOperation(device, writer)
+	err := device.IpcGetOperation(writer)
 	if err != nil {
 		return nil
 	}
@@ -158,46 +168,18 @@ func wgGetConfig(tunnelHandle int32) *C.char {
 
 //export wgBindInterfaceScope
 func wgBindInterfaceScope(tunnelHandle int32, ifscope int32) {
-	var operr error
 	device, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return
 	}
-	device.log.Info.Printf("Binding sockets to interface %d\n", ifscope)
-	bind := device.net.bind.(*NativeBind)
-	for bind.ipv4 != nil {
-		fd, err := bind.ipv4.SyscallConn()
-		if err != nil {
-			device.log.Error.Printf("Unable to bind v4 socket to interface:", err)
-			break
-		}
-		err = fd.Control(func(fd uintptr) {
-			operr = unix.SetsockoptInt(int(fd), unix.IPPROTO_IP, unix.IP_BOUND_IF, int(ifscope))
-		})
-		if err == nil {
-			err = operr
-		}
-		if err != nil {
-			device.log.Error.Printf("Unable to bind v4 socket to interface:", err)
-		}
-		break
+	device.Info.Printf("Binding sockets to interface %d\n", ifscope)
+	err := device.BindSocketToInterface4(uint32(ifscope))
+	if err != nil {
+		device.Error.Printf("Unable to bind v4 socket to interface:", err)
 	}
-	for bind.ipv6 != nil {
-		fd, err := bind.ipv6.SyscallConn()
-		if err != nil {
-			device.log.Error.Printf("Unable to bind v6 socket to interface:", err)
-			break
-		}
-		err = fd.Control(func(fd uintptr) {
-			operr = unix.SetsockoptInt(int(fd), unix.IPPROTO_IPV6, unix.IPV6_BOUND_IF, int(ifscope))
-		})
-		if err == nil {
-			err = operr
-		}
-		if err != nil {
-			device.log.Error.Printf("Unable to bind v6 socket to interface:", err)
-		}
-		break
+	err = device.BindSocketToInterface6(uint32(ifscope))
+	if err != nil {
+		device.Error.Printf("Unable to bind v6 socket to interface:", err)
 	}
 }
 
