@@ -46,7 +46,7 @@ class TunnelEditTableViewController: UITableViewController {
     let onDemandFields: [ActivateOnDemandViewModel.OnDemandField] = [
         .nonWiFiInterface,
         .wiFiInterface,
-        .ssidEdit
+        .ssid
     ]
 
     let tunnelsManager: TunnelsManager
@@ -60,8 +60,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        let onDemandOption = tunnel.activateOnDemandSetting.isActivateOnDemandEnabled ? tunnel.activateOnDemandSetting.activateOnDemandOption : .none
-        onDemandViewModel = ActivateOnDemandViewModel(from: onDemandOption)
+        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
         super.init(style: .grouped)
         loadSections()
     }

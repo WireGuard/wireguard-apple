@@ -24,21 +24,28 @@ class TunnelDetailTableViewController: UITableViewController {
         .rxBytes, .txBytes, .lastHandshakeTime
     ]
 
+    static let onDemandFields: [ActivateOnDemandViewModel.OnDemandField] = [
+        .onDemand, .ssid
+    ]
+
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer
     var tunnelViewModel: TunnelViewModel
+    var onDemandViewModel: ActivateOnDemandViewModel
 
     private var sections = [Section]()
     private var interfaceFieldIsVisible = [Bool]()
     private var peerFieldIsVisible = [[Bool]]()
 
     private var statusObservationToken: AnyObject?
+    private var onDemandObservationToken: AnyObject?
     private var reloadRuntimeConfigurationTimer: Timer?
 
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
         super.init(style: .grouped)
         loadSections()
         loadVisibleFields()
@@ -50,6 +57,11 @@ class TunnelDetailTableViewController: UITableViewController {
                 self.reloadRuntimeConfiguration()
                 self.stopUpdatingRuntimeConfiguration()
             }
+        }
+        onDemandObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak self] tunnel, _ in
+            // Handle On-Demand getting turned on/off outside of the app
+            self?.onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
+            self?.updateActivateOnDemandFields()
         }
     }
 
@@ -242,11 +254,27 @@ class TunnelDetailTableViewController: UITableViewController {
             self.applyTunnelConfiguration(tunnelConfiguration: tunnelConfiguration)
         }
     }
+
+    private func updateActivateOnDemandFields() {
+        guard let onDemandSection = sections.firstIndex(where: { if case .onDemand = $0 { return true } else { return false } }) else { return }
+        let numberOfTableViewOnDemandRows = tableView.numberOfRows(inSection: onDemandSection)
+        let ssidRowIndexPath = IndexPath(row: 1, section: onDemandSection)
+        switch (numberOfTableViewOnDemandRows, onDemandViewModel.isWiFiInterfaceEnabled) {
+        case (1, true):
+            tableView.insertRows(at: [ssidRowIndexPath], with: .automatic)
+        case (2, false):
+            tableView.deleteRows(at: [ssidRowIndexPath], with: .automatic)
+        default:
+            break
+        }
+        tableView.reloadSections(IndexSet(integer: onDemandSection), with: .automatic)
+    }
 }
 
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
         loadSections()
         loadVisibleFields()
         title = tunnel.name
@@ -272,7 +300,7 @@ extension TunnelDetailTableViewController {
         case .peer(let peerIndex, _):
             return peerFieldIsVisible[peerIndex].filter { $0 }.count
         case .onDemand:
-            return 1
+            return onDemandViewModel.isWiFiInterfaceEnabled ? 2 : 1
         case .delete:
             return 1
         }
@@ -380,10 +408,12 @@ extension TunnelDetailTableViewController {
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.key = tr("tunnelOnDemandKey")
-        cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
-        cell.observationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
-            cell?.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
+        let field = TunnelDetailTableViewController.onDemandFields[indexPath.row]
+        cell.key = field.localizedUIString
+        if field == .onDemand {
+            cell.value = onDemandViewModel.localizedInterfaceDescription
+        } else if field == .ssid {
+            cell.value = onDemandViewModel.ssidOption.localizedUIString
         }
         return cell
     }

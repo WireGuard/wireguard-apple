@@ -5,13 +5,15 @@ import Foundation
 
 class ActivateOnDemandViewModel {
     enum OnDemandField {
+        case onDemand
         case nonWiFiInterface
         case wiFiInterface
-        case ssidDescription
-        case ssidEdit
+        case ssid
 
         var localizedUIString: String {
             switch self {
+            case .onDemand:
+                return tr("tunnelOnDemandKey")
             case .nonWiFiInterface:
                 #if os(iOS)
                 return tr("tunnelOnDemandCellular")
@@ -21,8 +23,7 @@ class ActivateOnDemandViewModel {
                 #error("Unimplemented")
                 #endif
             case .wiFiInterface: return tr("tunnelOnDemandWiFi")
-            case .ssidDescription: return tr("tunnelOnDemandSSIDDescription")
-            case .ssidEdit: return tr("tunnelOnDemandSSIDEdit")
+            case .ssid: return tr("tunnelOnDemandSSIDsKey")
             }
         }
     }
@@ -48,7 +49,15 @@ class ActivateOnDemandViewModel {
 }
 
 extension ActivateOnDemandViewModel {
-    convenience init(from option: ActivateOnDemandOption) {
+    convenience init(setting: ActivateOnDemandSetting) {
+        if setting.isActivateOnDemandEnabled {
+            self.init(option: setting.activateOnDemandOption)
+        } else {
+            self.init(option: .none)
+        }
+    }
+
+    convenience init(option: ActivateOnDemandOption) {
         self.init()
         switch option {
         case .none:
@@ -99,6 +108,33 @@ extension ActivateOnDemandViewModel {
             isWiFiInterfaceEnabled = isEnabled
         default:
             break
+        }
+    }
+}
+
+extension ActivateOnDemandViewModel {
+    var localizedInterfaceDescription: String {
+        switch (isWiFiInterfaceEnabled, isNonWiFiInterfaceEnabled) {
+        case (false, false):
+            return tr("tunnelOnDemandOptionOff")
+        case (true, false):
+            return tr("tunnelOnDemandOptionWiFiOnly")
+        case (false, true):
+            #if os(iOS)
+            return tr("tunnelOnDemandOptionCellularOnly")
+            #elseif os(macOS)
+            return tr("tunnelOnDemandOptionEthernetOnly")
+            #else
+            #error("Unimplemented")
+            #endif
+        case (true, true):
+            #if os(iOS)
+            return tr("tunnelOnDemandOptionWiFiOrCellular")
+            #elseif os(macOS)
+            return tr("tunnelOnDemandOptionWiFiOrEthernet")
+            #else
+            #error("Unimplemented")
+            #endif
         }
     }
 }

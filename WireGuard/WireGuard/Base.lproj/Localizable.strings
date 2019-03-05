@@ -84,9 +84,7 @@
 "tunnelOnDemandCellular" = "Cellular";
 "tunnelOnDemandEthernet" = "Ethernet";
 "tunnelOnDemandWiFi" = "Wi-Fi";
-"tunnelOnDemandSSIDDescription" = "Selected SSIDs";
-"tunnelOnDemandSSIDescriptionMac" = "SSIDs";
-"tunnelOnDemandSSIDEdit" = "Select SSIDs";
+"tunnelOnDemandSSIDsKey" = "SSIDs";
 
 "tunnelOnDemandAnySSID" = "Any SSID";
 "tunnelOnDemandOnlySelectedSSIDs" = "Only selected SSIDs";
@@ -98,7 +96,7 @@
 "tunnelOnDemandAddMessageAddNewSSID" = "Add manually";
 "tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Connected: %@";
 
-"tunnelOnDemandKey" = "Activate on demand";
+"tunnelOnDemandKey" = "On demand";
 "tunnelOnDemandOptionOff" = "Off";
 "tunnelOnDemandOptionWiFiOnly" = "Wi-Fi only";
 "tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi or cellular";
