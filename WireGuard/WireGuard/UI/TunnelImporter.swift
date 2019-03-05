@@ -33,22 +33,22 @@ class TunnelImporter {
                     do {
                         fileContents = try String(contentsOf: url)
                     } catch let error {
-                        if let cocoaError = error as? CocoaError, cocoaError.isFileError {
-                            lastFileImportErrorText = (title: tr("alertCantOpenInputConfFileTitle"), message: error.localizedDescription)
-                        } else {
-                            lastFileImportErrorText = (title: tr("alertCantOpenInputConfFileTitle"), message: tr(format: "alertCantOpenInputConfFileMessage (%@)", fileName))
-                        }
                         DispatchQueue.main.async {
+                            if let cocoaError = error as? CocoaError, cocoaError.isFileError {
+                                lastFileImportErrorText = (title: tr("alertCantOpenInputConfFileTitle"), message: error.localizedDescription)
+                            } else {
+                                lastFileImportErrorText = (title: tr("alertCantOpenInputConfFileTitle"), message: tr(format: "alertCantOpenInputConfFileMessage (%@)", fileName))
+                            }
                             configs.append(nil)
                             dispatchGroup.leave()
                         }
                         return
                     }
                     let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName)
-                    if tunnelConfiguration == nil {
-                        lastFileImportErrorText = (title: tr("alertBadConfigImportTitle"), message: tr(format: "alertBadConfigImportMessage (%@)", fileName))
-                    }
                     DispatchQueue.main.async {
+                        if tunnelConfiguration == nil {
+                            lastFileImportErrorText = (title: tr("alertBadConfigImportTitle"), message: tr(format: "alertBadConfigImportMessage (%@)", fileName))
+                        }
                         configs.append(tunnelConfiguration)
                         dispatchGroup.leave()
                     }
