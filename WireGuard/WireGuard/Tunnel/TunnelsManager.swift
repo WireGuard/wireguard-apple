@@ -148,19 +148,21 @@ class TunnelsManager {
         }
     }
 
-    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (UInt) -> Void) {
-        addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, completionHandler: completionHandler)
+    func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
+        addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, lastError: nil, completionHandler: completionHandler)
     }
 
-    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt, completionHandler: @escaping (UInt) -> Void) {
+    private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt, lastError: TunnelsManagerError?, completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
         guard let head = tunnelConfigurations.first else {
-            completionHandler(numberSuccessful)
+            completionHandler(numberSuccessful, lastError)
             return
         }
         let tail = tunnelConfigurations.dropFirst()
         add(tunnelConfiguration: head) { [weak self, tail] result in
             DispatchQueue.main.async {
-                self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful + (result.isSuccess ? 1 : 0), completionHandler: completionHandler)
+                let numberSuccessful = numberSuccessful + (result.isSuccess ? 1 : 0)
+                let lastError = lastError ?? (result.error as? TunnelsManagerError)
+                self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful, lastError: lastError, completionHandler: completionHandler)
             }
         }
     }
