@@ -56,7 +56,7 @@ class TunnelImporter {
             }
         }
         dispatchGroup.notify(queue: .main) {
-            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { numberSuccessful in
+            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { numberSuccessful, _ in
                 if !configs.isEmpty && numberSuccessful == configs.count {
                     completionHandler?()
                     return
