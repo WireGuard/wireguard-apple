@@ -56,29 +56,28 @@ class TunnelImporter {
             }
         }
         dispatchGroup.notify(queue: .main) {
-            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { numberSuccessful, _ in
+            tunnelsManager.addMultiple(tunnelConfigurations: configs.compactMap { $0 }) { numberSuccessful, lastAddError in
                 if !configs.isEmpty && numberSuccessful == configs.count {
                     completionHandler?()
                     return
                 }
-                let title: String
-                let message: String
+                let alertText: (title: String, message: String)?
                 if urls.count == 1 {
                     if urls.first!.pathExtension.lowercased() == "zip" && !configs.isEmpty {
-                        title = tr(format: "alertImportedFromZipTitle (%d)", numberSuccessful)
-                        message = tr(format: "alertImportedFromZipMessage (%1$d of %2$d)", numberSuccessful, configs.count)
-                    } else if let lastFileImportErrorText = lastFileImportErrorText {
-                        title = lastFileImportErrorText.title
-                        message = lastFileImportErrorText.message
+                        alertText = (title: tr(format: "alertImportedFromZipTitle (%d)", numberSuccessful),
+                                     message: tr(format: "alertImportedFromZipMessage (%1$d of %2$d)", numberSuccessful, configs.count))
                     } else {
-                        completionHandler?()
-                        return
+                        alertText = lastFileImportErrorText ?? lastAddError?.alertText
                     }
                 } else {
-                    title = tr(format: "alertImportedFromMultipleFilesTitle (%d)", numberSuccessful)
-                    message = tr(format: "alertImportedFromMultipleFilesMessage (%1$d of %2$d)", numberSuccessful, configs.count)
+                    alertText = (title: tr(format: "alertImportedFromMultipleFilesTitle (%d)", numberSuccessful),
+                                 message: tr(format: "alertImportedFromMultipleFilesMessage (%1$d of %2$d)", numberSuccessful, configs.count))
                 }
-                errorPresenterType.showErrorAlert(title: title, message: message, from: sourceVC, onPresented: completionHandler)
+                if let alertText = alertText {
+                    errorPresenterType.showErrorAlert(title: alertText.title, message: alertText.message, from: sourceVC, onPresented: completionHandler)
+                } else {
+                    completionHandler?()
+                }
             }
         }
     }
