@@ -2,6 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import UIKit
+import SystemConfiguration.CaptiveNetwork
 
 protocol SSIDOptionEditTableViewControllerDelegate: class {
     func ssidOptionSaved(option: ActivateOnDemandViewModel.OnDemandSSIDOption, ssids: [String])
@@ -14,9 +15,15 @@ class SSIDOptionEditTableViewController: UITableViewController {
         case addSSIDs
     }
 
+    private enum AddSSIDRow {
+        case addConnectedSSID(connectedSSID: String)
+        case addNewSSID
+    }
+
     weak var delegate: SSIDOptionEditTableViewControllerDelegate?
 
     private var sections = [Section]()
+    private var addSSIDRows = [AddSSIDRow]()
 
     let ssidOptionFields: [ActivateOnDemandViewModel.OnDemandSSIDOption] = [
         .anySSID,
@@ -26,12 +33,15 @@ class SSIDOptionEditTableViewController: UITableViewController {
 
     var selectedOption: ActivateOnDemandViewModel.OnDemandSSIDOption
     var selectedSSIDs: [String]
+    var connectedSSID: String?
 
     init(option: ActivateOnDemandViewModel.OnDemandSSIDOption, ssids: [String]) {
         selectedOption = option
         selectedSSIDs = ssids
         super.init(style: .grouped)
+        connectedSSID = getConnectedSSID()
         loadSections()
+        loadAddSSIDRows()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -63,6 +73,30 @@ class SSIDOptionEditTableViewController: UITableViewController {
         }
     }
 
+    func loadAddSSIDRows() {
+        addSSIDRows.removeAll()
+        if let connectedSSID = connectedSSID {
+            if !selectedSSIDs.contains(connectedSSID) {
+                addSSIDRows.append(.addConnectedSSID(connectedSSID: connectedSSID))
+            }
+        }
+        addSSIDRows.append(.addNewSSID)
+    }
+
+    func updateTableViewAddSSIDRows() {
+        guard let addSSIDSection = sections.firstIndex(of: .addSSIDs) else { return }
+        let numberOfAddSSIDRows = addSSIDRows.count
+        let numberOfAddSSIDRowsInTableView = tableView.numberOfRows(inSection: addSSIDSection)
+        switch (numberOfAddSSIDRowsInTableView, numberOfAddSSIDRows) {
+        case (1, 2):
+            tableView.insertRows(at: [IndexPath(row: 0, section: addSSIDSection)], with: .automatic)
+        case (2, 1):
+            tableView.deleteRows(at: [IndexPath(row: 0, section: addSSIDSection)], with: .automatic)
+        default:
+            break
+        }
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         delegate?.ssidOptionSaved(option: selectedOption, ssids: selectedSSIDs)
     }
@@ -80,7 +114,7 @@ extension SSIDOptionEditTableViewController {
         case .selectedSSIDs:
             return selectedSSIDs.count
         case .addSSIDs:
-            return 1
+            return addSSIDRows.count
         }
     }
 
@@ -143,6 +177,8 @@ extension SSIDOptionEditTableViewController {
             guard let self = self, let cell = cell else { return }
             if let row = self.tableView.indexPath(for: cell)?.row {
                 self.selectedSSIDs[row] = text
+                self.loadAddSSIDRows()
+                self.updateTableViewAddSSIDRows()
             }
         }
         return cell
@@ -150,7 +186,12 @@ extension SSIDOptionEditTableViewController {
 
     private func addSSIDCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: TextCell = tableView.dequeueReusableCell(for: indexPath)
-        cell.message = tr("tunnelOnDemandAddMessageAddNew")
+        switch addSSIDRows[indexPath.row] {
+        case .addConnectedSSID:
+            cell.message = tr(format: "tunnelOnDemandAddMessageAddConnectedSSID (%@)", connectedSSID!)
+        case .addNewSSID:
+            cell.message = tr("tunnelOnDemandAddMessageAddNewSSID")
+        }
         cell.isEditing = true
         return cell
     }
@@ -169,10 +210,19 @@ extension SSIDOptionEditTableViewController {
             } else {
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
             }
+            loadAddSSIDRows()
+            updateTableViewAddSSIDRows()
         case .addSSIDs:
             assert(editingStyle == .insert)
             let hasSelectedSSIDsSection = sections.contains(.selectedSSIDs)
-            selectedSSIDs.append("")
+            let newSSID: String
+            switch addSSIDRows[indexPath.row] {
+            case .addConnectedSSID(let connectedSSID):
+                newSSID = connectedSSID
+            case .addNewSSID:
+                newSSID = ""
+            }
+            selectedSSIDs.append(newSSID)
             loadSections()
             let selectedSSIDsSection = sections.firstIndex(of: .selectedSSIDs)!
             let indexPath = IndexPath(row: selectedSSIDs.count - 1, section: selectedSSIDsSection)
@@ -181,8 +231,12 @@ extension SSIDOptionEditTableViewController {
             } else {
                 tableView.insertRows(at: [indexPath], with: .automatic)
             }
-            if let selectedSSIDCell = tableView.cellForRow(at: indexPath) as? EditableTextCell {
-                selectedSSIDCell.beginEditing()
+            loadAddSSIDRows()
+            updateTableViewAddSSIDRows()
+            if newSSID.isEmpty {
+                if let selectedSSIDCell = tableView.cellForRow(at: indexPath) as? EditableTextCell {
+                    selectedSSIDCell.beginEditing()
+                }
             }
         }
     }
@@ -224,4 +278,16 @@ extension SSIDOptionEditTableViewController {
             assertionFailure()
         }
     }
+}
+
+private func getConnectedSSID() -> String? {
+    guard let supportedInterfaces = CNCopySupportedInterfaces() as? [CFString] else { return nil }
+    for interface in supportedInterfaces {
+        if let networkInfo = CNCopyCurrentNetworkInfo(interface) {
+            if let ssid = (networkInfo as NSDictionary)[kCNNetworkInfoKeySSID as String] as? String {
+                return !ssid.isEmpty ? ssid : nil
+            }
+        }
+    }
+    return nil
 }

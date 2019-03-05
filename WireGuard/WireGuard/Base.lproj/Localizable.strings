@@ -95,7 +95,8 @@
 "tunnelOnDemandSelectionViewTitle" = "Select SSIDs";
 "tunnelOnDemandSectionTitleSelectedSSIDs" = "Selected SSIDs";
 "tunnelOnDemandSectionTitleAddSSIDs" = "Add SSIDs";
-"tunnelOnDemandAddMessageAddNew" = "Add manually";
+"tunnelOnDemandAddMessageAddNewSSID" = "Add manually";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Connected: %@";
 
 "tunnelOnDemandKey" = "Activate on demand";
 "tunnelOnDemandOptionOff" = "Off";
