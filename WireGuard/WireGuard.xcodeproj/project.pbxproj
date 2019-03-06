@@ -77,6 +77,7 @@
 		6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
 		6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */; };
 		6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */; };
+		6F86476B222FBB07006925D9 /* ControlRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F864769222FB87C006925D9 /* ControlRow.swift */; };
 		6F89E17A21EDEB0E00C97BB9 /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */; };
 		6F89E17C21F090CC00C97BB9 /* TunnelsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */; };
 		6F8F0D7122258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */; };
@@ -90,6 +91,7 @@
 		6F919EDC218C65C50023B400 /* wireguard_doc_logo_320x320.png in Resources */ = {isa = PBXBuildFile; fileRef = 6F919ED8218C65C50023B400 /* wireguard_doc_logo_320x320.png */; };
 		6F9B582921E8D6D100544D02 /* PopupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9B582721E8CD4300544D02 /* PopupRow.swift */; };
 		6FB1017921C57DE600766195 /* MockTunnels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1017821C57DE600766195 /* MockTunnels.swift */; };
+		6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB17945222FD5960018AE71 /* OnDemandWiFiControls.swift */; };
 		6FB1BD6021D2607A00A991BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */; };
 		6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FB1BD6121D2607E00A991BF /* Assets.xcassets */; };
 		6FB1BD9921D4BFE700A991BF /* WireGuardNetworkExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6FB1BD9121D4BFE600A991BF /* WireGuardNetworkExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -300,6 +302,7 @@
 		6F7774EE21722D97006A79B3 /* TunnelsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsManager.swift; sourceTree = "<group>"; };
 		6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelEditTableViewController.swift; sourceTree = "<group>"; };
 		6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelErrors.swift; sourceTree = "<group>"; };
+		6F864769222FB87C006925D9 /* ControlRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlRow.swift; sourceTree = "<group>"; };
 		6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 		6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsTracker.swift; sourceTree = "<group>"; };
 		6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandViewModel.swift; sourceTree = "<group>"; };
@@ -312,6 +315,7 @@
 		6F919ED8218C65C50023B400 /* wireguard_doc_logo_320x320.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_320x320.png; sourceTree = "<group>"; };
 		6F9B582721E8CD4300544D02 /* PopupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupRow.swift; sourceTree = "<group>"; };
 		6FB1017821C57DE600766195 /* MockTunnels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTunnels.swift; sourceTree = "<group>"; };
+		6FB17945222FD5960018AE71 /* OnDemandWiFiControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnDemandWiFiControls.swift; sourceTree = "<group>"; };
 		6FB1BD5D21D2607A00A991BF /* WireGuard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FB1BD5F21D2607A00A991BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6FB1BD6121D2607E00A991BF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -443,6 +447,8 @@
 				6F9B582721E8CD4300544D02 /* PopupRow.swift */,
 				6FE3661C21F64F6B00F78C7D /* ConfTextColorTheme.swift */,
 				6F5EA59A223E58A8002B380A /* ButtonRow.swift */,
+				6F864769222FB87C006925D9 /* ControlRow.swift */,
+				6FB17945222FD5960018AE71 /* OnDemandWiFiControls.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1183,6 +1189,7 @@
 				6B586C55220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */,
 				6F9B582921E8D6D100544D02 /* PopupRow.swift in Sources */,
 				6BAC16E6221634B300A5FB78 /* AppStorePrivacyNotice.swift in Sources */,
+				6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,
 				6FB1BDBD21D50F0200A991BF /* ringlogger.h in Sources */,
@@ -1197,6 +1204,7 @@
 				6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */,
 				6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6FBA101821D656000051C35F /* StatusMenu.swift in Sources */,
+				6F86476B222FBB07006925D9 /* ControlRow.swift in Sources */,
 				6F613D9B21DE33B8004B217A /* KeyValueRow.swift in Sources */,
 				6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */,
 				5F52D0BB21E3781B00283CEA /* ConfTextView.swift in Sources */,
