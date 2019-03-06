@@ -42,11 +42,15 @@ class TunnelEditViewController: NSViewController {
         return textView
     }()
 
-    let onDemandRow: PopupRow = {
-        let popupRow = PopupRow()
-        popupRow.key = tr("macFieldOnDemand")
-        return popupRow
+    let onDemandEthernetCheckbox: NSButton = {
+        let checkbox = NSButton()
+        checkbox.title = tr("tunnelOnDemandEthernet")
+        checkbox.setButtonType(.switch)
+        checkbox.state = .off
+        return checkbox
     }()
+
+    let onDemandWiFiControls = OnDemandWiFiControls()
 
     let scrollView: NSScrollView = {
         let scrollView = NSScrollView()
@@ -89,6 +93,7 @@ class TunnelEditViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
+    var onDemandViewModel: ActivateOnDemandViewModel
 
     weak var delegate: TunnelEditViewControllerDelegate?
 
@@ -101,6 +106,7 @@ class TunnelEditViewController: NSViewController {
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
+        self.onDemandViewModel = tunnel != nil ? ActivateOnDemandViewModel(setting: tunnel!.activateOnDemandSetting) : ActivateOnDemandViewModel()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -109,7 +115,6 @@ class TunnelEditViewController: NSViewController {
     }
 
     func populateFields() {
-        let selectedActivateOnDemandOption: ActivateOnDemandOption
         if let tunnel = tunnel {
             // Editing an existing tunnel
             let tunnelConfiguration = tunnel.tunnelConfiguration!
@@ -117,11 +122,6 @@ class TunnelEditViewController: NSViewController {
             textView.string = tunnelConfiguration.asWgQuickConfig()
             publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64Key() ?? ""
             textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64Key() ?? ""
-            if tunnel.activateOnDemandSetting.isActivateOnDemandEnabled {
-                selectedActivateOnDemandOption = tunnel.activateOnDemandSetting.activateOnDemandOption
-            } else {
-                selectedActivateOnDemandOption = .none
-            }
             let singlePeer = tunnelConfiguration.peers.count == 1 ? tunnelConfiguration.peers.first : nil
             updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: singlePeer?.allowedIPs.map { $0.stringRepresentation })
             dnsServersAddedToAllowedIPs = excludePrivateIPsCheckbox.state == .on ? tunnelConfiguration.interface.dns.map { $0.stringRepresentation }.joined(separator: ", ") : nil
@@ -132,7 +132,6 @@ class TunnelEditViewController: NSViewController {
             let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64Key() ?? "")\n"
             publicKeyRow.value = publicKey.base64Key() ?? ""
             textView.string = bootstrappingText
-            selectedActivateOnDemandOption = .none
         }
         privateKeyObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
             if let privateKeyString = textView.privateKeyString,
@@ -150,13 +149,24 @@ class TunnelEditViewController: NSViewController {
         singlePeerAllowedIPsObservationToken = textView.observe(\.singlePeerAllowedIPs) { [weak self] textView, _ in
             self?.updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: textView.singlePeerAllowedIPs)
         }
-
-        onDemandRow.valueOptions = activateOnDemandOptions.map { TunnelViewModel.activateOnDemandOptionText(for: $0) }
-        onDemandRow.selectedOptionIndex = activateOnDemandOptions.firstIndex(of: selectedActivateOnDemandOption)!
     }
 
     override func loadView() {
         populateFields()
+
+        let onDemandEthernetRow = ControlRow(controlView: onDemandEthernetCheckbox)
+        onDemandEthernetRow.key = tr("macFieldOnDemand")
+        onDemandEthernetCheckbox.state = onDemandViewModel.isNonWiFiInterfaceEnabled ? .on : .off
+
+        let onDemandWiFiRow = ControlRow(controlView: onDemandWiFiControls)
+        onDemandWiFiRow.key = ""
+        onDemandWiFiControls.onDemandViewModel = onDemandViewModel
+
+        NSLayoutConstraint.activate([
+            onDemandEthernetRow.keyLabel.firstBaselineAnchor.constraint(equalTo: onDemandEthernetRow.controlView.firstBaselineAnchor),
+            onDemandWiFiRow.controlView.centerYAnchor.constraint(equalTo: onDemandWiFiRow.centerYAnchor),
+            onDemandWiFiRow.trailingAnchor.constraint(equalTo: onDemandWiFiControls.trailingAnchor)
+        ])
 
         scrollView.documentView = textView
 
@@ -172,7 +182,7 @@ class TunnelEditViewController: NSViewController {
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
 
-        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, onDemandRow, scrollView])
+        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, onDemandEthernetRow, onDemandWiFiRow, scrollView])
         editorStackView.orientation = .vertical
         editorStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
         editorStackView.spacing = internalSpacing
@@ -210,13 +220,10 @@ class TunnelEditViewController: NSViewController {
             ErrorPresenter.showErrorAlert(title: tr("macAlertNameIsEmpty"), message: "", from: self)
             return
         }
-        let onDemandSetting: ActivateOnDemandSetting
-        let onDemandOption = activateOnDemandOptions[onDemandRow.selectedOptionIndex]
-        if onDemandOption == .none {
-            onDemandSetting = ActivateOnDemandSetting.defaultSetting
-        } else {
-            onDemandSetting = ActivateOnDemandSetting(isActivateOnDemandEnabled: true, activateOnDemandOption: onDemandOption)
-        }
+
+        onDemandViewModel.isNonWiFiInterfaceEnabled = onDemandEthernetCheckbox.state == .on
+        onDemandWiFiControls.saveToViewModel()
+        let onDemandSetting = ActivateOnDemandSetting(with: onDemandViewModel.toOnDemandOption())
 
         let isTunnelModifiedWithoutChangingName = (tunnel != nil && tunnel!.name == name)
         guard isTunnelModifiedWithoutChangingName || tunnelsManager.tunnel(named: name) == nil else {
