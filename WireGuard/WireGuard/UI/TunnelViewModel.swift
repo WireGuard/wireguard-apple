@@ -622,49 +622,6 @@ class TunnelViewModel {
     }
 }
 
-extension TunnelViewModel {
-    static func activateOnDemandOptionText(for activateOnDemandOption: ActivateOnDemandOption) -> String {
-        switch activateOnDemandOption {
-        case .none:
-            return tr("tunnelOnDemandOptionOff")
-        case .wiFiInterfaceOnly:
-            return tr("tunnelOnDemandOptionWiFiOnly")
-        case .nonWiFiInterfaceOnly:
-            #if os(iOS)
-            return tr("tunnelOnDemandOptionCellularOnly")
-            #elseif os(macOS)
-            return tr("tunnelOnDemandOptionEthernetOnly")
-            #else
-            #error("Unimplemented")
-            #endif
-        case .anyInterface:
-            #if os(iOS)
-            return tr("tunnelOnDemandOptionWiFiOrCellular")
-            #elseif os(macOS)
-            return tr("tunnelOnDemandOptionWiFiOrEthernet")
-            #else
-            #error("Unimplemented")
-            #endif
-        }
-    }
-
-    static func activateOnDemandDetailText(for activateOnDemandSetting: ActivateOnDemandSetting?) -> String {
-        if let activateOnDemandSetting = activateOnDemandSetting {
-            if activateOnDemandSetting.isActivateOnDemandEnabled {
-                return TunnelViewModel.activateOnDemandOptionText(for: activateOnDemandSetting.activateOnDemandOption)
-            } else {
-                return TunnelViewModel.activateOnDemandOptionText(for: .none)
-            }
-        } else {
-            return TunnelViewModel.activateOnDemandOptionText(for: .none)
-        }
-    }
-
-    static func defaultActivateOnDemandOption() -> ActivateOnDemandOption {
-        return .anyInterface(.anySSID)
-    }
-}
-
 private func prettyBytes(_ bytes: UInt64) -> String {
     switch bytes {
     case 0..<1024:
