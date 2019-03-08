@@ -9,8 +9,13 @@ class ChevronCell: UITableViewCell {
         set(value) { textLabel?.text = value }
     }
 
+    var detailMessage: String {
+        get { return detailTextLabel?.text ?? "" }
+        set(value) { detailTextLabel?.text = value }
+    }
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: .default, reuseIdentifier: reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
         accessoryType = .disclosureIndicator
     }
 
