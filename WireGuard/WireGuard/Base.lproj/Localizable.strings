@@ -312,6 +312,7 @@
 
 "macFieldKey (%@)" = "%@:";
 "macFieldOnDemand" = "On-Demand:";
+"macFieldOnDemandSSIDs" = "SSIDs:";
 
 // Mac status display
 

@@ -9,13 +9,15 @@ class TunnelDetailTableViewController: NSViewController {
         case interfaceFieldRow(TunnelViewModel.InterfaceField)
         case peerFieldRow(peer: TunnelViewModel.PeerData, field: TunnelViewModel.PeerField)
         case onDemandRow
+        case onDemandSSIDRow
         case spacerRow
 
         func localizedSectionKeyString() -> String {
             switch self {
             case .interfaceFieldRow: return tr("tunnelSectionTitleInterface")
             case .peerFieldRow: return tr("tunnelSectionTitlePeer")
-            case .onDemandRow: return ""
+            case .onDemandRow: return tr("macFieldOnDemand")
+            case .onDemandSSIDRow: return ""
             case .spacerRow: return ""
             }
         }
@@ -25,6 +27,7 @@ class TunnelDetailTableViewController: NSViewController {
             case .interfaceFieldRow(let field): return field == .name
             case .peerFieldRow(_, let field): return field == .publicKey
             case .onDemandRow: return true
+            case .onDemandSSIDRow: return false
             case .spacerRow: return false
             }
         }
@@ -39,6 +42,10 @@ class TunnelDetailTableViewController: NSViewController {
         .publicKey, .preSharedKey, .endpoint,
         .allowedIPs, .persistentKeepAlive,
         .rxBytes, .txBytes, .lastHandshakeTime
+    ]
+
+    static let onDemandFields: [ActivateOnDemandViewModel.OnDemandField] = [
+        .onDemand, .ssid
     ]
 
     let tableView: NSTableView = {
@@ -76,6 +83,9 @@ class TunnelDetailTableViewController: NSViewController {
             updateTableViewModelRows()
         }
     }
+
+    var onDemandViewModel: ActivateOnDemandViewModel
+
     private var tableViewModelRowsBySection = [[(isVisible: Bool, modelRow: TableViewModelRow)]]()
     private var tableViewModelRows = [TableViewModelRow]()
 
@@ -87,6 +97,7 @@ class TunnelDetailTableViewController: NSViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
         super.init(nibName: nil, bundle: nil)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
@@ -177,6 +188,9 @@ class TunnelDetailTableViewController: NSViewController {
 
         var onDemandSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
         onDemandSection.append((isVisible: true, modelRow: .onDemandRow))
+        if onDemandViewModel.isWiFiInterfaceEnabled {
+            onDemandSection.append((isVisible: true, modelRow: .onDemandSSIDRow))
+        }
         modelRowsBySection.append(onDemandSection)
 
         tableViewModelRowsBySection = modelRowsBySection
@@ -382,9 +396,15 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             return NSView()
         case .onDemandRow:
             let cell: KeyValueRow = tableView.dequeueReusableCell()
-            cell.key = tr("macFieldOnDemand")
-            cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
+            cell.key = modelRow.localizedSectionKeyString()
+            cell.value = onDemandViewModel.localizedInterfaceDescription
             cell.isKeyInBold = true
+            return cell
+        case .onDemandSSIDRow:
+            let cell: KeyValueRow = tableView.dequeueReusableCell()
+            cell.key = tr("macFieldOnDemandSSIDs")
+            cell.value = onDemandViewModel.ssidOption.localizedUIString
+            cell.isKeyInBold = false
             return cell
         }
     }
@@ -472,6 +492,7 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
 extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
+        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
         updateStatus()
