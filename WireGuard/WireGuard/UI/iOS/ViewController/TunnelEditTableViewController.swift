@@ -442,6 +442,7 @@ extension TunnelEditTableViewController {
         } else {
             let cell: ChevronCell = tableView.dequeueReusableCell(for: indexPath)
             cell.message = field.localizedUIString
+            cell.detailMessage = onDemandViewModel.ssidOption.localizedUIString
             return cell
         }
     }
@@ -500,8 +501,14 @@ extension TunnelEditTableViewController {
 
 extension TunnelEditTableViewController: SSIDOptionEditTableViewControllerDelegate {
     func ssidOptionSaved(option: ActivateOnDemandViewModel.OnDemandSSIDOption, ssids: [String]) {
-        let validSSIDs = ssids.filter { !$0.isEmpty }
-        onDemandViewModel.selectedSSIDs = validSSIDs
-        onDemandViewModel.ssidOption = validSSIDs.isEmpty ? .anySSID : option
+        onDemandViewModel.selectedSSIDs = ssids
+        onDemandViewModel.ssidOption = option
+        onDemandViewModel.fixSSIDOption()
+        if let onDemandSection = sections.firstIndex(where: { $0 == .onDemand }) {
+            if let ssidRowIndex = onDemandFields.firstIndex(of: .ssid) {
+                let indexPath = IndexPath(row: ssidRowIndex, section: onDemandSection)
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        }
     }
 }

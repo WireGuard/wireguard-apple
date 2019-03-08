@@ -137,6 +137,13 @@ extension ActivateOnDemandViewModel {
             #endif
         }
     }
+
+    func fixSSIDOption() {
+        selectedSSIDs = uniquifiedNonEmptySelectedSSIDs()
+        if selectedSSIDs.isEmpty {
+            ssidOption = .anySSID
+        }
+    }
 }
 
 private extension ActivateOnDemandViewModel {
