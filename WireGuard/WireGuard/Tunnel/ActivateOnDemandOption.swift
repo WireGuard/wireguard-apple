@@ -3,13 +3,8 @@
 
 import NetworkExtension
 
-struct ActivateOnDemandSetting {
-    var isActivateOnDemandEnabled: Bool
-    var activateOnDemandOption: ActivateOnDemandOption
-}
-
 enum ActivateOnDemandOption: Equatable {
-    case none // Valid only when isActivateOnDemandEnabled is false
+    case off
     case wiFiInterfaceOnly(ActivateOnDemandSSIDOption)
     case nonWiFiInterfaceOnly
     case anyInterface(ActivateOnDemandSSIDOption)
@@ -29,12 +24,11 @@ enum ActivateOnDemandSSIDOption: Equatable {
     case exceptSpecificSSIDs([String])
 }
 
-extension ActivateOnDemandSetting {
+extension ActivateOnDemandOption {
     func apply(on tunnelProviderManager: NETunnelProviderManager) {
-        tunnelProviderManager.isOnDemandEnabled = isActivateOnDemandEnabled
         let rules: [NEOnDemandRule]?
-        switch activateOnDemandOption {
-        case .none:
+        switch self {
+        case .off:
             rules = nil
         case .wiFiInterfaceOnly(let ssidOption):
             rules = ssidOnDemandRules(option: ssidOption) + [NEOnDemandRuleDisconnect(interfaceType: nonWiFiInterfaceType)]
@@ -48,6 +42,7 @@ extension ActivateOnDemandSetting {
             }
         }
         tunnelProviderManager.onDemandRules = rules
+        tunnelProviderManager.isOnDemandEnabled = self != .off
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {
@@ -55,7 +50,7 @@ extension ActivateOnDemandSetting {
         let activateOnDemandOption: ActivateOnDemandOption
         switch rules.count {
         case 0:
-            activateOnDemandOption = .none
+            activateOnDemandOption = .off
         case 1:
             let rule = rules[0]
             precondition(rule.action == .connect)
@@ -90,17 +85,8 @@ extension ActivateOnDemandSetting {
             fatalError("Unexpected number of onDemandRules set on tunnel provider manager")
         }
 
-        self.activateOnDemandOption = activateOnDemandOption
-        if activateOnDemandOption == .none {
-            isActivateOnDemandEnabled = false
-        } else {
-            isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-        }
+        self = activateOnDemandOption
     }
-}
-
-extension ActivateOnDemandSetting {
-    static var defaultSetting = ActivateOnDemandSetting(isActivateOnDemandEnabled: false, activateOnDemandOption: .none)
 }
 
 private extension NEOnDemandRuleConnect {
@@ -130,15 +116,5 @@ private func ssidOnDemandRules(option: ActivateOnDemandSSIDOption) -> [NEOnDeman
     case .exceptSpecificSSIDs(let ssids):
         return [NEOnDemandRuleDisconnect(interfaceType: .wiFi, ssids: ssids),
                 NEOnDemandRuleConnect(interfaceType: .wiFi)]
-    }
-}
-
-extension ActivateOnDemandSetting {
-    init(with option: ActivateOnDemandOption) {
-        if option == .none {
-            self = ActivateOnDemandSetting(isActivateOnDemandEnabled: false, activateOnDemandOption: option)
-        } else {
-            self = ActivateOnDemandSetting(isActivateOnDemandEnabled: true, activateOnDemandOption: option)
-        }
     }
 }

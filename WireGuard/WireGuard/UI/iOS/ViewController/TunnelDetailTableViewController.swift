@@ -45,7 +45,7 @@ class TunnelDetailTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
+        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
         super.init(style: .grouped)
         loadSections()
         loadVisibleFields()
@@ -60,7 +60,7 @@ class TunnelDetailTableViewController: UITableViewController {
         }
         onDemandObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak self] tunnel, _ in
             // Handle On-Demand getting turned on/off outside of the app
-            self?.onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
+            self?.onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
             self?.updateActivateOnDemandFields()
         }
     }
@@ -274,7 +274,7 @@ class TunnelDetailTableViewController: UITableViewController {
 extension TunnelDetailTableViewController: TunnelEditTableViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
+        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
         loadSections()
         loadVisibleFields()
         title = tunnel.name

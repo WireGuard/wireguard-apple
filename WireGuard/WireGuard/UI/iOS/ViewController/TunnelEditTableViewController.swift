@@ -60,7 +60,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(setting: tunnel.activateOnDemandSetting)
+        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
         super.init(style: .grouped)
         loadSections()
     }
@@ -113,10 +113,10 @@ class TunnelEditTableViewController: UITableViewController {
             ErrorPresenter.showErrorAlert(title: alertTitle, message: errorMessage, from: self)
             tableView.reloadData() // Highlight erroring fields
         case .saved(let tunnelConfiguration):
-            let activateOnDemandSetting = ActivateOnDemandSetting(with: onDemandViewModel.toOnDemandOption())
+            let onDemandOption = onDemandViewModel.toOnDemandOption()
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
-                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: activateOnDemandSetting) { [weak self] error in
+                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] error in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -126,7 +126,7 @@ class TunnelEditTableViewController: UITableViewController {
                 }
             } else {
                 // We're adding a new tunnel
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: activateOnDemandSetting) { [weak self] result in
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
