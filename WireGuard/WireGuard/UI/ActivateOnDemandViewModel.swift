@@ -156,9 +156,23 @@ private extension ActivateOnDemandViewModel {
         case .anySSID:
             return .anySSID
         case .onlySpecificSSIDs:
-            return .onlySpecificSSIDs(selectedSSIDs)
+            let ssids = uniquifiedNonEmptySelectedSSIDs()
+            return ssids.isEmpty ? .anySSID : .onlySpecificSSIDs(selectedSSIDs)
         case .exceptSpecificSSIDs:
-            return .exceptSpecificSSIDs(selectedSSIDs)
+            let ssids = uniquifiedNonEmptySelectedSSIDs()
+            return ssids.isEmpty ? .anySSID : .exceptSpecificSSIDs(selectedSSIDs)
         }
+    }
+
+    func uniquifiedNonEmptySelectedSSIDs() -> [String] {
+        let nonEmptySSIDs = selectedSSIDs.filter { !$0.isEmpty }
+        var seenSSIDs = Set<String>()
+        var uniquified = [String]()
+        for ssid in nonEmptySSIDs {
+            guard !seenSSIDs.contains(ssid) else { continue }
+            uniquified.append(ssid)
+            seenSSIDs.insert(ssid)
+        }
+        return uniquified
     }
 }
