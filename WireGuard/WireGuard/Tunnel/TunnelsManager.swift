@@ -97,7 +97,7 @@ class TunnelsManager {
         }
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting = ActivateOnDemandSetting.defaultSetting, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
@@ -113,7 +113,7 @@ class TunnelsManager {
         tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
         tunnelProviderManager.isEnabled = true
 
-        activateOnDemandSetting.apply(on: tunnelProviderManager)
+        onDemandOption.apply(on: tunnelProviderManager)
 
         let activeTunnel = tunnels.first { $0.status == .active || $0.status == .activating }
 
@@ -167,7 +167,7 @@ class TunnelsManager {
         }
     }
 
-    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, activateOnDemandSetting: ActivateOnDemandSetting, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(TunnelsManagerError.tunnelNameEmpty)
@@ -191,8 +191,8 @@ class TunnelsManager {
         }
         tunnelProviderManager.isEnabled = true
 
-        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
-        activateOnDemandSetting.apply(on: tunnelProviderManager)
+        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && onDemandOption != .off
+        onDemandOption.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             guard error == nil else {
@@ -455,8 +455,8 @@ class TunnelContainer: NSObject {
         return tunnelProvider.tunnelConfiguration
     }
 
-    var activateOnDemandSetting: ActivateOnDemandSetting {
-        return ActivateOnDemandSetting(from: tunnelProvider)
+    var onDemandOption: ActivateOnDemandOption {
+        return ActivateOnDemandOption(from: tunnelProvider)
     }
 
     init(tunnel: NETunnelProviderManager) {

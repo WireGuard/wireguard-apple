@@ -49,18 +49,10 @@ class ActivateOnDemandViewModel {
 }
 
 extension ActivateOnDemandViewModel {
-    convenience init(setting: ActivateOnDemandSetting) {
-        if setting.isActivateOnDemandEnabled {
-            self.init(option: setting.activateOnDemandOption)
-        } else {
-            self.init(option: .none)
-        }
-    }
-
     convenience init(option: ActivateOnDemandOption) {
         self.init()
         switch option {
-        case .none:
+        case .off:
             break
         case .wiFiInterfaceOnly(let onDemandSSIDOption):
             isWiFiInterfaceEnabled = true
@@ -77,7 +69,7 @@ extension ActivateOnDemandViewModel {
     func toOnDemandOption() -> ActivateOnDemandOption {
         switch (isWiFiInterfaceEnabled, isNonWiFiInterfaceEnabled) {
         case (false, false):
-            return .none
+            return .off
         case (false, true):
             return .nonWiFiInterfaceOnly
         case (true, false):

@@ -84,13 +84,6 @@ class TunnelEditViewController: NSViewController {
         return button
     }()
 
-    let activateOnDemandOptions: [ActivateOnDemandOption] = [
-        .none,
-        .anyInterface(.anySSID),
-        .wiFiInterfaceOnly(.anySSID),
-        .nonWiFiInterfaceOnly
-    ]
-
     let tunnelsManager: TunnelsManager
     let tunnel: TunnelContainer?
     var onDemandViewModel: ActivateOnDemandViewModel
@@ -106,7 +99,7 @@ class TunnelEditViewController: NSViewController {
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
-        self.onDemandViewModel = tunnel != nil ? ActivateOnDemandViewModel(setting: tunnel!.activateOnDemandSetting) : ActivateOnDemandViewModel()
+        self.onDemandViewModel = tunnel != nil ? ActivateOnDemandViewModel(option: tunnel!.onDemandOption) : ActivateOnDemandViewModel()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -223,7 +216,7 @@ class TunnelEditViewController: NSViewController {
 
         onDemandViewModel.isNonWiFiInterfaceEnabled = onDemandEthernetCheckbox.state == .on
         onDemandWiFiControls.saveToViewModel()
-        let onDemandSetting = ActivateOnDemandSetting(with: onDemandViewModel.toOnDemandOption())
+        let onDemandOption = onDemandViewModel.toOnDemandOption()
 
         let isTunnelModifiedWithoutChangingName = (tunnel != nil && tunnel!.name == name)
         guard isTunnelModifiedWithoutChangingName || tunnelsManager.tunnel(named: name) == nil else {
@@ -259,7 +252,7 @@ class TunnelEditViewController: NSViewController {
 
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
-            tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] error in
+            tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] error in
                 self?.setUserInteractionEnabled(true)
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -271,7 +264,7 @@ class TunnelEditViewController: NSViewController {
         } else {
             // We're creating a new tunnel
             AppStorePrivacyNotice.show(from: self, into: tunnelsManager) { [weak self] in
-                self?.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, activateOnDemandSetting: onDemandSetting) { [weak self] result in
+                self?.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
                     self?.setUserInteractionEnabled(true)
                     if let error = result.error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)

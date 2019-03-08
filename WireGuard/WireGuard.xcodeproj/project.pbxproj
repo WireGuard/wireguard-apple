@@ -129,7 +129,7 @@
 		6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
 		6FB1BDCB21D50F1700A991BF /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
 		6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
-		6FB1BDCD21D50F5300A991BF /* ActivateOnDemandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandSetting.swift */; };
+		6FB1BDCD21D50F5300A991BF /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A821C451D100994C13 /* TunnelStatus.swift */; };
 		6FB1BDD021D50F5300A991BF /* TunnelErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */; };
 		6FB1BDD121D50F5300A991BF /* ZipImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE254FA219C10800028284D /* ZipImporter.swift */; };
@@ -182,7 +182,7 @@
 		6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 		6FFA5D96219446380001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 		6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
-		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandSetting.swift */; };
+		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
 /* End PBXBuildFile section */
 
@@ -362,7 +362,7 @@
 		6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuard.entitlements; sourceTree = "<group>"; };
 		6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NETunnelProviderProtocol+Extension.swift"; sourceTree = "<group>"; };
 		6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
-		6FFA5DA32197085D0001E2F7 /* ActivateOnDemandSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandSetting.swift; sourceTree = "<group>"; };
+		6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandOption.swift; sourceTree = "<group>"; };
 		6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParseError+WireGuardAppError.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -543,7 +543,7 @@
 			children = (
 				6F7774EE21722D97006A79B3 /* TunnelsManager.swift */,
 				6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */,
-				6FFA5DA32197085D0001E2F7 /* ActivateOnDemandSetting.swift */,
+				6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */,
 				5F4541A821C451D100994C13 /* TunnelStatus.swift */,
 				6FB1017821C57DE600766195 /* MockTunnels.swift */,
 				6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */,
@@ -1158,7 +1158,7 @@
 				6FBA101521D613F90051C35F /* Application.swift in Sources */,
 				6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */,
 				6F8F0D7222258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */,
-				6FB1BDCD21D50F5300A991BF /* ActivateOnDemandSetting.swift in Sources */,
+				6FB1BDCD21D50F5300A991BF /* ActivateOnDemandOption.swift in Sources */,
 				6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */,
 				6FB1BDD021D50F5300A991BF /* TunnelErrors.swift in Sources */,
 				6FB1BDD121D50F5300A991BF /* ZipImporter.swift in Sources */,
@@ -1307,7 +1307,7 @@
 				5F4541A221C2D6DF00994C13 /* BorderedTextButton.swift in Sources */,
 				5FF7B96521CC95FA00A7DD74 /* PeerConfiguration.swift in Sources */,
 				6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */,
-				6FFA5DA42197085D0001E2F7 /* ActivateOnDemandSetting.swift in Sources */,
+				6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */,
 				5F4541B221CBFAEE00994C13 /* String+ArrayConversion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
