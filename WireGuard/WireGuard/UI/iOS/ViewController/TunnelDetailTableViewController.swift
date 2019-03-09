@@ -423,7 +423,7 @@ extension TunnelDetailTableViewController {
             } else {
                 let cell: ChevronCell = tableView.dequeueReusableCell(for: indexPath)
                 cell.message = field.localizedUIString
-                cell.detailMessage = onDemandViewModel.ssidOption.localizedUIString
+                cell.detailMessage = onDemandViewModel.localizedSSIDDescription
                 return cell
             }
         }
