@@ -90,8 +90,9 @@
 "tunnelOnDemandOnlySelectedSSIDs" = "Only selected SSIDs";
 "tunnelOnDemandExceptSelectedSSIDs" = "Except selected SSIDs";
 
-"tunnelOnDemandSelectionViewTitle" = "Select SSIDs";
-"tunnelOnDemandSectionTitleSelectedSSIDs" = "Selected SSIDs";
+"tunnelOnDemandSSIDViewTitle" = "SSIDs";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
+"tunnelOnDemandNoSSIDs" = "No SSIDs";
 "tunnelOnDemandSectionTitleAddSSIDs" = "Add SSIDs";
 "tunnelOnDemandAddMessageAddNewSSID" = "Add manually";
 "tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Connected: %@";

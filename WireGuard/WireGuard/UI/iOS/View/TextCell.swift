@@ -17,8 +17,18 @@ class TextCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func setTextColor(_ color: UIColor) {
+        textLabel?.textColor = color
+    }
+
+    func setTextAlignment(_ alignment: NSTextAlignment) {
+        textLabel?.textAlignment = alignment
+    }
+
     override func prepareForReuse() {
         super.prepareForReuse()
         message = ""
+        setTextColor(.black)
+        setTextAlignment(.left)
     }
 }
