@@ -36,8 +36,8 @@ class ActivateOnDemandViewModel {
         var localizedUIString: String {
             switch self {
             case .anySSID: return tr("tunnelOnDemandAnySSID")
-            case .onlySpecificSSIDs: return tr("tunnelOnDemandOnlySelectedSSIDs")
-            case .exceptSpecificSSIDs: return tr("tunnelOnDemandExceptSelectedSSIDs")
+            case .onlySpecificSSIDs: return tr("tunnelOnDemandOnlyTheseSSIDs")
+            case .exceptSpecificSSIDs: return tr("tunnelOnDemandExceptTheseSSIDs")
             }
         }
     }
