@@ -76,10 +76,10 @@ class TunnelDetailTableViewController: UITableViewController {
 
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.allowsSelection = false
         tableView.register(SwitchCell.self)
         tableView.register(KeyValueCell.self)
         tableView.register(ButtonCell.self)
+        tableView.register(ChevronCell.self)
 
         restorationIdentifier = "TunnelDetailVC:\(tunnel.name)"
     }
@@ -407,15 +407,26 @@ extension TunnelDetailTableViewController {
     }
 
     private func onDemandCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
         let field = TunnelDetailTableViewController.onDemandFields[indexPath.row]
-        cell.key = field.localizedUIString
         if field == .onDemand {
+            let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.key = field.localizedUIString
             cell.value = onDemandViewModel.localizedInterfaceDescription
-        } else if field == .ssid {
-            cell.value = onDemandViewModel.ssidOption.localizedUIString
+            return cell
+        } else {
+            assert(field == .ssid)
+            if onDemandViewModel.ssidOption == .anySSID {
+                let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
+                cell.key = field.localizedUIString
+                cell.value = onDemandViewModel.ssidOption.localizedUIString
+                return cell
+            } else {
+                let cell: ChevronCell = tableView.dequeueReusableCell(for: indexPath)
+                cell.message = field.localizedUIString
+                cell.detailMessage = onDemandViewModel.ssidOption.localizedUIString
+                return cell
+            }
         }
-        return cell
     }
 
     private func deleteConfigurationCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
@@ -437,4 +448,23 @@ extension TunnelDetailTableViewController {
         return cell
     }
 
+}
+
+extension TunnelDetailTableViewController {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if case .onDemand = sections[indexPath.section],
+            case .ssid = TunnelDetailTableViewController.onDemandFields[indexPath.row] {
+            return indexPath
+        }
+        return nil
+    }
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if case .onDemand = sections[indexPath.section],
+            case .ssid = TunnelDetailTableViewController.onDemandFields[indexPath.row] {
+            let ssidDetailVC = SSIDOptionDetailTableViewController(title: onDemandViewModel.ssidOption.localizedUIString, ssids: onDemandViewModel.selectedSSIDs)
+            navigationController?.pushViewController(ssidDetailVC, animated: true)
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
