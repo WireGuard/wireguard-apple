@@ -403,7 +403,15 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         case .onDemandSSIDRow:
             let cell: KeyValueRow = tableView.dequeueReusableCell()
             cell.key = tr("macFieldOnDemandSSIDs")
-            cell.value = onDemandViewModel.ssidOption.localizedUIString
+            let value: String
+            if onDemandViewModel.ssidOption == .anySSID {
+                value = onDemandViewModel.ssidOption.localizedUIString
+            } else {
+                value = tr(format: "tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)",
+                           onDemandViewModel.ssidOption.localizedUIString,
+                           onDemandViewModel.selectedSSIDs.joined(separator: ", "))
+            }
+            cell.value = value
             cell.isKeyInBold = false
             return cell
         }

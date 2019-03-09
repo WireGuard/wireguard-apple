@@ -93,6 +93,7 @@
 "tunnelOnDemandOnlySSIDs (%d)" = "Only %d SSIDs";
 "tunnelOnDemandExceptSSID (%d)" = "Except %d SSID";
 "tunnelOnDemandExceptSSIDs (%d)" = "Except %d SSIDs";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
 
 "tunnelOnDemandSSIDViewTitle" = "SSIDs";
 "tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
