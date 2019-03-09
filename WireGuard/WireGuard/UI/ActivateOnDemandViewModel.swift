@@ -130,6 +130,25 @@ extension ActivateOnDemandViewModel {
         }
     }
 
+    var localizedSSIDDescription: String {
+        guard isWiFiInterfaceEnabled else { return "" }
+        switch ssidOption {
+        case .anySSID: return tr("tunnelOnDemandAnySSID")
+        case .onlySpecificSSIDs:
+            if selectedSSIDs.count == 1 {
+                return tr(format: "tunnelOnDemandOnlySSID (%d)", selectedSSIDs.count)
+            } else {
+                return tr(format: "tunnelOnDemandOnlySSIDs (%d)", selectedSSIDs.count)
+            }
+        case .exceptSpecificSSIDs:
+            if selectedSSIDs.count == 1 {
+                return tr(format: "tunnelOnDemandExceptSSID (%d)", selectedSSIDs.count)
+            } else {
+                return tr(format: "tunnelOnDemandExceptSSIDs (%d)", selectedSSIDs.count)
+            }
+        }
+    }
+
     func fixSSIDOption() {
         selectedSSIDs = uniquifiedNonEmptySelectedSSIDs()
         if selectedSSIDs.isEmpty {
