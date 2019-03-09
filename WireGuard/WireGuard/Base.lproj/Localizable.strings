@@ -99,8 +99,8 @@
 "tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
 "tunnelOnDemandNoSSIDs" = "No SSIDs";
 "tunnelOnDemandSectionTitleAddSSIDs" = "Add SSIDs";
-"tunnelOnDemandAddMessageAddNewSSID" = "Add manually";
-"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Connected: %@";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Add connected: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Add new";
 
 "tunnelOnDemandKey" = "On demand";
 "tunnelOnDemandOptionOff" = "Off";
