@@ -2,6 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Cocoa
+import CoreWLAN
 
 class OnDemandWiFiControls: NSStackView {
 
@@ -38,7 +39,10 @@ class OnDemandWiFiControls: NSStackView {
         didSet { updateSSIDControls() }
     }
 
+    var currentSSIDs: [String]
+
     init() {
+        currentSSIDs = getCurrentSSIDs()
         super.init(frame: CGRect.zero)
         onDemandSSIDOptionsPopup.addItems(withTitles: OnDemandWiFiControls.onDemandSSIDOptions.map { $0.localizedUIString })
         setViews([onDemandWiFiCheckbox, onDemandSSIDOptionsPopup, onDemandSSIDsField], in: .leading)
@@ -55,6 +59,8 @@ class OnDemandWiFiControls: NSStackView {
 
         onDemandSSIDOptionsPopup.target = self
         onDemandSSIDOptionsPopup.action = #selector(ssidOptionsPopupValueChanged)
+
+        onDemandSSIDsField.delegate = self
 
         updateSSIDControls()
     }
@@ -94,4 +100,14 @@ class OnDemandWiFiControls: NSStackView {
             onDemandSSIDsField.becomeFirstResponder()
         }
     }
+}
+
+extension OnDemandWiFiControls: NSTokenFieldDelegate {
+    func tokenField(_ tokenField: NSTokenField, completionsForSubstring substring: String, indexOfToken tokenIndex: Int, indexOfSelectedItem selectedIndex: UnsafeMutablePointer<Int>?) -> [Any]? {
+        return currentSSIDs.filter { $0.hasPrefix(substring) }
+    }
+}
+
+private func getCurrentSSIDs() -> [String] {
+    return CWWiFiClient.shared().interfaces()?.compactMap { $0.ssid() } ?? []
 }
