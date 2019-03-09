@@ -50,7 +50,7 @@ class SSIDOptionEditTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = tr("tunnelOnDemandSelectionViewTitle")
+        title = tr("tunnelOnDemandSSIDViewTitle")
 
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
@@ -66,9 +66,7 @@ class SSIDOptionEditTableViewController: UITableViewController {
         sections.removeAll()
         sections.append(.ssidOption)
         if selectedOption != .anySSID {
-            if !selectedSSIDs.isEmpty {
-                sections.append(.selectedSSIDs)
-            }
+            sections.append(.selectedSSIDs)
             sections.append(.addSSIDs)
         }
     }
@@ -112,7 +110,7 @@ extension SSIDOptionEditTableViewController {
         case .ssidOption:
             return ssidOptionFields.count
         case .selectedSSIDs:
-            return selectedSSIDs.count
+            return selectedSSIDs.isEmpty ? 1 : selectedSSIDs.count
         case .addSSIDs:
             return addSSIDRows.count
         }
@@ -123,7 +121,11 @@ extension SSIDOptionEditTableViewController {
         case .ssidOption:
             return ssidOptionCell(for: tableView, at: indexPath)
         case .selectedSSIDs:
-            return selectedSSIDCell(for: tableView, at: indexPath)
+            if !selectedSSIDs.isEmpty {
+                return selectedSSIDCell(for: tableView, at: indexPath)
+            } else {
+                return noSSIDsCell(for: tableView, at: indexPath)
+            }
         case .addSSIDs:
             return addSSIDCell(for: tableView, at: indexPath)
         }
@@ -133,7 +135,9 @@ extension SSIDOptionEditTableViewController {
         switch sections[indexPath.section] {
         case .ssidOption:
             return false
-        case .selectedSSIDs, .addSSIDs:
+        case .selectedSSIDs:
+            return !selectedSSIDs.isEmpty
+        case .addSSIDs:
             return true
         }
     }
@@ -166,6 +170,14 @@ extension SSIDOptionEditTableViewController {
         cell.message = field.localizedUIString
         cell.isChecked = selectedOption == field
         cell.isEditing = false
+        return cell
+    }
+
+    private func noSSIDsCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell: TextCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.message = tr("tunnelOnDemandNoSSIDs")
+        cell.setTextColor(.gray)
+        cell.setTextAlignment(.center)
         return cell
     }
 
@@ -203,18 +215,15 @@ extension SSIDOptionEditTableViewController {
         case .selectedSSIDs:
             assert(editingStyle == .delete)
             selectedSSIDs.remove(at: indexPath.row)
-            loadSections()
-            let hasSelectedSSIDsSection = sections.contains(.selectedSSIDs)
-            if hasSelectedSSIDsSection {
+            if !selectedSSIDs.isEmpty {
                 tableView.deleteRows(at: [indexPath], with: .automatic)
             } else {
-                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+                tableView.reloadRows(at: [indexPath], with: .automatic)
             }
             loadAddSSIDRows()
             updateTableViewAddSSIDRows()
         case .addSSIDs:
             assert(editingStyle == .insert)
-            let hasSelectedSSIDsSection = sections.contains(.selectedSSIDs)
             let newSSID: String
             switch addSSIDRows[indexPath.row] {
             case .addConnectedSSID(let connectedSSID):
@@ -226,8 +235,8 @@ extension SSIDOptionEditTableViewController {
             loadSections()
             let selectedSSIDsSection = sections.firstIndex(of: .selectedSSIDs)!
             let indexPath = IndexPath(row: selectedSSIDs.count - 1, section: selectedSSIDsSection)
-            if !hasSelectedSSIDsSection {
-                tableView.insertSections(IndexSet(integer: selectedSSIDsSection), with: .automatic)
+            if selectedSSIDs.count == 1 {
+                tableView.reloadRows(at: [indexPath], with: .automatic)
             } else {
                 tableView.insertRows(at: [indexPath], with: .automatic)
             }
@@ -239,12 +248,6 @@ extension SSIDOptionEditTableViewController {
                 }
             }
         }
-    }
-
-    func lastSelectedSSIDItemIndexPath() -> IndexPath? {
-        guard !selectedSSIDs.isEmpty else { return nil }
-        guard let section = sections.firstIndex(of: .selectedSSIDs) else { return nil }
-        return IndexPath(row: selectedSSIDs.count - 1, section: section)
     }
 }
 
@@ -262,15 +265,14 @@ extension SSIDOptionEditTableViewController {
         switch sections[indexPath.section] {
         case .ssidOption:
             let previousOption = selectedOption
-            let previousSectionCount = sections.count
             selectedOption = ssidOptionFields[indexPath.row]
             loadSections()
             if previousOption == .anySSID {
-                let indexSet = selectedSSIDs.isEmpty ? IndexSet(integer: 1) : IndexSet(1 ... 2)
+                let indexSet = IndexSet(1 ... 2)
                 tableView.insertSections(indexSet, with: .fade)
             }
             if selectedOption == .anySSID {
-                let indexSet = previousSectionCount == 2 ? IndexSet(integer: 1) : IndexSet(1 ... 2)
+                let indexSet = IndexSet(1 ... 2)
                 tableView.deleteSections(indexSet, with: .fade)
             }
             tableView.reloadSections(IndexSet(integer: indexPath.section), with: .none)
