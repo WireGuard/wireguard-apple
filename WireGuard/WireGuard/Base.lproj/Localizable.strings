@@ -87,8 +87,8 @@
 "tunnelOnDemandSSIDsKey" = "SSIDs";
 
 "tunnelOnDemandAnySSID" = "Any SSID";
-"tunnelOnDemandOnlySelectedSSIDs" = "Only selected SSIDs";
-"tunnelOnDemandExceptSelectedSSIDs" = "Except selected SSIDs";
+"tunnelOnDemandOnlyTheseSSIDs" = "Only these SSIDs";
+"tunnelOnDemandExceptTheseSSIDs" = "Except these SSIDs";
 "tunnelOnDemandOnlySSID (%d)" = "Only %d SSID";
 "tunnelOnDemandOnlySSIDs (%d)" = "Only %d SSIDs";
 "tunnelOnDemandExceptSSID (%d)" = "Except %d SSID";
