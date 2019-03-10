@@ -240,12 +240,32 @@ class TunnelsManager {
                 completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel(systemError: error!))
                 return
             }
-            if let self = self {
-                let index = self.tunnels.firstIndex(of: tunnel)!
+            if let self = self, let index = self.tunnels.firstIndex(of: tunnel) {
                 self.tunnels.remove(at: index)
                 self.tunnelsListDelegate?.tunnelRemoved(at: index, tunnel: tunnel)
             }
             completionHandler(nil)
+        }
+    }
+
+    func removeMultiple(tunnels: [TunnelContainer], completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+        removeMultiple(tunnels: ArraySlice(tunnels), completionHandler: completionHandler)
+    }
+
+    private func removeMultiple(tunnels: ArraySlice<TunnelContainer>, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+        guard let head = tunnels.first else {
+            completionHandler(nil)
+            return
+        }
+        let tail = tunnels.dropFirst()
+        remove(tunnel: head) { [weak self, tail] error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completionHandler(error)
+                } else {
+                    self?.removeMultiple(tunnels: tail, completionHandler: completionHandler)
+                }
+            }
         }
     }
 
