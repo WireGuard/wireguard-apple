@@ -22,6 +22,7 @@ class SSIDOptionDetailTableViewController: UITableViewController {
 
         tableView.estimatedRowHeight = 44
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.allowsSelection = false
 
         tableView.register(TextCell.self)
     }
