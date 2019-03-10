@@ -4,7 +4,7 @@
 import Cocoa
 
 protocol TunnelsListTableViewControllerDelegate: class {
-    func tunnelSelected(tunnel: TunnelContainer)
+    func tunnelsSelected(tunnelIndices: [Int])
     func tunnelsListEmpty()
 }
 
@@ -18,6 +18,7 @@ class TunnelsListTableViewController: NSViewController {
         tableView.addTableColumn(NSTableColumn(identifier: NSUserInterfaceItemIdentifier("TunnelsList")))
         tableView.headerView = nil
         tableView.rowSizeStyle = .medium
+        tableView.allowsMultipleSelection = true
         return tableView
     }()
 
@@ -158,18 +159,24 @@ class TunnelsListTableViewController: NSViewController {
 
     @objc func handleRemoveTunnelAction() {
         guard let window = view.window else { return }
-        let selectedTunnelIndex = tableView.selectedRow
-        guard selectedTunnelIndex >= 0 && selectedTunnelIndex < tunnelsManager.numberOfTunnels() else { return }
-        let selectedTunnel = tunnelsManager.tunnel(at: selectedTunnelIndex)
+        let selectedTunnelIndices = tableView.selectedRowIndexes.sorted()
+        let selectedTunnels = selectedTunnelIndices.compactMap { tunnelIndex in
+            tunnelIndex >= 0 && tunnelIndex < tunnelsManager.numberOfTunnels() ? tunnelsManager.tunnel(at: tunnelIndex) : nil
+        }
+        guard !selectedTunnels.isEmpty else { return }
         let alert = NSAlert()
-        alert.messageText = tr(format: "macDeleteTunnelConfirmationAlertMessage (%@)", selectedTunnel.name)
+        if selectedTunnels.count == 1 {
+            alert.messageText = tr(format: "macDeleteTunnelConfirmationAlertMessage (%@)", selectedTunnels.first!.name)
+        } else {
+            alert.messageText = tr(format: "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)", selectedTunnels.count)
+        }
         alert.informativeText = tr("macDeleteTunnelConfirmationAlertInfo")
         alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleDelete"))
         alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleCancel"))
         alert.beginSheetModal(for: window) { [weak self] response in
             guard response == .alertFirstButtonReturn else { return }
             self?.removeButton.isEnabled = false
-            self?.tunnelsManager.remove(tunnel: selectedTunnel) { [weak self] error in
+            self?.tunnelsManager.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
                 guard let self = self else { return }
                 defer { self.removeButton.isEnabled = true }
                 if let error = error {
@@ -309,9 +316,10 @@ extension TunnelsListTableViewController: NSTableViewDelegate {
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
-        guard tableView.selectedRow >= 0 else { return }
-        let selectedTunnel = tunnelsManager.tunnel(at: tableView.selectedRow)
-        delegate?.tunnelSelected(tunnel: selectedTunnel)
+        let selectedTunnelIndices = tableView.selectedRowIndexes.sorted()
+        if !selectedTunnelIndices.isEmpty {
+            delegate?.tunnelsSelected(tunnelIndices: tableView.selectedRowIndexes.sorted())
+        }
     }
 }
 
