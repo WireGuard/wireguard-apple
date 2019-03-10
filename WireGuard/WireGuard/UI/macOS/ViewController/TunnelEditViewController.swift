@@ -205,6 +205,7 @@ class TunnelEditViewController: NSViewController {
         view.window?.ignoresMouseEvents = !enabled
         nameRow.valueLabel.isEditable = enabled
         textView.isEditable = enabled
+        onDemandWiFiControls.onDemandSSIDsField.isEnabled = enabled
     }
 
     @objc func handleSaveAction() {
