@@ -84,7 +84,12 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
     }
 
     func tunnelsListEmpty() {
-        let noTunnelsVC = NoTunnelsDetailViewController(tunnelsManager: tunnelsManager)
+        let noTunnelsVC = ButtonedDetailViewController()
+        noTunnelsVC.setButtonTitle(tr("macButtonImportTunnels"))
+        noTunnelsVC.onButtonClicked = { [weak self] in
+            guard let self = self else { return }
+            ImportPanelPresenter.presentImportPanel(tunnelsManager: self.tunnelsManager, sourceVC: self)
+        }
         setTunnelDetailContentVC(noTunnelsVC)
         self.tunnelDetailVC = nil
     }
