@@ -271,6 +271,7 @@
 "macWindowTitleManageTunnels" = "Manage WireGuard Tunnels";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "Are you sure you want to delete ‘%@’?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Are you sure you want to delete %d tunnels?";
 "macDeleteTunnelConfirmationAlertInfo" = "You cannot undo this action.";
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
@@ -283,6 +284,8 @@
 
 "macNameFieldExportZip" = "Export tunnels to";
 "macSheetButtonExportZip" = "Save";
+
+"macButtonDeleteTunnels (%d)" = "Delete %d tunnels";
 
 // Mac detail/edit view fields
 

@@ -77,10 +77,27 @@ class ManageTunnelsRootViewController: NSViewController {
 }
 
 extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegate {
-    func tunnelSelected(tunnel: TunnelContainer) {
-        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
-        setTunnelDetailContentVC(tunnelDetailVC)
-        self.tunnelDetailVC = tunnelDetailVC
+    func tunnelsSelected(tunnelIndices: [Int]) {
+        assert(!tunnelIndices.isEmpty)
+        if tunnelIndices.count == 1 {
+            let tunnel = tunnelsManager.tunnel(at: tunnelIndices.first!)
+            let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
+            setTunnelDetailContentVC(tunnelDetailVC)
+            self.tunnelDetailVC = tunnelDetailVC
+        } else if tunnelIndices.count > 1 {
+            let multiSelectionVC: ButtonedDetailViewController
+            if let buttonedDetailVC = tunnelDetailContentVC as? ButtonedDetailViewController {
+                multiSelectionVC = buttonedDetailVC
+            } else {
+                multiSelectionVC = ButtonedDetailViewController()
+            }
+            multiSelectionVC.setButtonTitle(tr(format: "macButtonDeleteTunnels (%d)", tunnelIndices.count))
+            multiSelectionVC.onButtonClicked = { [weak tunnelsListVC] in
+                tunnelsListVC?.handleRemoveTunnelAction()
+            }
+            setTunnelDetailContentVC(multiSelectionVC)
+            self.tunnelDetailVC = nil
+        }
     }
 
     func tunnelsListEmpty() {
