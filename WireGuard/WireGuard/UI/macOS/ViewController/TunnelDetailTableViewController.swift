@@ -97,7 +97,7 @@ class TunnelDetailTableViewController: NSViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
+        onDemandViewModel = ActivateOnDemandViewModel(tunnel: tunnel)
         super.init(nibName: nil, bundle: nil)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
@@ -500,7 +500,7 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
 extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
     func tunnelSaved(tunnel: TunnelContainer) {
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
+        onDemandViewModel = ActivateOnDemandViewModel(tunnel: tunnel)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
         updateStatus()
