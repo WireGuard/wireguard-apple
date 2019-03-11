@@ -60,7 +60,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
-        onDemandViewModel = ActivateOnDemandViewModel(option: tunnel.onDemandOption)
+        onDemandViewModel = ActivateOnDemandViewModel(tunnel: tunnel)
         super.init(style: .grouped)
         loadSections()
     }

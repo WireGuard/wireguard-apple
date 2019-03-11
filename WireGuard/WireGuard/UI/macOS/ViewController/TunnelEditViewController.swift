@@ -99,7 +99,7 @@ class TunnelEditViewController: NSViewController {
     init(tunnelsManager: TunnelsManager, tunnel: TunnelContainer?) {
         self.tunnelsManager = tunnelsManager
         self.tunnel = tunnel
-        self.onDemandViewModel = tunnel != nil ? ActivateOnDemandViewModel(option: tunnel!.onDemandOption) : ActivateOnDemandViewModel()
+        self.onDemandViewModel = tunnel != nil ? ActivateOnDemandViewModel(tunnel: tunnel!) : ActivateOnDemandViewModel()
         super.init(nibName: nil, bundle: nil)
     }
 
