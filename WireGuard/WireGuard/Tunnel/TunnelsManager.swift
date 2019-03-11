@@ -184,7 +184,11 @@ class TunnelsManager {
             tunnel.name = tunnelName
         }
 
-        tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
+        var isTunnelConfigurationChanged = false
+        if tunnelProviderManager.tunnelConfiguration != tunnelConfiguration {
+            tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
+            isTunnelConfigurationChanged = true
+        }
         tunnelProviderManager.isEnabled = true
 
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && activateOnDemandSetting.isActivateOnDemandEnabled
@@ -206,10 +210,12 @@ class TunnelsManager {
             }
             self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
 
-            if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
-                // Turn off the tunnel, and then turn it back on, so the changes are made effective
-                tunnel.status = .restarting
-                (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+            if isTunnelConfigurationChanged {
+                if tunnel.status == .active || tunnel.status == .activating || tunnel.status == .reasserting {
+                    // Turn off the tunnel, and then turn it back on, so the changes are made effective
+                    tunnel.status = .restarting
+                    (tunnel.tunnelProvider.connection as? NETunnelProviderSession)?.stopTunnel()
+                }
             }
 
             if isActivatingOnDemand {
