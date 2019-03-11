@@ -52,15 +52,15 @@ extension TunnelConfiguration {
                 trimmedLine = String(line)
             }
 
-            trimmedLine = trimmedLine.trimmingCharacters(in: .whitespaces)
+            trimmedLine = trimmedLine.trimmingCharacters(in: .whitespacesAndNewlines)
             let lowercasedLine = trimmedLine.lowercased()
 
             if !trimmedLine.isEmpty {
                 if let equalsIndex = trimmedLine.firstIndex(of: "=") {
                     // Line contains an attribute
-                    let keyWithCase = trimmedLine[..<equalsIndex].trimmingCharacters(in: .whitespaces)
+                    let keyWithCase = trimmedLine[..<equalsIndex].trimmingCharacters(in: .whitespacesAndNewlines)
                     let key = keyWithCase.lowercased()
-                    let value = trimmedLine[trimmedLine.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespaces)
+                    let value = trimmedLine[trimmedLine.index(equalsIndex, offsetBy: 1)...].trimmingCharacters(in: .whitespacesAndNewlines)
                     let keysWithMultipleEntriesAllowed: Set<String> = ["address", "allowedips", "dns"]
                     if let presentValue = attributes[key] {
                         if keysWithMultipleEntriesAllowed.contains(key) {
@@ -182,7 +182,7 @@ extension TunnelConfiguration {
         }
         if let addressesString = attributes["address"] {
             var addresses = [IPAddressRange]()
-            for addressString in addressesString.splitToArray(trimmingCharacters: .whitespaces) {
+            for addressString in addressesString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
                 guard let address = IPAddressRange(from: addressString) else {
                     throw ParseError.interfaceHasInvalidAddress(addressString)
                 }
@@ -192,7 +192,7 @@ extension TunnelConfiguration {
         }
         if let dnsString = attributes["dns"] {
             var dnsServers = [DNSServer]()
-            for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespaces) {
+            for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
                 guard let dnsServer = DNSServer(from: dnsServerString) else {
                     throw ParseError.interfaceHasInvalidDNS(dnsServerString)
                 }
