@@ -4,11 +4,8 @@ golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25/go.mod h1:djNgcEr1/C05ACk
 golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95 h1:fY7Dsw114eJN4boqzVSbpVHO6rTdhq6/GnXeu+PKnzU=
 golang.org/x/net v0.0.0-20190301231341-16b79f2e4e95/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
-golang.org/x/sys v0.0.0-20190302025703-b6889370fb10 h1:xQJI9OEiErEQ++DoXOHqEpzsGMrAv2Q2jyCpi7DmfpQ=
 golang.org/x/sys v0.0.0-20190302025703-b6889370fb10/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
-golang.org/x/sys v0.0.0-20190308023053-584f3b12f43e h1:K7CV15oJ823+HLXQ+M7MSMrUg8LjfqY7O3naO+8Pp/I=
-golang.org/x/sys v0.0.0-20190308023053-584f3b12f43e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.zx2c4.com/wireguard v0.0.0-20190303043202-244a98e380fa h1:t/IV/5G9uPXXDoaOrk+Lx2VsFhbqWGYFE+GEl160Yzc=
-golang.zx2c4.com/wireguard v0.0.0-20190303043202-244a98e380fa/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
-golang.zx2c4.com/wireguard v0.0.0-20190308004054-5c7cc256e39a h1:RvrH0NQcXaN9h2JoBDAI3BWcTTJL3vH9L1gHQY0T76w=
-golang.zx2c4.com/wireguard v0.0.0-20190308004054-5c7cc256e39a/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
+golang.org/x/sys v0.0.0-20190312061237-fead79001313 h1:pczuHS43Cp2ktBEEmLwScxgjWsBSzdaQiKzUyf3DTTc=
+golang.org/x/sys v0.0.0-20190312061237-fead79001313/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.zx2c4.com/wireguard v0.0.0-20190310024754-66fb5caf023e h1:lyp5Vq7gvB3Ei9iCJNhEvzuQx99gteo+GoRZPFOCmRE=
+golang.zx2c4.com/wireguard v0.0.0-20190310024754-66fb5caf023e/go.mod h1:Koyxt99ZAZcr8lJuisBNX9vnaqKVNGcITeWOI1Zkmsw=
