@@ -47,6 +47,14 @@
 "tunnelStatusRestarting" = "Restarting";
 "tunnelStatusWaiting" = "Waiting";
 
+"macToggleStatusButtonActivate" = "Activate";
+"macToggleStatusButtonActivating" = "Activating…";
+"macToggleStatusButtonDeactivate" = "Deactivate";
+"macToggleStatusButtonDeactivating" = "Deactivating…";
+"macToggleStatusButtonReasserting" = "Reactivating…";
+"macToggleStatusButtonRestarting" = "Restarting…";
+"macToggleStatusButtonWaiting" = "Waiting…";
+
 "tunnelSectionTitleInterface" = "Interface";
 
 "tunnelInterfaceName" = "Name";

@@ -51,13 +51,14 @@ class TunnelDetailTableViewController: NSViewController {
         return tableView
     }()
 
-    let statusCheckbox: NSButton = {
-        let checkbox = NSButton()
-        checkbox.title = ""
-        checkbox.setButtonType(.switch)
-        checkbox.state = .off
-        checkbox.toolTip = "Toggle status (⌘T)"
-        return checkbox
+    let toggleStatusButton: NSButton = {
+        let button = NSButton()
+        button.title = ""
+        button.setButtonType(.momentaryPushIn)
+        button.bezelStyle = .rounded
+        button.toolTip = "Toggle status (⌘T)"
+        button.widthAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
+        return button
     }()
 
     let editButton: NSButton = {
@@ -113,8 +114,8 @@ class TunnelDetailTableViewController: NSViewController {
         tableView.dataSource = self
         tableView.delegate = self
 
-        statusCheckbox.target = self
-        statusCheckbox.action = #selector(statusCheckboxToggled(sender:))
+        toggleStatusButton.target = self
+        toggleStatusButton.action = #selector(handleToggleActiveStatusAction)
 
         editButton.target = self
         editButton.action = #selector(handleEditTunnelAction)
@@ -133,11 +134,11 @@ class TunnelDetailTableViewController: NSViewController {
         containerView.addLayoutGuide(bottomControlsContainer)
         containerView.addSubview(box)
         containerView.addSubview(scrollView)
-        containerView.addSubview(statusCheckbox)
+        containerView.addSubview(toggleStatusButton)
         containerView.addSubview(editButton)
         box.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        statusCheckbox.translatesAutoresizingMaskIntoConstraints = false
+        toggleStatusButton.translatesAutoresizingMaskIntoConstraints = false
         editButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -149,10 +150,10 @@ class TunnelDetailTableViewController: NSViewController {
             bottomControlsContainer.heightAnchor.constraint(equalToConstant: 32),
             scrollView.bottomAnchor.constraint(equalTo: bottomControlsContainer.topAnchor),
             bottomControlsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            statusCheckbox.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
-            bottomControlsContainer.bottomAnchor.constraint(equalTo: statusCheckbox.bottomAnchor, constant: 4),
+            toggleStatusButton.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
+            bottomControlsContainer.bottomAnchor.constraint(equalTo: toggleStatusButton.bottomAnchor, constant: 0),
             editButton.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
-            bottomControlsContainer.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 4)
+            bottomControlsContainer.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 0)
         ])
 
         NSLayoutConstraint.activate([
@@ -203,28 +204,26 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     func updateStatus() {
-        let statusText: String
+        let toggleStatusButtonText: String
         switch tunnel.status {
         case .waiting:
-            statusText = tr("tunnelStatusWaiting")
+            toggleStatusButtonText = tr("macToggleStatusButtonWaiting")
         case .inactive:
-            statusText = tr("tunnelStatusInactive")
+            toggleStatusButtonText = tr("macToggleStatusButtonActivate")
         case .activating:
-            statusText = tr("tunnelStatusActivating")
+            toggleStatusButtonText = tr("macToggleStatusButtonActivating")
         case .active:
-            statusText = tr("tunnelStatusActive")
+            toggleStatusButtonText = tr("macToggleStatusButtonDeactivate")
         case .deactivating:
-            statusText = tr("tunnelStatusDeactivating")
+            toggleStatusButtonText = tr("macToggleStatusButtonDeactivating")
         case .reasserting:
-            statusText = tr("tunnelStatusReasserting")
+            toggleStatusButtonText = tr("macToggleStatusButtonReasserting")
         case .restarting:
-            statusText = tr("tunnelStatusRestarting")
+            toggleStatusButtonText = tr("macToggleStatusButtonRestarting")
         }
-        statusCheckbox.title = tr(format: "macStatus (%@)", statusText)
-        let shouldBeChecked = (tunnel.status != .inactive && tunnel.status != .deactivating)
+        toggleStatusButton.title = toggleStatusButtonText
         let shouldBeEnabled = (tunnel.status == .active || tunnel.status == .inactive)
-        statusCheckbox.state = shouldBeChecked ? .on : .off
-        statusCheckbox.isEnabled = shouldBeEnabled
+        toggleStatusButton.isEnabled = shouldBeEnabled
         if tunnel.status == .active {
             startUpdatingRuntimeConfiguration()
         } else if tunnel.status == .inactive {
@@ -247,15 +246,6 @@ class TunnelDetailTableViewController: NSViewController {
         if tunnel.status == .inactive {
             tunnelsManager.startActivation(of: tunnel)
         } else if tunnel.status == .active {
-            tunnelsManager.startDeactivation(of: tunnel)
-        }
-    }
-
-    @objc func statusCheckboxToggled(sender: AnyObject?) {
-        guard let statusCheckbox = sender as? NSButton else { return }
-        if statusCheckbox.state == .on {
-            tunnelsManager.startActivation(of: tunnel)
-        } else if statusCheckbox.state == .off {
             tunnelsManager.startDeactivation(of: tunnel)
         }
     }
