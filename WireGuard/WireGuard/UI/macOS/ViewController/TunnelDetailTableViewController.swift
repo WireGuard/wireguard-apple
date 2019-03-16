@@ -31,7 +31,7 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     static let interfaceFields: [TunnelViewModel.InterfaceField] = [
-        .name, .publicKey, .addresses,
+        .name, .status, .publicKey, .addresses,
         .listenPort, .mtu, .dns
     ]
 
@@ -175,7 +175,9 @@ class TunnelDetailTableViewController: NSViewController {
 
         var interfaceSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
         for field in TunnelDetailTableViewController.interfaceFields {
-            interfaceSection.append((isVisible: !tunnelViewModel.interfaceData[field].isEmpty, modelRow: .interfaceFieldRow(field)))
+            let isStatus = field == .status
+            let isEmpty = tunnelViewModel.interfaceData[field].isEmpty
+            interfaceSection.append((isVisible: isStatus || !isEmpty, modelRow: .interfaceFieldRow(field)))
         }
         interfaceSection.append((isVisible: true, modelRow: .spacerRow))
         modelRowsBySection.append(interfaceSection)
@@ -398,12 +400,16 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         let modelRow = tableViewModelRows[row]
         switch modelRow {
         case .interfaceFieldRow(let field):
-            let cell: KeyValueRow = tableView.dequeueReusableCell()
-            let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
-            cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
-            cell.value = tunnelViewModel.interfaceData[field]
-            cell.isKeyInBold = modelRow.isTitleRow()
-            return cell
+            if field == .status {
+                return statusCell()
+            } else {
+                let cell: KeyValueRow = tableView.dequeueReusableCell()
+                let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
+                cell.key = tr(format: "macFieldKey (%@)", localizedKeyString)
+                cell.value = tunnelViewModel.interfaceData[field]
+                cell.isKeyInBold = modelRow.isTitleRow()
+                return cell
+            }
         case .peerFieldRow(let peerData, let field):
             let cell: KeyValueRow = tableView.dequeueReusableCell()
             let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
@@ -425,6 +431,50 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             cell.value = TunnelViewModel.activateOnDemandDetailText(for: tunnel.activateOnDemandSetting)
             cell.isKeyInBold = true
             return cell
+        }
+    }
+
+    func statusCell() -> NSView {
+        let cell: KeyValueImageRow = tableView.dequeueReusableCell()
+        cell.key = tr(format: "macFieldKey (%@)", tr("tunnelInterfaceStatus"))
+        cell.value = TunnelDetailTableViewController.localizedStatusDescription(forStatus: tunnel.status)
+        cell.valueImage = TunnelDetailTableViewController.image(forStatus: tunnel.status)
+        cell.observationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+            guard let cell = cell else { return }
+            cell.value = TunnelDetailTableViewController.localizedStatusDescription(forStatus: tunnel.status)
+            cell.valueImage = TunnelDetailTableViewController.image(forStatus: tunnel.status)
+        }
+        return cell
+    }
+
+    private static func localizedStatusDescription(forStatus status: TunnelStatus) -> String {
+        switch status {
+        case .inactive:
+            return tr("tunnelStatusInactive")
+        case .activating:
+            return tr("tunnelStatusActivating")
+        case .active:
+            return tr("tunnelStatusActive")
+        case .deactivating:
+            return tr("tunnelStatusDeactivating")
+        case .reasserting:
+            return tr("tunnelStatusReasserting")
+        case .restarting:
+            return tr("tunnelStatusRestarting")
+        case .waiting:
+            return tr("tunnelStatusWaiting")
+        }
+    }
+
+    private static func image(forStatus status: TunnelStatus?) -> NSImage? {
+        guard let status = status else { return nil }
+        switch status {
+        case .active, .restarting, .reasserting:
+            return NSImage(named: NSImage.statusAvailableName)
+        case .activating, .waiting, .deactivating:
+            return NSImage(named: NSImage.statusPartiallyAvailableName)
+        case .inactive:
+            return NSImage(named: NSImage.statusNoneName)
         }
     }
 }

@@ -14,6 +14,7 @@ class TunnelViewModel {
         case listenPort
         case mtu
         case dns
+        case status
 
         var localizedUIString: String {
             switch self {
@@ -25,6 +26,7 @@ class TunnelViewModel {
             case .listenPort: return tr("tunnelInterfaceListenPort")
             case .mtu: return tr("tunnelInterfaceMTU")
             case .dns: return tr("tunnelInterfaceDNS")
+            case .status: return tr("tunnelInterfaceStatus")
             }
         }
     }
