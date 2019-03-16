@@ -24,6 +24,8 @@ class EditableKeyValueRow: NSView {
         return valueLabel
     }()
 
+    let valueImageView: NSImageView?
+
     var key: String {
         get { return keyLabel.stringValue }
         set(value) { keyLabel.stringValue = value }
@@ -42,13 +44,24 @@ class EditableKeyValueRow: NSView {
             }
         }
     }
+    var valueImage: NSImage? {
+        get { return valueImageView?.image }
+        set(value) { valueImageView?.image = value }
+    }
+
+    var observationToken: AnyObject?
 
     override var intrinsicContentSize: NSSize {
         let height = max(keyLabel.intrinsicContentSize.height, valueLabel.intrinsicContentSize.height)
         return NSSize(width: NSView.noIntrinsicMetric, height: height)
     }
 
-    init() {
+    convenience init() {
+        self.init(hasValueImage: false)
+    }
+
+    fileprivate init(hasValueImage: Bool) {
+        valueImageView = hasValueImage ? NSImageView() : nil
         super.init(frame: CGRect.zero)
 
         addSubview(keyLabel)
@@ -60,9 +73,23 @@ class EditableKeyValueRow: NSView {
             keyLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             keyLabel.firstBaselineAnchor.constraint(equalTo: valueLabel.firstBaselineAnchor),
             self.leadingAnchor.constraint(equalTo: keyLabel.leadingAnchor),
-            keyLabel.trailingAnchor.constraint(equalTo: valueLabel.leadingAnchor, constant: -5),
             valueLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
+
+        let spacing: CGFloat = 5
+        if let valueImageView = valueImageView {
+            addSubview(valueImageView)
+            valueImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                valueImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+                valueImageView.leadingAnchor.constraint(equalTo: keyLabel.trailingAnchor, constant: spacing),
+                valueLabel.leadingAnchor.constraint(equalTo: valueImageView.trailingAnchor)
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                valueLabel.leadingAnchor.constraint(equalTo: keyLabel.trailingAnchor, constant: spacing)
+            ])
+        }
 
         keyLabel.setContentCompressionResistancePriority(.defaultHigh + 2, for: .horizontal)
         keyLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -85,8 +112,21 @@ class EditableKeyValueRow: NSView {
 }
 
 class KeyValueRow: EditableKeyValueRow {
-    override init() {
-        super.init()
+    init() {
+        super.init(hasValueImage: false)
+        valueLabel.isEditable = false
+        valueLabel.isBordered = false
+        valueLabel.backgroundColor = .clear
+    }
+
+    required init?(coder decoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class KeyValueImageRow: EditableKeyValueRow {
+    init() {
+        super.init(hasValueImage: true)
         valueLabel.isEditable = false
         valueLabel.isBordered = false
         valueLabel.backgroundColor = .clear
