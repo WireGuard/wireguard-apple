@@ -37,7 +37,7 @@ class ZipImporter {
                 fatalError()
             }
 
-            unarchivedFiles.sort { $0.fileBaseName < $1.fileBaseName }
+            unarchivedFiles.sort { TunnelsManager.tunnelNameIsLessThan($0.fileBaseName, $1.fileBaseName) }
             var configs: [TunnelConfiguration?] = Array(repeating: nil, count: unarchivedFiles.count)
             for (index, file) in unarchivedFiles.enumerated() {
                 if index > 0 && file == unarchivedFiles[index - 1] {
