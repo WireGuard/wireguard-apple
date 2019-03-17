@@ -32,7 +32,7 @@ class TunnelDetailTableViewController: NSViewController {
 
     static let interfaceFields: [TunnelViewModel.InterfaceField] = [
         .name, .status, .publicKey, .addresses,
-        .listenPort, .mtu, .dns
+        .listenPort, .mtu, .dns, .toggleStatus
     ]
 
     static let peerFields: [TunnelViewModel.PeerField] = [
@@ -49,16 +49,6 @@ class TunnelDetailTableViewController: NSViewController {
         tableView.backgroundColor = .clear
         tableView.selectionHighlightStyle = .none
         return tableView
-    }()
-
-    let toggleStatusButton: NSButton = {
-        let button = NSButton()
-        button.title = ""
-        button.setButtonType(.momentaryPushIn)
-        button.bezelStyle = .rounded
-        button.toolTip = "Toggle status (⌘T)"
-        button.widthAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
-        return button
     }()
 
     let editButton: NSButton = {
@@ -114,9 +104,6 @@ class TunnelDetailTableViewController: NSViewController {
         tableView.dataSource = self
         tableView.delegate = self
 
-        toggleStatusButton.target = self
-        toggleStatusButton.action = #selector(handleToggleActiveStatusAction)
-
         editButton.target = self
         editButton.action = #selector(handleEditTunnelAction)
 
@@ -134,11 +121,9 @@ class TunnelDetailTableViewController: NSViewController {
         containerView.addLayoutGuide(bottomControlsContainer)
         containerView.addSubview(box)
         containerView.addSubview(scrollView)
-        containerView.addSubview(toggleStatusButton)
         containerView.addSubview(editButton)
         box.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        toggleStatusButton.translatesAutoresizingMaskIntoConstraints = false
         editButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -150,8 +135,6 @@ class TunnelDetailTableViewController: NSViewController {
             bottomControlsContainer.heightAnchor.constraint(equalToConstant: 32),
             scrollView.bottomAnchor.constraint(equalTo: bottomControlsContainer.topAnchor),
             bottomControlsContainer.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            toggleStatusButton.leadingAnchor.constraint(equalTo: bottomControlsContainer.leadingAnchor),
-            bottomControlsContainer.bottomAnchor.constraint(equalTo: toggleStatusButton.bottomAnchor, constant: 0),
             editButton.trailingAnchor.constraint(equalTo: bottomControlsContainer.trailingAnchor),
             bottomControlsContainer.bottomAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 0)
         ])
@@ -176,7 +159,7 @@ class TunnelDetailTableViewController: NSViewController {
 
         var interfaceSection = [(isVisible: Bool, modelRow: TableViewModelRow)]()
         for field in TunnelDetailTableViewController.interfaceFields {
-            let isStatus = field == .status
+            let isStatus = field == .status || field == .toggleStatus
             let isEmpty = tunnelViewModel.interfaceData[field].isEmpty
             interfaceSection.append((isVisible: isStatus || !isEmpty, modelRow: .interfaceFieldRow(field)))
         }
@@ -204,26 +187,6 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     func updateStatus() {
-        let toggleStatusButtonText: String
-        switch tunnel.status {
-        case .waiting:
-            toggleStatusButtonText = tr("macToggleStatusButtonWaiting")
-        case .inactive:
-            toggleStatusButtonText = tr("macToggleStatusButtonActivate")
-        case .activating:
-            toggleStatusButtonText = tr("macToggleStatusButtonActivating")
-        case .active:
-            toggleStatusButtonText = tr("macToggleStatusButtonDeactivate")
-        case .deactivating:
-            toggleStatusButtonText = tr("macToggleStatusButtonDeactivating")
-        case .reasserting:
-            toggleStatusButtonText = tr("macToggleStatusButtonReasserting")
-        case .restarting:
-            toggleStatusButtonText = tr("macToggleStatusButtonRestarting")
-        }
-        toggleStatusButton.title = toggleStatusButtonText
-        let shouldBeEnabled = (tunnel.status == .active || tunnel.status == .inactive)
-        toggleStatusButton.isEnabled = shouldBeEnabled
         if tunnel.status == .active {
             startUpdatingRuntimeConfiguration()
         } else if tunnel.status == .inactive {
@@ -392,6 +355,8 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         case .interfaceFieldRow(let field):
             if field == .status {
                 return statusCell()
+            } else if field == .toggleStatus {
+                return toggleStatusCell()
             } else {
                 let cell: KeyValueRow = tableView.dequeueReusableCell()
                 let localizedKeyString = modelRow.isTitleRow() ? modelRow.localizedSectionKeyString() : field.localizedUIString
@@ -437,6 +402,22 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         return cell
     }
 
+    func toggleStatusCell() -> NSView {
+        let cell: ButtonRow = tableView.dequeueReusableCell()
+        cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(forStatus: tunnel.status)
+        cell.isButtonEnabled = (tunnel.status == .active || tunnel.status == .inactive)
+        cell.buttonToolTip = "Toggle status (⌘T)"
+        cell.onButtonClicked = { [weak self] in
+            self?.handleToggleActiveStatusAction()
+        }
+        cell.observationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+            guard let cell = cell else { return }
+            cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(forStatus: tunnel.status)
+            cell.isButtonEnabled = (tunnel.status == .active || tunnel.status == .inactive)
+        }
+        return cell
+    }
+
     private static func localizedStatusDescription(forStatus status: TunnelStatus) -> String {
         switch status {
         case .inactive:
@@ -465,6 +446,25 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
             return NSImage(named: NSImage.statusPartiallyAvailableName)
         case .inactive:
             return NSImage(named: NSImage.statusNoneName)
+        }
+    }
+
+    private static func localizedToggleStatusActionText(forStatus status: TunnelStatus) -> String {
+        switch status {
+        case .waiting:
+            return tr("macToggleStatusButtonWaiting")
+        case .inactive:
+            return tr("macToggleStatusButtonActivate")
+        case .activating:
+            return tr("macToggleStatusButtonActivating")
+        case .active:
+            return tr("macToggleStatusButtonDeactivate")
+        case .deactivating:
+            return tr("macToggleStatusButtonDeactivating")
+        case .reasserting:
+            return tr("macToggleStatusButtonReasserting")
+        case .restarting:
+            return tr("macToggleStatusButtonRestarting")
         }
     }
 }
