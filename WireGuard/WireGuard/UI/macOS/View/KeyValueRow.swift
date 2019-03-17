@@ -108,6 +108,7 @@ class EditableKeyValueRow: NSView {
         key = ""
         value = ""
         isKeyInBold = false
+        observationToken = nil
     }
 }
 
