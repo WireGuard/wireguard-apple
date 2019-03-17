@@ -42,15 +42,7 @@ class TunnelEditViewController: NSViewController {
         return textView
     }()
 
-    let onDemandEthernetCheckbox: NSButton = {
-        let checkbox = NSButton()
-        checkbox.title = tr("tunnelOnDemandEthernet")
-        checkbox.setButtonType(.switch)
-        checkbox.state = .off
-        return checkbox
-    }()
-
-    let onDemandWiFiControls = OnDemandWiFiControls()
+    let onDemandControlsRow = OnDemandControlsRow()
 
     let scrollView: NSScrollView = {
         let scrollView = NSScrollView()
@@ -147,20 +139,6 @@ class TunnelEditViewController: NSViewController {
     override func loadView() {
         populateFields()
 
-        let onDemandEthernetRow = ControlRow(controlView: onDemandEthernetCheckbox)
-        onDemandEthernetRow.key = tr("macFieldOnDemand")
-        onDemandEthernetCheckbox.state = onDemandViewModel.isNonWiFiInterfaceEnabled ? .on : .off
-
-        let onDemandWiFiRow = ControlRow(controlView: onDemandWiFiControls)
-        onDemandWiFiRow.key = ""
-        onDemandWiFiControls.onDemandViewModel = onDemandViewModel
-
-        NSLayoutConstraint.activate([
-            onDemandEthernetRow.keyLabel.firstBaselineAnchor.constraint(equalTo: onDemandEthernetRow.controlView.firstBaselineAnchor),
-            onDemandWiFiRow.controlView.centerYAnchor.constraint(equalTo: onDemandWiFiRow.centerYAnchor),
-            onDemandWiFiRow.trailingAnchor.constraint(equalTo: onDemandWiFiControls.trailingAnchor)
-        ])
-
         scrollView.documentView = textView
 
         saveButton.target = self
@@ -172,10 +150,12 @@ class TunnelEditViewController: NSViewController {
         excludePrivateIPsCheckbox.target = self
         excludePrivateIPsCheckbox.action = #selector(excludePrivateIPsCheckboxToggled(sender:))
 
+        onDemandControlsRow.onDemandViewModel = onDemandViewModel
+
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
 
-        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, onDemandEthernetRow, onDemandWiFiRow, scrollView])
+        let editorStackView = NSStackView(views: [nameRow, publicKeyRow, onDemandControlsRow, scrollView])
         editorStackView.orientation = .vertical
         editorStackView.setHuggingPriority(.defaultHigh, for: .horizontal)
         editorStackView.spacing = internalSpacing
@@ -205,7 +185,7 @@ class TunnelEditViewController: NSViewController {
         view.window?.ignoresMouseEvents = !enabled
         nameRow.valueLabel.isEditable = enabled
         textView.isEditable = enabled
-        onDemandWiFiControls.onDemandSSIDsField.isEnabled = enabled
+        onDemandControlsRow.onDemandSSIDsField.isEnabled = enabled
     }
 
     @objc func handleSaveAction() {
@@ -215,8 +195,7 @@ class TunnelEditViewController: NSViewController {
             return
         }
 
-        onDemandViewModel.isNonWiFiInterfaceEnabled = onDemandEthernetCheckbox.state == .on
-        onDemandWiFiControls.saveToViewModel()
+        onDemandControlsRow.saveToViewModel()
         let onDemandOption = onDemandViewModel.toOnDemandOption()
 
         let isTunnelModifiedWithoutChangingName = (tunnel != nil && tunnel!.name == name)
