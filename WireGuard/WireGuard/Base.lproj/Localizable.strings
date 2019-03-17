@@ -188,9 +188,6 @@
 "alertUnableToRemovePreviousLogTitle" = "Log export failed";
 "alertUnableToRemovePreviousLogMessage" = "The pre-existing log could not be cleared";
 
-"alertUnableToFindExtensionLogPathTitle" = "Log export failed";
-"alertUnableToFindExtensionLogPathMessage" = "Unable to determine extension log path";
-
 "alertUnableToWriteLogTitle" = "Log export failed";
 "alertUnableToWriteLogMessage" = "Unable to write logs to file";
 

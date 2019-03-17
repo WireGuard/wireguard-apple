@@ -14,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var manageTunnelsWindowObject: NSWindow?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
+        Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }

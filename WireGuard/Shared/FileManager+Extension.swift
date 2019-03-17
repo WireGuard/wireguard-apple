@@ -27,20 +27,12 @@ extension FileManager {
         return sharedFolderURL
     }
 
-    static var networkExtensionLogFileURL: URL? {
+    static var logFileURL: URL? {
         return sharedFolderURL?.appendingPathComponent("tunnel-log.bin")
     }
 
     static var networkExtensionLastErrorFileURL: URL? {
         return sharedFolderURL?.appendingPathComponent("last-error.txt")
-    }
-
-    static var appLogFileURL: URL? {
-        guard let documentDirURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
-            wg_log(.error, message: "Cannot obtain app documents folder URL")
-            return nil
-        }
-        return documentDirURL.appendingPathComponent("app-log.bin")
     }
 
     static func deleteFile(at url: URL) -> Bool {

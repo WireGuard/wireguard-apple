@@ -11,7 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mainVC: MainViewController?
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Logger.configureGlobal(withFilePath: FileManager.appLogFileURL?.path)
+        Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
 
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = .white

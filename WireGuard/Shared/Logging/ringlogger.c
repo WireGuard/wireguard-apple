@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <time.h>
 #include <errno.h>
@@ -19,98 +21,119 @@
 
 enum {
 	MAX_LOG_LINE_LENGTH = 512,
-	MAX_LINES = 1024,
-	MAGIC = 0xbeefbabeU
+	MAX_LINES = 2048,
+	MAGIC = 0xabadbeefU
 };
 
 struct log_line {
-	struct timeval tv;
+	atomic_uint_fast64_t time_ns;
 	char line[MAX_LOG_LINE_LENGTH];
 };
 
 struct log {
-	struct { uint32_t first, len; } header;
+	atomic_uint_fast32_t next_index;
 	struct log_line lines[MAX_LINES];
 	uint32_t magic;
 };
 
-void write_msg_to_log(struct log *log, const char *msg)
+void write_msg_to_log(struct log *log, const char *tag, const char *msg)
 {
-	struct log_line *line = &log->lines[(log->header.first + log->header.len) % MAX_LINES];
+	uint32_t index;
+	struct log_line *line;
+	struct timespec ts;
 
-	if (log->header.len == MAX_LINES)
-		log->header.first = (log->header.first + 1) % MAX_LINES;
-	else
-		++log->header.len;
+	clock_gettime(CLOCK_REALTIME, &ts);
 
-	gettimeofday(&line->tv, NULL);
-	strncpy(line->line, msg, MAX_LOG_LINE_LENGTH - 1);
-	line->line[MAX_LOG_LINE_LENGTH - 1] = '\0';
+	index = atomic_fetch_add(&log->next_index, 1);
+	line = &log->lines[index % MAX_LINES];
 
-	msync(&log->header, sizeof(log->header), MS_ASYNC);
+	atomic_store(&line->time_ns, 0);
+	memset(line->line, 0, MAX_LOG_LINE_LENGTH);
+
+	snprintf(line->line, MAX_LOG_LINE_LENGTH, "[%s] %s", tag, msg);
+	atomic_store(&line->time_ns, ts.tv_sec * 1000000000ULL + ts.tv_nsec);
+
+	msync(&log->next_index, sizeof(log->next_index), MS_ASYNC);
 	msync(line, sizeof(*line), MS_ASYNC);
 }
 
-static bool first_before_second(const struct log_line *line1, const struct log_line *line2)
+int write_log_to_file(const char *file_name, const struct log *input_log)
 {
-	if (line1->tv.tv_sec <= line2->tv.tv_sec)
-		return true;
-	if (line1->tv.tv_sec == line2->tv.tv_sec)
-		return line1->tv.tv_usec <= line2->tv.tv_usec;
-	return false;
-}
-
-int write_logs_to_file(const char *file_name, const struct log *log1, const char *tag1, const struct log *log2, const char *tag2)
-{
-	uint32_t i1, i2, len1 = log1->header.len, len2 = log2->header.len;
+	struct log *log;
+	uint32_t l, i;
 	FILE *file;
 	int ret;
 
-	if (len1 > MAX_LINES)
-		len1 = MAX_LINES;
-	if (len2 > MAX_LINES)
-		len2 = MAX_LINES;
+	log = malloc(sizeof(*log));
+	if (!log)
+		return -errno;
+	memcpy(log, input_log, sizeof(*log));
 
 	file = fopen(file_name, "w");
-	if (!file)
+	if (!file) {
+		free(log);
 		return -errno;
+	}
 
-	for (i1 = 0, i2 = 0;;) {
+	for (l = 0, i = log->next_index; l < MAX_LINES; ++l, ++i) {
+		const struct log_line *line = &log->lines[i % MAX_LINES];
+		time_t seconds = line->time_ns / 1000000000ULL;
+		uint32_t useconds = (line->time_ns % 1000000000ULL) / 1000ULL;
 		struct tm tm;
-		char buf[MAX_LOG_LINE_LENGTH];
-		const struct log_line *line1 = &log1->lines[(log1->header.first + i1) % MAX_LINES];
-		const struct log_line *line2 = &log2->lines[(log2->header.first + i2) % MAX_LINES];
-		const struct log_line *line;
-		const char *tag;
 
-		if (i1 < len1 && (i2 >= len2 || first_before_second(line1, line2))) {
-			line = line1;
-			tag = tag1;
-			++i1;
-		} else if (i2 < len2 && (i1 >= len1 || first_before_second(line2, line1))) {
-			line = line2;
-			tag = tag2;
-			++i2;
-		} else {
-			break;
-		}
+		if (!line->time_ns)
+			continue;
 
-		memcpy(buf, line->line, MAX_LOG_LINE_LENGTH);
-		buf[MAX_LOG_LINE_LENGTH - 1] = '\0';
-		if (!localtime_r(&line->tv.tv_sec, &tm))
+		if (!localtime_r(&seconds, &tm))
 			goto err;
-		if (fprintf(file, "%04d-%02d-%02d %02d:%02d:%02d.%06d: [%s] %s\n",
+
+		if (fprintf(file, "%04d-%02d-%02d %02d:%02d:%02d.%06d: %s\n",
 				  tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-				  tm.tm_hour, tm.tm_min, tm.tm_sec, line->tv.tv_usec,
-				  tag, buf) < 0)
+				  tm.tm_hour, tm.tm_min, tm.tm_sec, useconds,
+				  line->line) < 0)
 			goto err;
+
+
 	}
 	errno = 0;
 
 err:
 	ret = -errno;
 	fclose(file);
+	free(log);
 	return ret;
+}
+
+uint32_t view_lines_from_cursor(const struct log *input_log, uint32_t cursor, void(*cb)(const char *, uint64_t))
+{
+	struct log *log;
+	uint32_t l, i = cursor;
+
+	log = malloc(sizeof(*log));
+	if (!log)
+		return cursor;
+	memcpy(log, input_log, sizeof(*log));
+
+	if (i == -1)
+		i = log->next_index;
+
+	for (l = 0; l < MAX_LINES; ++l, ++i) {
+		const struct log_line *line = &log->lines[i % MAX_LINES];
+
+		if (cursor != -1 && i % MAX_LINES == log->next_index % MAX_LINES)
+			break;
+
+		if (!line->time_ns) {
+			if (cursor == -1)
+				continue;
+			else
+				break;
+		}
+		cb(line->line, line->time_ns);
+		cursor = (i + 1) % MAX_LINES;
+	}
+	free(log);
+	return cursor;
 }
 
 struct log *open_log(const char *file_name)
