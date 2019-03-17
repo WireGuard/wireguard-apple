@@ -12,10 +12,12 @@ public class Logger {
     static var global: Logger?
 
     var log: OpaquePointer
+    var tag: String
 
-    init(withFilePath filePath: String) throws {
+    init(tagged tag: String, withFilePath filePath: String) throws {
         guard let log = open_log(filePath) else { throw LoggerError.openFailure }
         self.log = log
+        self.tag = tag
     }
 
     deinit {
@@ -23,17 +25,14 @@ public class Logger {
     }
 
     func log(message: String) {
-        write_msg_to_log(log, message.trimmingCharacters(in: .newlines))
+        write_msg_to_log(log, tag, message.trimmingCharacters(in: .newlines))
     }
 
-    func writeLog(called ourTag: String, mergedWith otherLogFile: String, called otherTag: String, to targetFile: String) -> Bool {
-        guard let other = open_log(otherLogFile) else { return false }
-        let ret = write_logs_to_file(targetFile, log, ourTag, other, otherTag)
-        close_log(other)
-        return ret == 0
+    func writeLog(to targetFile: String) -> Bool {
+        return write_log_to_file(targetFile, self.log) == 0
     }
 
-    static func configureGlobal(withFilePath filePath: String?) {
+    static func configureGlobal(tagged tag: String, withFilePath filePath: String?) {
         if Logger.global != nil {
             return
         }
@@ -41,7 +40,7 @@ public class Logger {
             os_log("Unable to determine log destination path. Log will not be saved to file.", log: OSLog.default, type: .error)
             return
         }
-        guard let logger = try? Logger(withFilePath: filePath) else {
+        guard let logger = try? Logger(tagged: tag, withFilePath: filePath) else {
             os_log("Unable to open log file for writing. Log will not be saved to file.", log: OSLog.default, type: .error)
             return
         }
@@ -52,7 +51,6 @@ public class Logger {
         }
         let goBackendVersion = WIREGUARD_GO_VERSION
         Logger.global?.log(message: "App version: \(appVersion); Go backend version: \(goBackendVersion)")
-
     }
 }
 

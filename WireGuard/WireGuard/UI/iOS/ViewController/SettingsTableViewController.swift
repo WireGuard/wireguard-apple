@@ -126,12 +126,7 @@ class SettingsTableViewController: UITableViewController {
                 }
             }
 
-            guard let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path else {
-                ErrorPresenter.showErrorAlert(title: tr("alertUnableToFindExtensionLogPathTitle"), message: tr("alertUnableToFindExtensionLogPathMessage"), from: self)
-                return
-            }
-
-            let isWritten = Logger.global?.writeLog(called: "APP", mergedWith: networkExtensionLogFilePath, called: "NET", to: destinationURL.path) ?? false
+            let isWritten = Logger.global?.writeLog(to: destinationURL.path) ?? false
 
             DispatchQueue.main.async {
                 guard isWritten else {

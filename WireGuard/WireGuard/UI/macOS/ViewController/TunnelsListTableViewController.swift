@@ -198,17 +198,12 @@ class TunnelsListTableViewController: NSViewController {
         let timeStampString = dateFormatter.string(from: Date())
         savePanel.nameFieldStringValue = "wireguard-log-\(timeStampString).txt"
 
-        guard let networkExtensionLogFilePath = FileManager.networkExtensionLogFileURL?.path else {
-            ErrorPresenter.showErrorAlert(title: tr("alertUnableToFindExtensionLogPathTitle"), message: tr("alertUnableToFindExtensionLogPathMessage"), from: self)
-            return
-        }
-
         savePanel.beginSheetModal(for: window) { response in
             guard response == .OK else { return }
             guard let destinationURL = savePanel.url else { return }
 
             DispatchQueue.global(qos: .userInitiated).async {
-                let isWritten = Logger.global?.writeLog(called: "APP", mergedWith: networkExtensionLogFilePath, called: "NET", to: destinationURL.path) ?? false
+                let isWritten = Logger.global?.writeLog(to: destinationURL.path) ?? false
                 guard isWritten else {
                     DispatchQueue.main.async { [weak self] in
                         ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
