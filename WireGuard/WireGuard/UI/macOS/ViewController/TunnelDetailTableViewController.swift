@@ -56,7 +56,7 @@ class TunnelDetailTableViewController: NSViewController {
         button.title = tr("Edit")
         button.setButtonType(.momentaryPushIn)
         button.bezelStyle = .rounded
-        button.toolTip = "Edit tunnel (⌘E)"
+        button.toolTip = tr("macToolTipEditTunnel")
         return button
     }()
 
@@ -406,7 +406,7 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         let cell: ButtonRow = tableView.dequeueReusableCell()
         cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(forStatus: tunnel.status)
         cell.isButtonEnabled = (tunnel.status == .active || tunnel.status == .inactive)
-        cell.buttonToolTip = "Toggle status (⌘T)"
+        cell.buttonToolTip = tr("macToolTipToggleStatus")
         cell.onButtonClicked = { [weak self] in
             self?.handleToggleActiveStatusAction()
         }
