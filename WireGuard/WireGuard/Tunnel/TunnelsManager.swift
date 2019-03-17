@@ -28,7 +28,7 @@ class TunnelsManager {
     private var configurationsObservationToken: AnyObject?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
-        tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { $0.name < $1.name }
+        tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
         startObservingTunnelStatuses()
         startObservingTunnelConfigurations()
     }
@@ -90,7 +90,7 @@ class TunnelsManager {
                     }
                     let tunnel = TunnelContainer(tunnel: loadedTunnelProvider)
                     self.tunnels.append(tunnel)
-                    self.tunnels.sort { $0.name < $1.name }
+                    self.tunnels.sort { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
                     self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
                 }
             }
@@ -142,7 +142,7 @@ class TunnelsManager {
 
             let tunnel = TunnelContainer(tunnel: tunnelProviderManager)
             self.tunnels.append(tunnel)
-            self.tunnels.sort { $0.name < $1.name }
+            self.tunnels.sort { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
             self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
             completionHandler(.success(tunnel))
         }
@@ -204,7 +204,7 @@ class TunnelsManager {
             guard let self = self else { return }
             if isNameChanged {
                 let oldIndex = self.tunnels.firstIndex(of: tunnel)!
-                self.tunnels.sort { $0.name < $1.name }
+                self.tunnels.sort { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
                 let newIndex = self.tunnels.firstIndex(of: tunnel)!
                 self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
             }
@@ -400,6 +400,9 @@ class TunnelsManager {
         }
     }
 
+    static func tunnelNameIsLessThan(_ a: String, _ b: String) -> Bool {
+        return a.compare(b, options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive, .numeric]) == .orderedAscending
+    }
 }
 
 private func lastErrorTextFromNetworkExtension(for tunnel: TunnelContainer) -> (title: String, message: String)? {
