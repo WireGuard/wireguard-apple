@@ -78,6 +78,8 @@ class TunnelsListTableViewController: NSViewController {
         tableView.dataSource = self
         tableView.delegate = self
 
+        tableView.doubleAction = #selector(listDoubleClicked(sender:))
+
         let isSelected = selectTunnelInOperation() || selectTunnel(at: 0)
         if !isSelected {
             delegate?.tunnelsListEmpty()
@@ -239,6 +241,17 @@ class TunnelsListTableViewController: NSViewController {
                     }
                 }
             }
+        }
+    }
+
+    @objc func listDoubleClicked(sender: AnyObject) {
+        let tunnelIndex = tableView.clickedRow
+        guard tunnelIndex >= 0 && tunnelIndex < tunnelsManager.numberOfTunnels() else { return }
+        let tunnel = tunnelsManager.tunnel(at: tunnelIndex)
+        if tunnel.status == .inactive {
+            tunnelsManager.startActivation(of: tunnel)
+        } else if tunnel.status == .active {
+            tunnelsManager.startDeactivation(of: tunnel)
         }
     }
 
