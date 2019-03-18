@@ -238,7 +238,8 @@ class TunnelsListTableViewController: UIViewController {
             tr(format: "deleteTunnelConfirmationAlertButtonMessage (%d)", selectedTunnels.count) :
             tr(format: "deleteTunnelsConfirmationAlertButtonMessage (%d)", selectedTunnels.count)
         let title = tr("deleteTunnelsConfirmationAlertButtonTitle")
-        self.showConfirmationAlert(message: message, buttonTitle: title, from: sender) { [weak self] in
+        ConfirmationAlertPresenter.showConfirmationAlert(message: message, buttonTitle: title,
+                                                         from: sender, presentingVC: self) { [weak self] in
             self?.tunnelsManager?.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
                 guard let self = self else { return }
                 if let error = error {
@@ -249,20 +250,6 @@ class TunnelsListTableViewController: UIViewController {
                 self.tableView.setEditing(false, animated: true)
             }
         }
-    }
-
-    func showConfirmationAlert(message: String, buttonTitle: String, from barButtonItem: UIBarButtonItem, onConfirmed: @escaping (() -> Void)) {
-        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
-            onConfirmed()
-        }
-        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
-        alert.addAction(destroyAction)
-        alert.addAction(cancelAction)
-
-        alert.popoverPresentationController?.barButtonItem = barButtonItem
-
-        present(alert, animated: true, completion: nil)
     }
 }
 

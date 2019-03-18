@@ -311,7 +311,9 @@ extension TunnelEditTableViewController {
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self, weak peerData] in
             guard let self = self, let peerData = peerData else { return }
-            self.showConfirmationAlert(message: tr("deletePeerConfirmationAlertMessage"), buttonTitle: tr("deletePeerConfirmationAlertButtonTitle"), from: cell) { [weak self] in
+            ConfirmationAlertPresenter.showConfirmationAlert(message: tr("deletePeerConfirmationAlertMessage"),
+                                                             buttonTitle: tr("deletePeerConfirmationAlertButtonTitle"),
+                                                             from: cell, presentingVC: self) { [weak self] in
                 guard let self = self else { return }
                 let removedSectionIndices = self.deletePeer(peer: peerData)
                 let shouldShowExcludePrivateIPs = (self.tunnelViewModel.peersData.count == 1 && self.tunnelViewModel.peersData[0].shouldAllowExcludePrivateIPsControl)
@@ -460,21 +462,6 @@ extension TunnelEditTableViewController {
         tunnelViewModel.deletePeer(peer: peer)
         loadSections()
         return IndexSet(integer: interfaceFieldsBySection.count + peer.index)
-    }
-
-    func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView, onConfirmed: @escaping (() -> Void)) {
-        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
-            onConfirmed()
-        }
-        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
-        alert.addAction(destroyAction)
-        alert.addAction(cancelAction)
-
-        alert.popoverPresentationController?.sourceView = sourceView
-        alert.popoverPresentationController?.sourceRect = sourceView.bounds
-
-        present(alert, animated: true, completion: nil)
     }
 }
 
