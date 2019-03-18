@@ -77,7 +77,6 @@
 		6F7774EF21722D97006A79B3 /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
 		6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */; };
 		6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */; };
-		6F86476B222FBB07006925D9 /* ControlRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F864769222FB87C006925D9 /* ControlRow.swift */; };
 		6F89E17A21EDEB0E00C97BB9 /* StatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */; };
 		6F89E17C21F090CC00C97BB9 /* TunnelsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */; };
 		6F8F0D7122258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */; };
@@ -302,7 +301,6 @@
 		6F7774EE21722D97006A79B3 /* TunnelsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsManager.swift; sourceTree = "<group>"; };
 		6F7774F221774263006A79B3 /* TunnelEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelEditTableViewController.swift; sourceTree = "<group>"; };
 		6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelErrors.swift; sourceTree = "<group>"; };
-		6F864769222FB87C006925D9 /* ControlRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlRow.swift; sourceTree = "<group>"; };
 		6F89E17921EDEB0E00C97BB9 /* StatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusItemController.swift; sourceTree = "<group>"; };
 		6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsTracker.swift; sourceTree = "<group>"; };
 		6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandViewModel.swift; sourceTree = "<group>"; };
@@ -447,7 +445,6 @@
 				5F52D0BC21E3785C00283CEA /* ConfTextStorage.swift */,
 				6FE3661C21F64F6B00F78C7D /* ConfTextColorTheme.swift */,
 				6F5EA59A223E58A8002B380A /* ButtonRow.swift */,
-				6F864769222FB87C006925D9 /* ControlRow.swift */,
 				6FB17945222FD5960018AE71 /* OnDemandWiFiControls.swift */,
 			);
 			path = View;
@@ -1203,7 +1200,6 @@
 				6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */,
 				6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6FBA101821D656000051C35F /* StatusMenu.swift in Sources */,
-				6F86476B222FBB07006925D9 /* ControlRow.swift in Sources */,
 				6F613D9B21DE33B8004B217A /* KeyValueRow.swift in Sources */,
 				6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */,
 				5F52D0BB21E3781B00283CEA /* ConfTextView.swift in Sources */,
