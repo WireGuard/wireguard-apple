@@ -125,21 +125,6 @@ class TunnelDetailTableViewController: UITableViewController {
         }
     }
 
-    func showConfirmationAlert(message: String, buttonTitle: String, from sourceView: UIView, onConfirmed: @escaping (() -> Void)) {
-        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
-            onConfirmed()
-        }
-        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
-        let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
-        alert.addAction(destroyAction)
-        alert.addAction(cancelAction)
-
-        alert.popoverPresentationController?.sourceView = sourceView
-        alert.popoverPresentationController?.sourceRect = sourceView.bounds
-
-        present(alert, animated: true, completion: nil)
-    }
-
     func startUpdatingRuntimeConfiguration() {
         reloadRuntimeConfiguration()
         reloadRuntimeConfigurationTimer?.invalidate()
@@ -435,7 +420,9 @@ extension TunnelDetailTableViewController {
         cell.hasDestructiveAction = true
         cell.onTapped = { [weak self] in
             guard let self = self else { return }
-            self.showConfirmationAlert(message: tr("deleteTunnelConfirmationAlertMessage"), buttonTitle: tr("deleteTunnelConfirmationAlertButtonTitle"), from: cell) { [weak self] in
+            ConfirmationAlertPresenter.showConfirmationAlert(message: tr("deleteTunnelConfirmationAlertMessage"),
+                                       buttonTitle: tr("deleteTunnelConfirmationAlertButtonTitle"),
+                                       from: cell, presentingVC: self) { [weak self] in
                 guard let self = self else { return }
                 self.tunnelsManager.remove(tunnel: self.tunnel) { error in
                     if error != nil {
