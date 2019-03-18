@@ -251,6 +251,8 @@ extension TunnelEditTableViewController {
             cell.keyboardType = .numberPad
         case .publicKey, .generateKeyPair:
             cell.keyboardType = .default
+        case .status, .toggleStatus:
+            fatalError("Unexpected interface field")
         }
 
         cell.isValueValid = (!tunnelViewModel.interfaceData.fieldsWithError.contains(field))
