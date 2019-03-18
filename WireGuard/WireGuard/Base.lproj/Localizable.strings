@@ -13,6 +13,10 @@
 "tunnelsListSettingsButtonTitle" = "Settings";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Add a tunnel";
 "tunnelsListSwipeDeleteButtonTitle" = "Delete";
+"tunnelsListSelectButtonTitle" = "Select";
+"tunnelsListSelectAllButtonTitle" = "Select All";
+"tunnelsListDeleteButtonTitle" = "Delete";
+"tunnelsListSelectedTitle (%d)" = "%d selected";
 
 // Tunnels list menu
 
@@ -31,6 +35,10 @@
 
 "alertBadConfigImportTitle" = "Unable to import tunnel";
 "alertBadConfigImportMessage (%@)" = "The file ‘%@’ does not contain a valid WireGuard configuration";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Delete";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Delete %d tunnel";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Delete %d tunnels";
 
 // Tunnel detail and edit UI
 
