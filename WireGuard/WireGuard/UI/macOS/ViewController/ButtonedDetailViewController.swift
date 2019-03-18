@@ -35,6 +35,12 @@ class ButtonedDetailViewController: NSViewController {
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             button.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+
+        NSLayoutConstraint.activate([
+            view.widthAnchor.constraint(greaterThanOrEqualToConstant: 320),
+            view.heightAnchor.constraint(greaterThanOrEqualToConstant: 120)
+        ])
+
         self.view = view
     }
 
