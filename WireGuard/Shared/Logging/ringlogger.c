@@ -42,11 +42,14 @@ void write_msg_to_log(struct log *log, const char *tag, const char *msg)
 	struct log_line *line;
 	struct timespec ts;
 
+	// Race: This isn't synchronized with the fetch_add below, so items might be slightly out of order.
 	clock_gettime(CLOCK_REALTIME, &ts);
 
+	// Race: More than MAX_LINES writers and this will clash.
 	index = atomic_fetch_add(&log->next_index, 1);
 	line = &log->lines[index % MAX_LINES];
 
+	// Race: Before this line executes, we'll display old data after new data.
 	atomic_store(&line->time_ns, 0);
 	memset(line->line, 0, MAX_LOG_LINE_LENGTH);
 
