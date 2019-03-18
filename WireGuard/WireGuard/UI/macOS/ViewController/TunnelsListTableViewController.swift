@@ -19,6 +19,7 @@ class TunnelsListTableViewController: NSViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .medium
         tableView.allowsMultipleSelection = true
+        tableView.allowsEmptySelection = false
         return tableView
     }()
 
