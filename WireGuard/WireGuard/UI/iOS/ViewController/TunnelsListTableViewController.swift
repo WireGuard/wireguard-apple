@@ -9,6 +9,12 @@ class TunnelsListTableViewController: UIViewController {
 
     var tunnelsManager: TunnelsManager?
 
+    enum TableState: Equatable {
+        case normal
+        case rowSwiped
+        case multiSelect(selectionCount: Int)
+    }
+
     let tableView: UITableView = {
         let tableView = UITableView(frame: CGRect.zero, style: .plain)
         tableView.estimatedRowHeight = 60
@@ -32,6 +38,11 @@ class TunnelsListTableViewController: UIViewController {
     }()
 
     var detailDisplayedTunnel: TunnelContainer?
+    var tableState: TableState = .normal {
+        didSet {
+            handleTableStateChange()
+        }
+    }
 
     override func loadView() {
         view = UIView()
@@ -74,11 +85,37 @@ class TunnelsListTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = tr("tunnelsListTitle")
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListSettingsButtonTitle"), style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
-
+        tableState = .normal
         restorationIdentifier = "TunnelsListVC"
+    }
+
+    func handleTableStateChange() {
+        switch tableState {
+        case .normal:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped(sender:)))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListSettingsButtonTitle"), style: .plain, target: self, action: #selector(settingsButtonTapped(sender:)))
+        case .rowSwiped:
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListSelectButtonTitle"), style: .plain, target: self, action: #selector(selectButtonTapped))
+        case .multiSelect(let selectionCount):
+            if selectionCount > 0 {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTapped))
+                navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListDeleteButtonTitle"), style: .plain, target: self, action: #selector(deleteButtonTapped(sender:)))
+            } else {
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTapped))
+                navigationItem.leftBarButtonItem = UIBarButtonItem(title: tr("tunnelsListSelectAllButtonTitle"), style: .plain, target: self, action: #selector(selectAllButtonTapped))
+            }
+        }
+        if case .multiSelect(let selectionCount) = tableState, selectionCount > 0 {
+            navigationItem.title = tr(format: "tunnelsListSelectedTitle (%d)", selectionCount)
+        } else {
+            navigationItem.title = tr("tunnelsListTitle")
+        }
+        if case .multiSelect = tableState {
+            tableView.allowsMultipleSelectionDuringEditing = true
+        } else {
+            tableView.allowsMultipleSelectionDuringEditing = false
+        }
     }
 
     func setTunnelsManager(tunnelsManager: TunnelsManager) {
@@ -159,6 +196,74 @@ class TunnelsListTableViewController: UIViewController {
         scanQRCodeNC.modalPresentationStyle = .fullScreen
         present(scanQRCodeNC, animated: true)
     }
+
+    @objc func selectButtonTapped() {
+        let shouldCancelSwipe = tableState == .rowSwiped
+        tableState = .multiSelect(selectionCount: 0)
+        if shouldCancelSwipe {
+            tableView.setEditing(false, animated: false)
+        }
+        tableView.setEditing(true, animated: true)
+    }
+
+    @objc func doneButtonTapped() {
+        tableState = .normal
+        tableView.setEditing(false, animated: true)
+    }
+
+    @objc func selectAllButtonTapped() {
+        guard tableView.isEditing else { return }
+        guard let tunnelsManager = tunnelsManager else { return }
+        for index in 0 ..< tunnelsManager.numberOfTunnels() {
+            tableView.selectRow(at: IndexPath(row: index, section: 0), animated: false, scrollPosition: .none)
+        }
+        tableState = .multiSelect(selectionCount: tableView.indexPathsForSelectedRows?.count ?? 0)
+    }
+
+    @objc func cancelButtonTapped() {
+        tableState = .normal
+        tableView.setEditing(false, animated: true)
+    }
+
+    @objc func deleteButtonTapped(sender: AnyObject?) {
+        guard let sender = sender as? UIBarButtonItem else { return }
+        guard let tunnelsManager = tunnelsManager else { return }
+
+        let selectedTunnelIndices = tableView.indexPathsForSelectedRows?.map { $0.row } ?? []
+        let selectedTunnels = selectedTunnelIndices.compactMap { tunnelIndex in
+            tunnelIndex >= 0 && tunnelIndex < tunnelsManager.numberOfTunnels() ? tunnelsManager.tunnel(at: tunnelIndex) : nil
+        }
+        guard !selectedTunnels.isEmpty else { return }
+        let message = selectedTunnels.count == 1 ?
+            tr(format: "deleteTunnelConfirmationAlertButtonMessage (%d)", selectedTunnels.count) :
+            tr(format: "deleteTunnelsConfirmationAlertButtonMessage (%d)", selectedTunnels.count)
+        let title = tr("deleteTunnelsConfirmationAlertButtonTitle")
+        self.showConfirmationAlert(message: message, buttonTitle: title, from: sender) { [weak self] in
+            self?.tunnelsManager?.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
+                guard let self = self else { return }
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
+                }
+                self.tableState = .normal
+                self.tableView.setEditing(false, animated: true)
+            }
+        }
+    }
+
+    func showConfirmationAlert(message: String, buttonTitle: String, from barButtonItem: UIBarButtonItem, onConfirmed: @escaping (() -> Void)) {
+        let destroyAction = UIAlertAction(title: buttonTitle, style: .destructive) { _ in
+            onConfirmed()
+        }
+        let cancelAction = UIAlertAction(title: tr("actionCancel"), style: .cancel)
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .actionSheet)
+        alert.addAction(destroyAction)
+        alert.addAction(cancelAction)
+
+        alert.popoverPresentationController?.barButtonItem = barButtonItem
+
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
@@ -210,6 +315,10 @@ extension TunnelsListTableViewController: UITableViewDataSource {
 
 extension TunnelsListTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard !tableView.isEditing else {
+            tableState = .multiSelect(selectionCount: tableView.indexPathsForSelectedRows?.count ?? 0)
+            return
+        }
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
         let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
@@ -218,6 +327,13 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         tunnelDetailNC.restorationIdentifier = "DetailNC"
         showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
         detailDisplayedTunnel = tunnel
+    }
+
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        guard !tableView.isEditing else {
+            tableState = .multiSelect(selectionCount: tableView.indexPathsForSelectedRows?.count ?? 0)
+            return
+        }
     }
 
     func tableView(_ tableView: UITableView,
@@ -235,6 +351,18 @@ extension TunnelsListTableViewController: UITableViewDelegate {
             }
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
+
+    func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {
+        if tableState == .normal {
+            tableState = .rowSwiped
+        }
+    }
+
+    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
+        if tableState == .rowSwiped {
+            tableState = .normal
+        }
     }
 }
 

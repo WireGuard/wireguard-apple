@@ -98,6 +98,11 @@ class TunnelListCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        statusSwitch.isEnabled = !editing
+    }
+
     private func reset() {
         statusSwitch.isOn = false
         statusSwitch.isUserInteractionEnabled = false
