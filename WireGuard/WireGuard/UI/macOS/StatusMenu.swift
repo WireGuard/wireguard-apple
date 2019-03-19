@@ -13,6 +13,7 @@ class StatusMenu: NSMenu {
 
     var statusMenuItem: NSMenuItem?
     var networksMenuItem: NSMenuItem?
+    var deactivateMenuItem: NSMenuItem?
     var firstTunnelMenuItemIndex = 0
     var numberOfTunnelMenuItems = 0
 
@@ -53,16 +54,22 @@ class StatusMenu: NSMenu {
         networksMenuItem.isEnabled = false
         networksMenuItem.isHidden = true
         addItem(networksMenuItem)
+        let deactivateMenuItem = NSMenuItem(title: tr("macToggleStatusButtonDeactivate"), action: #selector(deactivateClicked), keyEquivalent: "")
+        deactivateMenuItem.target = self
+        deactivateMenuItem.isHidden = true
+        addItem(deactivateMenuItem)
         self.statusMenuItem = statusMenuItem
         self.networksMenuItem = networksMenuItem
+        self.deactivateMenuItem = deactivateMenuItem
     }
 
     func updateStatusMenuItems(with tunnel: TunnelContainer?) {
-        guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem else { return }
+        guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem, let deactivateMenuItem = deactivateMenuItem else { return }
         guard let tunnel = tunnel else {
             statusMenuItem.title = tr(format: "macStatus (%@)", tr("tunnelStatusInactive"))
             networksMenuItem.title = ""
             networksMenuItem.isHidden = true
+            deactivateMenuItem.isHidden = true
             return
         }
         var statusText: String
@@ -98,6 +105,7 @@ class StatusMenu: NSMenu {
             }
             networksMenuItem.isHidden = false
         }
+        deactivateMenuItem.isHidden = tunnel.status != .active
     }
 
     func addTunnelMenuItems() -> Bool {
@@ -125,6 +133,12 @@ class StatusMenu: NSMenu {
         let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(AppDelegate.quit), keyEquivalent: "")
         quitItem.target = NSApp.delegate
         addItem(quitItem)
+    }
+
+    @objc func deactivateClicked() {
+        if let currentTunnel = currentTunnel {
+            tunnelsManager.startDeactivation(of: currentTunnel)
+        }
     }
 
     @objc func tunnelClicked(sender: AnyObject) {
