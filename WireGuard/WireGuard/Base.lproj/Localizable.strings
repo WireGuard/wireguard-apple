@@ -37,8 +37,8 @@
 "alertBadConfigImportMessage (%@)" = "The file ‘%@’ does not contain a valid WireGuard configuration";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Delete";
-"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Delete %d tunnel";
-"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Delete %d tunnels";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Delete %d tunnel?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Delete %d tunnels?";
 
 // Tunnel detail and edit UI
 
