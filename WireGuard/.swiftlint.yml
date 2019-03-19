@@ -20,6 +20,6 @@ opt_in_rules:
  - unneeded_parentheses_in_closure_argument
  - unused_import
  - trailing_closure
-variable_name:
+identifier_name:
   min_length:
     warning: 0
