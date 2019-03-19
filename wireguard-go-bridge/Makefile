@@ -26,7 +26,7 @@ export CGO_ENABLED := 1
 build: $(DESTDIR)/libwg-go.a
 version-header: $(DESTDIR)/wireguard-go-version.h
 
-GOBUILDVERSION_NEEDED := go version go1.12 darwin/amd64
+GOBUILDVERSION_NEEDED := go version go1.12.1 darwin/amd64
 GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
 export REAL_GOROOT := $(shell go env GOROOT 2>/dev/null)
 export GOROOT := $(BUILDDIR)/goroot
@@ -44,7 +44,10 @@ $(GOROOT)/.prepared:
 	[ -n "$(REAL_GOROOT)" ]
 	mkdir -p "$(GOROOT)"
 	rsync -a --delete --exclude=pkg/obj/go-build "$(REAL_GOROOT)/" "$(GOROOT)/"
-	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff
+	cat goruntime-*.diff | patch -p1 -f -N -r- -d "$(GOROOT)"
+	rm -rf "$(GOPATH)/pkg/mod"
+	go get -d -tags ios; chmod -fR +w "$(GOPATH)/pkg/mod"
+	for sys in "$(GOPATH)/pkg/mod/golang.org/x/sys@"*; do cat sys-unix-*.diff | patch -p1 -f -N -r- -d "$$sys"; done
 	touch "$@"
 
 $(shell test "$$(cat "$(BUILDDIR)/.gobuildversion" 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.a")
@@ -63,7 +66,6 @@ endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
 $(DESTDIR)/wireguard-go-version.h: go.mod $(GOROOT)/.prepared
-	go get -d -tags ios; chmod -fR +w "$(GOPATH)/pkg/mod"
 	wggo="$(GOPATH)/pkg/mod/$$(sed -n 's/.*\(golang\.zx2c4\.com\/wireguard\) \(.*\)$$/\1@\2/p' go.mod)"; \
 	sed -n 's/.*WireGuardGoVersion = "\(.*\)"/#define WIREGUARD_GO_VERSION "\1"/p' "$$wggo/device/version.go" > "$@"
 
