@@ -19,7 +19,6 @@ class TunnelsListTableViewController: NSViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .medium
         tableView.allowsMultipleSelection = true
-        tableView.allowsEmptySelection = false
         return tableView
     }()
 
@@ -84,6 +83,7 @@ class TunnelsListTableViewController: NSViewController {
         if !isSelected {
             delegate?.tunnelsListEmpty()
         }
+        tableView.allowsEmptySelection = false
 
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
