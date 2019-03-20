@@ -44,7 +44,6 @@
 		6B6956362211DA80001B618A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6956352211DA80001B618A /* main.m */; };
 		6B707D8421F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */; };
 		6B707D8621F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */; };
-		6BAC16E6221634B300A5FB78 /* AppStorePrivacyNotice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAC16E42216324B00A5FB78 /* AppStorePrivacyNotice.swift */; };
 		6BD5C97B220D1AE200784E08 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5C979220D1AE100784E08 /* key.c */; };
 		6BD5C97C220D1AE200784E08 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5C979220D1AE100784E08 /* key.c */; };
 		6BD5C97D220D1AE200784E08 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5C979220D1AE100784E08 /* key.c */; };
@@ -286,7 +285,6 @@
 		6B62E45E220A6FA900EF34A6 /* PrivateDataConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateDataConfirmation.swift; sourceTree = "<group>"; };
 		6B6956352211DA80001B618A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TunnelConfiguration+UapiConfig.swift"; sourceTree = "<group>"; };
-		6BAC16E42216324B00A5FB78 /* AppStorePrivacyNotice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStorePrivacyNotice.swift; sourceTree = "<group>"; };
 		6BD5C979220D1AE100784E08 /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		6BD5C97A220D1AE200784E08 /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = key.h; sourceTree = "<group>"; };
 		6F0F44C8222D55BB00B0FF04 /* TextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCell.swift; sourceTree = "<group>"; };
@@ -623,7 +621,6 @@
 				6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */,
 				5F52D0BE21E3788900283CEA /* NSColor+Hex.swift */,
 				6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */,
-				6BAC16E42216324B00A5FB78 /* AppStorePrivacyNotice.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -1257,7 +1254,6 @@
 				6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */,
 				6FB1BDCB21D50F1700A991BF /* Curve25519.swift in Sources */,
 				6B586C55220CBA6D00427C51 /* Data+KeyEncoding.swift in Sources */,
-				6BAC16E6221634B300A5FB78 /* AppStorePrivacyNotice.swift in Sources */,
 				6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,

@@ -243,17 +243,15 @@ class TunnelEditViewController: NSViewController {
             }
         } else {
             // We're creating a new tunnel
-            AppStorePrivacyNotice.show(from: self, into: tunnelsManager) { [weak self] in
-                self?.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
-                    self?.setUserInteractionEnabled(true)
-                    if let error = result.error {
-                        ErrorPresenter.showErrorAlert(error: error, from: self)
-                        return
-                    }
-                    let tunnel: TunnelContainer = result.value!
-                    self?.dismiss(self)
-                    self?.delegate?.tunnelSaved(tunnel: tunnel)
+            self.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
+                self?.setUserInteractionEnabled(true)
+                if let error = result.error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
                 }
+                let tunnel: TunnelContainer = result.value!
+                self?.dismiss(self)
+                self?.delegate?.tunnelSaved(tunnel: tunnel)
             }
         }
     }
