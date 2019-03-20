@@ -13,9 +13,7 @@ class ImportPanelPresenter {
         openPanel.beginSheetModal(for: window) { [weak tunnelsManager] response in
             guard let tunnelsManager = tunnelsManager else { return }
             guard response == .OK else { return }
-            AppStorePrivacyNotice.show(from: sourceVC, into: tunnelsManager) {
-                TunnelImporter.importFromFile(urls: openPanel.urls, into: tunnelsManager, sourceVC: sourceVC, errorPresenterType: ErrorPresenter.self)
-            }
+            TunnelImporter.importFromFile(urls: openPanel.urls, into: tunnelsManager, sourceVC: sourceVC, errorPresenterType: ErrorPresenter.self)
         }
     }
 }
