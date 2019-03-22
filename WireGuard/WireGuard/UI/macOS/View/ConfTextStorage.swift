@@ -143,7 +143,7 @@ class ConfTextStorage: NSTextStorage {
             .font: defaultFont
         ]
         backingStore.setAttributes(defaultAttributes, range: fullTextRange)
-        var spans = highlight_config(backingStore.string.cString(using: String.Encoding.utf8))!
+        var spans = highlight_config(backingStore.string)!
         evaluateExcludePrivateIPs(highlightSpans: spans)
 
         while spans.pointee.type != HighlightEnd {
