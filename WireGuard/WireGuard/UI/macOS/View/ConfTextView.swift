@@ -14,6 +14,7 @@ class ConfTextView: NSTextView {
     override var string: String {
         didSet {
             confTextStorage.highlightSyntax()
+            updateConfigData()
         }
     }
 
@@ -53,6 +54,21 @@ class ConfTextView: NSTextView {
         }
     }
 
+    private func updateConfigData() {
+        if hasError != confTextStorage.hasError {
+            hasError = confTextStorage.hasError
+        }
+        if privateKeyString != confTextStorage.privateKeyString {
+            privateKeyString = confTextStorage.privateKeyString
+        }
+        let hasSyntaxError = confTextStorage.hasError
+        let hasSemanticError = confTextStorage.privateKeyString == nil || !confTextStorage.lastOnePeerHasPublicKey
+        let updatedSinglePeerAllowedIPs = confTextStorage.hasOnePeer && !hasSyntaxError && !hasSemanticError ? confTextStorage.lastOnePeerAllowedIPs : nil
+        if singlePeerAllowedIPs != updatedSinglePeerAllowedIPs {
+            singlePeerAllowedIPs = updatedSinglePeerAllowedIPs
+        }
+    }
+
     func setConfText(_ text: String) {
         let fullTextRange = NSRange(location: 0, length: (string as NSString).length)
         if shouldChangeText(in: fullTextRange, replacementString: text) {
@@ -66,16 +82,7 @@ extension ConfTextView: NSTextViewDelegate {
 
     func textDidChange(_ notification: Notification) {
         confTextStorage.highlightSyntax()
-        if hasError != confTextStorage.hasError {
-            hasError = confTextStorage.hasError
-        }
-        if privateKeyString != confTextStorage.privateKeyString {
-            privateKeyString = confTextStorage.privateKeyString
-        }
-        let updatedSinglePeerAllowedIPs = confTextStorage.hasOnePeer && !confTextStorage.hasError ? confTextStorage.lastOnePeerAllowedIPs : nil
-        if singlePeerAllowedIPs != updatedSinglePeerAllowedIPs {
-            singlePeerAllowedIPs = updatedSinglePeerAllowedIPs
-        }
+        updateConfigData()
         needsDisplay = true
     }
 

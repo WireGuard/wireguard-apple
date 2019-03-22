@@ -19,6 +19,7 @@ class ConfTextStorage: NSTextStorage {
     private(set) var hasOnePeer: Bool = false
     private(set) var lastOnePeerAllowedIPs = [String]()
     private(set) var lastOnePeerDNSServers = [String]()
+    private(set) var lastOnePeerHasPublicKey = false
 
     override init() {
         backingStore = NSMutableAttributedString(string: "")
@@ -88,6 +89,7 @@ class ConfTextStorage: NSTextStorage {
         hasOnePeer = false
         lastOnePeerAllowedIPs = []
         lastOnePeerDNSServers = []
+        lastOnePeerHasPublicKey = false
     }
 
     func evaluateExcludePrivateIPs(highlightSpans: UnsafePointer<highlight_span>) {
@@ -125,6 +127,8 @@ class ConfTextStorage: NSTextStorage {
                                  backingStore.attributedSubstring(from: NSRange(location: nextnext.pointee.start, length: nextnext.pointee.len)).string
                 }
                 lastOnePeerAllowedIPs.append(substring)
+            } else if span.type == HighlightPublicKey {
+                lastOnePeerHasPublicKey = true
             }
             spans = spans.successor()
         }
