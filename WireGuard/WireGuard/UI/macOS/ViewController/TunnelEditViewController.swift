@@ -117,6 +117,8 @@ class TunnelEditViewController: NSViewController {
             let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64Key() ?? "")\n"
             publicKeyRow.value = publicKey.base64Key() ?? ""
             textView.string = bootstrappingText
+            updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: nil)
+            dnsServersAddedToAllowedIPs = nil
         }
         privateKeyObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
             if let privateKeyString = textView.privateKeyString,
