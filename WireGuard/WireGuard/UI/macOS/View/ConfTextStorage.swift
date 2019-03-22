@@ -150,6 +150,7 @@ class ConfTextStorage: NSTextStorage {
         var spans = highlight_config(backingStore.string)!
         evaluateExcludePrivateIPs(highlightSpans: spans)
 
+        let spansStart = spans
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
 
@@ -169,6 +170,7 @@ class ConfTextStorage: NSTextStorage {
             spans = spans.successor()
         }
         backingStore.endEditing()
+        free(spansStart)
 
         beginEditing()
         edited(.editedAttributes, range: fullTextRange, changeInLength: 0)
