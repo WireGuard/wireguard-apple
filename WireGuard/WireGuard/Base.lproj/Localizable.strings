@@ -296,7 +296,7 @@
 "macMenuManageTunnels" = "Manage tunnels";
 "macMenuImportTunnels" = "Import tunnel(s) from file…";
 "macMenuAddEmptyTunnel" = "Add empty tunnel…";
-"macMenuExportLog" = "Export log to file…";
+"macMenuViewLog" = "View log";
 "macMenuExportTunnels" = "Export tunnels to zip…";
 "macMenuAbout" = "About WireGuard";
 "macMenuQuit" = "Quit";
@@ -387,3 +387,10 @@
 
 "macToolTipEditTunnel" = "Edit tunnel (⌘E)";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "Time";
+"macLogColumnTitleLogMessage" = "Log message";
+"macLogButtonTitleClose" = "Close";
+"macLogButtonTitleSave" = "Save…";
