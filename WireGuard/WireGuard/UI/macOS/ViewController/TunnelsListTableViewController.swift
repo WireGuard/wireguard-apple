@@ -53,7 +53,7 @@ class TunnelsListTableViewController: NSViewController {
 
         let menu = NSMenu()
         menu.addItem(imageItem)
-        menu.addItem(withTitle: tr("macMenuExportLog"), action: #selector(handleExportLogAction), keyEquivalent: "")
+        menu.addItem(withTitle: tr("macMenuViewLog"), action: #selector(handleViewLogAction), keyEquivalent: "")
         menu.addItem(withTitle: tr("macMenuExportTunnels"), action: #selector(handleExportTunnelsAction), keyEquivalent: "")
         menu.autoenablesItems = false
 
@@ -190,32 +190,9 @@ class TunnelsListTableViewController: NSViewController {
         }
     }
 
-    @objc func handleExportLogAction() {
-        guard let window = view.window else { return }
-        let savePanel = NSSavePanel()
-        savePanel.prompt = tr("macSheetButtonExportLog")
-        savePanel.nameFieldLabel = tr("macNameFieldExportLog")
-
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
-        let timeStampString = dateFormatter.string(from: Date())
-        savePanel.nameFieldStringValue = "wireguard-log-\(timeStampString).txt"
-
-        savePanel.beginSheetModal(for: window) { response in
-            guard response == .OK else { return }
-            guard let destinationURL = savePanel.url else { return }
-
-            DispatchQueue.global(qos: .userInitiated).async {
-                let isWritten = Logger.global?.writeLog(to: destinationURL.path) ?? false
-                guard isWritten else {
-                    DispatchQueue.main.async { [weak self] in
-                        ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
-                    }
-                    return
-                }
-            }
-
-        }
+    @objc func handleViewLogAction() {
+        let logVC = LogViewController()
+        self.presentAsSheet(logVC)
     }
 
     @objc func handleExportTunnelsAction() {
