@@ -209,10 +209,14 @@
 "settingsSectionTitleExportConfigurations" = "Export configurations";
 "settingsExportZipButtonTitle" = "Export zip archive";
 
-"settingsSectionTitleTunnelLog" = "Tunnel log";
-"settingsExportLogFileButtonTitle" = "Export log file";
+"settingsSectionTitleTunnelLog" = "Log";
+"settingsViewLogButtonTitle" = "View log";
 
-// Settings alerts
+// Log view
+
+"logViewTitle" = "Log";
+
+// Log alerts
 
 "alertUnableToRemovePreviousLogTitle" = "Log export failed";
 "alertUnableToRemovePreviousLogMessage" = "The pre-existing log could not be cleared";

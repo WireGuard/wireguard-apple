@@ -10,14 +10,14 @@ class SettingsTableViewController: UITableViewController {
         case iosAppVersion
         case goBackendVersion
         case exportZipArchive
-        case exportLogFile
+        case viewLog
 
         var localizedUIString: String {
             switch self {
             case .iosAppVersion: return tr("settingsVersionKeyWireGuardForIOS")
             case .goBackendVersion: return tr("settingsVersionKeyWireGuardGoBackend")
             case .exportZipArchive: return tr("settingsExportZipButtonTitle")
-            case .exportLogFile: return tr("settingsExportLogFileButtonTitle")
+            case .viewLog: return tr("settingsViewLogButtonTitle")
             }
         }
     }
@@ -25,7 +25,7 @@ class SettingsTableViewController: UITableViewController {
     let settingsFieldsBySection: [[SettingsFields]] = [
         [.iosAppVersion, .goBackendVersion],
         [.exportZipArchive],
-        [.exportLogFile]
+        [.viewLog]
     ]
 
     let tunnelsManager: TunnelsManager?
@@ -108,41 +108,10 @@ class SettingsTableViewController: UITableViewController {
         }
     }
 
-    func exportLogForLastActivatedTunnel(sourceView: UIView) {
-        guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+    func presentLogView() {
+        let logVC = LogViewController()
+        navigationController?.pushViewController(logVC, animated: true)
 
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
-        let timeStampString = dateFormatter.string(from: Date())
-        let destinationURL = destinationDir.appendingPathComponent("wireguard-log-\(timeStampString).txt")
-
-        DispatchQueue.global(qos: .userInitiated).async {
-
-            if FileManager.default.fileExists(atPath: destinationURL.path) {
-                let isDeleted = FileManager.deleteFile(at: destinationURL)
-                if !isDeleted {
-                    ErrorPresenter.showErrorAlert(title: tr("alertUnableToRemovePreviousLogTitle"), message: tr("alertUnableToRemovePreviousLogMessage"), from: self)
-                    return
-                }
-            }
-
-            let isWritten = Logger.global?.writeLog(to: destinationURL.path) ?? false
-
-            DispatchQueue.main.async {
-                guard isWritten else {
-                    ErrorPresenter.showErrorAlert(title: tr("alertUnableToWriteLogTitle"), message: tr("alertUnableToWriteLogMessage"), from: self)
-                    return
-                }
-                let activityVC = UIActivityViewController(activityItems: [destinationURL], applicationActivities: nil)
-                activityVC.popoverPresentationController?.sourceView = sourceView
-                activityVC.popoverPresentationController?.sourceRect = sourceView.bounds
-                activityVC.completionWithItemsHandler = { _, _, _, _ in
-                    // Remove the exported log file after the activity has completed
-                    _ = FileManager.deleteFile(at: destinationURL)
-                }
-                self.present(activityVC, animated: true)
-            }
-        }
     }
 }
 
@@ -192,11 +161,11 @@ extension SettingsTableViewController {
             }
             return cell
         } else {
-            assert(field == .exportLogFile)
+            assert(field == .viewLog)
             let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.localizedUIString
             cell.onTapped = { [weak self] in
-                self?.exportLogForLastActivatedTunnel(sourceView: cell.button)
+                self?.presentLogView()
             }
             return cell
         }
