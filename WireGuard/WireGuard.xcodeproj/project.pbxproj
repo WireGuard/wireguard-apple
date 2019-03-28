@@ -548,8 +548,8 @@
 			children = (
 				6FF4AC1E211EC472002C96EB /* Assets.xcassets */,
 				6FF4AC20211EC472002C96EB /* LaunchScreen.storyboard */,
-				5F4541AC21C4720B00994C13 /* ViewController */,
 				5F4541A721C44F5B00994C13 /* View */,
+				5F4541AC21C4720B00994C13 /* ViewController */,
 				6F7774E0217181B1006A79B3 /* AppDelegate.swift */,
 				6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */,
 				6F19D30322402B8700A126F2 /* ConfirmationAlertPresenter.swift */,
