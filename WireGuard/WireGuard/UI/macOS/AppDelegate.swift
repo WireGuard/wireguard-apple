@@ -44,6 +44,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc func quit() {
+        if let manageWindow = manageTunnelsWindowObject, manageWindow.attachedSheet != nil {
+            NSApp.activate(ignoringOtherApps: true)
+            manageWindow.orderFront(self)
+            return
+        }
         registerLoginItem(shouldLaunchAtLogin: false)
         guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
             NSApp.terminate(nil)
