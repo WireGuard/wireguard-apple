@@ -44,7 +44,8 @@ public class LogViewHelper {
                 LogViewHelper.logEntries.append(LogEntry(timestamp: dateString, message: message))
             }
             DispatchQueue.main.async { [weak self] in
-                self?.cursor = newCursor
+                guard let self = self else { return }
+                self.cursor = newCursor
                 completion(LogViewHelper.logEntries)
             }
         }

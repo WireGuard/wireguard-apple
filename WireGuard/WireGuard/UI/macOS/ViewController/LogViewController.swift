@@ -94,7 +94,6 @@ class LogViewController: NSViewController {
 
         closeButton.target = self
         closeButton.action = #selector(closeClicked)
-        closeButton.isEnabled = false
 
         saveButton.target = self
         saveButton.action = #selector(saveClicked)
@@ -153,7 +152,6 @@ class LogViewController: NSViewController {
             }
             if !self.progressIndicator.isHidden {
                 self.progressIndicator.stopAnimation(self)
-                self.closeButton.isEnabled = true
                 self.saveButton.isEnabled = true
             }
             guard !fetchedLogEntries.isEmpty else { return }
