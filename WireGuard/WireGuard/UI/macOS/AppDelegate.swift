@@ -57,8 +57,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let alert = NSAlert()
         alert.messageText = tr("macAppExitingWithActiveTunnelMessage")
         alert.informativeText = tr("macAppExitingWithActiveTunnelInfo")
-        if let window = manageTunnelsWindowObject {
-            alert.beginSheetModal(for: window) { _ in
+        NSApp.activate(ignoringOtherApps: true)
+        if let manageWindow = manageTunnelsWindowObject {
+            manageWindow.orderFront(self)
+            alert.beginSheetModal(for: manageWindow) { _ in
                 NSApp.terminate(nil)
             }
         } else {
