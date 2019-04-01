@@ -8,7 +8,7 @@ class LogViewController: UIViewController {
     let textView: UITextView = {
         let textView = UITextView()
         textView.isEditable = false
-        textView.isSelectable = false
+        textView.isSelectable = true
         textView.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
         textView.adjustsFontForContentSizeCategory = true
         return textView
@@ -69,7 +69,9 @@ class LogViewController: UIViewController {
             guard !fetchedLogEntries.isEmpty else { return }
             let isScrolledToEnd = self.textView.contentSize.height - self.textView.bounds.height - self.textView.contentOffset.y < 1
             let text = fetchedLogEntries.reduce("") { $0 + $1.text() + "\n" }
-            self.textView.insertText(text)
+            let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+            let richText = NSAttributedString(string: text, attributes: [.font: font])
+            self.textView.textStorage.append(richText)
             if isScrolledToEnd {
                 let endOfCurrentText = NSRange(location: (self.textView.text as NSString).length, length: 0)
                 self.textView.scrollRangeToVisible(endOfCurrentText)
