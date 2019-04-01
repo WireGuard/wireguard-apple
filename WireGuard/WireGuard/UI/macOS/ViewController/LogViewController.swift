@@ -76,6 +76,7 @@ class LogViewController: NSViewController {
     let logViewHelper: LogViewHelper?
     var logEntries = [LogViewHelper.LogEntry]()
     var isFetchingLogEntries = false
+    var isInScrolledToEndMode = true
 
     private var updateLogEntriesTimer: Timer?
 
@@ -102,6 +103,21 @@ class LogViewController: NSViewController {
         let clipView = NSClipView()
         clipView.documentView = tableView
         scrollView.contentView = clipView
+
+        _ = NotificationCenter.default.addObserver(forName: NSView.boundsDidChangeNotification, object: clipView, queue: OperationQueue.main) { [weak self] _ in
+            guard let self = self else { return }
+            let lastVisibleRowIndex = self.tableView.row(at: NSPoint(x: 0, y: self.scrollView.contentView.documentVisibleRect.maxY - 1))
+            self.isInScrolledToEndMode = lastVisibleRowIndex < 0 || lastVisibleRowIndex == self.logEntries.count - 1
+        }
+
+        _ = NotificationCenter.default.addObserver(forName: NSView.frameDidChangeNotification, object: tableView, queue: OperationQueue.main) { [weak self] _ in
+            guard let self = self else { return }
+            if self.isInScrolledToEndMode {
+                DispatchQueue.main.async {
+                    self.tableView.scroll(NSPoint(x: 0, y: self.tableView.frame.maxY - clipView.documentVisibleRect.height))
+                }
+            }
+        }
 
         let margin: CGFloat = 20
         let internalSpacing: CGFloat = 10
@@ -155,14 +171,9 @@ class LogViewController: NSViewController {
                 self.saveButton.isEnabled = true
             }
             guard !fetchedLogEntries.isEmpty else { return }
-            let numOfEntries = self.logEntries.count
-            let lastVisibleRowIndex = self.tableView.row(at: NSPoint(x: 0, y: self.scrollView.contentView.documentVisibleRect.maxY - 1))
-            let isScrolledToEnd = lastVisibleRowIndex == numOfEntries - 1
+            let oldCount = self.logEntries.count
             self.logEntries.append(contentsOf: fetchedLogEntries)
-            self.tableView.insertRows(at: IndexSet(integersIn: numOfEntries ..< numOfEntries + fetchedLogEntries.count), withAnimation: .slideDown)
-            if isScrolledToEnd {
-                self.tableView.scrollRowToVisible(self.logEntries.count - 1)
-            }
+            self.tableView.insertRows(at: IndexSet(integersIn: oldCount ..< oldCount + fetchedLogEntries.count), withAnimation: .slideDown)
         }
     }
 
