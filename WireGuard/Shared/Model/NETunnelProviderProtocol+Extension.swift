@@ -49,9 +49,9 @@ extension NETunnelProviderProtocol {
         Keychain.deleteReference(called: ref)
     }
 
-    func verifyConfigurationReference() -> Data? {
-        guard let ref = passwordReference else { return nil }
-        return Keychain.verifyReference(called: ref) ? ref : nil
+    func verifyConfigurationReference() -> Bool {
+        guard let ref = passwordReference else { return false }
+        return Keychain.verifyReference(called: ref)
     }
 
     @discardableResult

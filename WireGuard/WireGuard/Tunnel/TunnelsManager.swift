@@ -47,11 +47,18 @@ class TunnelsManager {
             var tunnelManagers = managers ?? []
             var refs: Set<Data> = []
             for (index, tunnelManager) in tunnelManagers.enumerated().reversed() {
-                let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol
-                if proto?.migrateConfigurationIfNeeded(called: tunnelManager.localizedDescription ?? "unknown") ?? false {
+                guard let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol else { continue }
+                if proto.migrateConfigurationIfNeeded(called: tunnelManager.localizedDescription ?? "unknown") {
                     tunnelManager.saveToPreferences { _ in }
                 }
-                if let ref = proto?.verifyConfigurationReference() {
+                #if os(iOS)
+                let passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
+                #elseif os(macOS)
+                let passwordRef = proto.passwordReference // To handle multiple users in macOS, we skip verifying
+                #else
+                #error("Unimplemented")
+                #endif
+                if let ref = passwordRef {
                     refs.insert(ref)
                 } else {
                     tunnelManager.removeFromPreferences { _ in }
@@ -453,6 +460,10 @@ class TunnelContainer: NSObject {
 
     var tunnelConfiguration: TunnelConfiguration? {
         return tunnelProvider.tunnelConfiguration
+    }
+
+    var isTunnelConfigurationAvailableInKeychain: Bool {
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.verifyConfigurationReference() ?? false
     }
 
     var onDemandOption: ActivateOnDemandOption {
