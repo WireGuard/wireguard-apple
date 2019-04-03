@@ -398,3 +398,9 @@
 "macLogColumnTitleLogMessage" = "Log message";
 "macLogButtonTitleClose" = "Close";
 "macLogButtonTitleSave" = "Save…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "The configuration for this tunnel cannot be found in the keychain.";
+"macUnusableTunnelInfo" = "In case this tunnel was created by another user, only that user can view, edit, or activate this tunnel.";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Delete tunnel";
