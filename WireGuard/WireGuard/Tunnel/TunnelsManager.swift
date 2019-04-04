@@ -245,7 +245,9 @@ class TunnelsManager {
 
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
-        (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
+        if tunnel.isTunnelConfigurationAvailableInKeychain {
+            (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
+        }
 
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
