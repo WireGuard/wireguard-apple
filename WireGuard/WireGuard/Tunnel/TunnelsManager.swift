@@ -78,14 +78,14 @@ class TunnelsManager {
             let loadedTunnelProviders = managers ?? []
 
             for (index, currentTunnel) in self.tunnels.enumerated().reversed() {
-                if !loadedTunnelProviders.contains(where: { $0.tunnelConfiguration == currentTunnel.tunnelConfiguration }) {
+                if !loadedTunnelProviders.contains(where: { $0.isEquivalentTo(currentTunnel) }) {
                     // Tunnel was deleted outside the app
                     self.tunnels.remove(at: index)
                     self.tunnelsListDelegate?.tunnelRemoved(at: index, tunnel: currentTunnel)
                 }
             }
             for loadedTunnelProvider in loadedTunnelProviders {
-                if let matchingTunnel = self.tunnels.first(where: { $0.tunnelConfiguration == loadedTunnelProvider.tunnelConfiguration }) {
+                if let matchingTunnel = self.tunnels.first(where: { loadedTunnelProvider.isEquivalentTo($0) }) {
                     matchingTunnel.tunnelProvider = loadedTunnelProvider
                     matchingTunnel.refreshStatus()
                 } else {
@@ -607,5 +607,16 @@ extension NETunnelProviderManager {
         protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
         localizedDescription = tunnelConfiguration.name
         objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+
+    func isEquivalentTo(_ tunnel: TunnelContainer) -> Bool {
+        switch (isTunnelConfigurationAvailableInKeychain, tunnel.isTunnelConfigurationAvailableInKeychain) {
+        case (true, true):
+            return tunnelConfiguration == tunnel.tunnelConfiguration
+        case (false, false):
+            return localizedDescription == tunnel.name
+        default:
+            return false
+        }
     }
 }
