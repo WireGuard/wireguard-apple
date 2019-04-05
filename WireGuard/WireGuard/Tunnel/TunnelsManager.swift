@@ -465,7 +465,7 @@ class TunnelContainer: NSObject {
     }
 
     var isTunnelConfigurationAvailableInKeychain: Bool {
-        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.verifyConfigurationReference() ?? false
+        return tunnelProvider.isTunnelConfigurationAvailableInKeychain
     }
 
     var onDemandOption: ActivateOnDemandOption {
@@ -580,7 +580,18 @@ class TunnelContainer: NSObject {
 }
 
 extension NETunnelProviderManager {
+    private static var cachedIsConfigAvailableInKeychainKey: UInt8 = 0
     private static var cachedConfigKey: UInt8 = 0
+
+    var isTunnelConfigurationAvailableInKeychain: Bool {
+        if let cachedNumber = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey) as? NSNumber {
+            return cachedNumber.boolValue
+        }
+        let isAvailable = (protocolConfiguration as? NETunnelProviderProtocol)?.verifyConfigurationReference() ?? false
+        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey, NSNumber(value: isAvailable), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return isAvailable
+    }
+
     var tunnelConfiguration: TunnelConfiguration? {
         if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey) as? TunnelConfiguration {
             return cached
