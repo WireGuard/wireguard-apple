@@ -607,6 +607,7 @@ extension NETunnelProviderManager {
         protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
         localizedDescription = tunnelConfiguration.name
         objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey, NSNumber(value: true), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     func isEquivalentTo(_ tunnel: TunnelContainer) -> Bool {
