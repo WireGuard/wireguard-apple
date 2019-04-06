@@ -319,10 +319,10 @@
 "macButtonImportTunnels" = "Import tunnel(s) from file";
 "macSheetButtonImport" = "Import";
 
-"macNameFieldExportLog" = "Export log to";
+"macNameFieldExportLog" = "Save log to:";
 "macSheetButtonExportLog" = "Save";
 
-"macNameFieldExportZip" = "Export tunnels to";
+"macNameFieldExportZip" = "Export tunnels to:";
 "macSheetButtonExportZip" = "Save";
 
 "macButtonDeleteTunnels (%d)" = "Delete %d tunnels";
