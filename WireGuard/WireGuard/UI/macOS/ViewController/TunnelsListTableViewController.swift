@@ -163,9 +163,15 @@ class TunnelsListTableViewController: NSViewController {
 
     @objc func handleRemoveTunnelAction() {
         guard let window = view.window else { return }
+
         let selectedTunnelIndices = tableView.selectedRowIndexes.sorted().filter { $0 >= 0 && $0 < tunnelsManager.numberOfTunnels() }
         guard !selectedTunnelIndices.isEmpty else { return }
-        let alert = NSAlert()
+        var nextSelection = selectedTunnelIndices.last! + 1
+        if nextSelection >= tunnelsManager.numberOfTunnels() {
+            nextSelection = max(selectedTunnelIndices.first! - 1, 0)
+        }
+
+        let alert = DeleteTunnelsConfirmationAlert()
         if selectedTunnelIndices.count == 1 {
             let firstSelectedTunnel = tunnelsManager.tunnel(at: selectedTunnelIndices.first!)
             alert.messageText = tr(format: "macDeleteTunnelConfirmationAlertMessage (%@)", firstSelectedTunnel.name)
@@ -173,41 +179,20 @@ class TunnelsListTableViewController: NSViewController {
             alert.messageText = tr(format: "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)", selectedTunnelIndices.count)
         }
         alert.informativeText = tr("macDeleteTunnelConfirmationAlertInfo")
-        let alertDeleteButton = alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleDelete"))
-        alertDeleteButton.target = self
-        alertDeleteButton.action = #selector(removeTunnelAlertDeleteClicked)
-        let alertCancelButton = alert.addButton(withTitle: tr("macDeleteTunnelConfirmationAlertButtonTitleCancel"))
-        alertCancelButton.target = self
-        alertCancelButton.action = #selector(removeTunnelAlertCancelClicked)
-        alert.beginSheetModal(for: window) { _ in }
-    }
-
-    @objc func removeTunnelAlertDeleteClicked(_ sender: AnyObject) {
-        guard let alertWindow = (sender as? NSView)?.window, alertWindow.isSheet else { return }
-        let selectedTunnelIndices = tableView.selectedRowIndexes.sorted().filter { $0 >= 0 && $0 < tunnelsManager.numberOfTunnels() }
-        precondition(!selectedTunnelIndices.isEmpty)
-        var nextSelection = selectedTunnelIndices.last! + 1
-        if nextSelection >= tunnelsManager.numberOfTunnels() {
-            nextSelection = max(selectedTunnelIndices.first! - 1, 0)
-        }
-        let selectedTunnels = selectedTunnelIndices.map { tunnelsManager.tunnel(at: $0) }
-        alertWindow.ignoresMouseEvents = true
-        self.selectTunnel(at: nextSelection)
-        isRemovingTunnels = true
-        tunnelsManager.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
+        alert.onDeleteClicked = { [weak self] completion in
             guard let self = self else { return }
-            self.view.window?.endSheet(alertWindow)
-            self.isRemovingTunnels = false
-            if let error = error {
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-                return
-            }
+            self.selectTunnel(at: nextSelection)
+            let selectedTunnels = selectedTunnelIndices.map { self.tunnelsManager.tunnel(at: $0) }
+            self.tunnelsManager.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
+                guard let self = self else { return }
+                defer { completion() }
+                if let error = error {
+                    ErrorPresenter.showErrorAlert(error: error, from: self)
+                    return
+                }
+             }
         }
-    }
-
-    @objc func removeTunnelAlertCancelClicked(_ sender: AnyObject) {
-        guard let alertWindow = (sender as? NSView)?.window, alertWindow.isSheet else { return }
-        view.window?.endSheet(alertWindow)
+        alert.beginSheetModal(for: window)
     }
 
     @objc func handleViewLogAction() {

@@ -314,6 +314,7 @@
 "macDeleteTunnelConfirmationAlertInfo" = "You cannot undo this action.";
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Cancel";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Deleting…";
 
 "macButtonImportTunnels" = "Import tunnel(s) from file";
 "macSheetButtonImport" = "Import";
