@@ -898,7 +898,7 @@
 				TargetAttributes = {
 					6F5D0C19218352EF000F85AD = {
 						CreatedOnToolsVersion = 10.0;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 					6F70E22822106A2D008BDFB4 = {
 						CreatedOnToolsVersion = 10.1;
@@ -910,6 +910,7 @@
 					};
 					6FB1BD5C21D2607A00A991BF = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -924,6 +925,7 @@
 					};
 					6FB1BD9021D4BFE600A991BF = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.Mac = {
 								enabled = 1;
@@ -935,7 +937,7 @@
 					};
 					6FF4AC13211EC46F002C96EB = {
 						CreatedOnToolsVersion = 9.4.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.AccessWiFi = {
 								enabled = 1;
@@ -1480,7 +1482,7 @@
 				PRODUCT_NAME = WireGuardNetworkExtension;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1502,7 +1504,7 @@
 				PRODUCT_NAME = WireGuardNetworkExtension;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1548,6 +1550,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_MACOS)";
 				PRODUCT_NAME = WireGuard;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1567,6 +1570,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_MACOS)";
 				PRODUCT_NAME = WireGuard;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1588,6 +1592,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1609,6 +1614,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "WireGuardNetworkExtension/WireGuardNetworkExtension-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1785,6 +1791,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_IOS)";
 				PRODUCT_NAME = WireGuard;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1801,6 +1808,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_IOS)";
 				PRODUCT_NAME = WireGuard;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
