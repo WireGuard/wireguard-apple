@@ -33,7 +33,7 @@ class TunnelsManager {
         startObservingTunnelConfigurations()
     }
 
-    static func create(completionHandler: @escaping (WireGuardResult<TunnelsManager>) -> Void) {
+    static func create(completionHandler: @escaping (Result<TunnelsManager, TunnelsManagerError>) -> Void) {
         #if targetEnvironment(simulator)
         completionHandler(.success(TunnelsManager(tunnelProviders: MockTunnels.createMockTunnels())))
         #else
@@ -104,7 +104,7 @@ class TunnelsManager {
         }
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, completionHandler: @escaping (WireGuardResult<TunnelContainer>) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, completionHandler: @escaping (Result<TunnelContainer, TunnelsManagerError>) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
@@ -167,9 +167,15 @@ class TunnelsManager {
         let tail = tunnelConfigurations.dropFirst()
         add(tunnelConfiguration: head) { [weak self, tail] result in
             DispatchQueue.main.async {
-                let numberSuccessful = numberSuccessful + (result.isSuccess ? 1 : 0)
-                let lastError = lastError ?? (result.error as? TunnelsManagerError)
-                self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessful, lastError: lastError, completionHandler: completionHandler)
+                var numberSuccessfulCount = numberSuccessful
+                var lastError: TunnelsManagerError?
+                switch result {
+                case .failure(let error):
+                    lastError = error
+                case .success:
+                    numberSuccessfulCount = numberSuccessful + 1
+                }
+                self?.addMultiple(tunnelConfigurations: tail, numberSuccessful: numberSuccessfulCount, lastError: lastError, completionHandler: completionHandler)
             }
         }
     }

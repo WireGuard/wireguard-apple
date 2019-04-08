@@ -20,26 +20,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
-            if let error = result.error {
+
+            switch result {
+            case .failure(let error):
                 ErrorPresenter.showErrorAlert(error: error, from: nil)
-                return
+            case .success(let tunnelsManager):
+                let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
+                statusMenu.windowDelegate = self
+
+                let statusItemController = StatusItemController()
+                statusItemController.statusItem.menu = statusMenu
+
+                let tunnelsTracker = TunnelsTracker(tunnelsManager: tunnelsManager)
+                tunnelsTracker.statusMenu = statusMenu
+                tunnelsTracker.statusItemController = statusItemController
+
+                self.tunnelsManager = tunnelsManager
+                self.tunnelsTracker = tunnelsTracker
+                self.statusItemController = statusItemController
             }
-
-            let tunnelsManager: TunnelsManager = result.value!
-
-            let statusMenu = StatusMenu(tunnelsManager: tunnelsManager)
-            statusMenu.windowDelegate = self
-
-            let statusItemController = StatusItemController()
-            statusItemController.statusItem.menu = statusMenu
-
-            let tunnelsTracker = TunnelsTracker(tunnelsManager: tunnelsManager)
-            tunnelsTracker.statusMenu = statusMenu
-            tunnelsTracker.statusItemController = statusItemController
-
-            self.tunnelsManager = tunnelsManager
-            self.tunnelsTracker = tunnelsTracker
-            self.statusItemController = statusItemController
         }
     }
 

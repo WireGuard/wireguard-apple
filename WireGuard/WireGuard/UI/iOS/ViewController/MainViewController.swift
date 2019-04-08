@@ -42,19 +42,18 @@ class MainViewController: UISplitViewController {
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
 
-            if let error = result.error {
+            switch result {
+            case .failure(let error):
                 ErrorPresenter.showErrorAlert(error: error, from: self)
-                return
+            case .success(let tunnelsManager):
+                self.tunnelsManager = tunnelsManager
+                self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
+
+                tunnelsManager.activationDelegate = self
+
+                self.onTunnelsManagerReady?(tunnelsManager)
+                self.onTunnelsManagerReady = nil
             }
-            let tunnelsManager: TunnelsManager = result.value!
-
-            self.tunnelsManager = tunnelsManager
-            self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
-
-            tunnelsManager.activationDelegate = self
-
-            self.onTunnelsManagerReady?(tunnelsManager)
-            self.onTunnelsManagerReady = nil
         }
     }
 

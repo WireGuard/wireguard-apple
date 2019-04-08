@@ -16,10 +16,10 @@ class TunnelImporter {
             if url.pathExtension.lowercased() == "zip" {
                 dispatchGroup.enter()
                 ZipImporter.importConfigFiles(from: url) { result in
-                    if let error = result.error {
+                    switch result {
+                    case .failure(let error):
                         lastFileImportErrorText = error.alertText
-                    }
-                    if let configsInZip = result.value {
+                    case .success(let configsInZip):
                         configs.append(contentsOf: configsInZip)
                     }
                     dispatchGroup.leave()
