@@ -27,6 +27,8 @@ import NetworkExtension
             self = .reasserting
         case .invalid:
             self = .inactive
+        @unknown default:
+            fatalError()
         }
     }
 }
@@ -54,6 +56,8 @@ extension NEVPNStatus: CustomDebugStringConvertible {
         case .disconnecting: return "disconnecting"
         case .reasserting: return "reasserting"
         case .invalid: return "invalid"
+        @unknown default:
+            fatalError()
         }
     }
 }
