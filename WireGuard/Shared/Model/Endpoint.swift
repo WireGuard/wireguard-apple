@@ -36,6 +36,8 @@ extension Endpoint {
             return "\(address):\(port)"
         case .ipv6(let address):
             return "[\(address)]:\(port)"
+        @unknown default:
+            fatalError()
         }
     }
 
@@ -78,6 +80,8 @@ extension Endpoint {
             return true
         case .ipv6:
             return true
+        @unknown default:
+            fatalError()
         }
     }
 
@@ -89,6 +93,8 @@ extension Endpoint {
             return nil
         case .ipv6:
             return nil
+        @unknown default:
+            fatalError()
         }
     }
 }

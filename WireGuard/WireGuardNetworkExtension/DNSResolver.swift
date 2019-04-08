@@ -117,6 +117,8 @@ extension Endpoint {
             hostname = "\(address)"
         case .ipv6(let address):
             hostname = "\(address)"
+        @unknown default:
+            fatalError()
         }
 
         var resultPointer = UnsafeMutablePointer<addrinfo>(OpaquePointer(bitPattern: 0))
