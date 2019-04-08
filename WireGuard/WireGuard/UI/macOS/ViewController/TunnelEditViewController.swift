@@ -247,13 +247,13 @@ class TunnelEditViewController: NSViewController {
             // We're creating a new tunnel
             self.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
                 self?.setUserInteractionEnabled(true)
-                if let error = result.error {
+                switch result {
+                case .failure(let error):
                     ErrorPresenter.showErrorAlert(error: error, from: self)
-                    return
+                case .success(let tunnel):
+                    self?.dismiss(self)
+                    self?.delegate?.tunnelSaved(tunnel: tunnel)
                 }
-                let tunnel: TunnelContainer = result.value!
-                self?.dismiss(self)
-                self?.delegate?.tunnelSaved(tunnel: tunnel)
             }
         }
     }

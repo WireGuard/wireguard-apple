@@ -7,6 +7,7 @@ enum ZipArchiveError: WireGuardAppError {
     case cantOpenInputZipFile
     case cantOpenOutputZipFileForWriting
     case badArchive
+    case noTunnelsInZipArchive
 
     var alertText: AlertText {
         switch self {
@@ -16,6 +17,8 @@ enum ZipArchiveError: WireGuardAppError {
             return (tr("alertCantOpenOutputZipFileForWritingTitle"), tr("alertCantOpenOutputZipFileForWritingMessage"))
         case .badArchive:
             return (tr("alertBadArchiveTitle"), tr("alertBadArchiveMessage"))
+        case .noTunnelsInZipArchive:
+            return (tr("alertNoTunnelsInImportedZipArchiveTitle"), tr("alertNoTunnelsInImportedZipArchiveMessage"))
         }
     }
 }

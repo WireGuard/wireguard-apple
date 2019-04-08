@@ -3,16 +3,8 @@
 
 import Foundation
 
-enum ZipImporterError: WireGuardAppError {
-    case noTunnelsInZipArchive
-
-    var alertText: AlertText {
-        return (tr("alertNoTunnelsInImportedZipArchiveTitle"), tr("alertNoTunnelsInImportedZipArchiveMessage"))
-    }
-}
-
 class ZipImporter {
-    static func importConfigFiles(from url: URL, completion: @escaping (WireGuardResult<[TunnelConfiguration?]>) -> Void) {
+    static func importConfigFiles(from url: URL, completion: @escaping (Result<[TunnelConfiguration?], ZipArchiveError>) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             var unarchivedFiles: [(fileBaseName: String, contents: Data)]
             do {
@@ -28,9 +20,9 @@ class ZipImporter {
                 }
 
                 if unarchivedFiles.isEmpty {
-                    throw ZipImporterError.noTunnelsInZipArchive
+                    throw ZipArchiveError.noTunnelsInZipArchive
                 }
-            } catch let error as WireGuardAppError {
+            } catch let error as ZipArchiveError {
                 DispatchQueue.main.async { completion(.failure(error)) }
                 return
             } catch {

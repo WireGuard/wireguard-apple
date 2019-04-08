@@ -264,9 +264,10 @@ extension TunnelsListTableViewController: QRScanViewControllerDelegate {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController,
                           completionHandler: (() -> Void)?) {
         tunnelsManager?.add(tunnelConfiguration: tunnelConfiguration) { result in
-            if let error = result.error {
+            switch result {
+            case .failure(let error):
                 ErrorPresenter.showErrorAlert(error: error, from: qrScanViewController, onDismissal: completionHandler)
-            } else {
+            case .success:
                 completionHandler?()
             }
         }
