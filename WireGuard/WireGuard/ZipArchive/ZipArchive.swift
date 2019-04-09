@@ -31,7 +31,7 @@ class ZipArchive {
             let fileName = input.fileName
             let contents = input.contents
             zipOpenNewFileInZip(zipFile, fileName.cString(using: .utf8), nil, nil, 0, nil, 0, nil, Z_DEFLATED, Z_DEFAULT_COMPRESSION)
-            contents.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> Void in
+            contents.withUnsafeUInt8Bytes { ptr -> Void in
                 zipWriteInFileInZip(zipFile, UnsafeRawPointer(ptr), UInt32(contents.count))
             }
             zipCloseFileInZip(zipFile)
