@@ -9,5 +9,5 @@ golang.org/x/sys v0.0.0-20190321052220-f7bb7a8bee54/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190405154228-4b34438f7a67 h1:1Fzlr8kkDLQwqMP8GxrhptBLqZG/EDpiATneiZHY998=
 golang.org/x/sys v0.0.0-20190405154228-4b34438f7a67/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
-golang.zx2c4.com/wireguard v0.0.0-20190409053722-f156a53ff46e h1:Z0nU7TaNu14KD0dVhMmDZk6GDR2yfDNiCfdCF2SMBIw=
-golang.zx2c4.com/wireguard v0.0.0-20190409053722-f156a53ff46e/go.mod h1:u0Cl3X+pyWdXaax3S583DQrnGDuTASO0QdlKFrs8r/8=
+golang.zx2c4.com/wireguard v0.0.0-20190409083948-18fa27047265 h1:ujM5BaP4MD/2MJZ1n7pmw6IIsyyS7SyPl0fDefnx/2o=
+golang.zx2c4.com/wireguard v0.0.0-20190409083948-18fa27047265/go.mod h1:u0Cl3X+pyWdXaax3S583DQrnGDuTASO0QdlKFrs8r/8=
