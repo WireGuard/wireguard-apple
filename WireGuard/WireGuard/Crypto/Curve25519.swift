@@ -9,7 +9,7 @@ struct Curve25519 {
 
     static func generatePrivateKey() -> Data {
         var privateKey = Data(repeating: 0, count: TunnelConfiguration.keyLength)
-        privateKey.withUnsafeMutableBytes { bytes in
+        privateKey.withUnsafeMutableUInt8Bytes { bytes in
             curve25519_generate_private_key(bytes)
         }
         assert(privateKey.count == TunnelConfiguration.keyLength)
@@ -19,8 +19,8 @@ struct Curve25519 {
     static func generatePublicKey(fromPrivateKey privateKey: Data) -> Data {
         assert(privateKey.count == TunnelConfiguration.keyLength)
         var publicKey = Data(repeating: 0, count: TunnelConfiguration.keyLength)
-        privateKey.withUnsafeBytes { privateKeyBytes in
-            publicKey.withUnsafeMutableBytes { bytes in
+        privateKey.withUnsafeUInt8Bytes { privateKeyBytes in
+            publicKey.withUnsafeMutableUInt8Bytes { bytes in
                 curve25519_derive_public_key(bytes, privateKeyBytes)
             }
         }
