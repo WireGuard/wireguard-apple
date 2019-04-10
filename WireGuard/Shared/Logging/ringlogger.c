@@ -107,7 +107,7 @@ err:
 	return ret;
 }
 
-uint32_t view_lines_from_cursor(const struct log *input_log, uint32_t cursor, void(*cb)(const char *, uint64_t))
+uint32_t view_lines_from_cursor(const struct log *input_log, uint32_t cursor, void *ctx, void(*cb)(const char *, uint64_t, void *))
 {
 	struct log *log;
 	uint32_t l, i = cursor;
@@ -132,7 +132,7 @@ uint32_t view_lines_from_cursor(const struct log *input_log, uint32_t cursor, vo
 			else
 				break;
 		}
-		cb(line->line, line->time_ns);
+		cb(line->line, line->time_ns, ctx);
 		cursor = (i + 1) % MAX_LINES;
 	}
 	free(log);
