@@ -21,7 +21,9 @@ public class LogViewHelper {
         }
     }
 
-    static var logEntries = [LogEntry]()
+    class LogEntries {
+        var entries: [LogEntry] = []
+    }
 
     init?(logFilePath: String?) {
         guard let logFilePath = logFilePath else { return nil }
@@ -34,19 +36,21 @@ public class LogViewHelper {
     }
 
     func fetchLogEntriesSinceLastFetch(completion: @escaping ([LogViewHelper.LogEntry]) -> Void) {
-        LogViewHelper.logEntries = []
+        var logEntries = LogEntries()
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            let newCursor = view_lines_from_cursor(self.log, self.cursor) { cStr, timestamp in
+            let newCursor = view_lines_from_cursor(self.log, self.cursor, &logEntries) { cStr, timestamp, ctx in
                 let message = cStr != nil ? String(cString: cStr!) : ""
                 let date = Date(timeIntervalSince1970: Double(timestamp) / 1000000000)
                 let dateString = ISO8601DateFormatter.string(from: date, timeZone: TimeZone.current, formatOptions: LogViewHelper.formatOptions)
-                LogViewHelper.logEntries.append(LogEntry(timestamp: dateString, message: message))
+                if let logEntries = ctx?.bindMemory(to: LogEntries.self, capacity: 1) {
+                    logEntries.pointee.entries.append(LogEntry(timestamp: dateString, message: message))
+                }
             }
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.cursor = newCursor
-                completion(LogViewHelper.logEntries)
+                completion(logEntries.entries)
             }
         }
     }
