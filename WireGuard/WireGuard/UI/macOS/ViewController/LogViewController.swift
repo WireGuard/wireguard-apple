@@ -187,6 +187,16 @@ class LogViewController: NSViewController {
         RunLoop.main.add(timer, forMode: .common)
     }
 
+    func stopUpdatingLogEntries() {
+        updateLogEntriesTimer?.invalidate()
+        updateLogEntriesTimer = nil
+    }
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        stopUpdatingLogEntries()
+    }
+
     @objc func saveClicked() {
         let savePanel = NSSavePanel()
         savePanel.prompt = tr("macSheetButtonExportLog")
