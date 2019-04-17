@@ -52,6 +52,7 @@
 		6F0F44CB222D55FD00B0FF04 /* EditableTextCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F0F44CA222D55FD00B0FF04 /* EditableTextCell.swift */; };
 		6F1075642258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1075632258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift */; };
 		6F19D30422402B8700A126F2 /* ConfirmationAlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F19D30322402B8700A126F2 /* ConfirmationAlertPresenter.swift */; };
+		6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */; };
 		6F4DD16B21DA558800690EAE /* TunnelListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16A21DA558800690EAE /* TunnelListRow.swift */; };
 		6F4DD16C21DA558F00690EAE /* NSTableView+Reuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */; };
 		6F4DD16E21DBEA0700690EAE /* ManageTunnelsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */; };
@@ -298,6 +299,7 @@
 		6F0F44CA222D55FD00B0FF04 /* EditableTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextCell.swift; sourceTree = "<group>"; };
 		6F1075632258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTunnelsConfirmationAlert.swift; sourceTree = "<group>"; };
 		6F19D30322402B8700A126F2 /* ConfirmationAlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationAlertPresenter.swift; sourceTree = "<group>"; };
+		6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAppStoreUpdateDetector.swift; sourceTree = "<group>"; };
 		6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableView+Reuse.swift"; sourceTree = "<group>"; };
 		6F4DD16A21DA558800690EAE /* TunnelListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelListRow.swift; sourceTree = "<group>"; };
 		6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageTunnelsRootViewController.swift; sourceTree = "<group>"; };
@@ -632,6 +634,7 @@
 				6F89E17B21F090CC00C97BB9 /* TunnelsTracker.swift */,
 				6FBA104121D6BC210051C35F /* ErrorPresenter.swift */,
 				6FCD99AE21E0EA1700BA4C82 /* ImportPanelPresenter.swift */,
+				6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */,
 				6FB1BD6121D2607E00A991BF /* Assets.xcassets */,
 				6FB1BD6621D2607E00A991BF /* Info.plist */,
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
@@ -1304,6 +1307,7 @@
 				6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */,
 				6FB1BDC521D50F0300A991BF /* Endpoint.swift in Sources */,
 				6FB1BDC621D50F0300A991BF /* DNSServer.swift in Sources */,
+				6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */,
 				6FB1BDC721D50F0300A991BF /* InterfaceConfiguration.swift in Sources */,
 				6F907C9D224663A2003CED21 /* LogViewHelper.swift in Sources */,
 				6FB1BDC821D50F0300A991BF /* PeerConfiguration.swift in Sources */,

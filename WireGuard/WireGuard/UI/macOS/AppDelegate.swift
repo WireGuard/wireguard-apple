@@ -68,6 +68,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             NSApp.terminate(nil)
         }
     }
+
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        if UserDefaults.standard.bool(forKey: "shouldSuppressAppStoreUpdateDetection") {
+            wg_log(.debug, staticMessage: "App Store update detection is suppressed")
+            return .terminateNow
+        }
+        guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
+            return .terminateNow
+        }
+        guard let appleEvent = NSAppleEventManager.shared().currentAppleEvent else {
+            return .terminateNow
+        }
+        guard MacAppStoreUpdateDetector.isUpdatingFromMacAppStore(quitAppleEvent: appleEvent) else {
+            return .terminateNow
+        }
+        let alert = NSAlert()
+        alert.messageText = tr("macAppStoreUpdatingAlertMessage")
+        if currentTunnel.isActivateOnDemandEnabled {
+            alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithOnDemand (%@)", currentTunnel.name)
+        } else {
+            alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)", currentTunnel.name)
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        if let manageWindow = manageTunnelsWindowObject {
+            alert.beginSheetModal(for: manageWindow) { _ in }
+        } else {
+            alert.runModal()
+        }
+        return .terminateCancel
+    }
 }
 
 extension AppDelegate: StatusMenuWindowDelegate {

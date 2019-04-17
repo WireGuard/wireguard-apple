@@ -405,3 +405,9 @@
 "macUnusableTunnelMessage" = "The configuration for this tunnel cannot be found in the keychain.";
 "macUnusableTunnelInfo" = "In case this tunnel was created by another user, only that user can view, edit, or activate this tunnel.";
 "macUnusableTunnelButtonTitleDeleteTunnel" = "Delete tunnel";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Please disable on-demand for tunnel ‘%@’, deactivate it, and then continue updating in App Store.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Please deactivate tunnel ‘%@’ and then continue updating in App Store.";

@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+
+import Cocoa
+
+class MacAppStoreUpdateDetector {
+    static func isUpdatingFromMacAppStore(quitAppleEvent: NSAppleEventDescriptor) -> Bool {
+        guard isQuitEvent(quitAppleEvent) else { return false }
+        guard let senderPIDDescriptor = quitAppleEvent.attributeDescriptor(forKeyword: keySenderPIDAttr) else { return false }
+        let pid = senderPIDDescriptor.int32Value
+        guard let executablePath = getExecutablePath(from: pid) else { return false }
+        wg_log(.debug, message: "aevt/quit Apple event received from: \(executablePath)")
+        if executablePath.hasPrefix("/System/Library/") {
+            let executableName = URL(fileURLWithPath: executablePath, isDirectory: false).lastPathComponent
+            return executableName == "com.apple.CommerceKit.StoreAEService"
+        }
+        return false
+    }
+}
+
+private func isQuitEvent(_ event: NSAppleEventDescriptor) -> Bool {
+    if let eventClassDescriptor = event.attributeDescriptor(forKeyword: keyEventClassAttr),
+        let eventIdDescriptor = event.attributeDescriptor(forKeyword: keyEventIDAttr) {
+        return eventClassDescriptor.typeCodeValue == kCoreEventClass && eventIdDescriptor.typeCodeValue == kAEQuitApplication
+    }
+    return false
+}
+
+private func getExecutablePath(from pid: pid_t) -> String? {
+    let bufferSize = Int(PATH_MAX)
+    var buffer = Data(capacity: bufferSize)
+    return buffer.withUnsafeMutableBytes { (ptr: UnsafeMutableRawBufferPointer) -> String? in
+        if let basePtr = ptr.baseAddress {
+            let byteCount = proc_pidpath(pid, basePtr, UInt32(bufferSize))
+            return byteCount > 0 ? String(cString: basePtr.bindMemory(to: CChar.self, capacity: bufferSize)) : nil
+        }
+        return nil
+    }
+}
