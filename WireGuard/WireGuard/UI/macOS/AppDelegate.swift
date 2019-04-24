@@ -97,6 +97,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         return .terminateCancel
     }
+
+    func applicationShouldTerminateAfterLastWindowClosed(_ application: NSApplication) -> Bool {
+        application.setActivationPolicy(.accessory)
+        return false
+    }
 }
 
 extension AppDelegate: StatusMenuWindowDelegate {
