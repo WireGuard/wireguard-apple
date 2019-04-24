@@ -175,11 +175,11 @@ func wgBindInterfaceScope(tunnelHandle int32, ifscope int32) {
 	device.Info.Printf("Binding sockets to interface %d\n", ifscope)
 	err := device.BindSocketToInterface4(uint32(ifscope))
 	if err != nil {
-		device.Error.Printf("Unable to bind v4 socket to interface:", err)
+		device.Error.Printf("Unable to bind v4 socket to interface: %v", err)
 	}
 	err = device.BindSocketToInterface6(uint32(ifscope))
 	if err != nil {
-		device.Error.Printf("Unable to bind v6 socket to interface:", err)
+		device.Error.Printf("Unable to bind v6 socket to interface: %v", err)
 	}
 }
 
