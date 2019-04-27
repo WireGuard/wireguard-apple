@@ -20,6 +20,15 @@ class LogViewController: UIViewController {
         return busyIndicator
     }()
 
+    let paragraphStyle: NSParagraphStyle = {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.setParagraphStyle(NSParagraphStyle.default)
+        paragraphStyle.lineHeightMultiple = 1.2
+        return paragraphStyle
+    }()
+
+    var isNextLineHighlighted = false
+
     var logViewHelper: LogViewHelper?
     var isFetchingLogEntries = false
     private var updateLogEntriesTimer: Timer?
@@ -68,9 +77,20 @@ class LogViewController: UIViewController {
             }
             guard !fetchedLogEntries.isEmpty else { return }
             let isScrolledToEnd = self.textView.contentSize.height - self.textView.bounds.height - self.textView.contentOffset.y < 1
-            let text = fetchedLogEntries.reduce("") { $0 + $1.text() + "\n" }
-            let font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
-            let richText = NSAttributedString(string: text, attributes: [.font: font])
+
+            let richText = NSMutableAttributedString()
+            let bodyFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
+            let captionFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
+            let lightGrayColor = UIColor(white: 0.88, alpha: 1.0)
+
+            for logEntry in fetchedLogEntries {
+                let bgColor = self.isNextLineHighlighted ? lightGrayColor : UIColor.white
+                let timestampText = NSAttributedString(string: logEntry.timestamp + "\n", attributes: [.font: captionFont, .backgroundColor: bgColor, .paragraphStyle: self.paragraphStyle])
+                let messageText = NSAttributedString(string: logEntry.message + "\n", attributes: [.font: bodyFont, .backgroundColor: bgColor, .paragraphStyle: self.paragraphStyle])
+                richText.append(timestampText)
+                richText.append(messageText)
+                self.isNextLineHighlighted.toggle()
+            }
             self.textView.textStorage.append(richText)
             if isScrolledToEnd {
                 let endOfCurrentText = NSRange(location: (self.textView.text as NSString).length, length: 0)
