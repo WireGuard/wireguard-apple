@@ -57,6 +57,10 @@ class MainViewController: UISplitViewController {
         }
     }
 
+    func allTunnelNames() -> [String]? {
+        guard let tunnelsManager = self.tunnelsManager else { return nil }
+        return tunnelsManager.mapTunnels { $0.name }
+    }
 }
 
 extension MainViewController: TunnelsManagerActivationDelegate {
@@ -84,7 +88,7 @@ extension MainViewController {
         }
     }
 
-    func showTunnelDetailForTunnel(named tunnelName: String, animated: Bool) {
+    func showTunnelDetailForTunnel(named tunnelName: String, animated: Bool, shouldToggleStatus: Bool) {
         let showTunnelDetailBlock: (TunnelsManager) -> Void = { [weak self] tunnelsManager in
             if let tunnel = tunnelsManager.tunnel(named: tunnelName) {
                 let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
@@ -97,6 +101,13 @@ extension MainViewController {
                         UIView.performWithoutAnimation {
                             self.showDetailViewController(tunnelDetailNC, sender: self)
                         }
+                    }
+                }
+                if shouldToggleStatus {
+                    if tunnel.status == .inactive {
+                        tunnelsManager.startActivation(of: tunnel)
+                    } else if tunnel.status == .active {
+                        tunnelsManager.startDeactivation(of: tunnel)
                     }
                 }
             }

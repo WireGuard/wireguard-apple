@@ -311,6 +311,10 @@ class TunnelsManager {
         return tunnels[index]
     }
 
+    func mapTunnels<T>(transform: (TunnelContainer) throws -> T) rethrows -> [T] {
+        return try tunnels.map(transform)
+    }
+
     func index(of tunnel: TunnelContainer) -> Int? {
         return tunnels.firstIndex(of: tunnel)
     }
