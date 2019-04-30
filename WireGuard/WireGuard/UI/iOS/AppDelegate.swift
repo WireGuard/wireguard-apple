@@ -9,9 +9,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var mainVC: MainViewController?
+    var isLaunchedForSpecificAction = false
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
+
+        if let launchOptions = launchOptions {
+            if launchOptions[.url] != nil || launchOptions[.shortcutItem] != nil {
+                isLaunchedForSpecificAction = true
+            }
+        }
 
         let window = UIWindow(frame: UIScreen.main.bounds)
         window.backgroundColor = .white
@@ -37,6 +44,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         mainVC?.refreshTunnelConnectionStatuses()
     }
+
+    func applicationWillResignActive(_ application: UIApplication) {
+        guard let allTunnelNames = mainVC?.allTunnelNames() else { return }
+        application.shortcutItems = QuickActionItem.createItems(allTunnelNames: allTunnelNames)
+    }
+
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
+        guard shortcutItem.type == QuickActionItem.type else {
+            completionHandler(false)
+            return
+        }
+        let tunnelName = shortcutItem.localizedTitle
+        mainVC?.showTunnelDetailForTunnel(named: tunnelName, animated: false, shouldToggleStatus: true)
+        completionHandler(true)
+    }
 }
 
 extension AppDelegate {
@@ -45,7 +67,7 @@ extension AppDelegate {
     }
 
     func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
-        return true
+        return !self.isLaunchedForSpecificAction
     }
 
     func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
@@ -58,7 +80,7 @@ extension AppDelegate {
                 }
             } else {
                 // Show it when tunnelsManager is available
-                mainVC?.showTunnelDetailForTunnel(named: tunnelName, animated: false)
+                mainVC?.showTunnelDetailForTunnel(named: tunnelName, animated: false, shouldToggleStatus: false)
             }
         }
         return nil

@@ -55,6 +55,7 @@
 		6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */; };
 		6F3E02E9228000F6001FE7E3 /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3E02E8228000F6001FE7E3 /* MainMenu.swift */; };
 		6F29A9432278518D00DC6A6B /* RecentTunnelsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F29A9422278518D00DC6A6B /* RecentTunnelsTracker.swift */; };
+		6F29A94722787B1600DC6A6B /* QuickActionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F29A94622787B1600DC6A6B /* QuickActionItem.swift */; };
 		6F4DD16B21DA558800690EAE /* TunnelListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16A21DA558800690EAE /* TunnelListRow.swift */; };
 		6F4DD16C21DA558F00690EAE /* NSTableView+Reuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */; };
 		6F4DD16E21DBEA0700690EAE /* ManageTunnelsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */; };
@@ -305,6 +306,7 @@
 		6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAppStoreUpdateDetector.swift; sourceTree = "<group>"; };
 		6F3E02E8228000F6001FE7E3 /* MainMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		6F29A9422278518D00DC6A6B /* RecentTunnelsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentTunnelsTracker.swift; sourceTree = "<group>"; };
+		6F29A94622787B1600DC6A6B /* QuickActionItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickActionItem.swift; sourceTree = "<group>"; };
 		6F4DD16721DA552B00690EAE /* NSTableView+Reuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableView+Reuse.swift"; sourceTree = "<group>"; };
 		6F4DD16A21DA558800690EAE /* TunnelListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelListRow.swift; sourceTree = "<group>"; };
 		6F4DD16D21DBEA0700690EAE /* ManageTunnelsRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageTunnelsRootViewController.swift; sourceTree = "<group>"; };
@@ -571,6 +573,7 @@
 				6F19D30322402B8700A126F2 /* ConfirmationAlertPresenter.swift */,
 				5F45417C21C1B23600994C13 /* UITableViewCell+Reuse.swift */,
 				6F29A9422278518D00DC6A6B /* RecentTunnelsTracker.swift */,
+				6F29A94622787B1600DC6A6B /* QuickActionItem.swift */,
 				6FF4AC23211EC472002C96EB /* Info.plist */,
 				6FF4AC482120B9E0002C96EB /* WireGuard.entitlements */,
 			);
@@ -1358,6 +1361,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FE1765A21C90E87002690EA /* LocalizationHelper.swift in Sources */,
+				6F29A94722787B1600DC6A6B /* QuickActionItem.swift in Sources */,
 				6FF3527221C2616C0008484E /* ringlogger.c in Sources */,
 				6F0F44CB222D55FD00B0FF04 /* EditableTextCell.swift in Sources */,
 				6FF3527321C2616C0008484E /* Logger.swift in Sources */,
