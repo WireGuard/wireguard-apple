@@ -46,7 +46,11 @@ class TunnelsManager {
 
             var tunnelManagers = managers ?? []
             var refs: Set<Data> = []
+            var tunnelNames: Set<String> = []
             for (index, tunnelManager) in tunnelManagers.enumerated().reversed() {
+                if let tunnelName = tunnelManager.localizedDescription {
+                    tunnelNames.insert(tunnelName)
+                }
                 guard let proto = tunnelManager.protocolConfiguration as? NETunnelProviderProtocol else { continue }
                 if proto.migrateConfigurationIfNeeded(called: tunnelManager.localizedDescription ?? "unknown") {
                     tunnelManager.saveToPreferences { _ in }
@@ -66,6 +70,7 @@ class TunnelsManager {
                 }
             }
             Keychain.deleteReferences(except: refs)
+            RecentTunnelsTracker.cleanupTunnels(except: tunnelNames)
             completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
         }
         #endif
@@ -188,7 +193,8 @@ class TunnelsManager {
         }
 
         let tunnelProviderManager = tunnel.tunnelProvider
-        let isNameChanged = tunnelName != tunnelProviderManager.localizedDescription
+        let oldName = tunnelProviderManager.localizedDescription ?? ""
+        let isNameChanged = tunnelName != oldName
         if isNameChanged {
             guard !tunnels.contains(where: { $0.name == tunnelName }) else {
                 completionHandler(TunnelsManagerError.tunnelAlreadyExistsWithThatName)
@@ -220,6 +226,9 @@ class TunnelsManager {
                 self.tunnels.sort { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
                 let newIndex = self.tunnels.firstIndex(of: tunnel)!
                 self.tunnelsListDelegate?.tunnelMoved(from: oldIndex, to: newIndex)
+                #if os(iOS)
+                RecentTunnelsTracker.handleTunnelRenamed(oldName: oldName, newName: tunnelName)
+                #endif
             }
             self.tunnelsListDelegate?.tunnelModified(at: self.tunnels.firstIndex(of: tunnel)!)
 
@@ -266,6 +275,10 @@ class TunnelsManager {
                 self.tunnelsListDelegate?.tunnelRemoved(at: index, tunnel: tunnel)
             }
             completionHandler(nil)
+
+            #if os(iOS)
+            RecentTunnelsTracker.handleTunnelRemoved(tunnelName: tunnel.name)
+            #endif
         }
     }
 
@@ -342,6 +355,10 @@ class TunnelsManager {
         tunnel.status = .active
         #else
         tunnel.startActivation(activationDelegate: activationDelegate)
+        #endif
+
+        #if os(iOS)
+        RecentTunnelsTracker.handleTunnelActivated(tunnelName: tunnel.name)
         #endif
     }
 
