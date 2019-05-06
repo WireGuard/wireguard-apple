@@ -115,27 +115,3 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
         self.tunnelDetailVC = nil
     }
 }
-
-extension ManageTunnelsRootViewController {
-    override func keyDown(with event: NSEvent) {
-        let modifierFlags = event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue
-        let isCmdOrCmdShiftDown = (modifierFlags == NSEvent.ModifierFlags.command.rawValue || modifierFlags == NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
-
-        if event.specialKey == .delete {
-            tunnelsListVC?.handleRemoveTunnelAction()
-        } else if isCmdOrCmdShiftDown {
-            switch event.charactersIgnoringModifiers {
-            case "n":
-                tunnelsListVC?.handleAddEmptyTunnelAction()
-            case "o":
-                tunnelsListVC?.handleImportTunnelAction()
-            case "t":
-                tunnelDetailVC?.handleToggleActiveStatusAction()
-            case "e":
-                tunnelDetailVC?.handleEditTunnelAction()
-            default:
-                break
-            }
-        }
-    }
-}
