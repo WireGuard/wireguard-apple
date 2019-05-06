@@ -127,8 +127,8 @@ class StatusMenu: NSMenu {
     }
 
     func addApplicationItems() {
-        let aboutItem = NSMenuItem(title: tr("macMenuAbout"), action: #selector(aboutClicked), keyEquivalent: "")
-        aboutItem.target = self
+        let aboutItem = NSMenuItem(title: tr("macMenuAbout"), action: #selector(AppDelegate.aboutClicked), keyEquivalent: "")
+        aboutItem.target = NSApp.delegate
         addItem(aboutItem)
         let quitItem = NSMenuItem(title: tr("macMenuQuit"), action: #selector(AppDelegate.quit), keyEquivalent: "")
         quitItem.target = NSApp.delegate
@@ -163,22 +163,6 @@ class StatusMenu: NSMenu {
         guard let manageTunnelsWindow = windowDelegate?.manageTunnelsWindow() else { return }
         manageTunnelsWindow.makeKeyAndOrderFront(self)
         ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: manageTunnelsWindow.contentViewController)
-    }
-
-    @objc func aboutClicked() {
-        var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
-        if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            appVersion += " (\(appBuild))"
-        }
-        let appVersionString = [
-            tr(format: "macAppVersion (%@)", appVersion),
-            tr(format: "macGoBackendVersion (%@)", WIREGUARD_GO_VERSION)
-        ].joined(separator: "\n")
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.orderFrontStandardAboutPanel(options: [
-            .applicationVersion: appVersionString,
-            .version: ""
-        ])
     }
 }
 

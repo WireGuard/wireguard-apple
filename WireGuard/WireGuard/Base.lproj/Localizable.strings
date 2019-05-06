@@ -291,7 +291,7 @@
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
 "alertSystemErrorMessageTunnelConfigurationUnknown" = "Unknown system error.";
 
-// Mac status bar menu / pulldown menu
+// Mac status bar menu / pulldown menu / main menu
 
 "macMenuNetworks (%@)" = "Networks: %@";
 "macMenuNetworksNone" = "Networks: None";
@@ -304,6 +304,31 @@
 "macMenuExportTunnels" = "Export tunnels to zip…";
 "macMenuAbout" = "About WireGuard";
 "macMenuQuit" = "Quit";
+
+"macMenuHideApp" = "Hide WireGuard";
+"macMenuHideOtherApps" = "Hide Others";
+"macMenuShowAllApps" = "Show All";
+
+"macMenuFile" = "File";
+"macMenuCloseWindow" = "Close Window";
+
+"macMenuEdit" = "Edit";
+"macMenuUndo" = "Undo";
+"macMenuRedo" = "Redo";
+"macMenuCut" = "Cut";
+"macMenuCopy" = "Copy";
+"macMenuPaste" = "Paste";
+"macMenuSelectAll" = "Select All";
+
+"macMenuTunnel" = "Tunnel";
+"macMenuToggleStatus" = "Toggle Status";
+"macMenuEditTunnel" = "Edit…";
+"macMenuDeleteSelected" = "Delete Selected";
+
+"macMenuWindow" = "Window";
+"macMenuMinimize" = "Minimize";
+"macMenuZoom" = "Zoom";
+"macMenuFullScreen" = "Full Screen";
 
 // Mac manage tunnels window
 
