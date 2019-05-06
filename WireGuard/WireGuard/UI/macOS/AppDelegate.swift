@@ -17,6 +17,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
         registerLoginItem(shouldLaunchAtLogin: true)
+        NSApp.mainMenu = MainMenu()
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
@@ -101,6 +102,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ application: NSApplication) -> Bool {
         application.setActivationPolicy(.accessory)
         return false
+    }
+}
+
+extension AppDelegate {
+    @objc func aboutClicked() {
+        var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+        if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            appVersion += " (\(appBuild))"
+        }
+        let appVersionString = [
+            tr(format: "macAppVersion (%@)", appVersion),
+            tr(format: "macGoBackendVersion (%@)", WIREGUARD_GO_VERSION)
+        ].joined(separator: "\n")
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.orderFrontStandardAboutPanel(options: [
+            .applicationVersion: appVersionString,
+            .version: ""
+        ])
     }
 }
 
