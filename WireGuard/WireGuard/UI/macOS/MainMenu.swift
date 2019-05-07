@@ -3,6 +3,8 @@
 
 import Cocoa
 
+// swiftlint:disable colon
+
 class MainMenu: NSMenu {
     init() {
         super.init(title: "")
