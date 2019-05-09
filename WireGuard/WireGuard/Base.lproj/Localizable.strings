@@ -308,6 +308,7 @@
 "macMenuHideApp" = "Hide WireGuard";
 "macMenuHideOtherApps" = "Hide Others";
 "macMenuShowAllApps" = "Show All";
+"macMenuQuitManagingTunnels" = "Quit Tunnel Manager";
 
 "macMenuFile" = "File";
 "macMenuCloseWindow" = "Close Window";
