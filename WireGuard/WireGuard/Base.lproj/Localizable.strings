@@ -303,7 +303,7 @@
 "macMenuViewLog" = "View log";
 "macMenuExportTunnels" = "Export tunnels to zip…";
 "macMenuAbout" = "About WireGuard";
-"macMenuQuit" = "Quit";
+"macMenuQuit" = "Quit WireGuard";
 
 "macMenuHideApp" = "Hide WireGuard";
 "macMenuHideOtherApps" = "Hide Others";
