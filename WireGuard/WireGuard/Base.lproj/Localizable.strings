@@ -297,11 +297,11 @@
 "macMenuNetworksNone" = "Networks: None";
 
 "macMenuTitle" = "WireGuard";
-"macMenuManageTunnels" = "Manage tunnels";
-"macMenuImportTunnels" = "Import tunnel(s) from file…";
-"macMenuAddEmptyTunnel" = "Add empty tunnel…";
-"macMenuViewLog" = "View log";
-"macMenuExportTunnels" = "Export tunnels to zip…";
+"macMenuManageTunnels" = "Manage Tunnels";
+"macMenuImportTunnels" = "Import Tunnel(s) from File…";
+"macMenuAddEmptyTunnel" = "Add Empty Tunnel…";
+"macMenuViewLog" = "View Log";
+"macMenuExportTunnels" = "Export Tunnels to Zip…";
 "macMenuAbout" = "About WireGuard";
 "macMenuQuit" = "Quit WireGuard";
 
