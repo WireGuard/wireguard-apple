@@ -309,6 +309,14 @@ extension TunnelsListTableViewController: NSTableViewDelegate {
     }
 }
 
+extension TunnelsListTableViewController {
+    override func keyDown(with event: NSEvent) {
+        if event.specialKey == .delete {
+            handleRemoveTunnelAction()
+        }
+    }
+}
+
 class FillerButton: NSButton {
     override var intrinsicContentSize: NSSize {
         return NSSize(width: NSView.noIntrinsicMetric, height: NSView.noIntrinsicMetric)
