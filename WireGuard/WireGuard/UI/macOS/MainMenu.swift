@@ -80,8 +80,8 @@ class MainMenu: NSMenu {
     private func createEditMenu() -> NSMenu {
         let menu = NSMenu(title: tr("macMenuEdit"))
 
-        menu.addItem(withTitle: tr("macMenuUndo"), action: #selector(UndoActionRespondable.undo(_:)), keyEquivalent:"z")
-        menu.addItem(withTitle: tr("macMenuRedo"), action: #selector(UndoActionRespondable.redo(_:)), keyEquivalent:"Z")
+        menu.addItem(withTitle: "", action: #selector(UndoActionRespondable.undo(_:)), keyEquivalent:"z")
+        menu.addItem(withTitle: "", action: #selector(UndoActionRespondable.redo(_:)), keyEquivalent:"Z")
 
         menu.addItem(NSMenuItem.separator())
 
@@ -117,7 +117,7 @@ class MainMenu: NSMenu {
 
         menu.addItem(NSMenuItem.separator())
 
-        let fullScreenMenuItem = menu.addItem(withTitle: tr("macMenuFullScreen"), action: #selector(NSWindow.toggleFullScreen(_:)), keyEquivalent:"f")
+        let fullScreenMenuItem = menu.addItem(withTitle: "", action: #selector(NSWindow.toggleFullScreen(_:)), keyEquivalent:"f")
         fullScreenMenuItem.keyEquivalentModifierMask = [.command, .control]
 
         return menu

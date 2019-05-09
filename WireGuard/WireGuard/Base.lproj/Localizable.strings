@@ -314,8 +314,6 @@
 "macMenuCloseWindow" = "Close Window";
 
 "macMenuEdit" = "Edit";
-"macMenuUndo" = "Undo";
-"macMenuRedo" = "Redo";
 "macMenuCut" = "Cut";
 "macMenuCopy" = "Copy";
 "macMenuPaste" = "Paste";
@@ -329,7 +327,6 @@
 "macMenuWindow" = "Window";
 "macMenuMinimize" = "Minimize";
 "macMenuZoom" = "Zoom";
-"macMenuFullScreen" = "Full Screen";
 
 // Mac manage tunnels window
 
