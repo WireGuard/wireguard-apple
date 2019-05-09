@@ -115,3 +115,21 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
         self.tunnelDetailVC = nil
     }
 }
+
+extension ManageTunnelsRootViewController {
+    override func supplementalTarget(forAction action: Selector, sender: Any?) -> Any? {
+        switch action {
+        case #selector(TunnelsListTableViewController.handleViewLogAction),
+             #selector(TunnelsListTableViewController.handleAddEmptyTunnelAction),
+             #selector(TunnelsListTableViewController.handleImportTunnelAction),
+             #selector(TunnelsListTableViewController.handleExportTunnelsAction),
+             #selector(TunnelsListTableViewController.handleRemoveTunnelAction):
+            return tunnelsListVC
+        case #selector(TunnelDetailTableViewController.handleToggleActiveStatusAction),
+             #selector(TunnelDetailTableViewController.handleEditTunnelAction):
+            return tunnelDetailVC
+        default:
+            return super.supplementalTarget(forAction: action, sender: sender)
+        }
+    }
+}
