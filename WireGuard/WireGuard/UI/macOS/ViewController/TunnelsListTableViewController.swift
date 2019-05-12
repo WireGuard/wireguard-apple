@@ -317,6 +317,15 @@ extension TunnelsListTableViewController {
     }
 }
 
+extension TunnelsListTableViewController: NSMenuItemValidation {
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(TunnelsListTableViewController.handleRemoveTunnelAction) {
+            return !tableView.selectedRowIndexes.isEmpty
+        }
+        return true
+    }
+}
+
 class FillerButton: NSButton {
     override var intrinsicContentSize: NSSize {
         return NSSize(width: NSView.noIntrinsicMetric, height: NSView.noIntrinsicMetric)
