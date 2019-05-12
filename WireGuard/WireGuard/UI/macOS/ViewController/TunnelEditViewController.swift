@@ -73,6 +73,8 @@ class TunnelEditViewController: NSViewController {
         button.title = tr("macEditSave")
         button.setButtonType(.momentaryPushIn)
         button.bezelStyle = .rounded
+        button.keyEquivalent = "s"
+        button.keyEquivalentModifierMask = [.command]
         return button
     }()
 
