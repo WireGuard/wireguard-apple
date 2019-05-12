@@ -261,3 +261,9 @@ extension LogViewController: NSTableViewDelegate {
         }
     }
 }
+
+extension LogViewController {
+    override func cancelOperation(_ sender: Any?) {
+        closeClicked()
+    }
+}
