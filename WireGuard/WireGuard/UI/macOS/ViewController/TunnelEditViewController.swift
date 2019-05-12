@@ -287,3 +287,9 @@ class TunnelEditViewController: NSViewController {
         }
     }
 }
+
+extension TunnelEditViewController {
+    override func cancelOperation(_ sender: Any?) {
+        handleDiscardAction()
+    }
+}
