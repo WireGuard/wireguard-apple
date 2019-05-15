@@ -124,9 +124,13 @@ extension AppDelegate {
 }
 
 extension AppDelegate: StatusMenuWindowDelegate {
-    func manageTunnelsWindow() -> NSWindow {
+    func showManageTunnelsWindow(completion: ((NSWindow?) -> Void)?) {
+        guard let tunnelsManager = tunnelsManager else {
+            completion?(nil)
+            return
+        }
         if manageTunnelsWindowObject == nil {
-            manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager!)
+            manageTunnelsRootVC = ManageTunnelsRootViewController(tunnelsManager: tunnelsManager)
             let window = NSWindow(contentViewController: manageTunnelsRootVC!)
             window.title = tr("macWindowTitleManageTunnels")
             window.setContentSize(NSSize(width: 800, height: 480))
@@ -134,7 +138,10 @@ extension AppDelegate: StatusMenuWindowDelegate {
             manageTunnelsWindowObject = window
             tunnelsTracker?.manageTunnelsRootVC = manageTunnelsRootVC
         }
-        return manageTunnelsWindowObject!
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        manageTunnelsWindowObject!.makeKeyAndOrderFront(self)
+        completion?(manageTunnelsWindowObject)
     }
 }
 
