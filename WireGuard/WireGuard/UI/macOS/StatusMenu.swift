@@ -4,7 +4,7 @@
 import Cocoa
 
 protocol StatusMenuWindowDelegate: class {
-    func manageTunnelsWindow() -> NSWindow
+    func showManageTunnelsWindow(completion: ((NSWindow?) -> Void)?)
 }
 
 class StatusMenu: NSMenu {
@@ -151,18 +151,16 @@ class StatusMenu: NSMenu {
     }
 
     @objc func manageTunnelsClicked() {
-        NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
-        guard let manageTunnelsWindow = windowDelegate?.manageTunnelsWindow() else { return }
-        manageTunnelsWindow.makeKeyAndOrderFront(self)
+        windowDelegate?.showManageTunnelsWindow(completion: nil)
     }
 
     @objc func importTunnelsClicked() {
-        NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
-        guard let manageTunnelsWindow = windowDelegate?.manageTunnelsWindow() else { return }
-        manageTunnelsWindow.makeKeyAndOrderFront(self)
-        ImportPanelPresenter.presentImportPanel(tunnelsManager: tunnelsManager, sourceVC: manageTunnelsWindow.contentViewController)
+        windowDelegate?.showManageTunnelsWindow { [weak self] manageTunnelsWindow in
+            guard let self = self else { return }
+            guard let manageTunnelsWindow = manageTunnelsWindow else { return }
+            ImportPanelPresenter.presentImportPanel(tunnelsManager: self.tunnelsManager,
+                                                    sourceVC: manageTunnelsWindow.contentViewController)
+        }
     }
 }
 
