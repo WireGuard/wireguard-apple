@@ -255,21 +255,21 @@ class TunnelsListTableViewController: UIViewController {
     func showTunnelDetail(for tunnel: TunnelContainer, animated: Bool) {
         guard let tunnelsManager = tunnelsManager else { return }
         guard let splitViewController = splitViewController else { return }
+        guard let navController = navigationController else { return }
 
         if detailDisplayedTunnel != tunnel {
             let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
                                                                  tunnel: tunnel)
             let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
             tunnelDetailNC.restorationIdentifier = "DetailNC"
-            if animated {
-                splitViewController.showDetailViewController(tunnelDetailNC, sender: self)
+            if splitViewController.isCollapsed && navController.viewControllers.count > 1 {
+                navController.setViewControllers([self, tunnelDetailNC], animated: animated)
             } else {
-                UIView.performWithoutAnimation {
-                    splitViewController.showDetailViewController(tunnelDetailNC, sender: self)
-                }
+                splitViewController.showDetailViewController(tunnelDetailNC, sender: self, animated: animated)
             }
             detailDisplayedTunnel = tunnel
         }
+        self.presentedViewController?.dismiss(animated: false, completion: nil)
     }
 }
 
@@ -398,6 +398,18 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
             detailDisplayedTunnel = nil
             if let presentedNavController = self.presentedViewController as? UINavigationController, presentedNavController.viewControllers.first is TunnelEditTableViewController {
                 self.presentedViewController?.dismiss(animated: false, completion: nil)
+            }
+        }
+    }
+}
+
+extension UISplitViewController {
+    func showDetailViewController(_ vc: UIViewController, sender: Any?, animated: Bool) {
+        if animated {
+            showDetailViewController(vc, sender: sender)
+        } else {
+            UIView.performWithoutAnimation {
+                showDetailViewController(vc, sender: sender)
             }
         }
     }
