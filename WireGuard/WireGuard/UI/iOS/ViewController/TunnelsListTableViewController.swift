@@ -251,6 +251,26 @@ class TunnelsListTableViewController: UIViewController {
             }
         }
     }
+
+    func showTunnelDetail(for tunnel: TunnelContainer, animated: Bool) {
+        guard let tunnelsManager = tunnelsManager else { return }
+        guard let splitViewController = splitViewController else { return }
+
+        if detailDisplayedTunnel != tunnel {
+            let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
+                                                                 tunnel: tunnel)
+            let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
+            tunnelDetailNC.restorationIdentifier = "DetailNC"
+            if animated {
+                splitViewController.showDetailViewController(tunnelDetailNC, sender: self)
+            } else {
+                UIView.performWithoutAnimation {
+                    splitViewController.showDetailViewController(tunnelDetailNC, sender: self)
+                }
+            }
+            detailDisplayedTunnel = tunnel
+        }
+    }
 }
 
 extension TunnelsListTableViewController: UIDocumentPickerDelegate {
@@ -309,12 +329,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         }
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
-        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
-                                                             tunnel: tunnel)
-        let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
-        tunnelDetailNC.restorationIdentifier = "DetailNC"
-        showDetailViewController(tunnelDetailNC, sender: self) // Shall get propagated up to the split-vc
-        detailDisplayedTunnel = tunnel
+        showTunnelDetail(for: tunnel, animated: true)
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

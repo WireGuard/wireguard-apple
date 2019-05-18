@@ -90,19 +90,10 @@ extension MainViewController {
 
     func showTunnelDetailForTunnel(named tunnelName: String, animated: Bool, shouldToggleStatus: Bool) {
         let showTunnelDetailBlock: (TunnelsManager) -> Void = { [weak self] tunnelsManager in
+            guard let self = self else { return }
+            guard let tunnelsListVC = self.tunnelsListVC else { return }
             if let tunnel = tunnelsManager.tunnel(named: tunnelName) {
-                let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
-                let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
-                tunnelDetailNC.restorationIdentifier = "DetailNC"
-                if let self = self {
-                    if animated {
-                        self.showDetailViewController(tunnelDetailNC, sender: self)
-                    } else {
-                        UIView.performWithoutAnimation {
-                            self.showDetailViewController(tunnelDetailNC, sender: self)
-                        }
-                    }
-                }
+                tunnelsListVC.showTunnelDetail(for: tunnel, animated: false)
                 if shouldToggleStatus {
                     if tunnel.status == .inactive {
                         tunnelsManager.startActivation(of: tunnel)
