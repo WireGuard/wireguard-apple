@@ -17,6 +17,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
         registerLoginItem(shouldLaunchAtLogin: true)
+
+        NSApp.setActivationPolicy(.regular)
         NSApp.mainMenu = MainMenu()
 
         TunnelsManager.create { [weak self] result in
@@ -39,6 +41,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.tunnelsManager = tunnelsManager
                 self.tunnelsTracker = tunnelsTracker
                 self.statusItemController = statusItemController
+
+                self.showManageTunnelsWindow(completion: nil)
             }
         }
     }
