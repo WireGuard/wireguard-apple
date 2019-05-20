@@ -19,11 +19,7 @@ class MacAppStoreUpdateDetector {
 }
 
 private func isQuitEvent(_ event: NSAppleEventDescriptor) -> Bool {
-    if let eventClassDescriptor = event.attributeDescriptor(forKeyword: keyEventClassAttr),
-        let eventIdDescriptor = event.attributeDescriptor(forKeyword: keyEventIDAttr) {
-        return eventClassDescriptor.typeCodeValue == kCoreEventClass && eventIdDescriptor.typeCodeValue == kAEQuitApplication
-    }
-    return false
+    return event.eventClass == kCoreEventClass && event.eventID == kAEQuitApplication
 }
 
 private func getExecutablePath(from pid: pid_t) -> String? {

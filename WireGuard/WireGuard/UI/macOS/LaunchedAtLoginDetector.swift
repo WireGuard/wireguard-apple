@@ -13,9 +13,5 @@ class LaunchedAtLoginDetector {
 }
 
 private func isOpenEvent(_ event: NSAppleEventDescriptor) -> Bool {
-    if let eventClassDescriptor = event.attributeDescriptor(forKeyword: keyEventClassAttr),
-        let eventIdDescriptor = event.attributeDescriptor(forKeyword: keyEventIDAttr) {
-        return eventClassDescriptor.typeCodeValue == kCoreEventClass && eventIdDescriptor.typeCodeValue == kAEOpenApplication
-    }
-    return false
+    return event.eventClass == kCoreEventClass && event.eventID == kAEOpenApplication
 }
