@@ -1521,7 +1521,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = WireGuard/UI/macOS/LoginItemHelper/LoginItemHelper.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				INFOPLIST_FILE = WireGuard/UI/macOS/Info.plist;
+				INFOPLIST_FILE = WireGuard/UI/macOS/LoginItemHelper/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_MACOS).login-item-helper";
 				PRODUCT_NAME = WireGuardLoginItemHelper;
 				SDKROOT = macosx;
@@ -1534,7 +1534,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = WireGuard/UI/macOS/LoginItemHelper/LoginItemHelper.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				INFOPLIST_FILE = WireGuard/UI/macOS/Info.plist;
+				INFOPLIST_FILE = WireGuard/UI/macOS/LoginItemHelper/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID_MACOS).login-item-helper";
 				PRODUCT_NAME = WireGuardLoginItemHelper;
 				SDKROOT = macosx;
