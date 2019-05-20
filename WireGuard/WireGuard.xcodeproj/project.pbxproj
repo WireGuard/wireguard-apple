@@ -68,6 +68,7 @@
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C3F217F3413003482A3 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3E217F3413003482A3 /* DNSServer.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
+		6F6483E7229293300075BA15 /* LaunchedAtLoginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6483E6229293300075BA15 /* LaunchedAtLoginDetector.swift */; };
 		6F6899A62180447E0012E523 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
 		6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
 		6F693A562179E556008551C1 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F693A552179E556008551C1 /* Endpoint.swift */; };
@@ -320,6 +321,7 @@
 		6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelViewModel.swift; sourceTree = "<group>"; };
 		6F628C3E217F3413003482A3 /* DNSServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
 		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
+		6F6483E6229293300075BA15 /* LaunchedAtLoginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchedAtLoginDetector.swift; sourceTree = "<group>"; };
 		6F689999218043390012E523 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
 		6F6899A42180447E0012E523 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		6F6899A52180447E0012E523 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
@@ -638,6 +640,7 @@
 				6FBA104121D6BC210051C35F /* ErrorPresenter.swift */,
 				6FCD99AE21E0EA1700BA4C82 /* ImportPanelPresenter.swift */,
 				6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */,
+				6F6483E6229293300075BA15 /* LaunchedAtLoginDetector.swift */,
 				6FB1BD6121D2607E00A991BF /* Assets.xcassets */,
 				6FB1BD6621D2607E00A991BF /* Info.plist */,
 				6FB1BD6721D2607E00A991BF /* WireGuard.entitlements */,
@@ -1295,6 +1298,7 @@
 				6F3E02E9228000F6001FE7E3 /* MainMenu.swift in Sources */,
 				5F52D0BF21E3788900283CEA /* NSColor+Hex.swift in Sources */,
 				6FB1BDBE21D50F0200A991BF /* Logger.swift in Sources */,
+				6F6483E7229293300075BA15 /* LaunchedAtLoginDetector.swift in Sources */,
 				6FB1BDBF21D50F0200A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				6FADE96C2254B8C300B838A4 /* UnusableTunnelDetailViewController.swift in Sources */,
 				6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */,

@@ -5,12 +5,13 @@
 
 int main(int argc, char *argv[])
 {
-    NSURL *bundleURL = [NSBundle.mainBundle bundleURL];
+    NSString *appIdInfoDictionaryKey = @"com.wireguard.macos.app_id";
+    NSString *appId = [NSBundle.mainBundle objectForInfoDictionaryKey:appIdInfoDictionaryKey];
 
-    // From <path>/WireGuard.app/Contents/Library/LoginItems/WireGuardLoginItemHelper.app, derive <path>/WireGuard.app
-    for (int i = 0; i < 4; ++i)
-        bundleURL = [bundleURL URLByDeletingLastPathComponent];
+    NSString *launchCode = @"LaunchedByWireGuardLoginItemHelper";
+    NSAppleEventDescriptor *paramDescriptor = [NSAppleEventDescriptor descriptorWithString:launchCode];
 
-    [NSWorkspace.sharedWorkspace launchApplication:[bundleURL path]];
+    [NSWorkspace.sharedWorkspace launchAppWithBundleIdentifier:appId options:NSWorkspaceLaunchWithoutActivation
+                                additionalEventParamDescriptor:paramDescriptor launchIdentifier:NULL];
     return 0;
 }
