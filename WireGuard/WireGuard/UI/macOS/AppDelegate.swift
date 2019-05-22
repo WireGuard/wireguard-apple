@@ -56,6 +56,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
+        if hasVisibleWindows {
+            return true
+        }
+        showManageTunnelsWindow(completion: nil)
+        return false
+    }
+
     @objc func quit() {
         if let manageWindow = manageTunnelsWindowObject, manageWindow.attachedSheet != nil {
             NSApp.activate(ignoringOtherApps: true)
