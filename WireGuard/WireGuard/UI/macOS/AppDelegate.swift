@@ -15,6 +15,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var manageTunnelsWindowObject: NSWindow?
     var onAppDeactivation: (() -> Void)?
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // To workaround a possible AppKit bug that causes the main menu to become unresponsive sometimes
+        // (especially when launched through Xcode) if we call setActivationPolicy(.regular) in
+        // in applicationDidFinishLaunching, we set it to .prohibited here.
+        // Setting it to .regular would fix that problem too, but at this point, we don't know
+        // whether the app was launched at login or not, so we're not sure whether we should
+        // show the app icon in the dock or not.
+        NSApp.setActivationPolicy(.prohibited)
+    }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
         registerLoginItem(shouldLaunchAtLogin: true)
@@ -24,10 +34,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             isLaunchedAtLogin = LaunchedAtLoginDetector.isLaunchedAtLogin(openAppleEvent: appleEvent)
         }
 
-        if !isLaunchedAtLogin {
-            setDockIconAndMainMenuVisibility(isVisible: true)
-        }
         NSApp.mainMenu = MainMenu()
+        setDockIconAndMainMenuVisibility(isVisible: !isLaunchedAtLogin)
 
         TunnelsManager.create { [weak self] result in
             guard let self = self else { return }
