@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     var manageTunnelsRootVC: ManageTunnelsRootViewController?
     var manageTunnelsWindowObject: NSWindow?
+    var onAppDeactivation: (() -> Void)?
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
@@ -24,7 +25,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         if !isLaunchedAtLogin {
-            NSApp.setActivationPolicy(.regular)
+            setDockIconAndMainMenuVisibility(isVisible: true)
         }
         NSApp.mainMenu = MainMenu()
 
@@ -121,8 +122,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ application: NSApplication) -> Bool {
-        application.setActivationPolicy(.accessory)
+        setDockIconAndMainMenuVisibility(isVisible: false)
         return false
+    }
+
+    private func setDockIconAndMainMenuVisibility(isVisible: Bool, completion: (() -> Void)? = nil) {
+        let currentActivationPolicy = NSApp.activationPolicy()
+        let newActivationPolicy: NSApplication.ActivationPolicy = isVisible ? .regular : .accessory
+        guard currentActivationPolicy != newActivationPolicy else {
+            if newActivationPolicy == .regular {
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            completion?()
+            return
+        }
+        if newActivationPolicy == .regular && NSApp.isActive {
+            // To workaround a possible AppKit bug that causes the main menu to become unresponsive,
+            // we should deactivate the app first and then set the activation policy.
+            // NSApp.deactivate() doesn't always deactivate the app, so we instead use
+            // setActivationPolicy(.prohibited).
+            onAppDeactivation = {
+                NSApp.setActivationPolicy(.regular)
+                NSApp.activate(ignoringOtherApps: true)
+                completion?()
+            }
+            NSApp.setActivationPolicy(.prohibited)
+        } else {
+            NSApp.setActivationPolicy(newActivationPolicy)
+            if newActivationPolicy == .regular {
+                NSApp.activate(ignoringOtherApps: true)
+            }
+            completion?()
+        }
+    }
+
+    func applicationDidResignActive(_ notification: Notification) {
+        onAppDeactivation?()
+        onAppDeactivation = nil
     }
 }
 
@@ -159,10 +195,10 @@ extension AppDelegate: StatusMenuWindowDelegate {
             manageTunnelsWindowObject = window
             tunnelsTracker?.manageTunnelsRootVC = manageTunnelsRootVC
         }
-        NSApp.setActivationPolicy(.regular)
-        NSApp.activate(ignoringOtherApps: true)
-        manageTunnelsWindowObject!.makeKeyAndOrderFront(self)
-        completion?(manageTunnelsWindowObject)
+        setDockIconAndMainMenuVisibility(isVisible: true) { [weak manageTunnelsWindowObject] in
+            manageTunnelsWindowObject?.makeKeyAndOrderFront(self)
+            completion?(manageTunnelsWindowObject)
+        }
     }
 }
 
