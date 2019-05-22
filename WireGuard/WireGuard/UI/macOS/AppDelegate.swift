@@ -58,6 +58,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
+        if let appleEvent = NSAppleEventManager.shared().currentAppleEvent {
+            if LaunchedAtLoginDetector.isReopenedByLoginItemHelper(reopenAppleEvent: appleEvent) {
+                return false
+            }
+        }
         if hasVisibleWindows {
             return true
         }
