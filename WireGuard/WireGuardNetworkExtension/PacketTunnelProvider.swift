@@ -147,7 +147,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
             _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
         }
-        #endif
+        #elseif os(macOS)
         var interfaces = path.availableInterfaces
         if let ifname = ifname {
             interfaces = interfaces.filter { $0.name != ifname }
@@ -155,6 +155,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if let ifscope = interfaces.first?.index {
             wgBindInterfaceScope(handle, Int32(ifscope))
         }
+        #endif
     }
 }
 
