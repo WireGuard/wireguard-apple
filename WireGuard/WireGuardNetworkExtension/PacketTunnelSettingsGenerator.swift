@@ -97,16 +97,13 @@ class PacketTunnelSettingsGenerator {
 
         let (ipv4Routes, ipv6Routes) = routes()
         let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
-        let (ipv4ExcludedRoutes, ipv6ExcludedRoutes) = excludedRoutes()
 
         let ipv4Settings = NEIPv4Settings(addresses: ipv4Routes.map { $0.destinationAddress }, subnetMasks: ipv4Routes.map { $0.destinationSubnetMask })
         ipv4Settings.includedRoutes = ipv4IncludedRoutes
-        ipv4Settings.excludedRoutes = ipv4ExcludedRoutes
         networkSettings.ipv4Settings = ipv4Settings
 
         let ipv6Settings = NEIPv6Settings(addresses: ipv6Routes.map { $0.destinationAddress }, networkPrefixLengths: ipv6Routes.map { $0.destinationNetworkPrefixLength })
         ipv6Settings.includedRoutes = ipv6IncludedRoutes
-        ipv6Settings.excludedRoutes = ipv6ExcludedRoutes
         networkSettings.ipv6Settings = ipv6Settings
 
         return networkSettings
@@ -155,25 +152,5 @@ class PacketTunnelSettingsGenerator {
             }
         }
         return (ipv4IncludedRoutes, ipv6IncludedRoutes)
-    }
-    private func excludedRoutes() -> ([NEIPv4Route]?, [NEIPv6Route]?) {
-        #if os(macOS)
-        return (nil, nil)
-        #elseif os(iOS)
-        var ipv4ExcludedRoutes = [NEIPv4Route]()
-        var ipv6ExcludedRoutes = [NEIPv6Route]()
-        for endpoint in resolvedEndpoints {
-            guard let host = endpoint?.host else { continue }
-            switch host {
-            case .ipv4(let v4):
-                ipv4ExcludedRoutes.append(NEIPv4Route(destinationAddress: "\(v4)", subnetMask: "255.255.255.255"))
-            case .ipv6(let v6):
-                ipv6ExcludedRoutes.append(NEIPv6Route(destinationAddress: "\(v6)", networkPrefixLength: 128))
-            default:
-                continue
-            }
-        }
-        return (ipv4ExcludedRoutes, ipv6ExcludedRoutes)
-        #endif
     }
 }
