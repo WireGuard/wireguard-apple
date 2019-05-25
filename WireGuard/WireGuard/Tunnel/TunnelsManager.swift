@@ -70,7 +70,9 @@ class TunnelsManager {
                 }
             }
             Keychain.deleteReferences(except: refs)
+            #if os(iOS)
             RecentTunnelsTracker.cleanupTunnels(except: tunnelNames)
+            #endif
             completionHandler(.success(TunnelsManager(tunnelProviders: tunnelManagers)))
         }
         #endif
