@@ -9,13 +9,17 @@ import os.log
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private var handle: Int32?
+    #if os(iOS)
     private var networkMonitor: NWPathMonitor?
+    #endif
     private var ifname: String?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
 
+    #if os(iOS)
     deinit {
         networkMonitor?.cancel()
     }
+    #endif
 
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
@@ -51,9 +55,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
                 startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
             } else {
+                #if os(iOS)
                 self.networkMonitor = NWPathMonitor()
                 self.networkMonitor!.pathUpdateHandler = self.pathUpdate
                 self.networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
+                #endif
 
                 let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
                 if fileDescriptor < 0 {
@@ -84,8 +90,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+        #if os(iOS)
         networkMonitor?.cancel()
         networkMonitor = nil
+        #endif
 
         ErrorNotifier.removeLastErrorFile()
 
@@ -140,23 +148,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
+    #if os(iOS)
     private func pathUpdate(path: Network.NWPath) {
         guard let handle = handle else { return }
-        wg_log(.debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
-        #if os(iOS)
         if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
             _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
         }
-        #elseif os(macOS)
-        var interfaces = path.availableInterfaces
-        if let ifname = ifname {
-            interfaces = interfaces.filter { $0.name != ifname }
-        }
-        if let ifscope = interfaces.first?.index {
-            wgBindInterfaceScope(handle, Int32(ifscope))
-        }
-        #endif
     }
+    #endif
 }
 
 extension String {
