@@ -135,7 +135,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ application: NSApplication) -> Bool {
-        setDockIconAndMainMenuVisibility(isVisible: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak self] in
+            self?.setDockIconAndMainMenuVisibility(isVisible: false)
+        }
         return false
     }
 
