@@ -101,7 +101,6 @@ class TunnelDetailTableViewController: NSViewController {
         super.init(nibName: nil, bundle: nil)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
-        updateStatus()
         statusObservationToken = tunnel.observe(\TunnelContainer.status) { [weak self] _, _ in
             self?.updateStatus()
         }
@@ -224,6 +223,12 @@ class TunnelDetailTableViewController: NSViewController {
             tunnelsManager.startActivation(of: tunnel)
         } else if tunnel.status == .active {
             tunnelsManager.startDeactivation(of: tunnel)
+        }
+    }
+
+    override func viewWillAppear() {
+        if tunnel.status == .active {
+            startUpdatingRuntimeConfiguration()
         }
     }
 
