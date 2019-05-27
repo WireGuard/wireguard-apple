@@ -257,18 +257,16 @@ class TunnelsListTableViewController: UIViewController {
         guard let splitViewController = splitViewController else { return }
         guard let navController = navigationController else { return }
 
-        if detailDisplayedTunnel != tunnel {
-            let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
-                                                                 tunnel: tunnel)
-            let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
-            tunnelDetailNC.restorationIdentifier = "DetailNC"
-            if splitViewController.isCollapsed && navController.viewControllers.count > 1 {
-                navController.setViewControllers([self, tunnelDetailNC], animated: animated)
-            } else {
-                splitViewController.showDetailViewController(tunnelDetailNC, sender: self, animated: animated)
-            }
-            detailDisplayedTunnel = tunnel
+        let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager,
+                                                             tunnel: tunnel)
+        let tunnelDetailNC = UINavigationController(rootViewController: tunnelDetailVC)
+        tunnelDetailNC.restorationIdentifier = "DetailNC"
+        if splitViewController.isCollapsed && navController.viewControllers.count > 1 {
+            navController.setViewControllers([self, tunnelDetailNC], animated: animated)
+        } else {
+            splitViewController.showDetailViewController(tunnelDetailNC, sender: self, animated: animated)
         }
+        detailDisplayedTunnel = tunnel
         self.presentedViewController?.dismiss(animated: false, completion: nil)
     }
 }
