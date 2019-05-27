@@ -102,7 +102,13 @@ class TunnelDetailTableViewController: NSViewController {
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
         statusObservationToken = tunnel.observe(\TunnelContainer.status) { [weak self] _, _ in
-            self?.updateStatus()
+            guard let self = self else { return }
+            if tunnel.status == .active {
+                self.startUpdatingRuntimeConfiguration()
+            } else if tunnel.status == .inactive {
+                self.reloadRuntimeConfiguration()
+                self.stopUpdatingRuntimeConfiguration()
+            }
         }
     }
 
@@ -197,15 +203,6 @@ class TunnelDetailTableViewController: NSViewController {
 
     func updateTableViewModelRows() {
         tableViewModelRows = tableViewModelRowsBySection.flatMap { $0.filter { $0.isVisible }.map { $0.modelRow } }
-    }
-
-    func updateStatus() {
-        if tunnel.status == .active {
-            startUpdatingRuntimeConfiguration()
-        } else if tunnel.status == .inactive {
-            reloadRuntimeConfiguration()
-            stopUpdatingRuntimeConfiguration()
-        }
     }
 
     @objc func handleEditTunnelAction() {
@@ -508,7 +505,6 @@ extension TunnelDetailTableViewController: TunnelEditViewControllerDelegate {
         onDemandViewModel = ActivateOnDemandViewModel(tunnel: tunnel)
         updateTableViewModelRowsBySection()
         updateTableViewModelRows()
-        updateStatus()
         tableView.reloadData()
         self.tunnelEditVC = nil
     }
