@@ -220,7 +220,8 @@ class LogViewController: NSViewController {
                     return
                 }
                 DispatchQueue.main.async { [weak self] in
-                    self?.dismiss(self)
+                    guard let self = self else { return }
+                    self.presentingViewController?.dismiss(self)
                 }
             }
 
@@ -228,7 +229,7 @@ class LogViewController: NSViewController {
     }
 
     @objc func closeClicked() {
-        dismiss(self)
+        presentingViewController?.dismiss(self)
     }
 
     @objc func copy(_ sender: Any?) {
