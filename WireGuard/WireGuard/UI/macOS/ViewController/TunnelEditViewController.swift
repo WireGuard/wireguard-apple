@@ -237,24 +237,26 @@ class TunnelEditViewController: NSViewController {
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
             tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] error in
-                self?.setUserInteractionEnabled(true)
+                guard let self = self else { return }
+                self.setUserInteractionEnabled(true)
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                     return
                 }
-                self?.dismiss(self)
-                self?.delegate?.tunnelSaved(tunnel: tunnel)
+                self.delegate?.tunnelSaved(tunnel: tunnel)
+                self.presentingViewController?.dismiss(self)
             }
         } else {
             // We're creating a new tunnel
             self.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
-                self?.setUserInteractionEnabled(true)
+                guard let self = self else { return }
+                self.setUserInteractionEnabled(true)
                 switch result {
                 case .failure(let error):
                     ErrorPresenter.showErrorAlert(error: error, from: self)
                 case .success(let tunnel):
-                    self?.dismiss(self)
-                    self?.delegate?.tunnelSaved(tunnel: tunnel)
+                    self.delegate?.tunnelSaved(tunnel: tunnel)
+                    self.presentingViewController?.dismiss(self)
                 }
             }
         }
@@ -262,7 +264,7 @@ class TunnelEditViewController: NSViewController {
 
     @objc func handleDiscardAction() {
         delegate?.tunnelEditingCancelled()
-        dismiss(self)
+        presentingViewController?.dismiss(self)
     }
 
     func updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: [String]?) {
