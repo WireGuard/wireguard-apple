@@ -18,6 +18,7 @@ extern int wgTurnOn(gostring_t settings, int32_t tun_fd);
 extern void wgTurnOff(int handle);
 extern int64_t wgSetConfig(int handle, gostring_t settings);
 extern char *wgGetConfig(int handle);
+extern void wgBumpSockets(int handle);
 extern const char *wgVersion();
 
 #endif
