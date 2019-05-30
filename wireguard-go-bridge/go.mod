@@ -3,6 +3,6 @@ module golang.zx2c4.com/wireguard/ios
 go 1.12
 
 require (
-	golang.org/x/sys v0.0.0-20190405154228-4b34438f7a67
-	golang.zx2c4.com/wireguard v0.0.0-20190409083948-18fa27047265
+	golang.org/x/sys v0.0.0-20190522044717-8097e1b27ff5
+	golang.zx2c4.com/wireguard v0.0.20190518-0.20190530131616-d9f995209c3c
 )
