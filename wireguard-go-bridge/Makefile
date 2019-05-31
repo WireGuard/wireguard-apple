@@ -26,7 +26,7 @@ export CGO_ENABLED := 1
 build: $(DESTDIR)/libwg-go.a
 version-header: $(DESTDIR)/wireguard-go-version.h
 
-GOBUILDVERSION_NEEDED := go version go1.12.1 darwin/amd64
+GOBUILDVERSION_NEEDED := go version go1.12.5 darwin/amd64
 GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
 export REAL_GOROOT := $(shell go env GOROOT 2>/dev/null)
 export GOROOT := $(BUILDDIR)/goroot
