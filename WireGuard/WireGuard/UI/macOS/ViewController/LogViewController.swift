@@ -146,7 +146,8 @@ class LogViewController: NSViewController {
         ])
 
         NSLayoutConstraint.activate([
-            containerView.widthAnchor.constraint(equalToConstant: 640),
+            containerView.widthAnchor.constraint(greaterThanOrEqualToConstant: 640),
+            containerView.widthAnchor.constraint(lessThanOrEqualToConstant: 1200),
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 240)
         ])
 
@@ -250,12 +251,11 @@ extension LogViewController: NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         if LogColumn.time.isRepresenting(tableColumn: tableColumn) {
             let cell: LogViewTimestampCell = tableView.dequeueReusableCell()
-            cell.stringValue = logEntries[row].timestamp
+            cell.text = logEntries[row].timestamp
             return cell
         } else if LogColumn.logMessage.isRepresenting(tableColumn: tableColumn) {
             let cell: LogViewMessageCell = tableView.dequeueReusableCell()
-            cell.stringValue = logEntries[row].message
-            cell.preferredMaxLayoutWidth = tableColumn?.width ?? 0
+            cell.text = logEntries[row].message
             return cell
         } else {
             fatalError()
