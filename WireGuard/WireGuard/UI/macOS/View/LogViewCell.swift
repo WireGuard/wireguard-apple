@@ -3,13 +3,25 @@
 
 import Cocoa
 
-class LogViewCell: NSTextField {
+class LogViewCell: NSTableCellView {
+    var text: String = "" {
+        didSet { textField?.stringValue = text }
+    }
+
     init() {
         super.init(frame: .zero)
-        isSelectable = false
-        isEditable = false
-        isBordered = false
-        backgroundColor = .clear
+
+        let textField = NSTextField(wrappingLabelWithString: "")
+        addSubview(textField)
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            textField.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            textField.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            textField.topAnchor.constraint(equalTo: self.topAnchor),
+            textField.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+
+        self.textField = textField
     }
 
     required init?(coder: NSCoder) {
@@ -17,19 +29,19 @@ class LogViewCell: NSTextField {
     }
 
     override func prepareForReuse() {
-        stringValue = ""
-        preferredMaxLayoutWidth = 0
+        textField?.stringValue = ""
     }
 }
 
 class LogViewTimestampCell: LogViewCell {
     override init() {
         super.init()
-        maximumNumberOfLines = 1
-        lineBreakMode = .byClipping
-        preferredMaxLayoutWidth = 0
-        setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        setContentHuggingPriority(.defaultLow, for: .vertical)
+        if let textField = textField {
+            textField.maximumNumberOfLines = 1
+            textField.lineBreakMode = .byClipping
+            textField.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+            textField.setContentHuggingPriority(.defaultLow, for: .vertical)
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -40,10 +52,12 @@ class LogViewTimestampCell: LogViewCell {
 class LogViewMessageCell: LogViewCell {
     override init() {
         super.init()
-        maximumNumberOfLines = 0
-        lineBreakMode = .byWordWrapping
-        setContentCompressionResistancePriority(.required, for: .vertical)
-        setContentHuggingPriority(.required, for: .vertical)
+        if let textField = textField {
+            textField.maximumNumberOfLines = 0
+            textField.lineBreakMode = .byWordWrapping
+            textField.setContentCompressionResistancePriority(.required, for: .vertical)
+            textField.setContentHuggingPriority(.required, for: .vertical)
+        }
     }
 
     required init?(coder: NSCoder) {
