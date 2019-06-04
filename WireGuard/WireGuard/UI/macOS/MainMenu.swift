@@ -51,8 +51,8 @@ class MainMenu: NSMenu {
 
         menu.addItem(NSMenuItem.separator())
 
-        menu.addItem(withTitle: tr("macMenuQuitManagingTunnels"),
-            action: #selector(NSWindow.performClose(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: tr("macMenuQuit"),
+            action: #selector(AppDelegate.confirmAndQuit), keyEquivalent: "q")
 
         return menu
     }

@@ -78,6 +78,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
+    @objc func confirmAndQuit() {
+        let alert = NSAlert()
+        alert.messageText = tr("macConfirmAndQuitAlertMessage")
+        if let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating {
+            alert.informativeText = tr(format: "macConfirmAndQuitInfoWithActiveTunnel (%@)", currentTunnel.name)
+        } else {
+            alert.informativeText = tr("macConfirmAndQuitAlertInfo")
+        }
+        alert.addButton(withTitle: tr("macConfirmAndQuitAlertCloseWindow"))
+        alert.addButton(withTitle: tr("macConfirmAndQuitAlertQuitWireGuard"))
+
+        NSApp.activate(ignoringOtherApps: true)
+        if let manageWindow = manageTunnelsWindowObject {
+            manageWindow.orderFront(self)
+            alert.beginSheetModal(for: manageWindow) { response in
+                switch response {
+                case .alertFirstButtonReturn:
+                    manageWindow.close()
+                case .alertSecondButtonReturn:
+                    NSApp.terminate(nil)
+                default:
+                    break
+                }
+            }
+        }
+    }
+
     @objc func quit() {
         if let manageWindow = manageTunnelsWindowObject, manageWindow.attachedSheet != nil {
             NSApp.activate(ignoringOtherApps: true)
