@@ -308,7 +308,6 @@
 "macMenuHideApp" = "Hide WireGuard";
 "macMenuHideOtherApps" = "Hide Others";
 "macMenuShowAllApps" = "Show All";
-"macMenuQuitManagingTunnels" = "Quit Tunnel Manager";
 
 "macMenuFile" = "File";
 "macMenuCloseWindow" = "Close Window";
@@ -405,6 +404,12 @@
 "iosViewPrivateData" = "Authenticate to view tunnel private keys.";
 
 // Mac alert
+
+"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
+"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.\n\nNote that if you quit WireGuard entirely the currently active tunnel ('%@') will still remain active until you deactivate it from this application or through the Network panel in System Preferences.";
+"macConfirmAndQuitAlertQuitWireGuard" = "Quit WireGuard";
+"macConfirmAndQuitAlertCloseWindow" = "Close Tunnels Manager";
 
 "macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
 "macAppExitingWithActiveTunnelInfo" = "The tunnel will remain active after exiting. You may disable it by reopening this application or through the Network panel in System Preferences.";
