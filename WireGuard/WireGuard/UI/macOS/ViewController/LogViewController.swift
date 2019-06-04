@@ -193,6 +193,10 @@ class LogViewController: NSViewController {
         updateLogEntriesTimer = nil
     }
 
+    override func viewWillAppear() {
+        view.window?.setFrameAutosaveName(NSWindow.FrameAutosaveName("LogWindow"))
+    }
+
     override func viewWillDisappear() {
         super.viewWillDisappear()
         stopUpdatingLogEntries()
