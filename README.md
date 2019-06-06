@@ -1,12 +1,14 @@
 # [WireGuard](https://www.wireguard.com/) for iOS and macOS
 
+This project contains an application for iOS and for macOS, as well as many components shared between the two of them. You may toggle between the two platforms by selecting the target from within Xcode.
+
 ## Building
 
-- Clone this repo recursively:
+- Clone this repo:
 
 ```
-$ git clone --recursive https://git.zx2c4.com/wireguard-ios
-$ cd wireguard-ios
+$ git clone https://git.zx2c4.com/wireguard-apple
+$ cd wireguard-apple
 ```
 
 - Rename and populate developer team ID file:
