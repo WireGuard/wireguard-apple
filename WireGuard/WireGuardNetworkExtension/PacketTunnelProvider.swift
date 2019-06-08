@@ -11,7 +11,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
     private var ifname: String?
-    private var lastSeenInterfaces: [String] = []
+    private var lastPath: Network.NWPath?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
 
     deinit {
@@ -143,18 +143,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private func pathUpdate(path: Network.NWPath) {
         guard let handle = handle else { return }
-        guard let ifname = ifname else { return }
         wg_log(.debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
-        guard path.status == .satisfied else { return }
 
         #if os(iOS)
         if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
             _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
         }
         #endif
-        let interfaces = path.availableInterfaces.filter { $0.name != ifname }.compactMap { $0.name }
-        if !interfaces.elementsEqual(lastSeenInterfaces) {
-            lastSeenInterfaces = interfaces
+        if path != lastPath {
+            lastPath = path
             wgBumpSockets(handle)
         }
     }
