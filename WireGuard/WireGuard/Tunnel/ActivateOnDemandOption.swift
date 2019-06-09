@@ -46,46 +46,59 @@ extension ActivateOnDemandOption {
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {
-        let rules = tunnelProviderManager.onDemandRules ?? []
-        let activateOnDemandOption: ActivateOnDemandOption
+        if tunnelProviderManager.isOnDemandEnabled, let onDemandRules = tunnelProviderManager.onDemandRules {
+            self = ActivateOnDemandOption.create(from: onDemandRules)
+        } else {
+            self = .off
+        }
+    }
+
+    private static func create(from rules: [NEOnDemandRule]) -> ActivateOnDemandOption {
         switch rules.count {
         case 0:
-            activateOnDemandOption = .off
+            return .off
         case 1:
             let rule = rules[0]
-            precondition(rule.action == .connect)
-            activateOnDemandOption = .anyInterface(.anySSID)
+            guard rule.action == .connect else { return .off }
+            return .anyInterface(.anySSID)
         case 2:
-            let connectRule = rules.first(where: { $0.action == .connect })!
-            let disconnectRule = rules.first(where: { $0.action == .disconnect })!
+            guard let connectRule = rules.first(where: { $0.action == .connect }) else {
+                wg_log(.error, message: "Unexpected onDemandRules set on tunnel provider manager: \(rules.count) rules found but no connect rule.")
+                return .off
+            }
+            guard let disconnectRule = rules.first(where: { $0.action == .disconnect }) else {
+                wg_log(.error, message: "Unexpected onDemandRules set on tunnel provider manager: \(rules.count) rules found but no disconnect rule.")
+                return .off
+            }
             if connectRule.interfaceTypeMatch == .wiFi && disconnectRule.interfaceTypeMatch == nonWiFiInterfaceType {
-                activateOnDemandOption = .wiFiInterfaceOnly(.anySSID)
+                return .wiFiInterfaceOnly(.anySSID)
             } else if connectRule.interfaceTypeMatch == nonWiFiInterfaceType && disconnectRule.interfaceTypeMatch == .wiFi {
-                activateOnDemandOption = .nonWiFiInterfaceOnly
+                return .nonWiFiInterfaceOnly
             } else {
-                fatalError("Unexpected onDemandRules set on tunnel provider manager")
+                wg_log(.error, message: "Unexpected onDemandRules set on tunnel provider manager: \(rules.count) rules found but interface types are inconsistent.")
+                return .off
             }
         case 3:
-            let ssidRule = rules.first(where: { $0.interfaceTypeMatch == .wiFi && $0.ssidMatch != nil })!
-            let nonWiFiRule = rules.first(where: { $0.interfaceTypeMatch == nonWiFiInterfaceType })!
+            guard let ssidRule = rules.first(where: { $0.interfaceTypeMatch == .wiFi && $0.ssidMatch != nil }) else { return .off }
+            guard let nonWiFiRule = rules.first(where: { $0.interfaceTypeMatch == nonWiFiInterfaceType }) else { return .off }
             let ssids = ssidRule.ssidMatch!
             switch (ssidRule.action, nonWiFiRule.action) {
             case (.connect, .connect):
-                activateOnDemandOption = .anyInterface(.onlySpecificSSIDs(ssids))
+                return .anyInterface(.onlySpecificSSIDs(ssids))
             case (.connect, .disconnect):
-                activateOnDemandOption = .wiFiInterfaceOnly(.onlySpecificSSIDs(ssids))
+                return .wiFiInterfaceOnly(.onlySpecificSSIDs(ssids))
             case (.disconnect, .connect):
-                activateOnDemandOption = .anyInterface(.exceptSpecificSSIDs(ssids))
+                return .anyInterface(.exceptSpecificSSIDs(ssids))
             case (.disconnect, .disconnect):
-                activateOnDemandOption = .wiFiInterfaceOnly(.exceptSpecificSSIDs(ssids))
+                return .wiFiInterfaceOnly(.exceptSpecificSSIDs(ssids))
             default:
-                fatalError("Unexpected SSID onDemandRules set on tunnel provider manager")
+                wg_log(.error, message: "Unexpected onDemandRules set on tunnel provider manager: \(rules.count) rules found")
+                return .off
             }
         default:
-            fatalError("Unexpected number of onDemandRules set on tunnel provider manager")
+            wg_log(.error, message: "Unexpected number of onDemandRules set on tunnel provider manager: \(rules.count) rules found")
+            return .off
         }
-
-        self = activateOnDemandOption
     }
 }
 
