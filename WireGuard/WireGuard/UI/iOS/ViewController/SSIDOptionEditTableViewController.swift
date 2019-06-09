@@ -266,6 +266,10 @@ extension SSIDOptionEditTableViewController {
         case .ssidOption:
             let previousOption = selectedOption
             selectedOption = ssidOptionFields[indexPath.row]
+            guard previousOption != selectedOption else {
+                tableView.deselectRow(at: indexPath, animated: true)
+                return
+            }
             loadSections()
             if previousOption == .anySSID {
                 let indexSet = IndexSet(1 ... 2)
