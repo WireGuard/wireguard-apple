@@ -132,10 +132,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if UserDefaults.standard.bool(forKey: "shouldSuppressAppStoreUpdateDetection") {
-            wg_log(.debug, staticMessage: "App Store update detection is suppressed")
-            return .terminateNow
-        }
         guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
             return .terminateNow
         }
