@@ -11,7 +11,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
     private var ifname: String?
-    private var lastPath: Network.NWPath?
     private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
 
     deinit {
@@ -150,10 +149,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
         }
         #endif
-        if path != lastPath {
-            lastPath = path
-            wgBumpSockets(handle)
-        }
+        wgBumpSockets(handle)
     }
 }
 
