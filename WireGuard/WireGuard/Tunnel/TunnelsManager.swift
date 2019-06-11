@@ -58,7 +58,12 @@ class TunnelsManager {
                 #if os(iOS)
                 let passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
                 #elseif os(macOS)
-                let passwordRef = proto.passwordReference // To handle multiple users in macOS, we skip verifying
+                let passwordRef: Data?
+                if proto.providerConfiguration?["UID"] as? uid_t == getuid() {
+                    passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
+                } else {
+                    passwordRef = proto.passwordReference // To handle multiple users in macOS, we skip verifying
+                }
                 #else
                 #error("Unimplemented")
                 #endif
@@ -262,10 +267,15 @@ class TunnelsManager {
 
     func remove(tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
-        if tunnel.isTunnelConfigurationAvailableInKeychain {
+        #if os(macOS)
+        if tunnel.isTunnelAvailableToUser {
             (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
         }
-
+        #elseif os(iOS)
+        (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
+        #else
+        #error("Unimplemented")
+        #endif
         tunnelProviderManager.removeFromPreferences { [weak self] error in
             guard error == nil else {
                 wg_log(.error, message: "Remove: Saving configuration failed: \(error!)")
@@ -493,13 +503,15 @@ class TunnelContainer: NSObject {
         return tunnelProvider.tunnelConfiguration
     }
 
-    var isTunnelConfigurationAvailableInKeychain: Bool {
-        return tunnelProvider.isTunnelConfigurationAvailableInKeychain
-    }
-
     var onDemandOption: ActivateOnDemandOption {
         return ActivateOnDemandOption(from: tunnelProvider)
     }
+
+    #if os(macOS)
+    var isTunnelAvailableToUser: Bool {
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.providerConfiguration?["UID"] as? uid_t == getuid()
+    }
+    #endif
 
     init(tunnel: NETunnelProviderManager) {
         name = tunnel.localizedDescription ?? "Unnamed"
@@ -609,17 +621,7 @@ class TunnelContainer: NSObject {
 }
 
 extension NETunnelProviderManager {
-    private static var cachedIsConfigAvailableInKeychainKey: UInt8 = 0
     private static var cachedConfigKey: UInt8 = 0
-
-    var isTunnelConfigurationAvailableInKeychain: Bool {
-        if let cachedNumber = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey) as? NSNumber {
-            return cachedNumber.boolValue
-        }
-        let isAvailable = (protocolConfiguration as? NETunnelProviderProtocol)?.verifyConfigurationReference() ?? false
-        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey, NSNumber(value: isAvailable), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return isAvailable
-    }
 
     var tunnelConfiguration: TunnelConfiguration? {
         if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey) as? TunnelConfiguration {
@@ -636,17 +638,9 @@ extension NETunnelProviderManager {
         protocolConfiguration = NETunnelProviderProtocol(tunnelConfiguration: tunnelConfiguration, previouslyFrom: protocolConfiguration)
         localizedDescription = tunnelConfiguration.name
         objc_setAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey, tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(self, &NETunnelProviderManager.cachedIsConfigAvailableInKeychainKey, NSNumber(value: true), objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
 
     func isEquivalentTo(_ tunnel: TunnelContainer) -> Bool {
-        switch (isTunnelConfigurationAvailableInKeychain, tunnel.isTunnelConfigurationAvailableInKeychain) {
-        case (true, true):
-            return tunnelConfiguration == tunnel.tunnelConfiguration
-        case (false, false):
-            return localizedDescription == tunnel.name
-        default:
-            return false
-        }
+        return localizedDescription == tunnel.name && tunnelConfiguration == tunnel.tunnelConfiguration
     }
 }

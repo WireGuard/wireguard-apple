@@ -81,7 +81,7 @@ extension ManageTunnelsRootViewController: TunnelsListTableViewControllerDelegat
         assert(!tunnelIndices.isEmpty)
         if tunnelIndices.count == 1 {
             let tunnel = tunnelsManager.tunnel(at: tunnelIndices.first!)
-            if tunnel.isTunnelConfigurationAvailableInKeychain {
+            if tunnel.isTunnelAvailableToUser {
                 let tunnelDetailVC = TunnelDetailTableViewController(tunnelsManager: tunnelsManager, tunnel: tunnel)
                 setTunnelDetailContentVC(tunnelDetailVC)
                 self.tunnelDetailVC = tunnelDetailVC

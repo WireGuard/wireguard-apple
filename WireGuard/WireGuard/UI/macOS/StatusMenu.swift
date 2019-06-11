@@ -168,7 +168,7 @@ extension StatusMenu {
     func insertTunnelMenuItem(for tunnel: TunnelContainer, at tunnelIndex: Int) {
         let menuItem = TunnelMenuItem(tunnel: tunnel, action: #selector(tunnelClicked(sender:)))
         menuItem.target = self
-        menuItem.isHidden = !tunnel.isTunnelConfigurationAvailableInKeychain
+        menuItem.isHidden = !tunnel.isTunnelAvailableToUser
         insertItem(menuItem, at: firstTunnelMenuItemIndex + tunnelIndex)
         if numberOfTunnelMenuItems == 0 {
             insertItem(NSMenuItem.separator(), at: firstTunnelMenuItemIndex + tunnelIndex + 1)

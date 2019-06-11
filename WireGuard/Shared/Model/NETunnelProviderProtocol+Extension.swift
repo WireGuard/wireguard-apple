@@ -22,6 +22,9 @@ extension NETunnelProviderProtocol {
         if passwordReference == nil {
             return nil
         }
+        #if os(macOS)
+        providerConfiguration = ["UID": getuid()]
+        #endif
 
         let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
         if endpoints.count == 1 {
@@ -60,11 +63,25 @@ extension NETunnelProviderProtocol {
          * in the keychain. But it's still useful to keep the migration
          * around so that .mobileconfig files are easier.
          */
-        guard let oldConfig = providerConfiguration?["WgQuickConfig"] as? String else { return false }
-        providerConfiguration = nil
-        guard passwordReference == nil else { return true }
-        wg_log(.debug, message: "Migrating tunnel configuration '\(name)'")
-        passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
-        return true
+        if let oldConfig = providerConfiguration?["WgQuickConfig"] as? String {
+            #if os(macOS)
+            providerConfiguration = ["UID": getuid()]
+            #elseif os(iOS)
+            providerConfiguration = nil
+            #else
+            #error("Unimplemented")
+            #endif
+            guard passwordReference == nil else { return true }
+            wg_log(.debug, message: "Migrating tunnel configuration '\(name)'")
+            passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
+            return true
+        }
+        #if os(macOS)
+        if passwordReference != nil && providerConfiguration?["UID"] == nil && verifyConfigurationReference() {
+            providerConfiguration = ["UID": getuid()]
+            return true
+        }
+        #endif
+        return false
     }
 }
