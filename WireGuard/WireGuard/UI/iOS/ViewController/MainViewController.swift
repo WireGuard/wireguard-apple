@@ -109,6 +109,19 @@ extension MainViewController {
             onTunnelsManagerReady = showTunnelDetailBlock
         }
     }
+
+    func importFromDisposableFile(url: URL) {
+        let importFromFileBlock: (TunnelsManager) -> Void = { [weak self] tunnelsManager in
+            TunnelImporter.importFromFile(urls: [url], into: tunnelsManager, sourceVC: self, errorPresenterType: ErrorPresenter.self) {
+                _ = FileManager.deleteFile(at: url)
+            }
+        }
+        if let tunnelsManager = tunnelsManager {
+            importFromFileBlock(tunnelsManager)
+        } else {
+            onTunnelsManagerReady = importFromFileBlock
+        }
+    }
 }
 
 extension MainViewController: UISplitViewControllerDelegate {
