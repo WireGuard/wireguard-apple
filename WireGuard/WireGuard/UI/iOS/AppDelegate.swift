@@ -34,10 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        guard let tunnelsManager = mainVC?.tunnelsManager else { return true }
-        TunnelImporter.importFromFile(urls: [url], into: tunnelsManager, sourceVC: mainVC, errorPresenterType: ErrorPresenter.self) {
-            _ = FileManager.deleteFile(at: url)
-        }
+        mainVC?.importFromDisposableFile(url: url)
         return true
     }
 
