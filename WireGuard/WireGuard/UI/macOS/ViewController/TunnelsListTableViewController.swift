@@ -12,7 +12,7 @@ class TunnelsListTableViewController: NSViewController {
 
     let tunnelsManager: TunnelsManager
     weak var delegate: TunnelsListTableViewControllerDelegate?
-    var isRemovingTunnels = false
+    var isRemovingTunnelsFromWithinTheApp = false
 
     let tableView: NSTableView = {
         let tableView = NSTableView()
@@ -183,8 +183,10 @@ class TunnelsListTableViewController: NSViewController {
             guard let self = self else { return }
             self.selectTunnel(at: nextSelection)
             let selectedTunnels = selectedTunnelIndices.map { self.tunnelsManager.tunnel(at: $0) }
+            self.isRemovingTunnelsFromWithinTheApp = true
             self.tunnelsManager.removeMultiple(tunnels: selectedTunnels) { [weak self] error in
                 guard let self = self else { return }
+                self.isRemovingTunnelsFromWithinTheApp = false
                 defer { completion() }
                 if let error = error {
                     ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -281,9 +283,14 @@ extension TunnelsListTableViewController {
     }
 
     func tunnelRemoved(at index: Int) {
+        let selectedIndices = tableView.selectedRowIndexes
+        let isSingleSelectedTunnelBeingRemoved = selectedIndices.contains(index) && selectedIndices.count == 1
         tableView.removeRows(at: IndexSet(integer: index), withAnimation: .slideLeft)
         if tunnelsManager.numberOfTunnels() == 0 {
             delegate?.tunnelsListEmpty()
+        } else if !isRemovingTunnelsFromWithinTheApp && isSingleSelectedTunnelBeingRemoved {
+            let newSelection = min(index, tunnelsManager.numberOfTunnels() - 1)
+            tableView.selectRowIndexes(IndexSet(integer: newSelection), byExtendingSelection: false)
         }
     }
 }
