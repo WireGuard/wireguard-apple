@@ -44,10 +44,20 @@ class TunnelImporter {
                         }
                         return
                     }
-                    let tunnelConfiguration = try? TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName)
+                    var parseError: Error?
+                    var tunnelConfiguration: TunnelConfiguration?
+                    do {
+                        tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: fileContents, called: fileBaseName)
+                    } catch let error {
+                        parseError = error
+                    }
                     DispatchQueue.main.async {
-                        if tunnelConfiguration == nil {
-                            lastFileImportErrorText = (title: tr("alertBadConfigImportTitle"), message: tr(format: "alertBadConfigImportMessage (%@)", fileName))
+                        if parseError != nil {
+                            if let parseError = parseError as? WireGuardAppError {
+                                lastFileImportErrorText = parseError.alertText
+                            } else {
+                                lastFileImportErrorText = (title: tr("alertBadConfigImportTitle"), message: tr(format: "alertBadConfigImportMessage (%@)", fileName))
+                            }
                         }
                         configs.append(tunnelConfiguration)
                         dispatchGroup.leave()
