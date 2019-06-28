@@ -39,7 +39,7 @@ extension TunnelConfiguration {
         var interfaceConfiguration: InterfaceConfiguration?
         var peerConfigurations = [PeerConfiguration]()
 
-        let lines = wgQuickConfig.split(separator: "\n")
+        let lines = wgQuickConfig.split { $0.isNewline }
 
         var parserState = ParserState.notInASection
         var attributes = [String: String]()
