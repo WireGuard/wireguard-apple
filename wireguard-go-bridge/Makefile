@@ -26,12 +26,10 @@ export CGO_ENABLED := 1
 build: $(DESTDIR)/libwg-go.a
 version-header: $(DESTDIR)/wireguard-go-version.h
 
-GOBUILDVERSION_NEEDED := go version go1.12.5 darwin/amd64
+GOBUILDVERSION_NEEDED := go version go1.13.1 darwin/amd64
 GOBUILDVERSION_CURRENT := $(shell go version 2>/dev/null)
 export REAL_GOROOT := $(shell go env GOROOT 2>/dev/null)
 export GOROOT := $(BUILDDIR)/goroot
-export GOPATH := $(BUILDDIR)/gopath
-export PATH := $(GOPATH)/bin:$(PATH)
 GOBUILDVERSION_FAKE := $(shell $(GOROOT)/bin/go version 2>/dev/null)
 ifneq ($(GOBUILDVERSION_NEEDED),$(GOBUILDVERSION_CURRENT))
 $(error This requires $(GOBUILDVERSION_NEEDED))
@@ -44,10 +42,7 @@ $(GOROOT)/.prepared:
 	[ -n "$(REAL_GOROOT)" ]
 	mkdir -p "$(GOROOT)"
 	rsync -a --delete --exclude=pkg/obj/go-build "$(REAL_GOROOT)/" "$(GOROOT)/"
-	cat goruntime-*.diff | patch -p1 -f -N -r- -d "$(GOROOT)"
-	rm -rf "$(GOPATH)/pkg/mod"
-	go get -d -tags ios; chmod -fR +w "$(GOPATH)/pkg/mod"
-	for sys in "$(GOPATH)/pkg/mod/golang.org/x/sys@"*; do cat sys-unix-*.diff | patch -p1 -f -N -r- -d "$$sys"; done
+	patch -p1 -f -N -r- -d "$(GOROOT)" < goruntime-boottime-over-monotonic.diff
 	touch "$@"
 
 $(shell test "$$(cat "$(BUILDDIR)/.gobuildversion" 2>/dev/null)" = "$(GOBUILDVERSION_CURRENT)" || rm -f "$(DESTDIR)/libwg-go.a")
@@ -58,7 +53,6 @@ $(BUILDDIR)/libwg-go-$(1).a: $(GOROOT)/.prepared
 	CGO_LDFLAGS="$(CFLAGS_PREFIX) $(ARCH)" \
 	GOARCH="$(GOARCH_$(1))" \
 	go build -tags ios -ldflags=-w -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive && go version > "$(BUILDDIR)/.gobuildversion"; \
-	chmod -fR +w "$(GOPATH)/pkg/mod"; \
 	ret=$$$$?; \
 	rm -f "$(BUILDDIR)/libwg-go-$(1).h"; \
 	exit $$$$ret
@@ -66,7 +60,8 @@ endef
 $(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
 $(DESTDIR)/wireguard-go-version.h: go.mod $(GOROOT)/.prepared
-	wggo="$(GOPATH)/pkg/mod/$$(sed -n 's/.*\(golang\.zx2c4\.com\/wireguard\) \(.*\)$$/\1@\2/p' go.mod)"; \
+	go get -d -tags ios
+	wggo="$$(go env GOPATH)/pkg/mod/$$(sed -n 's/.*\(golang\.zx2c4\.com\/wireguard\) \(.*\)$$/\1@\2/p' go.mod)"; \
 	sed -n 's/.*WireGuardGoVersion = "\(.*\)"/#define WIREGUARD_GO_VERSION "\1"/p' "$$wggo/device/version.go" > "$@"
 
 $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
