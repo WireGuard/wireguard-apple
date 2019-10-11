@@ -70,6 +70,7 @@ class TunnelsManager {
                 if let ref = passwordRef {
                     refs.insert(ref)
                 } else {
+                    wg_log(.info, message: "Removing orphaned tunnel with non-verifying keychain entry: \(tunnelManager.localizedDescription ?? "<unknown>")")
                     tunnelManager.removeFromPreferences { _ in }
                     tunnelManagers.remove(at: index)
                 }

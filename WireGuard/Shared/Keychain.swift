@@ -112,6 +112,6 @@ class Keychain {
     static func verifyReference(called ref: Data) -> Bool {
         return SecItemCopyMatching([kSecClass as String: kSecClassGenericPassword,
                                     kSecValuePersistentRef as String: ref] as CFDictionary,
-                                   nil) == errSecSuccess
+                                   nil) != errSecItemNotFound
     }
 }
