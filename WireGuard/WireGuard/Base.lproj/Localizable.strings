@@ -437,3 +437,7 @@
 "macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Please disable on-demand for tunnel ‘%@’, deactivate it, and then continue updating in App Store.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Please deactivate tunnel ‘%@’ and then continue updating in App Store.";
+
+// Donation
+
+"donateLink" = "♥ Donate to the WireGuard Project";

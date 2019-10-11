@@ -11,6 +11,7 @@ class SettingsTableViewController: UITableViewController {
         case goBackendVersion
         case exportZipArchive
         case viewLog
+        case donateLink
 
         var localizedUIString: String {
             switch self {
@@ -18,12 +19,13 @@ class SettingsTableViewController: UITableViewController {
             case .goBackendVersion: return tr("settingsVersionKeyWireGuardGoBackend")
             case .exportZipArchive: return tr("settingsExportZipButtonTitle")
             case .viewLog: return tr("settingsViewLogButtonTitle")
+            case .donateLink: return tr("donateLink")
             }
         }
     }
 
     let settingsFieldsBySection: [[SettingsFields]] = [
-        [.iosAppVersion, .goBackendVersion],
+        [.iosAppVersion, .goBackendVersion, .donateLink],
         [.exportZipArchive],
         [.viewLog]
     ]
@@ -160,14 +162,24 @@ extension SettingsTableViewController {
                 self?.exportConfigurationsAsZipFile(sourceView: cell.button)
             }
             return cell
-        } else {
-            assert(field == .viewLog)
+        } else if field == .viewLog {
             let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
             cell.buttonText = field.localizedUIString
             cell.onTapped = { [weak self] in
                 self?.presentLogView()
             }
             return cell
+        } else if field == .donateLink {
+            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
+            cell.buttonText = field.localizedUIString
+            cell.onTapped = {
+                if let url = URL(string: "https://www.wireguard.com/donations/"), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:])
+                }
+            }
+            return cell
+        } else {
+            assert(false)
         }
     }
 }
