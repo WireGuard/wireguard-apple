@@ -178,8 +178,7 @@ extension SettingsTableViewController {
                 }
             }
             return cell
-        } else {
-            assert(false)
         }
+        fatalError()
     }
 }
