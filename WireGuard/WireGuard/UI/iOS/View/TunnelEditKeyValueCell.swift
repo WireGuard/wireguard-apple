@@ -30,7 +30,11 @@ class TunnelEditEditableKeyValueCell: TunnelEditKeyValueCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         copyableGesture = false
-        valueTextField.textColor = .black
+        if #available(iOS 13.0, *) {
+            valueTextField.textColor = .label
+        } else {
+            valueTextField.textColor = .black
+        }
         valueTextField.isEnabled = true
         valueLabelScrollView.isScrollEnabled = false
         valueTextField.widthAnchor.constraint(equalTo: valueLabelScrollView.widthAnchor).isActive = true

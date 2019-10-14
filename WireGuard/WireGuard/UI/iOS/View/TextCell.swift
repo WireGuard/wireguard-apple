@@ -28,7 +28,11 @@ class TextCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         message = ""
-        setTextColor(.black)
+        if #available(iOS 13.0, *) {
+            setTextColor(.label)
+        } else {
+            setTextColor(.black)
+        }
         setTextAlignment(.left)
     }
 }

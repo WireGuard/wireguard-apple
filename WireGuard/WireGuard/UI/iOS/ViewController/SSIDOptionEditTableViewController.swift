@@ -176,7 +176,11 @@ extension SSIDOptionEditTableViewController {
     private func noSSIDsCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: TextCell = tableView.dequeueReusableCell(for: indexPath)
         cell.message = tr("tunnelOnDemandNoSSIDs")
-        cell.setTextColor(.gray)
+        if #available(iOS 13.0, *) {
+            cell.setTextColor(.secondaryLabel)
+        } else {
+            cell.setTextColor(.gray)
+        }
         cell.setTextAlignment(.center)
         return cell
     }

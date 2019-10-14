@@ -9,8 +9,8 @@ class ButtonCell: UITableViewCell {
         set(value) { button.setTitle(value, for: .normal) }
     }
     var hasDestructiveAction: Bool {
-        get { return button.tintColor == .red }
-        set(value) { button.tintColor = value ? .red : buttonStandardTintColor }
+        get { return button.tintColor == .systemRed }
+        set(value) { button.tintColor = value ? .systemRed : buttonStandardTintColor }
     }
     var onTapped: (() -> Void)?
 
