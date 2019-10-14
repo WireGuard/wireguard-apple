@@ -16,7 +16,11 @@ class SwitchCell: UITableViewCell {
         get { return switchView.isEnabled }
         set(value) {
             switchView.isEnabled = value
-            textLabel?.textColor = value ? .black : .gray
+            if #available(iOS 13.0, *) {
+                textLabel?.textColor = value ? .label : .secondaryLabel
+            } else {
+                textLabel?.textColor = value ? .black : .gray
+            }
         }
     }
 

@@ -9,7 +9,11 @@ class KeyValueCell: UITableViewCell {
         let keyLabel = UILabel()
         keyLabel.font = UIFont.preferredFont(forTextStyle: .body)
         keyLabel.adjustsFontForContentSizeCategory = true
-        keyLabel.textColor = .black
+        if #available(iOS 13.0, *) {
+            keyLabel.textColor = .label
+        } else {
+            keyLabel.textColor = .black
+        }
         keyLabel.textAlignment = .left
         return keyLabel
     }()
@@ -31,7 +35,11 @@ class KeyValueCell: UITableViewCell {
         valueTextField.autocapitalizationType = .none
         valueTextField.autocorrectionType = .no
         valueTextField.spellCheckingType = .no
-        valueTextField.textColor = .gray
+        if #available(iOS 13.0, *) {
+            valueTextField.textColor = .secondaryLabel
+        } else {
+            valueTextField.textColor = .gray
+        }
         return valueTextField
     }()
 
@@ -56,10 +64,18 @@ class KeyValueCell: UITableViewCell {
 
     var isValueValid = true {
         didSet {
-            if isValueValid {
-                keyLabel.textColor = .black
+            if #available(iOS 13.0, *) {
+                if isValueValid {
+                    keyLabel.textColor = .label
+                } else {
+                    keyLabel.textColor = .systemRed
+                }
             } else {
-                keyLabel.textColor = .red
+                if isValueValid {
+                    keyLabel.textColor = .black
+                } else {
+                    keyLabel.textColor = .red
+                }
             }
         }
     }
