@@ -120,7 +120,7 @@ class TunnelDetailTableViewController: UITableViewController {
             let editVC = TunnelEditTableViewController(tunnelsManager: self.tunnelsManager, tunnel: self.tunnel)
             editVC.delegate = self
             let editNC = UINavigationController(rootViewController: editVC)
-            editNC.modalPresentationStyle = .formSheet
+            editNC.modalPresentationStyle = .fullScreen
             self.present(editNC, animated: true)
         }
     }
