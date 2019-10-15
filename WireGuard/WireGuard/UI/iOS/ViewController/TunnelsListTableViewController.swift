@@ -184,7 +184,7 @@ class TunnelsListTableViewController: UIViewController {
     func presentViewControllerForTunnelCreation(tunnelsManager: TunnelsManager) {
         let editVC = TunnelEditTableViewController(tunnelsManager: tunnelsManager)
         let editNC = UINavigationController(rootViewController: editVC)
-        editNC.modalPresentationStyle = .formSheet
+        editNC.modalPresentationStyle = .fullScreen
         present(editNC, animated: true)
     }
 
