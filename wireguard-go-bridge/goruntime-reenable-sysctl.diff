@@ -1,0 +1,436 @@
+From 7ad8def9cee8170fc2572b0b79d3ba07b4334256 Mon Sep 17 00:00:00 2001
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date: Wed, 23 Oct 2019 13:08:46 +0200
+Subject: [PATCH] [release-branch.go1.13] syscall: reenable sysctl on iOS
+
+This was disabled due to a report that the App Store rejects the symbol
+__sysctl. However, we use the sysctl symbol, which is fine. The __sysctl
+symbol is used by x/sys/unix, which needs fixing instead. So, this
+commit reenables sysctl on iOS, so that things like net.InterfaceByName
+can work again.
+
+This reverts CL 193843, CL 193844, CL 193845, and CL 193846.
+
+Fixes #35105
+Updates #35101
+Updates #34133
+Updates #35103
+
+Change-Id: Ib8eb9f87b81db24965b0de29d99eb52887c7c60a
+Reviewed-on: https://go-review.googlesource.com/c/go/+/202778
+Run-TryBot: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: David Crawshaw <crawshaw@golang.org>
+Reviewed-by: Brad Fitzpatrick <bradfitz@golang.org>
+TryBot-Result: Gobot Gobot <gobot@golang.org>
+Reviewed-on: https://go-review.googlesource.com/c/go/+/202779
+Reviewed-by: Elias Naur <mail@eliasnaur.com>
+Reviewed-by: Ian Lance Taylor <iant@golang.org>
+---
+ src/log/syslog/syslog_test.go        |  6 ----
+ src/net/interface_test.go            | 12 --------
+ src/os/os_test.go                    |  3 --
+ src/syscall/syscall_darwin.go        |  1 +
+ src/syscall/syscall_darwin_386.go    |  1 -
+ src/syscall/syscall_darwin_amd64.go  |  1 -
+ src/syscall/syscall_darwin_arm.go    |  4 ---
+ src/syscall/syscall_darwin_arm64.go  |  4 ---
+ src/syscall/zsyscall_darwin_386.go   | 42 ++++++++++++++--------------
+ src/syscall/zsyscall_darwin_386.s    |  4 +--
+ src/syscall/zsyscall_darwin_amd64.go | 42 ++++++++++++++--------------
+ src/syscall/zsyscall_darwin_amd64.s  |  4 +--
+ src/syscall/zsyscall_darwin_arm.go   | 21 ++++++++++++++
+ src/syscall/zsyscall_darwin_arm.s    |  2 ++
+ src/syscall/zsyscall_darwin_arm64.go | 21 ++++++++++++++
+ src/syscall/zsyscall_darwin_arm64.s  |  2 ++
+ 16 files changed, 93 insertions(+), 77 deletions(-)
+
+diff --git a/src/log/syslog/syslog_test.go b/src/log/syslog/syslog_test.go
+index 8a28d67c984..447654a8749 100644
+--- a/src/log/syslog/syslog_test.go
++++ b/src/log/syslog/syslog_test.go
+@@ -134,9 +134,6 @@ func startServer(n, la string, done chan<- string) (addr string, sock io.Closer,
+ }
+ 
+ func TestWithSimulated(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	t.Parallel()
+ 	msg := "Test 123"
+ 	var transport []string
+@@ -275,9 +272,6 @@ func check(t *testing.T, in, out string) {
+ }
+ 
+ func TestWrite(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	t.Parallel()
+ 	tests := []struct {
+ 		pri Priority
+diff --git a/src/net/interface_test.go b/src/net/interface_test.go
+index 6cdfb6265ff..fb6032fbc06 100644
+--- a/src/net/interface_test.go
++++ b/src/net/interface_test.go
+@@ -51,9 +51,6 @@ func ipv6LinkLocalUnicastAddr(ifi *Interface) string {
+ }
+ 
+ func TestInterfaces(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	ift, err := Interfaces()
+ 	if err != nil {
+ 		t.Fatal(err)
+@@ -85,9 +82,6 @@ func TestInterfaces(t *testing.T) {
+ }
+ 
+ func TestInterfaceAddrs(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	ift, err := Interfaces()
+ 	if err != nil {
+ 		t.Fatal(err)
+@@ -107,9 +101,6 @@ func TestInterfaceAddrs(t *testing.T) {
+ }
+ 
+ func TestInterfaceUnicastAddrs(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	ift, err := Interfaces()
+ 	if err != nil {
+ 		t.Fatal(err)
+@@ -137,9 +128,6 @@ func TestInterfaceUnicastAddrs(t *testing.T) {
+ }
+ 
+ func TestInterfaceMulticastAddrs(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	ift, err := Interfaces()
+ 	if err != nil {
+ 		t.Fatal(err)
+diff --git a/src/os/os_test.go b/src/os/os_test.go
+index b94ab0d2320..c1012812583 100644
+--- a/src/os/os_test.go
++++ b/src/os/os_test.go
+@@ -1521,9 +1521,6 @@ func testWindowsHostname(t *testing.T, hostname string) {
+ }
+ 
+ func TestHostname(t *testing.T) {
+-	if runtime.GOOS == "darwin" && (runtime.GOARCH == "arm" || runtime.GOARCH == "arm64") {
+-		t.Skipf("sysctl is not supported on iOS")
+-	}
+ 	hostname, err := Hostname()
+ 	if err != nil {
+ 		t.Fatal(err)
+diff --git a/src/syscall/syscall_darwin.go b/src/syscall/syscall_darwin.go
+index 2efcf3bea94..7d795ee4d3d 100644
+--- a/src/syscall/syscall_darwin.go
++++ b/src/syscall/syscall_darwin.go
+@@ -337,6 +337,7 @@ func Kill(pid int, signum Signal) (err error) { return kill(pid, int(signum), 1)
+ //sysnb ioctlPtr(fd int, req uint, arg unsafe.Pointer) (err error) = SYS_ioctl
+ //sysnb execve(path *byte, argv **byte, envp **byte) (err error)
+ //sysnb exit(res int) (err error)
++//sys	sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error)
+ //sys	fcntlPtr(fd int, cmd int, arg unsafe.Pointer) (val int, err error) = SYS_fcntl
+ //sys   unlinkat(fd int, path string, flags int) (err error)
+ //sys   openat(fd int, path string, flags int, perm uint32) (fdret int, err error)
+diff --git a/src/syscall/syscall_darwin_386.go b/src/syscall/syscall_darwin_386.go
+index 46714bab57f..8c5b82da55d 100644
+--- a/src/syscall/syscall_darwin_386.go
++++ b/src/syscall/syscall_darwin_386.go
+@@ -22,7 +22,6 @@ func setTimeval(sec, usec int64) Timeval {
+ //sys	Statfs(path string, stat *Statfs_t) (err error) = SYS_statfs64
+ //sys   fstatat(fd int, path string, stat *Stat_t, flags int) (err error) = SYS_fstatat64
+ //sys   ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
+-//sys   sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error)
+ 
+ func SetKevent(k *Kevent_t, fd, mode, flags int) {
+ 	k.Ident = uint32(fd)
+diff --git a/src/syscall/syscall_darwin_amd64.go b/src/syscall/syscall_darwin_amd64.go
+index 43506e4531d..23a4e5f9962 100644
+--- a/src/syscall/syscall_darwin_amd64.go
++++ b/src/syscall/syscall_darwin_amd64.go
+@@ -22,7 +22,6 @@ func setTimeval(sec, usec int64) Timeval {
+ //sys	Statfs(path string, stat *Statfs_t) (err error) = SYS_statfs64
+ //sys   fstatat(fd int, path string, stat *Stat_t, flags int) (err error) = SYS_fstatat64
+ //sys   ptrace(request int, pid int, addr uintptr, data uintptr) (err error)
+-//sys   sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error)
+ 
+ func SetKevent(k *Kevent_t, fd, mode, flags int) {
+ 	k.Ident = uint64(fd)
+diff --git a/src/syscall/syscall_darwin_arm.go b/src/syscall/syscall_darwin_arm.go
+index 4ca2e300e4c..7f39cf40031 100644
+--- a/src/syscall/syscall_darwin_arm.go
++++ b/src/syscall/syscall_darwin_arm.go
+@@ -29,10 +29,6 @@ func ptrace(request int, pid int, addr uintptr, data uintptr) error {
+ 	return ENOTSUP
+ }
+ 
+-func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) error {
+-	return ENOTSUP
+-}
+-
+ func SetKevent(k *Kevent_t, fd, mode, flags int) {
+ 	k.Ident = uint32(fd)
+ 	k.Filter = int16(mode)
+diff --git a/src/syscall/syscall_darwin_arm64.go b/src/syscall/syscall_darwin_arm64.go
+index fde48f35961..bd110f2e7f2 100644
+--- a/src/syscall/syscall_darwin_arm64.go
++++ b/src/syscall/syscall_darwin_arm64.go
+@@ -29,10 +29,6 @@ func ptrace(request int, pid int, addr uintptr, data uintptr) error {
+ 	return ENOTSUP
+ }
+ 
+-func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) error {
+-	return ENOTSUP
+-}
+-
+ func SetKevent(k *Kevent_t, fd, mode, flags int) {
+ 	k.Ident = uint64(fd)
+ 	k.Filter = int16(mode)
+diff --git a/src/syscall/zsyscall_darwin_386.go b/src/syscall/zsyscall_darwin_386.go
+index 0ffc692116f..2c3b15f5f94 100644
+--- a/src/syscall/zsyscall_darwin_386.go
++++ b/src/syscall/zsyscall_darwin_386.go
+@@ -1870,6 +1870,27 @@ func libc_exit_trampoline()
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
++func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
++	var _p0 unsafe.Pointer
++	if len(mib) > 0 {
++		_p0 = unsafe.Pointer(&mib[0])
++	} else {
++		_p0 = unsafe.Pointer(&_zero)
++	}
++	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
++	if e1 != 0 {
++		err = errnoErr(e1)
++	}
++	return
++}
++
++func libc_sysctl_trampoline()
++
++//go:linkname libc_sysctl libc_sysctl
++//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
++
++// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
++
+ func fcntlPtr(fd int, cmd int, arg unsafe.Pointer) (val int, err error) {
+ 	r0, _, e1 := syscall(funcPC(libc_fcntl_trampoline), uintptr(fd), uintptr(cmd), uintptr(arg))
+ 	val = int(r0)
+@@ -2060,24 +2081,3 @@ func libc_ptrace_trampoline()
+ 
+ //go:linkname libc_ptrace libc_ptrace
+ //go:cgo_import_dynamic libc_ptrace ptrace "/usr/lib/libSystem.B.dylib"
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+-func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
+-	var _p0 unsafe.Pointer
+-	if len(mib) > 0 {
+-		_p0 = unsafe.Pointer(&mib[0])
+-	} else {
+-		_p0 = unsafe.Pointer(&_zero)
+-	}
+-	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-func libc_sysctl_trampoline()
+-
+-//go:linkname libc_sysctl libc_sysctl
+-//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
+diff --git a/src/syscall/zsyscall_darwin_386.s b/src/syscall/zsyscall_darwin_386.s
+index 0dec5baa226..d84b46229e1 100644
+--- a/src/syscall/zsyscall_darwin_386.s
++++ b/src/syscall/zsyscall_darwin_386.s
+@@ -229,6 +229,8 @@ TEXT ·libc_execve_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_execve(SB)
+ TEXT ·libc_exit_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_exit(SB)
++TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
++	JMP	libc_sysctl(SB)
+ TEXT ·libc_unlinkat_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_unlinkat(SB)
+ TEXT ·libc_openat_trampoline(SB),NOSPLIT,$0-0
+@@ -249,5 +251,3 @@ TEXT ·libc_fstatat64_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_fstatat64(SB)
+ TEXT ·libc_ptrace_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_ptrace(SB)
+-TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
+-	JMP	libc_sysctl(SB)
+diff --git a/src/syscall/zsyscall_darwin_amd64.go b/src/syscall/zsyscall_darwin_amd64.go
+index 942152ae39d..83214de2fbb 100644
+--- a/src/syscall/zsyscall_darwin_amd64.go
++++ b/src/syscall/zsyscall_darwin_amd64.go
+@@ -1870,6 +1870,27 @@ func libc_exit_trampoline()
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
++func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
++	var _p0 unsafe.Pointer
++	if len(mib) > 0 {
++		_p0 = unsafe.Pointer(&mib[0])
++	} else {
++		_p0 = unsafe.Pointer(&_zero)
++	}
++	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
++	if e1 != 0 {
++		err = errnoErr(e1)
++	}
++	return
++}
++
++func libc_sysctl_trampoline()
++
++//go:linkname libc_sysctl libc_sysctl
++//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
++
++// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
++
+ func fcntlPtr(fd int, cmd int, arg unsafe.Pointer) (val int, err error) {
+ 	r0, _, e1 := syscall(funcPC(libc_fcntl_trampoline), uintptr(fd), uintptr(cmd), uintptr(arg))
+ 	val = int(r0)
+@@ -2060,24 +2081,3 @@ func libc_ptrace_trampoline()
+ 
+ //go:linkname libc_ptrace libc_ptrace
+ //go:cgo_import_dynamic libc_ptrace ptrace "/usr/lib/libSystem.B.dylib"
+-
+-// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+-
+-func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
+-	var _p0 unsafe.Pointer
+-	if len(mib) > 0 {
+-		_p0 = unsafe.Pointer(&mib[0])
+-	} else {
+-		_p0 = unsafe.Pointer(&_zero)
+-	}
+-	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
+-	if e1 != 0 {
+-		err = errnoErr(e1)
+-	}
+-	return
+-}
+-
+-func libc_sysctl_trampoline()
+-
+-//go:linkname libc_sysctl libc_sysctl
+-//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
+diff --git a/src/syscall/zsyscall_darwin_amd64.s b/src/syscall/zsyscall_darwin_amd64.s
+index fcb7f9c2913..23ddbe06c0d 100644
+--- a/src/syscall/zsyscall_darwin_amd64.s
++++ b/src/syscall/zsyscall_darwin_amd64.s
+@@ -229,6 +229,8 @@ TEXT ·libc_execve_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_execve(SB)
+ TEXT ·libc_exit_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_exit(SB)
++TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
++	JMP	libc_sysctl(SB)
+ TEXT ·libc_unlinkat_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_unlinkat(SB)
+ TEXT ·libc_openat_trampoline(SB),NOSPLIT,$0-0
+@@ -249,5 +251,3 @@ TEXT ·libc_fstatat64_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_fstatat64(SB)
+ TEXT ·libc_ptrace_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_ptrace(SB)
+-TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
+-	JMP	libc_sysctl(SB)
+diff --git a/src/syscall/zsyscall_darwin_arm.go b/src/syscall/zsyscall_darwin_arm.go
+index 73ee205d335..2a643f209fd 100644
+--- a/src/syscall/zsyscall_darwin_arm.go
++++ b/src/syscall/zsyscall_darwin_arm.go
+@@ -1870,6 +1870,27 @@ func libc_exit_trampoline()
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
++func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
++	var _p0 unsafe.Pointer
++	if len(mib) > 0 {
++		_p0 = unsafe.Pointer(&mib[0])
++	} else {
++		_p0 = unsafe.Pointer(&_zero)
++	}
++	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
++	if e1 != 0 {
++		err = errnoErr(e1)
++	}
++	return
++}
++
++func libc_sysctl_trampoline()
++
++//go:linkname libc_sysctl libc_sysctl
++//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
++
++// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
++
+ func fcntlPtr(fd int, cmd int, arg unsafe.Pointer) (val int, err error) {
+ 	r0, _, e1 := syscall(funcPC(libc_fcntl_trampoline), uintptr(fd), uintptr(cmd), uintptr(arg))
+ 	val = int(r0)
+diff --git a/src/syscall/zsyscall_darwin_arm.s b/src/syscall/zsyscall_darwin_arm.s
+index 6462a198b02..c7cd83d83ea 100644
+--- a/src/syscall/zsyscall_darwin_arm.s
++++ b/src/syscall/zsyscall_darwin_arm.s
+@@ -229,6 +229,8 @@ TEXT ·libc_execve_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_execve(SB)
+ TEXT ·libc_exit_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_exit(SB)
++TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
++	JMP	libc_sysctl(SB)
+ TEXT ·libc_unlinkat_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_unlinkat(SB)
+ TEXT ·libc_openat_trampoline(SB),NOSPLIT,$0-0
+diff --git a/src/syscall/zsyscall_darwin_arm64.go b/src/syscall/zsyscall_darwin_arm64.go
+index bbe092cd073..0b778398692 100644
+--- a/src/syscall/zsyscall_darwin_arm64.go
++++ b/src/syscall/zsyscall_darwin_arm64.go
+@@ -1870,6 +1870,27 @@ func libc_exit_trampoline()
+ 
+ // THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
+ 
++func sysctl(mib []_C_int, old *byte, oldlen *uintptr, new *byte, newlen uintptr) (err error) {
++	var _p0 unsafe.Pointer
++	if len(mib) > 0 {
++		_p0 = unsafe.Pointer(&mib[0])
++	} else {
++		_p0 = unsafe.Pointer(&_zero)
++	}
++	_, _, e1 := syscall6(funcPC(libc_sysctl_trampoline), uintptr(_p0), uintptr(len(mib)), uintptr(unsafe.Pointer(old)), uintptr(unsafe.Pointer(oldlen)), uintptr(unsafe.Pointer(new)), uintptr(newlen))
++	if e1 != 0 {
++		err = errnoErr(e1)
++	}
++	return
++}
++
++func libc_sysctl_trampoline()
++
++//go:linkname libc_sysctl libc_sysctl
++//go:cgo_import_dynamic libc_sysctl sysctl "/usr/lib/libSystem.B.dylib"
++
++// THIS FILE IS GENERATED BY THE COMMAND AT THE TOP; DO NOT EDIT
++
+ func fcntlPtr(fd int, cmd int, arg unsafe.Pointer) (val int, err error) {
+ 	r0, _, e1 := syscall(funcPC(libc_fcntl_trampoline), uintptr(fd), uintptr(cmd), uintptr(arg))
+ 	val = int(r0)
+diff --git a/src/syscall/zsyscall_darwin_arm64.s b/src/syscall/zsyscall_darwin_arm64.s
+index ec2210f1df0..7b8b3764a82 100644
+--- a/src/syscall/zsyscall_darwin_arm64.s
++++ b/src/syscall/zsyscall_darwin_arm64.s
+@@ -229,6 +229,8 @@ TEXT ·libc_execve_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_execve(SB)
+ TEXT ·libc_exit_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_exit(SB)
++TEXT ·libc_sysctl_trampoline(SB),NOSPLIT,$0-0
++	JMP	libc_sysctl(SB)
+ TEXT ·libc_unlinkat_trampoline(SB),NOSPLIT,$0-0
+ 	JMP	libc_unlinkat(SB)
+ TEXT ·libc_openat_trampoline(SB),NOSPLIT,$0-0
