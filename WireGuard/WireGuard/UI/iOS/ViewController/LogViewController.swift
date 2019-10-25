@@ -41,7 +41,11 @@ class LogViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
-        view.backgroundColor = .white
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        } else {
+            view.backgroundColor = .white
+        }
 
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -87,12 +91,18 @@ class LogViewController: UIViewController {
             let richText = NSMutableAttributedString()
             let bodyFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
             let captionFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
-            let lightGrayColor = UIColor(white: 0.88, alpha: 1.0)
-
             for logEntry in fetchedLogEntries {
-                let bgColor = self.isNextLineHighlighted ? lightGrayColor : UIColor.white
-                let timestampText = NSAttributedString(string: logEntry.timestamp + "\n", attributes: [.font: captionFont, .backgroundColor: bgColor, .paragraphStyle: self.paragraphStyle])
-                let messageText = NSAttributedString(string: logEntry.message + "\n", attributes: [.font: bodyFont, .backgroundColor: bgColor, .paragraphStyle: self.paragraphStyle])
+                var bgColor: UIColor
+                var fgColor: UIColor
+                if #available(iOS 13.0, *) {
+                    bgColor = self.isNextLineHighlighted ? .systemGray3 : .systemBackground
+                    fgColor = .label
+                } else {
+                    bgColor = self.isNextLineHighlighted ? UIColor(white: 0.88, alpha: 1.0) : UIColor.white
+                    fgColor = .black
+                }
+                let timestampText = NSAttributedString(string: logEntry.timestamp + "\n", attributes: [.font: captionFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
+                let messageText = NSAttributedString(string: logEntry.message + "\n", attributes: [.font: bodyFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
                 richText.append(timestampText)
                 richText.append(messageText)
                 self.isNextLineHighlighted.toggle()
