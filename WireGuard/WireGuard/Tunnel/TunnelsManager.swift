@@ -20,17 +20,23 @@ protocol TunnelsManagerActivationDelegate: class {
 }
 
 class TunnelsManager {
-    private var tunnels: [TunnelContainer]
+    fileprivate var tunnels: [TunnelContainer]
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
     private var statusObservationToken: AnyObject?
     private var waiteeObservationToken: AnyObject?
     private var configurationsObservationToken: AnyObject?
+    private var catalinaWorkaround: Any?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
         startObservingTunnelStatuses()
         startObservingTunnelConfigurations()
+        #if os(macOS)
+        if #available(macOS 10.15, *) {
+            self.catalinaWorkaround = CatalinaWorkaround(tunnelsManager: self)
+        }
+        #endif
     }
 
     static func create(completionHandler: @escaping (Result<TunnelsManager, TunnelsManagerError>) -> Void) {
@@ -75,7 +81,15 @@ class TunnelsManager {
                     tunnelManagers.remove(at: index)
                 }
             }
+            #if os(macOS)
+            if #available(macOS 10.15, *) {
+                // Don't delete orphaned keychain refs. We need them to restore tunnels as a workaround.
+            } else {
+                Keychain.deleteReferences(except: refs)
+            }
+            #else
             Keychain.deleteReferences(except: refs)
+            #endif
             #if os(iOS)
             RecentTunnelsTracker.cleanupTunnels(except: tunnelNames)
             #endif
@@ -622,7 +636,7 @@ class TunnelContainer: NSObject {
 }
 
 extension NETunnelProviderManager {
-    private static var cachedConfigKey: UInt8 = 0
+    fileprivate static var cachedConfigKey: UInt8 = 0
 
     var tunnelConfiguration: TunnelConfiguration? {
         if let cached = objc_getAssociatedObject(self, &NETunnelProviderManager.cachedConfigKey) as? TunnelConfiguration {
@@ -645,3 +659,148 @@ extension NETunnelProviderManager {
         return localizedDescription == tunnel.name && tunnelConfiguration == tunnel.tunnelConfiguration
     }
 }
+
+#if os(macOS)
+@available(macOS 10.15, *)
+class CatalinaWorkaround {
+
+    // In macOS Catalina, for some users, the tunnels get deleted arbitrarily
+    // by the OS. It's not clear what triggers that.
+
+    // As a workaround, in macOS Catalina, when we realize that tunnels have been
+    // deleted outside the app, we reinstate those tunnels using the information
+    // in the keychain.
+
+    unowned let tunnelsManager: TunnelsManager
+    private var configChangeSubscriber: Any?
+
+    struct ReinstationData {
+        let tunnelConfiguration: TunnelConfiguration
+        let keychainPasswordRef: Data
+    }
+
+    init(tunnelsManager: TunnelsManager) {
+        self.tunnelsManager = tunnelsManager
+
+        // Attempt reinstation when there's a change in tunnel configurations,
+        // which indicates that tunnels may have been deleted outside the app.
+        // We use debounce to wait for all change notifications to arrive
+        // before attempting to reinstate, so that we don't have saveToPreferences
+        // being called while another saveToPreferences is in progress.
+        self.configChangeSubscriber = NotificationCenter.default
+            .publisher(for: .NEVPNConfigurationChange, object: nil)
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .subscribe(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.reinstateTunnelsDeletedOutsideApp()
+        }
+
+        // Attempt reinstation on app launch
+        reinstateTunnelsDeletedOutsideApp()
+    }
+
+    func reinstateTunnelsDeletedOutsideApp() {
+        let rd = reinstationDataForTunnelsDeletedOutsideApp()
+        reinstateTunnels(ArraySlice(rd), completionHandler: nil)
+    }
+
+    private func reinstateTunnels(_ rdArray: ArraySlice<ReinstationData>, completionHandler: (() -> Void)?) {
+        guard let head = rdArray.first else {
+            completionHandler?()
+            return
+        }
+        let tail = rdArray.dropFirst()
+        self.tunnelsManager.reinstateTunnel(reinstationData: head) { _ in
+            DispatchQueue.main.async {
+                self.reinstateTunnels(tail, completionHandler: completionHandler)
+            }
+        }
+    }
+
+    private func reinstationDataForTunnelsDeletedOutsideApp() -> [ReinstationData] {
+        let knownRefs: [Data] = self.tunnelsManager.tunnels
+            .compactMap { $0.tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol }
+            .compactMap { $0.passwordReference }
+        let knownRefsSet: Set<Data> = Set(knownRefs)
+        var result: CFTypeRef?
+        let ret = SecItemCopyMatching([kSecClass as String: kSecClassGenericPassword,
+                                       kSecAttrService as String: Bundle.main.bundleIdentifier as Any,
+                                       kSecMatchLimit as String: kSecMatchLimitAll,
+                                       kSecReturnAttributes as String: true,
+                                       kSecReturnPersistentRef as String: true] as CFDictionary,
+                                      &result)
+        guard ret == errSecSuccess, let resultDicts = result as? [[String: Any]] else { return [] }
+        let labelPrefix = "WireGuard Tunnel: "
+        var reinstationData: [ReinstationData] = []
+        for resultDict in resultDicts {
+            guard let ref = resultDict[kSecValuePersistentRef as String] as? Data else { continue }
+            guard let label = resultDict[kSecAttrLabel as String] as? String else { continue }
+            guard label.hasPrefix(labelPrefix) else { continue }
+            if !knownRefsSet.contains(ref) {
+                let tunnelName = String(label.dropFirst(labelPrefix.count))
+                if let configStr = Keychain.openReference(called: ref),
+                    let config = try? TunnelConfiguration(fromWgQuickConfig: configStr, called: tunnelName) {
+                    reinstationData.append(ReinstationData(tunnelConfiguration: config, keychainPasswordRef: ref))
+                }
+            }
+        }
+        return reinstationData
+    }
+}
+#endif
+
+#if os(macOS)
+@available(macOS 10.15, *)
+extension TunnelsManager {
+    fileprivate func reinstateTunnel(reinstationData: CatalinaWorkaround.ReinstationData, completionHandler: @escaping (Bool) -> Void) {
+        let tunnelName = reinstationData.tunnelConfiguration.name ?? ""
+        if tunnelName.isEmpty {
+            completionHandler(false)
+            return
+        }
+
+        if tunnels.contains(where: { $0.name == tunnelName }) {
+            completionHandler(false)
+            return
+        }
+
+        let tunnelProviderProtocol = NETunnelProviderProtocol()
+        guard let appId = Bundle.main.bundleIdentifier else { fatalError() }
+        tunnelProviderProtocol.providerBundleIdentifier = "\(appId).network-extension"
+        tunnelProviderProtocol.passwordReference = reinstationData.keychainPasswordRef
+        tunnelProviderProtocol.providerConfiguration = ["UID": getuid()]
+        tunnelProviderProtocol.serverAddress = {
+            let endpoints = reinstationData.tunnelConfiguration.peers.compactMap { $0.endpoint }
+            if endpoints.count == 1 {
+                return endpoints[0].stringRepresentation
+            } else if endpoints.isEmpty {
+                return "Unspecified"
+            } else {
+                return "Multiple endpoints"
+            }
+        }()
+
+        let tunnelProvider = NETunnelProviderManager()
+        tunnelProvider.localizedDescription = tunnelName
+        tunnelProvider.protocolConfiguration = tunnelProviderProtocol
+        objc_setAssociatedObject(tunnelProvider, &NETunnelProviderManager.cachedConfigKey, reinstationData.tunnelConfiguration, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        tunnelProvider.isEnabled = true
+
+        tunnelProvider.saveToPreferences { [weak self] error in
+            guard error == nil else {
+                wg_log(.error, message: "Reinstate: Saving configuration failed: \(error!)")
+                completionHandler(false)
+                return
+            }
+
+            guard let self = self else { return }
+
+            let tunnel = TunnelContainer(tunnel: tunnelProvider)
+            self.tunnels.append(tunnel)
+            self.tunnels.sort { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
+            self.tunnelsListDelegate?.tunnelAdded(at: self.tunnels.firstIndex(of: tunnel)!)
+            completionHandler(true)
+        }
+    }
+}
+#endif
