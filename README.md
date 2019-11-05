@@ -18,7 +18,7 @@ $ cp WireGuard/WireGuard/Config/Developer.xcconfig.template WireGuard/WireGuard/
 $ vim WireGuard/WireGuard/Config/Developer.xcconfig
 ```
 
-- Install swiftlint and go:
+- Install swiftlint and go 1.13.4:
 
 ```
 $ brew install swiftlint go
