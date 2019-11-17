@@ -91,11 +91,11 @@ class DNSResolver {
             }
             freeaddrinfo(resultPointer)
 
-            // We prefer an IPv4 address over an IPv6 address
-            if let ipv4Address = ipv4Address {
-                return Endpoint(host: .ipv4(ipv4Address), port: endpoint.port)
-            } else if let ipv6Address = ipv6Address {
+            // We prefer an IPv6 address over an IPv4 address
+            if let ipv6Address = ipv6Address {
                 return Endpoint(host: .ipv6(ipv6Address), port: endpoint.port)
+            } else if let ipv4Address = ipv4Address {
+                return Endpoint(host: .ipv4(ipv4Address), port: endpoint.port)
             } else {
                 return nil
             }
