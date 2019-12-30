@@ -136,5 +136,5 @@ Here's an example WireGuard configuration payload dictionary:
 
 Configurations added via .mobileconfig will not be migrated into keychain until the WireGuard application is opened once.
 
-[wg-quick(8)]: https://git.zx2c4.com/WireGuard/about/src/tools/man/wg-quick.8
-[wg(8)]: https://git.zx2c4.com/WireGuard/about/src/tools/man/wg.8
+[wg-quick(8)]: https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8
+[wg(8)]: https://git.zx2c4.com/wireguard-tools/about/src/man/wg.8

@@ -43,7 +43,7 @@ extension Endpoint {
 
     init?(from string: String) {
         // Separation of host and port is based on 'parse_endpoint' function in
-        // https://git.zx2c4.com/WireGuard/tree/src/tools/config.c
+        // https://git.zx2c4.com/wireguard-tools/tree/src/config.c
         guard !string.isEmpty else { return nil }
         let startOfPort: String.Index
         let hostString: String
