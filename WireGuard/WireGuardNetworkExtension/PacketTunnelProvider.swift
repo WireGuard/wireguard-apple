@@ -70,7 +70,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 }
                 ifnamePtr.deallocate()
                 wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
-                let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration().withGoString { return wgTurnOn($0, fileDescriptor) }
+                let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration()
+                    .withCString { return wgTurnOn($0, fileDescriptor) }
                 if handle < 0 {
                     wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
                     errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
@@ -146,18 +147,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         #if os(iOS)
         if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
-            _ = packetTunnelSettingsGenerator.endpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
+            _ = packetTunnelSettingsGenerator.endpointUapiConfiguration()
+                .withCString { return wgSetConfig(handle, $0) }
         }
         #endif
         wgBumpSockets(handle)
-    }
-}
-
-extension String {
-    func withGoString<R>(_ call: (gostring_t) -> R) -> R {
-        func helper(_ pointer: UnsafePointer<Int8>?, _ call: (gostring_t) -> R) -> R {
-            return call(gostring_t(p: pointer, n: utf8.count))
-        }
-        return helper(self, call)
     }
 }
