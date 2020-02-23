@@ -1,0 +1,443 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+
+// Generic alert action names
+
+"actionOK" = "OK";
+"actionCancel" = "キャンセル";
+"actionSave" = "保存";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "設定";
+"tunnelsListCenteredAddTunnelButtonTitle" = "トンネルの追加";
+"tunnelsListSwipeDeleteButtonTitle" = "削除";
+"tunnelsListSelectButtonTitle" = "選択";
+"tunnelsListSelectAllButtonTitle" = "すべて選択";
+"tunnelsListDeleteButtonTitle" = "削除";
+"tunnelsListSelectedTitle (%d)" = "%d 件選択";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "WireGuardトンネルの追加";
+"addTunnelMenuImportFile" = "ファイル、アーカイブから作成";
+"addTunnelMenuQRCode" = "QRコードから作成";
+"addTunnelMenuFromScratch" = "空の状態から作成";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "%d トンネルを作成しました";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "インポートファイルの %2$d 件中の %1$d 件目";
+
+"alertImportedFromZipTitle (%d)" = "%d トンネルを作成しました";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "zip アーカイブの %2$d 件中の %1$d 件目";
+
+"alertBadConfigImportTitle" = "トンネルをインポートできません";
+"alertBadConfigImportMessage (%@)" = "ファイル ‘%@’ には有効な WireGuard の設定がありません";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "削除";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d トンネルを削除しますか?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "%d トンネルを削除しますか?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "新規作成";
+"editTunnelViewTitle" = "設定の編集";
+
+"tunnelSectionTitleStatus" = "状態";
+
+"tunnelStatusInactive" = "無効";
+"tunnelStatusActivating" = "有効化中";
+"tunnelStatusActive" = "有効";
+"tunnelStatusDeactivating" = "無効化中";
+"tunnelStatusReasserting" = "再有効化中";
+"tunnelStatusRestarting" = "再起動中";
+"tunnelStatusWaiting" = "待機中";
+
+"macToggleStatusButtonActivate" = "有効化";
+"macToggleStatusButtonActivating" = "有効化中…";
+"macToggleStatusButtonDeactivate" = "無効化";
+"macToggleStatusButtonDeactivating" = "無効化中…";
+"macToggleStatusButtonReasserting" = "再有効化中…";
+"macToggleStatusButtonRestarting" = "再起動中…";
+"macToggleStatusButtonWaiting" = "待機中…";
+
+"tunnelSectionTitleInterface" = "インターフェース";
+
+"tunnelInterfaceName" = "名前";
+"tunnelInterfacePrivateKey" = "秘密鍵";
+"tunnelInterfacePublicKey" = "公開鍵";
+"tunnelInterfaceGenerateKeypair" = "キーペアの生成";
+"tunnelInterfaceAddresses" = "IPアドレス";
+"tunnelInterfaceListenPort" = "待ち受けポート";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS サーバ";
+"tunnelInterfaceStatus" = "Status";
+
+"tunnelSectionTitlePeer" = "ピア";
+
+"tunnelPeerPublicKey" = "公開鍵";
+"tunnelPeerPreSharedKey" = "事前共有鍵";
+"tunnelPeerEndpoint" = "エンドポイント";
+"tunnelPeerPersistentKeepalive" = "持続的キープアライブ";
+"tunnelPeerAllowedIPs" = "Allowed IPs";
+"tunnelPeerRxBytes" = "受信";
+"tunnelPeerTxBytes" = "送信";
+"tunnelPeerLastHandshakeTime" = "直近のハンドシェイク";
+"tunnelPeerExcludePrivateIPs" = "プライベートIPは対象外";
+
+"tunnelSectionTitleOnDemand" = "オンデマンドでの有効化";
+
+"tunnelOnDemandCellular" = "モバイル回線";
+"tunnelOnDemandEthernet" = "イーサネット（有線LAN）";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSID";
+
+"tunnelOnDemandAnySSID" = "すべてのSSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "これらのSSIDのみ";
+"tunnelOnDemandExceptTheseSSIDs" = "これらのSSIDを除外";
+"tunnelOnDemandOnlySSID (%d)" = "%d 件のSSIDのみ";
+"tunnelOnDemandOnlySSIDs (%d)" = "%d 件のSSIDのみ";
+"tunnelOnDemandExceptSSID (%d)" = "%d 件のSSIDを除外";
+"tunnelOnDemandExceptSSIDs (%d)" = "%d 件のSSIDを除外";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSID";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID";
+"tunnelOnDemandNoSSIDs" = "SSIDなし";
+"tunnelOnDemandSectionTitleAddSSIDs" = "SSIDの追加";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Add connected: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "追加";
+
+"tunnelOnDemandKey" = "オンデマンド";
+"tunnelOnDemandOptionOff" = "オフ";
+"tunnelOnDemandOptionWiFiOnly" = "Wi-Fi のみ";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi または モバイル回線";
+"tunnelOnDemandOptionCellularOnly" = "モバイル回線のみ";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi または 有線LAN";
+"tunnelOnDemandOptionEthernetOnly" = "有線LANのみ";
+
+"addPeerButtonTitle" = "ピアを追加";
+
+"deletePeerButtonTitle" = "ピアを削除";
+"deletePeerConfirmationAlertButtonTitle" = "削除";
+"deletePeerConfirmationAlertMessage" = "このピアを削除しますか？";
+
+"deleteTunnelButtonTitle" = "トンネルを削除";
+"deleteTunnelConfirmationAlertButtonTitle" = "削除";
+"deleteTunnelConfirmationAlertMessage" = "このトンネルを削除しますか？";
+
+"tunnelEditPlaceholderTextRequired" = "必須";
+"tunnelEditPlaceholderTextOptional" = "任意";
+"tunnelEditPlaceholderTextAutomatic" = "自動";
+"tunnelEditPlaceholderTextStronglyRecommended" = "設定を推奨";
+"tunnelEditPlaceholderTextOff" = "オフ";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "%@ 秒ごと";
+"tunnelHandshakeTimestampNow" = "Now";
+"tunnelHandshakeTimestampSystemClockBackward" = "(システムクロックが遅れている)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ 前";
+"tunnelHandshakeTimestampYear (%d)" = "%d 年";
+"tunnelHandshakeTimestampYears (%d)" = "%d 年";
+"tunnelHandshakeTimestampDay (%d)" = "%d 日";
+"tunnelHandshakeTimestampDays (%d)" = "%d 日";
+"tunnelHandshakeTimestampHour (%d)" = "%d 時間";
+"tunnelHandshakeTimestampHours (%d)" = "%d 時間";
+"tunnelHandshakeTimestampMinute (%d)" = "%d 分";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d 分";
+"tunnelHandshakeTimestampSecond (%d)" = "%d 秒";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d 秒";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ 時";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ 分";
+
+"tunnelPeerPresharedKeyEnabled" = "有効";
+
+// Error alerts while creating / editing a tunnel configuration
+
+/* Alert title for error in the interface data */
+"alertInvalidInterfaceTitle" = "無効なインターフェース";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "インターフェース名は必須です";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "インターフェースの秘密鍵は必須です";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "インターフェースの秘密鍵はBase64でエンコードされた32バイトの長さでなければなりません";
+"alertInvalidInterfaceMessageAddressInvalid" = "インターフェースのアドレスはカンマで区切られたIPアドレス（CIDR表記可）のリストでなければなりません";
+"alertInvalidInterfaceMessageListenPortInvalid" = "インターフェースの待受ポートは0から65535の範囲内の値か、または未指定でなければなりません";
+"alertInvalidInterfaceMessageMTUInvalid" = "インターフェースのMTUは576から65535の範囲内の値か、または未指定でなければなりません";
+"alertInvalidInterfaceMessageDNSInvalid" = "インターフェースのDNSサーバはカンマで区切られたIPアドレスのリストでなければなりません";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "無効なピア";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "ピアの公開鍵は必須です";
+"alertInvalidPeerMessagePublicKeyInvalid" = "ピアの公開鍵はBase64でエンコードされた32バイトの長さでなければなりません";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "ピアの事前共有鍵はBase64でエンコードされた32バイトの長さでなければなりません";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "ピアのAllowed IPはカンマで区切られたIPアドレス（CIDR表記可）のリストでなければなりません";
+"alertInvalidPeerMessageEndpointInvalid" = "ピアのエンドポイントは 'ホスト:ポート番号' または '[ホスト]:ポート番号' の形式でなければなりません’";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "ピアの持続的キープアライブは0から65535の範囲内の値か、または未指定でなければなりません";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "複数のピアで同じ共有鍵は使用できません";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "QRコードをスキャン";
+"scanQRCodeTipText" = "Tip: `qrencode -t ansiutf8 < tunnel.conf` で生成できます";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "カメラがサポートされていません";
+"alertScanQRCodeCameraUnsupportedMessage" = "この機器ではQRコードをスキャンできません";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "無効なQRコード";
+"alertScanQRCodeInvalidQRCodeMessage" = "スキャンしたQRコードは有効なWireGuardの設定ではありません";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "無効なコード";
+"alertScanQRCodeUnreadableQRCodeMessage" = "スキャンしたコードが解読できません";
+
+"alertScanQRCodeNamePromptTitle" = "スキャンしたトンネル名をつけてください";
+
+// Settings UI
+
+"settingsViewTitle" = "設定";
+
+"settingsSectionTitleAbout" = "About";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard for iOS";
+"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+
+"settingsSectionTitleExportConfigurations" = "設定のエクスポート";
+"settingsExportZipButtonTitle" = "ZIPアーカイブとしてエクスポート";
+
+"settingsSectionTitleTunnelLog" = "ログ";
+"settingsViewLogButtonTitle" = "ログを参照する";
+
+// Log view
+
+"logViewTitle" = "ログ";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "ログのエクスポート失敗";
+"alertUnableToRemovePreviousLogMessage" = "以前のログを消去できませんでした";
+
+"alertUnableToWriteLogTitle" = "ログのエクスポート失敗";
+"alertUnableToWriteLogMessage" = "ファイルにログを書き込めません";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "ZIPアーカイブの読込不可";
+"alertCantOpenInputZipFileMessage" = "ZIPアーカイブは読み込みできません";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "ZIPアーカイブ作成不可";
+"alertCantOpenOutputZipFileForWritingMessage" = "ZIPファイルを書き込み用に開けません";
+
+"alertBadArchiveTitle" = "ZIPアーカイブ読込不可";
+"alertBadArchiveMessage" = "不良なZIPアーカイブファイルです";
+
+"alertNoTunnelsToExportTitle" = "エクスポート対象なし";
+"alertNoTunnelsToExportMessage" = "エクスポートできるトンネルが1つもありません";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "ZIPアーカイブにトンネルなし";
+"alertNoTunnelsInImportedZipArchiveMessage" = "ZIPアーカイブ内に拡張子 .conf のトンネル設定ファイルが見つかりません";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "ファイルからのインポート不可";
+"alertCantOpenInputConfFileMessage (%@)" = "ファイル ‘%@’ は読み込めません";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "有効化に失敗";
+"alertTunnelActivationFailureMessage" = "トンネルを有効化できませんでした。インターネットに接続しているか確認してください。";
+"alertTunnelActivationSavedConfigFailureMessage" = "保存済みの設定からトンネルの情報を取得できませんでした";
+"alertTunnelActivationBackendFailureMessage" = "Go バックエンドライブラリを起動できません";
+"alertTunnelActivationFileDescriptorFailureMessage" = "TUNデバイスのファイルディスクリプタを特定できません";
+"alertTunnelActivationSetNetworkSettingsMessage" = "トンネルオブジェクトにネットワーク設定を適用できません";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " このトンネルは「オンデマンド有効化」が有効なため、OSによって自動的に有効化が行われます。トンネル設定から「オンデマンド有効化」をオフにすることもできます。";
+
+"alertTunnelDNSFailureTitle" = "DNSの名前解決失敗";
+"alertTunnelDNSFailureMessage" = "エンドポイントのドメイン名が解決できませんでした";
+
+"alertTunnelNameEmptyTitle" = "名前が未指定";
+"alertTunnelNameEmptyMessage" = "名前のないトンネルは作成できません";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "存在する名前";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "同じ名前のトンネルがすでに存在します";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "有効化中";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "トンネルはすでに有効になっているか、有効化処理中です";
+
+// Tunnel management error alerts on system error
+
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+"alertSystemErrorOnListingTunnelsTitle" = "トンネル表示不可";
+"alertSystemErrorOnAddTunnelTitle" = "トンネル作成不可";
+"alertSystemErrorOnModifyTunnelTitle" = "トンネル編集不可";
+"alertSystemErrorOnRemoveTunnelTitle" = "トンネル削除不可";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "有効化に失敗";
+"alertTunnelActivationSystemErrorMessage (%@)" = "トンネルを有効化できませんでした。 %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "設定が不正です";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "設定が無効化されています。";
+"alertSystemErrorMessageTunnelConnectionFailed" = "接続に失敗しました。";
+"alertSystemErrorMessageTunnelConfigurationStale" = "設定は失効しています。";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "設定の読み取り、または書き込みに失敗しました。";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "不明なシステムエラー。";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "ネットワーク: %@";
+"macMenuNetworksNone" = "ネットワーク: なし";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "Tunnelの管理";
+"macMenuImportTunnels" = "ファイルからトンネルをインポート…";
+"macMenuAddEmptyTunnel" = "空の状態のトンネルを追加…";
+"macMenuViewLog" = "ログを参照";
+"macMenuExportTunnels" = "トンネルをZIPにエクスポート…";
+"macMenuAbout" = "WireGuardについて";
+"macMenuQuit" = "WireGuardを終了";
+
+"macMenuHideApp" = "WireGuardを隠す";
+"macMenuHideOtherApps" = "ほかを隠す";
+"macMenuShowAllApps" = "すべて表示";
+
+"macMenuFile" = "ファイル";
+"macMenuCloseWindow" = "ウィンドウを閉じる";
+
+"macMenuEdit" = "編集";
+"macMenuCut" = "切り取り";
+"macMenuCopy" = "コピー";
+"macMenuPaste" = "貼り付け";
+"macMenuSelectAll" = "すべて選択";
+
+"macMenuTunnel" = "トンネル";
+"macMenuToggleStatus" = "ステータスを切り替え";
+"macMenuEditTunnel" = "編集…";
+"macMenuDeleteSelected" = "選択したものを削除";
+
+"macMenuWindow" = "ウィンドウ";
+"macMenuMinimize" = "最小化";
+"macMenuZoom" = "ズーム";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "WireGuardトンネルの管理";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "本当に ‘%@’ を削除しますか？";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "本当に %d トンネルを削除しますか？";
+"macDeleteTunnelConfirmationAlertInfo" = "この操作はもとに戻せません。";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "削除";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "キャンセル";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "削除しています…";
+
+"macButtonImportTunnels" = "ファイルからトンネルをインポート";
+"macSheetButtonImport" = "インポート";
+
+"macNameFieldExportLog" = "ログの保存先:";
+"macSheetButtonExportLog" = "保存";
+
+"macNameFieldExportZip" = "トンネルのエクスポート先:";
+"macSheetButtonExportZip" = "保存";
+
+"macButtonDeleteTunnels (%d)" = "%d トンネルを削除";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "オンデマンド:";
+"macFieldOnDemandSSIDs" = "SSID:";
+
+// Mac status display
+
+"macStatus (%@)" = "状態: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "破棄";
+"macEditSave" = "保存";
+
+"macAlertNameIsEmpty" = "名前は必須です";
+"macAlertDuplicateName (%@)" = "‘%@’ の名前のトンネルはすでに存在します。";
+
+"macAlertInvalidLine (%@)" = "不正な行: ‘%@’。";
+
+"macAlertNoInterface" = "設定には ‘Interface’ セクションがなければなりません。";
+"macAlertMultipleInterfaces" = "設定内の 'Interface' セクションは1つだけでなければなりません。";
+"macAlertPrivateKeyInvalid" = "秘密鍵が不正です。";
+"macAlertListenPortInvalid (%@)" = "待ち受けポート ‘%@’ は不正です。";
+"macAlertAddressInvalid (%@)" = "アドレス ‘%@’ は不正です。";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ は不正です。";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ は不正です。";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Interfaceに認識不能なキー項目 ‘%@’ が含まれています";
+"macAlertInfoUnrecognizedInterfaceKey" = "有効なキー項目: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’, ‘MTU’";
+
+"macAlertPublicKeyInvalid" = "公開鍵が不正です";
+"macAlertPreSharedKeyInvalid" = "事前共有鍵が不正です";
+"macAlertAllowedIPInvalid (%@)" = "Allowed IP ‘%@’ が不正です";
+"macAlertEndpointInvalid (%@)" = "Endpoint ‘%@’ が不正です";
+"macAlertPersistentKeepliveInvalid (%@)" = "持続的キープアライブの値 ‘%@’ が不正です";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Peerに認識不能なキー項目 ‘%@’ が含まれています";
+"macAlertInfoUnrecognizedPeerKey" = "有効なキー項目: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’, ‘PersistentKeepalive’";
+
+"macAlertMultipleEntriesForKey (%@)" = "キー項目 ‘%@’ は各セクションに1エントリであるべきです";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "App version: %@";
+"macGoBackendVersion (%@)" = "Go backend version: %@";
+
+// Privacy
+
+"macExportPrivateData" = "トンネルの秘密鍵をエクスポートする";
+"macViewPrivateData" = "トンネルの秘密鍵を表示する";
+"iosExportPrivateData" = "トンネルの秘密鍵をエクスポートするための認証を行います";
+"iosViewPrivateData" = "トンネルの秘密鍵を表示するための認証を行います";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "トンネル管理画面を閉じますか？それともWireGuard自体を終了しますか？";
+"macConfirmAndQuitAlertInfo" = "トンネル管理画面を閉じても、メニューバーアイコンからWireGuardを操作できます。";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "トンネル管理画面を閉じても、メニューバーアイコンからWireGuardを操作できます。\n\n注意：WireGuard自体を終了しても、現在有効化済みのトンネル ('%@') はこのアプリケーションかシステム環境設定のネットワークパネルから無効化するまでは有効なままです。";
+"macConfirmAndQuitAlertQuitWireGuard" = "WireGuardを終了";
+"macConfirmAndQuitAlertCloseWindow" = "トンネル管理画面を閉じる";
+
+"macAppExitingWithActiveTunnelMessage" = "WireGuard終了時点で有効なトンネルが残っています。";
+"macAppExitingWithActiveTunnelInfo" = "終了後もトンネルは有効なままです。無効化はこのアプリケーションを再度起動して行うか、システム環境設定のネットワークパネルから行います。";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "トンネルの編集 (⌘E)";
+"macToolTipToggleStatus" = "状態の切り替え (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "時刻";
+"macLogColumnTitleLogMessage" = "ログメッセージ";
+"macLogButtonTitleClose" = "閉じる";
+"macLogButtonTitleSave" = "保存…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "このトンネルの設定はkeychain内に見つかりません。";
+"macUnusableTunnelInfo" = "このトンネルが他のユーザーによって作成されたものである場合、そのユーザーだけがこのトンネルの表示、編集、有効化をすることができます。";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "トンネルを削除";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store に WireGuard 更新があります。";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "トンネル '%@' のオンデマンド有効化を解除し、トンネルを無効にしてから App Store での更新を行ってください。";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "トンネル ‘%@’ を無効にしてから App Store での更新を行ってください。";
+
+// Donation
+
+"donateLink" = "♥ WireGuard プロジェクトに寄付をお願いします！";
