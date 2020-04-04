@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+ * Copyright (C) 2015-2020 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
  */
 
 #include <stdbool.h>
@@ -62,10 +62,31 @@ static bool is_valid_key(string_span_t s)
 	if (s.len != 44 || s.s[43] != '=')
 		return false;
 
-	for (size_t i = 0; i < 43; ++i) {
+	for (size_t i = 0; i < 42; ++i) {
 		if (!is_decimal(s.s[i]) && !is_alphabet(s.s[i]) &&
 		    s.s[i] != '/' && s.s[i] != '+')
 			return false;
+	}
+	switch (s.s[42]) {
+	case 'A':
+	case 'E':
+	case 'I':
+	case 'M':
+	case 'Q':
+	case 'U':
+	case 'Y':
+	case 'c':
+	case 'g':
+	case 'k':
+	case 'o':
+	case 's':
+	case 'w':
+	case '4':
+	case '8':
+	case '0':
+		break;
+	default:
+		return false;
 	}
 	return true;
 }
@@ -166,9 +187,9 @@ static bool is_valid_uint(string_span_t s, bool support_hex, uint64_t min, uint6
 
 	if (support_hex && s.len > 2 && s.s[0] == '0' && s.s[1] == 'x') {
 		for (size_t i = 2; i < s.len; ++i) {
-			if (s.s[i] - '0' < 10)
+			if ((unsigned)s.s[i] - '0' < 10)
 				val = 16 * val + (s.s[i] - '0');
-			else if ((s.s[i] | 32) - 'a' < 6)
+			else if (((unsigned)s.s[i] | 32) - 'a' < 6)
 				val = 16 * val + (s.s[i] | 32) - 'a' + 10;
 			else
 				return false;
