@@ -302,6 +302,7 @@
 		6F0F44C8222D55BB00B0FF04 /* TextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextCell.swift; sourceTree = "<group>"; };
 		6F0F44CA222D55FD00B0FF04 /* EditableTextCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTextCell.swift; sourceTree = "<group>"; };
 		6F1075632258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteTunnelsConfirmationAlert.swift; sourceTree = "<group>"; };
+		6F16F46F243DB55600AA141B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = WireGuard/ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F19D30322402B8700A126F2 /* ConfirmationAlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationAlertPresenter.swift; sourceTree = "<group>"; };
 		6F2449E7226587B80047B9E9 /* MacAppStoreUpdateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacAppStoreUpdateDetector.swift; sourceTree = "<group>"; };
 		6F3E02E8228000F6001FE7E3 /* MainMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
@@ -1470,6 +1471,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				6FE1765521C90BBE002690EA /* Base */,
+				6F16F46F243DB55600AA141B /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
