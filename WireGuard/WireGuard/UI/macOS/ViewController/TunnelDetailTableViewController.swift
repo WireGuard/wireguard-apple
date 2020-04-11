@@ -60,7 +60,7 @@ class TunnelDetailTableViewController: NSViewController {
 
     let editButton: NSButton = {
         let button = NSButton()
-        button.title = tr("Edit")
+        button.title = tr("macButtonEdit")
         button.setButtonType(.momentaryPushIn)
         button.bezelStyle = .rounded
         button.toolTip = tr("macToolTipEditTunnel")
