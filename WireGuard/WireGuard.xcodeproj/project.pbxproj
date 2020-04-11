@@ -349,6 +349,7 @@
 		6F8F0D7022258153000E8335 /* ActivateOnDemandViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandViewModel.swift; sourceTree = "<group>"; };
 		6F8F0D7322267AD2000E8335 /* ChevronCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChevronCell.swift; sourceTree = "<group>"; };
 		6F8F0D7622267C57000E8335 /* SSIDOptionEditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSIDOptionEditTableViewController.swift; sourceTree = "<group>"; };
+		6F8F9C692441DBEF00BF8B8F /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = WireGuard/it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F907C9B224663A2003CED21 /* LogViewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogViewHelper.swift; sourceTree = "<group>"; };
 		6F919EC2218A2AE90023B400 /* ErrorPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPresenter.swift; sourceTree = "<group>"; };
 		6F919ED5218C65C50023B400 /* wireguard_doc_logo_22x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wireguard_doc_logo_22x29.png; sourceTree = "<group>"; };
@@ -976,6 +977,7 @@
 				en,
 				ja,
 				Base,
+				it,
 			);
 			mainGroup = 6FF4AC0B211EC46F002C96EB;
 			productRefGroup = 6FF4AC15211EC46F002C96EB /* Products */;
@@ -1472,6 +1474,7 @@
 			children = (
 				6FE1765521C90BBE002690EA /* Base */,
 				6F16F46F243DB55600AA141B /* ja */,
+				6F8F9C692441DBEF00BF8B8F /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
