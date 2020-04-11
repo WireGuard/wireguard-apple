@@ -1,0 +1,443 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2020 WireGuard LLC. All Rights Reserved.
+
+// Generic alert action names
+
+"actionOK" = "OK";
+"actionCancel" = "Abbrechen";
+"actionSave" = "Speichern";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Einstellungen";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Tunnel hinzufügen";
+"tunnelsListSwipeDeleteButtonTitle" = "Entfernen";
+"tunnelsListSelectButtonTitle" = "Auswählen";
+"tunnelsListSelectAllButtonTitle" = "Alle Auswählen";
+"tunnelsListDeleteButtonTitle" = "Entfernen";
+"tunnelsListSelectedTitle (%d)" = "%d ausgewählt";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "WireGuard-Tunnel hinzufügen";
+"addTunnelMenuImportFile" = "Aus Datei oder Archiv erstellen";
+"addTunnelMenuQRCode" = "Aus QR-Code erstellen";
+"addTunnelMenuFromScratch" = "Selbst erstellen";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "%d Tunnel erstellt";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "%1$d von %2$d Tunnel aus importierten Dateien erstellt";
+
+"alertImportedFromZipTitle (%d)" = "%d Tunnel erstellt";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "%1$d von %2$d Tunnel aus Zip-Archiv erstellt";
+
+"alertBadConfigImportTitle" = "Tunnel konnte nicht importiert werden";
+"alertBadConfigImportMessage (%@)" = "Die Datei ‘%@’ enthält keine gültige WireGuard-Konfiguration";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Entfernen";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d Tunnel löschen?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "%d Tunnel löschen?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Neue Konfiguration";
+"editTunnelViewTitle" = "Konfiguration bearbeiten";
+
+"tunnelSectionTitleStatus" = "Status";
+
+"tunnelStatusInactive" = "Inaktiv";
+"tunnelStatusActivating" = "Aktiviere";
+"tunnelStatusActive" = "Aktiv";
+"tunnelStatusDeactivating" = "Deaktiviere";
+"tunnelStatusReasserting" = "Reaktiviere";
+"tunnelStatusRestarting" = "Starte neu";
+"tunnelStatusWaiting" = "Warten";
+
+"macToggleStatusButtonActivate" = "Aktiviere";
+"macToggleStatusButtonActivating" = "Aktiviere…";
+"macToggleStatusButtonDeactivate" = "Deaktiviere";
+"macToggleStatusButtonDeactivating" = "Deaktiviere…";
+"macToggleStatusButtonReasserting" = "Reaktiviere…";
+"macToggleStatusButtonRestarting" = "Starte neu…";
+"macToggleStatusButtonWaiting" = "Warten…";
+
+"tunnelSectionTitleInterface" = "Schnittstelle";
+
+"tunnelInterfaceName" = "Name";
+"tunnelInterfacePrivateKey" = "Privater Schlüssel";
+"tunnelInterfacePublicKey" = "Öffentlicher Schlüssel";
+"tunnelInterfaceGenerateKeypair" = "Schlüsselpaar erzeugen";
+"tunnelInterfaceAddresses" = "Adressen";
+"tunnelInterfaceListenPort" = "Zu überwachender Port";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS-Server";
+"tunnelInterfaceStatus" = "Status";
+
+"tunnelSectionTitlePeer" = "Peer";
+
+"tunnelPeerPublicKey" = "Öffentlicher Schlüssel";
+"tunnelPeerPreSharedKey" = "Symmetrischer Schlüssel";
+"tunnelPeerEndpoint" = "Endpunkt";
+"tunnelPeerPersistentKeepalive" = "Dauerhafter Keepalive";
+"tunnelPeerAllowedIPs" = "Zulässige IPs";
+"tunnelPeerRxBytes" = "Daten empfangen";
+"tunnelPeerTxBytes" = "Daten gesendet";
+"tunnelPeerLastHandshakeTime" = "Letzter Handshake";
+"tunnelPeerExcludePrivateIPs" = "Private IPs ausschließen";
+
+"tunnelSectionTitleOnDemand" = "Aktivierung auf Wunsch";
+
+"tunnelOnDemandCellular" = "Mobil";
+"tunnelOnDemandEthernet" = "LAN";
+"tunnelOnDemandWiFi" = "WLAN";
+"tunnelOnDemandSSIDsKey" = "SSIDs";
+
+"tunnelOnDemandAnySSID" = "Alle SSIDs";
+"tunnelOnDemandOnlyTheseSSIDs" = "Nur diese SSIDs";
+"tunnelOnDemandExceptTheseSSIDs" = "Ausgenommen dieser SSIDs";
+"tunnelOnDemandOnlySSID (%d)" = "Nur %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Nur %d SSIDs";
+"tunnelOnDemandExceptSSID (%d)" = "Außer %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "Außer %d SSIDs";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSIDs";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
+"tunnelOnDemandNoSSIDs" = "Keine SSIDs";
+"tunnelOnDemandSectionTitleAddSSIDs" = "SSIDs hinzufügen";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Verbundene hinzufügen: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Neue hinzufügen";
+
+"tunnelOnDemandKey" = "On-Demand";
+"tunnelOnDemandOptionOff" = "Aus";
+"tunnelOnDemandOptionWiFiOnly" = "Nur WLAN";
+"tunnelOnDemandOptionWiFiOrCellular" = "WLAN oder Mobil";
+"tunnelOnDemandOptionCellularOnly" = "Nur Mobil";
+"tunnelOnDemandOptionWiFiOrEthernet" = "WLAN oder LAN";
+"tunnelOnDemandOptionEthernetOnly" = "Nur LAN";
+
+"addPeerButtonTitle" = "Peer hinzufügen";
+
+"deletePeerButtonTitle" = "Peer löschen";
+"deletePeerConfirmationAlertButtonTitle" = "Löschen";
+"deletePeerConfirmationAlertMessage" = "Diesen Peer löschen?";
+
+"deleteTunnelButtonTitle" = "Tunnel löschen";
+"deleteTunnelConfirmationAlertButtonTitle" = "Löschen";
+"deleteTunnelConfirmationAlertMessage" = "Diesen Tunnel löschen?";
+
+"tunnelEditPlaceholderTextRequired" = "Erforderlich";
+"tunnelEditPlaceholderTextOptional" = "Optional";
+"tunnelEditPlaceholderTextAutomatic" = "Automatisch";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Stark empfohlen";
+"tunnelEditPlaceholderTextOff" = "Aus";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "alle %@ Sekunden";
+"tunnelHandshakeTimestampNow" = "Jetzt";
+"tunnelHandshakeTimestampSystemClockBackward" = "(Systemuhr zurückgestellt)";
+"tunnelHandshakeTimestampAgo (%@)" = "vor %@";
+"tunnelHandshakeTimestampYear (%d)" = "%d Jahr";
+"tunnelHandshakeTimestampYears (%d)" = "%d Jahre";
+"tunnelHandshakeTimestampDay (%d)" = "%d Tag";
+"tunnelHandshakeTimestampDays (%d)" = "%d Tage";
+"tunnelHandshakeTimestampHour (%d)" = "%d Stunde";
+"tunnelHandshakeTimestampHours (%d)" = "%d Stunden";
+"tunnelHandshakeTimestampMinute (%d)" = "%d Minute";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d Minuten";
+"tunnelHandshakeTimestampSecond (%d)" = "%d Sekunde";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d Sekunden";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ Stunden";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ Minuten";
+
+"tunnelPeerPresharedKeyEnabled" = "aktiviert";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "Ungültige Schnittstelle";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Name der Schnittstelle ist erforderlich";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Der private Interface-Schlüssel ist erforderlich";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Der private Schlüssel der Schnittstelle muss ein 32-Byte-Schlüssel in der base64-Kodierung sein";
+"alertInvalidInterfaceMessageAddressInvalid" = "Schnittstellen-Adressen müssen eine Liste von kommaseparierten IP-Adressen sein, optional in CIDR-Notation";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Der Schnittstellen-Listen-Port muss zwischen 0 und 65535 liegen oder nicht spezifiziert sein";
+"alertInvalidInterfaceMessageMTUInvalid" = "Die MTU der Schnittstelle muss zwischen 576 und 65535 oder nicht spezifiziert sein";
+"alertInvalidInterfaceMessageDNSInvalid" = "Die DNS-Server der Schnittstelle müssen eine Liste von kommaseparierten IP-Adressen sein";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Ungültiger Peer";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Der öffentliche Schlüssel des Peers wird benötigt";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Der private Schlüssel des Peers muss ein 32-Byte-Schlüssel in base64-Kodierung sein";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Der mit dem Peer geteilte Schlüssel muss ein 32-Byte-Schlüssel in base64-Kodierung sein";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Erlaubte IPs des Teilnehmers müssen eine Liste kommaseparierter IP-Adressen sein, optional in CIDR-Notation";
+"alertInvalidPeerMessageEndpointInvalid" = "Der Endpunkt des Peers muss dem Format 'host:port' oder '[host]:port' entsprechen";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Der dauerhafte Keepalive des Peers muss zwischen 0 und 65535 oder nicht spezifiziert sein";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Zwei oder mehr Peers können nicht den gleichen öffentlichen Schlüssel haben";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "QR-Code scannen";
+"scanQRCodeTipText" = "Tipp: Mit `qrencode -t ansiutf8 < tunnel.conf` generieren";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Kamera nicht unterstützt";
+"alertScanQRCodeCameraUnsupportedMessage" = "Dieses Gerät kann QR-Codes nicht scannen";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Ungültiger QR-Code";
+"alertScanQRCodeInvalidQRCodeMessage" = "Der gescannte QR-Code ist keine gültige WireGuard-Konfiguration";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Ungültiger Code";
+"alertScanQRCodeUnreadableQRCodeMessage" = "Der gescannte Code konnte nicht gelesen werden";
+
+"alertScanQRCodeNamePromptTitle" = "Bitte den gescannten Tunnel benennen";
+
+// Settings UI
+
+"settingsViewTitle" = "Einstellungen";
+
+"settingsSectionTitleAbout" = "Über";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard für iOS";
+"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+
+"settingsSectionTitleExportConfigurations" = "Konfigurationen exportieren";
+"settingsExportZipButtonTitle" = "Zip-Archiv exportieren";
+
+"settingsSectionTitleTunnelLog" = "Log";
+"settingsViewLogButtonTitle" = "Log anzeigen";
+
+// Log view
+
+"logViewTitle" = "Log";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Log-Export fehlgeschlagen";
+"alertUnableToRemovePreviousLogMessage" = "Das bereits vorhandene Log konnte nicht gelöscht werden";
+
+"alertUnableToWriteLogTitle" = "Log-Export fehlgeschlagen";
+"alertUnableToWriteLogMessage" = "Konnte Logs nicht in Datei schreiben";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "Zip-Archiv kann nicht gelesen werden";
+"alertCantOpenInputZipFileMessage" = "Das Zip-Archiv konnte nicht gelesen werden.";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Zip-Archiv kann nicht erstellt werden";
+"alertCantOpenOutputZipFileForWritingMessage" = "Zip-Datei konnte nicht zum Schreiben geöffnet werden.";
+
+"alertBadArchiveTitle" = "Zip-Archiv kann nicht gelesen werden";
+"alertBadArchiveMessage" = "Fehlerhaftes oder beschädigtes Zip-Archiv.";
+
+"alertNoTunnelsToExportTitle" = "Nichts zum Exportieren";
+"alertNoTunnelsToExportMessage" = "Keine Tunnel zum Exportieren vorhanden";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "Keine Tunnel im Zip-Archiv";
+"alertNoTunnelsInImportedZipArchiveMessage" = "Es wurden keine .conf Tunneldateien im Zip-Archiv gefunden.";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "Import aus Datei nicht möglich";
+"alertCantOpenInputConfFileMessage (%@)" = "Die Datei ‘%@’ konnte nicht gelesen werden.";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "Aktivierungsfehler";
+"alertTunnelActivationFailureMessage" = "Der Tunnel konnte nicht aktiviert werden. Bitte stelle sicher, dass du mit dem Internet verbunden bist.";
+"alertTunnelActivationSavedConfigFailureMessage" = "Tunnelinformationen konnten nicht von der gespeicherten Konfiguration abgerufen werden.";
+"alertTunnelActivationBackendFailureMessage" = "Die Go-Backend-Bibliothek kann nicht aktiviert werden.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "TUN Dateideskriptor kann nicht ermittelt werden.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Netzwerkeinstellungen können nicht auf Tunnelobjekt angewendet werden.";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " Dieser Tunnel hat 'Activate on Demand' aktiviert, so dass dieser Tunnel vom Betriebssystem automatisch aktiviert werden kann. Du kannst 'Activate on Demand' in dieser App deaktivieren, indem du die Tunnelkonfiguration änderst.";
+
+"alertTunnelDNSFailureTitle" = "DNS-Auflösungsfehler";
+"alertTunnelDNSFailureMessage" = "Eine oder mehrere Endpunkt-Domains konnten nicht aufgelöst werden.";
+
+"alertTunnelNameEmptyTitle" = "Kein Name angegeben";
+"alertTunnelNameEmptyMessage" = "Kann Tunnel mit leerem Namen nicht erstellen";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Name bereits vorhanden";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "Ein Tunnel mit diesem Namen ist bereits vorhanden";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Aktivierung läuft";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "Der Tunnel ist bereits aktiv oder wird gerade aktiviert";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "Kann Tunnel nicht auflisten";
+"alertSystemErrorOnAddTunnelTitle" = "Kann Tunnel nicht erstellen";
+"alertSystemErrorOnModifyTunnelTitle" = "Kann Tunnel nicht ändern";
+"alertSystemErrorOnRemoveTunnelTitle" = "Kann Tunnel nicht löschen";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "Aktivierungsfehler";
+"alertTunnelActivationSystemErrorMessage (%@)" = "Der Tunnel konnte nicht aktiviert werden. %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "Die Konfiguration ist ungültig.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "Die Konfiguration ist deaktiviert.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "Verbindung fehlgeschlagen.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "Die Konfiguration ist veraltet.";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Lesen oder speichern der Konfiguration gescheitert.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "Unbekannter Systemfehler.";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "Netzwerke:%@";
+"macMenuNetworksNone" = "Keine Netzwerke.";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "Tunnel verwalten";
+"macMenuImportTunnels" = "Tunnel aus Datei importieren…";
+"macMenuAddEmptyTunnel" = "Leeren Tunnel hinzufügen…";
+"macMenuViewLog" = "Protokoll anzeigen";
+"macMenuExportTunnels" = "Tunnel als Zip exportieren…";
+"macMenuAbout" = "Über WireGuard";
+"macMenuQuit" = "WireGuard beenden";
+
+"macMenuHideApp" = "WireGuard ausblenden";
+"macMenuHideOtherApps" = "Andere ausblenden";
+"macMenuShowAllApps" = "Alle anzeigen";
+
+"macMenuFile" = "Datei";
+"macMenuCloseWindow" = "Fenster schließen";
+
+"macMenuEdit" = "Bearbeiten";
+"macMenuCut" = "Ausschneiden";
+"macMenuCopy" = "Kopieren";
+"macMenuPaste" = "Einfügen";
+"macMenuSelectAll" = "Alle markieren";
+
+"macMenuTunnel" = "Tunnel";
+"macMenuToggleStatus" = "Status umschalten";
+"macMenuEditTunnel" = "Bearbeiten…";
+"macMenuDeleteSelected" = "Ausgewählte löschen";
+
+"macMenuWindow" = "Fenster";
+"macMenuMinimize" = "Minimieren";
+"macMenuZoom" = "Vergrößern";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "WireGuard-Tunnel verwalten";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Möchten Sie ’%@’ wirklich löschen?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Möchten Sie diese %d Tunnel wirklich löschen?";
+"macDeleteTunnelConfirmationAlertInfo" = "Diese Aktion kann nicht rückgängig gemacht werden.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Löschen";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Abbrechen";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Lösche…";
+
+"macButtonImportTunnels" = "Tunnel aus Datei importieren";
+"macSheetButtonImport" = "Importieren";
+
+"macNameFieldExportLog" = "Log speichern unter:";
+"macSheetButtonExportLog" = "Speichern";
+
+"macNameFieldExportZip" = "Tunnel exportieren nach:";
+"macSheetButtonExportZip" = "Speichern";
+
+"macButtonDeleteTunnels (%d)" = "%d Tunnel löschen";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "On-Demand:";
+"macFieldOnDemandSSIDs" = "SSIDs:";
+
+// Mac status display
+
+"macStatus (%@)" = "Status: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "Verwerfen";
+"macEditSave" = "Speichern";
+
+"macAlertNameIsEmpty" = "Ein Name ist erforderlich";
+"macAlertDuplicateName (%@)" = "Ein anderer Tunnel mit dem Namen ‘%@ ’ existiert bereits.";
+
+"macAlertInvalidLine (%@)" = "Ungültige Zeile: ‘%@’.";
+
+"macAlertNoInterface" = "Die Konfiguration muss einen Abschnitt „Interface“ aufweisen.";
+"macAlertMultipleInterfaces" = "Die Konfiguration darf nur einen Abschnitt „Interface“ aufweisen.";
+"macAlertPrivateKeyInvalid" = "Der private Schlüssel ist ungültig.";
+"macAlertListenPortInvalid (%@)" = "Eingangs-Port '%@' ungültig.";
+"macAlertAddressInvalid (%@)" = "Adresse ‘%@’ ungültig.";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ ungültig.";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ ungültig.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Interface enthält nicht erkannten Schlüssel ‘%@’";
+"macAlertInfoUnrecognizedInterfaceKey" = "Gültige Schlüssel sind: 'PrivateKey', 'ListenPort', 'Address', 'DNS' und 'MTU'.";
+
+"macAlertPublicKeyInvalid" = "Der öffentliche Schlüssel ist ungültig";
+"macAlertPreSharedKeyInvalid" = "Der vorab geteilte Schlüssel ist ungültig";
+"macAlertAllowedIPInvalid (%@)" = "Erlaubte IP ‘%@’ ist ungültig";
+"macAlertEndpointInvalid (%@)" = "Endpunkt ‘%@’ ist ungültig";
+"macAlertPersistentKeepliveInvalid (%@)" = "Dauerhafter Keepalive ‘%@’ ist ungültig";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Teilnehmer enthält nicht erkannten Schlüssel ‘%@’";
+"macAlertInfoUnrecognizedPeerKey" = "Gültige Schlüssel sind: 'PublicKey', 'PresharedKey', 'AllowedIPs', 'Endpoint' und 'PersistentKeepalive'";
+
+"macAlertMultipleEntriesForKey (%@)" = "Es darf nur einen Eintrag pro Abschnitt für den Schlüssel ‘%@ ’ geben";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "App-Version: %@";
+"macGoBackendVersion (%@)" = "Go-Backend Version: %@";
+
+// Privacy
+
+"macExportPrivateData" = "exportiere private Schlüssel für Tunnel";
+"macViewPrivateData" = "zeige private Schlüssel für Tunnel";
+"iosExportPrivateData" = "Authentifizieren, um private Schlüssel für Tunnel zu exportieren.";
+"iosViewPrivateData" = "Authentifizieren, um private Schlüssel für Tunnel anzuzeigen.";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "Möchten Sie den Tunnelmanager schließen oder WireGuard ganz beenden?";
+"macConfirmAndQuitAlertInfo" = "Wenn Sie den Tunnelmanager schließen, wird WireGuard weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Wenn Sie den Tunnelmanager schließen, wird WireGuard weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.\n\nBeachten Sie, dass der derzeit aktive Tunnel ('%@') weiterhin aktiv bleibt (auch wenn Sie WireGuard ganz beenden), bis Sie ihn von dieser Anwendung oder über das Netzwerk-Panel in den Systemeinstellungen deaktivieren.";
+"macConfirmAndQuitAlertQuitWireGuard" = "WireGuard beenden";
+"macConfirmAndQuitAlertCloseWindow" = "Tunnelverwaltung schließen";
+
+"macAppExitingWithActiveTunnelMessage" = "WireGuard wird beendet, mit einem aktiven Tunnel";
+"macAppExitingWithActiveTunnelInfo" = "Der Tunnel bleibt nach dem Beenden aktiv. Sie können ihn deaktivieren, indem Sie diese Anwendung erneut öffnen oder in den Systemeinstellungen unter \"Netzwerk\" aktivieren.";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "Tunnel bearbeiten (⌘E)";
+"macToolTipToggleStatus" = "Status umschalten (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "Zeit";
+"macLogColumnTitleLogMessage" = "Protokoll-Nachricht";
+"macLogButtonTitleClose" = "Schließen";
+"macLogButtonTitleSave" = "Speichern…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "Die Konfiguration für diesen Tunnel kann nicht am Schlüsselbund gefunden werden.";
+"macUnusableTunnelInfo" = "Falls dieser Tunnel von einem anderen Benutzer erstellt wurde, kann nur dieser den Tunnel anzeigen, bearbeiten oder aktivieren.";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Tunnel löschen";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store möchte WireGuard aktualisieren";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Bitte deaktivieren Sie \"on-demand\" für den Tunnel ‘%@', deaktivieren Sie ihn und fahren Sie dann mit der Aktualisierung im App Store fort.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Bitte deaktivieren Sie den Tunnel ‘%@’ und fahren Sie dann mit der Aktualisierung im App Store fort.";
+
+// Donation
+
+"donateLink" = "♥ Spende an das WireGuard Projekt";
