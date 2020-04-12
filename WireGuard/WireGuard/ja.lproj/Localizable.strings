@@ -28,10 +28,10 @@
 // Tunnels list alerts
 
 "alertImportedFromMultipleFilesTitle (%d)" = "%d トンネルを作成しました";
-"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "インポートファイルの %2$d 件中の %1$d 件目";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "インポートファイルの %2$d 件中の %1$d トンネルを作成しました";
 
 "alertImportedFromZipTitle (%d)" = "%d トンネルを作成しました";
-"alertImportedFromZipMessage (%1$d of %2$d)" = "zip アーカイブの %2$d 件中の %1$d 件目";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "ZIP アーカイブの %2$d 件中の %1$d トンネルを作成しました";
 
 "alertBadConfigImportTitle" = "トンネルをインポートできません";
 "alertBadConfigImportMessage (%@)" = "ファイル ‘%@’ には有効な WireGuard の設定がありません";
@@ -70,10 +70,10 @@
 "tunnelInterfacePublicKey" = "公開鍵";
 "tunnelInterfaceGenerateKeypair" = "キーペアの生成";
 "tunnelInterfaceAddresses" = "IPアドレス";
-"tunnelInterfaceListenPort" = "待ち受けポート";
+"tunnelInterfaceListenPort" = "待受ポート";
 "tunnelInterfaceMTU" = "MTU";
 "tunnelInterfaceDNS" = "DNS サーバ";
-"tunnelInterfaceStatus" = "Status";
+"tunnelInterfaceStatus" = "状態";
 
 "tunnelSectionTitlePeer" = "ピア";
 
@@ -82,12 +82,12 @@
 "tunnelPeerEndpoint" = "エンドポイント";
 "tunnelPeerPersistentKeepalive" = "持続的キープアライブ";
 "tunnelPeerAllowedIPs" = "Allowed IPs";
-"tunnelPeerRxBytes" = "受信";
-"tunnelPeerTxBytes" = "送信";
+"tunnelPeerRxBytes" = "受信したデータ";
+"tunnelPeerTxBytes" = "送信したデータ";
 "tunnelPeerLastHandshakeTime" = "直近のハンドシェイク";
-"tunnelPeerExcludePrivateIPs" = "プライベートIPは対象外";
+"tunnelPeerExcludePrivateIPs" = "プライベートIPを対象外にする";
 
-"tunnelSectionTitleOnDemand" = "オンデマンドでの有効化";
+"tunnelSectionTitleOnDemand" = "オンデマンド有効化";
 
 "tunnelOnDemandCellular" = "モバイル回線";
 "tunnelOnDemandEthernet" = "イーサネット（有線LAN）";
@@ -99,15 +99,15 @@
 "tunnelOnDemandExceptTheseSSIDs" = "これらのSSIDを除外";
 "tunnelOnDemandOnlySSID (%d)" = "%d 件のSSIDのみ";
 "tunnelOnDemandOnlySSIDs (%d)" = "%d 件のSSIDのみ";
-"tunnelOnDemandExceptSSID (%d)" = "%d 件のSSIDを除外";
-"tunnelOnDemandExceptSSIDs (%d)" = "%d 件のSSIDを除外";
+"tunnelOnDemandExceptSSID (%d)" = "%d 件のSSIDが対象外";
+"tunnelOnDemandExceptSSIDs (%d)" = "%d 件のSSIDが対象外";
 "tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
 
 "tunnelOnDemandSSIDViewTitle" = "SSID";
 "tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID";
 "tunnelOnDemandNoSSIDs" = "SSIDなし";
 "tunnelOnDemandSectionTitleAddSSIDs" = "SSIDの追加";
-"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Add connected: %@";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "接続中の %@ を追加";
 "tunnelOnDemandAddMessageAddNewSSID" = "追加";
 
 "tunnelOnDemandKey" = "オンデマンド";
@@ -131,12 +131,12 @@
 "tunnelEditPlaceholderTextRequired" = "必須";
 "tunnelEditPlaceholderTextOptional" = "任意";
 "tunnelEditPlaceholderTextAutomatic" = "自動";
-"tunnelEditPlaceholderTextStronglyRecommended" = "設定を推奨";
+"tunnelEditPlaceholderTextStronglyRecommended" = "設定を強く推奨";
 "tunnelEditPlaceholderTextOff" = "オフ";
 
 "tunnelPeerPersistentKeepaliveValue (%@)" = "%@ 秒ごと";
-"tunnelHandshakeTimestampNow" = "Now";
-"tunnelHandshakeTimestampSystemClockBackward" = "(システムクロックが遅れている)";
+"tunnelHandshakeTimestampNow" = "今";
+"tunnelHandshakeTimestampSystemClockBackward" = "(システムクロックが巻き戻った)";
 "tunnelHandshakeTimestampAgo (%@)" = "%@ 前";
 "tunnelHandshakeTimestampYear (%d)" = "%d 年";
 "tunnelHandshakeTimestampYears (%d)" = "%d 年";
@@ -149,19 +149,19 @@
 "tunnelHandshakeTimestampSecond (%d)" = "%d 秒";
 "tunnelHandshakeTimestampSeconds (%d)" = "%d 秒";
 
-"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ 時";
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ 時間";
 "tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ 分";
 
 "tunnelPeerPresharedKeyEnabled" = "有効";
 
 // Error alerts while creating / editing a tunnel configuration
-
 /* Alert title for error in the interface data */
+
 "alertInvalidInterfaceTitle" = "無効なインターフェース";
 
 /* Any one of the following alert messages can go with the above title */
-"alertInvalidInterfaceMessageNameRequired" = "インターフェース名は必須です";
-"alertInvalidInterfaceMessagePrivateKeyRequired" = "インターフェースの秘密鍵は必須です";
+"alertInvalidInterfaceMessageNameRequired" = "インターフェース名は必須の設定項目です";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "インターフェースの秘密鍵は必須の設定項目です";
 "alertInvalidInterfaceMessagePrivateKeyInvalid" = "インターフェースの秘密鍵はBase64でエンコードされた32バイトの長さでなければなりません";
 "alertInvalidInterfaceMessageAddressInvalid" = "インターフェースのアドレスはカンマで区切られたIPアドレス（CIDR表記可）のリストでなければなりません";
 "alertInvalidInterfaceMessageListenPortInvalid" = "インターフェースの待受ポートは0から65535の範囲内の値か、または未指定でなければなりません";
@@ -172,13 +172,13 @@
 "alertInvalidPeerTitle" = "無効なピア";
 
 /* Any one of the following alert messages can go with the above title */
-"alertInvalidPeerMessagePublicKeyRequired" = "ピアの公開鍵は必須です";
+"alertInvalidPeerMessagePublicKeyRequired" = "ピアの公開鍵は必須の設定項目です";
 "alertInvalidPeerMessagePublicKeyInvalid" = "ピアの公開鍵はBase64でエンコードされた32バイトの長さでなければなりません";
 "alertInvalidPeerMessagePreSharedKeyInvalid" = "ピアの事前共有鍵はBase64でエンコードされた32バイトの長さでなければなりません";
 "alertInvalidPeerMessageAllowedIPsInvalid" = "ピアのAllowed IPはカンマで区切られたIPアドレス（CIDR表記可）のリストでなければなりません";
 "alertInvalidPeerMessageEndpointInvalid" = "ピアのエンドポイントは 'ホスト:ポート番号' または '[ホスト]:ポート番号' の形式でなければなりません’";
 "alertInvalidPeerMessagePersistentKeepaliveInvalid" = "ピアの持続的キープアライブは0から65535の範囲内の値か、または未指定でなければなりません";
-"alertInvalidPeerMessagePublicKeyDuplicated" = "複数のピアで同じ共有鍵は使用できません";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "複数のピアで同じ公開鍵は使用できません";
 
 // Scanning QR code UI
 
@@ -196,13 +196,13 @@
 "alertScanQRCodeUnreadableQRCodeTitle" = "無効なコード";
 "alertScanQRCodeUnreadableQRCodeMessage" = "スキャンしたコードが解読できません";
 
-"alertScanQRCodeNamePromptTitle" = "スキャンしたトンネル名をつけてください";
+"alertScanQRCodeNamePromptTitle" = "スキャンしたトンネル設定に名前をつけてください";
 
 // Settings UI
 
 "settingsViewTitle" = "設定";
 
-"settingsSectionTitleAbout" = "About";
+"settingsSectionTitleAbout" = "このプログラムについて";
 "settingsVersionKeyWireGuardForIOS" = "WireGuard for iOS";
 "settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
 
@@ -218,27 +218,27 @@
 
 // Log alerts
 
-"alertUnableToRemovePreviousLogTitle" = "ログのエクスポート失敗";
+"alertUnableToRemovePreviousLogTitle" = "ログのエクスポートに失敗";
 "alertUnableToRemovePreviousLogMessage" = "以前のログを消去できませんでした";
 
-"alertUnableToWriteLogTitle" = "ログのエクスポート失敗";
+"alertUnableToWriteLogTitle" = "ログのエクスポートに失敗";
 "alertUnableToWriteLogMessage" = "ファイルにログを書き込めません";
 
 // Zip import / export error alerts
 
 "alertCantOpenInputZipFileTitle" = "ZIPアーカイブの読込不可";
-"alertCantOpenInputZipFileMessage" = "ZIPアーカイブは読み込みできません";
+"alertCantOpenInputZipFileMessage" = "ZIPアーカイブが読み込めません";
 
 "alertCantOpenOutputZipFileForWritingTitle" = "ZIPアーカイブ作成不可";
 "alertCantOpenOutputZipFileForWritingMessage" = "ZIPファイルを書き込み用に開けません";
 
-"alertBadArchiveTitle" = "ZIPアーカイブ読込不可";
+"alertBadArchiveTitle" = "ZIPアーカイブの読込不可";
 "alertBadArchiveMessage" = "不良なZIPアーカイブファイルです";
 
 "alertNoTunnelsToExportTitle" = "エクスポート対象なし";
 "alertNoTunnelsToExportMessage" = "エクスポートできるトンネルが1つもありません";
 
-"alertNoTunnelsInImportedZipArchiveTitle" = "ZIPアーカイブにトンネルなし";
+"alertNoTunnelsInImportedZipArchiveTitle" = "ZIPアーカイブにトンネル設定がない";
 "alertNoTunnelsInImportedZipArchiveMessage" = "ZIPアーカイブ内に拡張子 .conf のトンネル設定ファイルが見つかりません";
 
 // Conf import error alerts
@@ -252,12 +252,12 @@
 "alertTunnelActivationFailureMessage" = "トンネルを有効化できませんでした。インターネットに接続しているか確認してください。";
 "alertTunnelActivationSavedConfigFailureMessage" = "保存済みの設定からトンネルの情報を取得できませんでした";
 "alertTunnelActivationBackendFailureMessage" = "Go バックエンドライブラリを起動できません";
-"alertTunnelActivationFileDescriptorFailureMessage" = "TUNデバイスのファイルディスクリプタを特定できません";
+"alertTunnelActivationFileDescriptorFailureMessage" = "TUN デバイスのファイルディスクリプタを特定できません";
 "alertTunnelActivationSetNetworkSettingsMessage" = "トンネルオブジェクトにネットワーク設定を適用できません";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " このトンネルは「オンデマンド有効化」が有効なため、OSによって自動的に有効化が行われます。トンネル設定から「オンデマンド有効化」をオフにすることもできます。";
+"alertTunnelActivationFailureOnDemandAddendum" = " このトンネルは「オンデマンド有効化」が有効なため、OSによって自動的に有効化が行われます。このアプリのトンネル設定から「オンデマンド有効化」をオフにできます。";
 
-"alertTunnelDNSFailureTitle" = "DNSの名前解決失敗";
+"alertTunnelDNSFailureTitle" = "DNSによる名前解決失敗";
 "alertTunnelDNSFailureMessage" = "エンドポイントのドメイン名が解決できませんでした";
 
 "alertTunnelNameEmptyTitle" = "名前が未指定";
@@ -287,7 +287,7 @@
 "alertSystemErrorMessageTunnelConfigurationInvalid" = "設定が不正です";
 "alertSystemErrorMessageTunnelConfigurationDisabled" = "設定が無効化されています。";
 "alertSystemErrorMessageTunnelConnectionFailed" = "接続に失敗しました。";
-"alertSystemErrorMessageTunnelConfigurationStale" = "設定は失効しています。";
+"alertSystemErrorMessageTunnelConfigurationStale" = "設定が他のプロセスによって更新されています";
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "設定の読み取り、または書き込みに失敗しました。";
 "alertSystemErrorMessageTunnelConfigurationUnknown" = "不明なシステムエラー。";
 
@@ -297,17 +297,17 @@
 "macMenuNetworksNone" = "ネットワーク: なし";
 
 "macMenuTitle" = "WireGuard";
-"macMenuManageTunnels" = "Tunnelの管理";
+"macMenuManageTunnels" = "トンネルの管理";
 "macMenuImportTunnels" = "ファイルからトンネルをインポート…";
-"macMenuAddEmptyTunnel" = "空の状態のトンネルを追加…";
-"macMenuViewLog" = "ログを参照";
-"macMenuExportTunnels" = "トンネルをZIPにエクスポート…";
-"macMenuAbout" = "WireGuardについて";
+"macMenuAddEmptyTunnel" = "設定が空のトンネルを追加…";
+"macMenuViewLog" = "ログの参照";
+"macMenuExportTunnels" = "トンネル設定をZIPにエクスポート…";
+"macMenuAbout" = "WireGuard について";
 "macMenuQuit" = "WireGuardを終了";
 
-"macMenuHideApp" = "WireGuardを隠す";
+"macMenuHideApp" = "WireGuard を隠す";
 "macMenuHideOtherApps" = "ほかを隠す";
-"macMenuShowAllApps" = "すべて表示";
+"macMenuShowAllApps" = "すべてを表示";
 
 "macMenuFile" = "ファイル";
 "macMenuCloseWindow" = "ウィンドウを閉じる";
@@ -316,7 +316,7 @@
 "macMenuCut" = "切り取り";
 "macMenuCopy" = "コピー";
 "macMenuPaste" = "貼り付け";
-"macMenuSelectAll" = "すべて選択";
+"macMenuSelectAll" = "すべてを選択";
 
 "macMenuTunnel" = "トンネル";
 "macMenuToggleStatus" = "ステータスを切り替え";
@@ -367,31 +367,31 @@
 "macEditSave" = "保存";
 
 "macAlertNameIsEmpty" = "名前は必須です";
-"macAlertDuplicateName (%@)" = "‘%@’ の名前のトンネルはすでに存在します。";
+"macAlertDuplicateName (%@)" = "‘%@’ という名前のトンネルはすでに存在します。";
 
 "macAlertInvalidLine (%@)" = "不正な行: ‘%@’。";
 
-"macAlertNoInterface" = "設定には ‘Interface’ セクションがなければなりません。";
-"macAlertMultipleInterfaces" = "設定内の 'Interface' セクションは1つだけでなければなりません。";
+"macAlertNoInterface" = "設定には ‘Interface’ セクションが必須です";
+"macAlertMultipleInterfaces" = "設定内の 'Interface' セクションは1つだけです";
 "macAlertPrivateKeyInvalid" = "秘密鍵が不正です。";
-"macAlertListenPortInvalid (%@)" = "待ち受けポート ‘%@’ は不正です。";
-"macAlertAddressInvalid (%@)" = "アドレス ‘%@’ は不正です。";
-"macAlertDNSInvalid (%@)" = "DNS ‘%@’ は不正です。";
-"macAlertMTUInvalid (%@)" = "MTU ‘%@’ は不正です。";
+"macAlertListenPortInvalid (%@)" = "待受ポート ‘%@’ は無効です。";
+"macAlertAddressInvalid (%@)" = "アドレス ‘%@’ は無効です。";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ は無効です。";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ は無効です。";
 
 "macAlertUnrecognizedInterfaceKey (%@)" = "Interfaceに認識不能なキー項目 ‘%@’ が含まれています";
 "macAlertInfoUnrecognizedInterfaceKey" = "有効なキー項目: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’, ‘MTU’";
 
 "macAlertPublicKeyInvalid" = "公開鍵が不正です";
 "macAlertPreSharedKeyInvalid" = "事前共有鍵が不正です";
-"macAlertAllowedIPInvalid (%@)" = "Allowed IP ‘%@’ が不正です";
-"macAlertEndpointInvalid (%@)" = "Endpoint ‘%@’ が不正です";
-"macAlertPersistentKeepliveInvalid (%@)" = "持続的キープアライブの値 ‘%@’ が不正です";
+"macAlertAllowedIPInvalid (%@)" = "Allowed IP ‘%@’ は無効です";
+"macAlertEndpointInvalid (%@)" = "Endpoint ‘%@’ は無効です";
+"macAlertPersistentKeepliveInvalid (%@)" = "持続的キープアライブの値 ‘%@’ は無効です";
 
 "macAlertUnrecognizedPeerKey (%@)" = "Peerに認識不能なキー項目 ‘%@’ が含まれています";
 "macAlertInfoUnrecognizedPeerKey" = "有効なキー項目: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’, ‘PersistentKeepalive’";
 
-"macAlertMultipleEntriesForKey (%@)" = "キー項目 ‘%@’ は各セクションに1エントリであるべきです";
+"macAlertMultipleEntriesForKey (%@)" = "キー項目 ‘%@’ は各セクションに1エントリだけにします";
 
 // Mac about dialog
 
@@ -400,10 +400,10 @@
 
 // Privacy
 
-"macExportPrivateData" = "トンネルの秘密鍵をエクスポートする";
-"macViewPrivateData" = "トンネルの秘密鍵を表示する";
-"iosExportPrivateData" = "トンネルの秘密鍵をエクスポートするための認証を行います";
-"iosViewPrivateData" = "トンネルの秘密鍵を表示するための認証を行います";
+"macExportPrivateData" = "トンネルの秘密鍵をエクスポート";
+"macViewPrivateData" = "トンネルの秘密鍵を表示";
+"iosExportPrivateData" = "トンネルの秘密鍵をエクスポートするために認証を行います";
+"iosViewPrivateData" = "トンネルの秘密鍵を表示するために認証を行います";
 
 // Mac alert
 
@@ -413,7 +413,7 @@
 "macConfirmAndQuitAlertQuitWireGuard" = "WireGuardを終了";
 "macConfirmAndQuitAlertCloseWindow" = "トンネル管理画面を閉じる";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard終了時点で有効なトンネルが残っています。";
+"macAppExitingWithActiveTunnelMessage" = "有効化中のトンネルが残ったまま WireGuard を終了しようとしています";
 "macAppExitingWithActiveTunnelInfo" = "終了後もトンネルは有効なままです。無効化はこのアプリケーションを再度起動して行うか、システム環境設定のネットワークパネルから行います。";
 
 // Mac tooltip
@@ -430,16 +430,16 @@
 
 // Mac unusable tunnel view
 
-"macUnusableTunnelMessage" = "このトンネルの設定はkeychain内に見つかりません。";
-"macUnusableTunnelInfo" = "このトンネルが他のユーザーによって作成されたものである場合、そのユーザーだけがこのトンネルの表示、編集、有効化をすることができます。";
+"macUnusableTunnelMessage" = "このトンネルの設定がキーチェーン内に見つかりません。";
+"macUnusableTunnelInfo" = "このトンネルが他のユーザーによって作成されたものである場合、そのユーザーだけがこのトンネルの表示、編集、有効化ができます。";
 "macUnusableTunnelButtonTitleDeleteTunnel" = "トンネルを削除";
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store に WireGuard 更新があります。";
+"macAppStoreUpdatingAlertMessage" = "App Store に WireGuard の更新版があります";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "トンネル '%@' のオンデマンド有効化を解除し、トンネルを無効にしてから App Store での更新を行ってください。";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "トンネル ‘%@’ を無効にしてから App Store での更新を行ってください。";
 
 // Donation
 
-"donateLink" = "♥ WireGuard プロジェクトに寄付をお願いします！";
+"donateLink" = "♥ WireGuard プロジェクトに寄付する";
