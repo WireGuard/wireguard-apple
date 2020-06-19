@@ -62,14 +62,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
                     return
                 }
-                var ifnameSize = socklen_t(IFNAMSIZ)
-                let ifnamePtr = UnsafeMutablePointer<CChar>.allocate(capacity: Int(ifnameSize))
-                ifnamePtr.initialize(repeating: 0, count: Int(ifnameSize))
-                if getsockopt(fileDescriptor, 2 /* SYSPROTO_CONTROL */, 2 /* UTUN_OPT_IFNAME */, ifnamePtr, &ifnameSize) == 0 {
-                    self.ifname = String(cString: ifnamePtr)
-                }
-                ifnamePtr.deallocate()
+
+                self.ifname = Self.getInterfaceName(fileDescriptor: fileDescriptor)
                 wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
+
                 let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration()
                     .withCString { return wgTurnOn($0, fileDescriptor) }
                 if handle < 0 {
@@ -119,6 +115,28 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             free(settings)
         } else {
             completionHandler(nil)
+        }
+    }
+
+    private class func getInterfaceName(fileDescriptor: Int32) -> String? {
+        var ifnameBytes = [CChar](repeating: 0, count: Int(IF_NAMESIZE))
+
+        return ifnameBytes.withUnsafeMutableBufferPointer { bufferPointer -> String? in
+            guard let baseAddress = bufferPointer.baseAddress else { return nil }
+
+            var ifnameSize = socklen_t(bufferPointer.count)
+            let result = getsockopt(
+                fileDescriptor,
+                2 /* SYSPROTO_CONTROL */,
+                2 /* UTUN_OPT_IFNAME */,
+                baseAddress, &ifnameSize
+            )
+
+            if result == 0 {
+                return String(cString: baseAddress)
+            } else {
+                return nil
+            }
         }
     }
 
