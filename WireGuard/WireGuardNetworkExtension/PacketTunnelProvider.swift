@@ -52,7 +52,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
             } else {
                 self.networkMonitor = NWPathMonitor()
-                self.networkMonitor!.pathUpdateHandler = self.pathUpdate
+                self.networkMonitor!.pathUpdateHandler = { [weak self] path in
+                    self?.pathUpdate(path: path)
+                }
                 self.networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
 
                 let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
