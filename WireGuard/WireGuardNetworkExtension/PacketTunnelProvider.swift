@@ -8,6 +8,8 @@ import os.log
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
+    private let dispatchQueue = DispatchQueue(label: "PacketTunnel")
+
     private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
     private var ifname: String?
@@ -18,105 +20,115 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
-        let activationAttemptId = options?["activationAttemptId"] as? String
-        let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
+        dispatchQueue.async {
+            let activationAttemptId = options?["activationAttemptId"] as? String
+            let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
 
-        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
-            let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
-                errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
+                let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
+                    errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                    startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                    return
+            }
+
+            self.configureLogger()
+            #if os(macOS)
+            wgEnableRoaming(true)
+            #endif
+
+            wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
+
+            let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
+            guard let resolvedEndpoints = DNSResolver.resolveSync(endpoints: endpoints) else {
+                errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
+                startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure)
                 return
-        }
+            }
+            assert(endpoints.count == resolvedEndpoints.count)
 
-        configureLogger()
-        #if os(macOS)
-        wgEnableRoaming(true)
-        #endif
+            self.packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
 
-        wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
+            self.setTunnelNetworkSettings(self.packetTunnelSettingsGenerator!.generateNetworkSettings()) { error in
+                self.dispatchQueue.async {
+                    if let error = error {
+                        wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
+                        errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                        startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                    } else {
+                        self.networkMonitor = NWPathMonitor()
+                        self.networkMonitor!.pathUpdateHandler = { [weak self] path in
+                            self?.pathUpdate(path: path)
+                        }
+                        self.networkMonitor!.start(queue: self.dispatchQueue)
 
-        let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-        guard let resolvedEndpoints = DNSResolver.resolveSync(endpoints: endpoints) else {
-            errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
-            startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure)
-            return
-        }
-        assert(endpoints.count == resolvedEndpoints.count)
+                        let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
+                        if fileDescriptor < 0 {
+                            wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
+                            errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                            return
+                        }
 
-        packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
+                        self.ifname = Self.getInterfaceName(fileDescriptor: fileDescriptor)
+                        wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
 
-        setTunnelNetworkSettings(packetTunnelSettingsGenerator!.generateNetworkSettings()) { error in
-            if let error = error {
-                wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
-                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
-                startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
-            } else {
-                self.networkMonitor = NWPathMonitor()
-                self.networkMonitor!.pathUpdateHandler = { [weak self] path in
-                    self?.pathUpdate(path: path)
+                        let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration()
+                            .withCString { return wgTurnOn($0, fileDescriptor) }
+                        if handle < 0 {
+                            wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
+                            errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
+                            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
+                            return
+                        }
+                        self.handle = handle
+                        startTunnelCompletionHandler(nil)
+                    }
                 }
-                self.networkMonitor!.start(queue: DispatchQueue(label: "NetworkMonitor"))
-
-                let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
-                if fileDescriptor < 0 {
-                    wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
-                    errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-                    startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-                    return
-                }
-
-                self.ifname = Self.getInterfaceName(fileDescriptor: fileDescriptor)
-                wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
-
-                let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration()
-                    .withCString { return wgTurnOn($0, fileDescriptor) }
-                if handle < 0 {
-                    wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
-                    errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
-                    startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
-                    return
-                }
-                self.handle = handle
-                startTunnelCompletionHandler(nil)
             }
         }
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        networkMonitor?.cancel()
-        networkMonitor = nil
+        dispatchQueue.async {
+            self.networkMonitor?.cancel()
+            self.networkMonitor = nil
 
-        ErrorNotifier.removeLastErrorFile()
+            ErrorNotifier.removeLastErrorFile()
 
-        wg_log(.info, staticMessage: "Stopping tunnel")
-        if let handle = handle {
-            wgTurnOff(handle)
+            wg_log(.info, staticMessage: "Stopping tunnel")
+            if let handle = self.handle {
+                wgTurnOff(handle)
+            }
+            completionHandler()
+
+            #if os(macOS)
+            // HACK: This is a filthy hack to work around Apple bug 32073323 (dup'd by us as 47526107).
+            // Remove it when they finally fix this upstream and the fix has been rolled out to
+            // sufficient quantities of users.
+            exit(0)
+            #endif
         }
-        completionHandler()
-
-        #if os(macOS)
-        // HACK: This is a filthy hack to work around Apple bug 32073323 (dup'd by us as 47526107).
-        // Remove it when they finally fix this upstream and the fix has been rolled out to
-        // sufficient quantities of users.
-        exit(0)
-        #endif
     }
 
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)? = nil) {
-        guard let completionHandler = completionHandler else { return }
-        guard let handle = handle else {
-            completionHandler(nil)
-            return
-        }
-        if messageData.count == 1 && messageData[0] == 0 {
-            guard let settings = wgGetConfig(handle) else {
+        dispatchQueue.async {
+            guard let completionHandler = completionHandler else { return }
+            guard let handle = self.handle else {
                 completionHandler(nil)
                 return
             }
-            completionHandler(String(cString: settings).data(using: .utf8)!)
-            free(settings)
-        } else {
-            completionHandler(nil)
+
+            if messageData.count == 1 && messageData[0] == 0 {
+                if let settings = wgGetConfig(handle) {
+                    let data = String(cString: settings).data(using: .utf8)!
+                    completionHandler(data)
+                    free(settings)
+                } else {
+                    completionHandler(nil)
+                }
+            } else {
+                completionHandler(nil)
+            }
         }
     }
 
