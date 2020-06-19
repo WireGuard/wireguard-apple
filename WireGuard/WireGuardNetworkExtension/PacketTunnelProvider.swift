@@ -8,7 +8,7 @@ import os.log
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
-    private let dispatchQueue = DispatchQueue(label: "PacketTunnel")
+    private let dispatchQueue = DispatchQueue(label: "PacketTunnel", qos: .utility)
 
     private var handle: Int32?
     private var networkMonitor: NWPathMonitor?
