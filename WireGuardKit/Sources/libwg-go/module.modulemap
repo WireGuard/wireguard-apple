@@ -1,0 +1,5 @@
+module libwg_go {
+    umbrella header "include/libwg_go.h"
+    link "wg-go"
+    export *
+}

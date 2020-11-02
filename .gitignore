@@ -31,6 +31,10 @@ xcuserdata
 *.hmap
 *.ipa
 
+# Swift Package Manager
+.swiftpm
+.build/
+
 # Fastlane
 *.app.dSYM.zip
 *.mobileprovision
