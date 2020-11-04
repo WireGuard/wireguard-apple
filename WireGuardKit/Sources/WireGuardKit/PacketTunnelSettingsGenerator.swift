@@ -19,7 +19,7 @@ class PacketTunnelSettingsGenerator {
         var wgSettings = ""
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
-            if let endpoint = resolvedEndpoints[index]?.withReresolvedIP() {
+            if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             }
@@ -42,7 +42,7 @@ class PacketTunnelSettingsGenerator {
             if let preSharedKey = peer.preSharedKey?.hexKey {
                 wgSettings.append("preshared_key=\(preSharedKey)\n")
             }
-            if let endpoint = resolvedEndpoints[index]?.withReresolvedIP() {
+            if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             }
