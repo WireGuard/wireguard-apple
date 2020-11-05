@@ -7,9 +7,9 @@ package main
 
 // #include <stdlib.h>
 // #include <sys/types.h>
-// static void callLogger(void *func, int level, const char *msg)
+// static void callLogger(void *func, void *ctx, int level, const char *msg)
 // {
-// 	((void(*)(int, const char *))func)(level, msg);
+// 	((void(*)(void *, int, const char *))func)(ctx, level, msg);
 // }
 import "C"
 
@@ -30,6 +30,7 @@ import (
 )
 
 var loggerFunc unsafe.Pointer
+var loggerCtx unsafe.Pointer
 var versionString *C.char
 
 type CLogger struct {
@@ -41,7 +42,7 @@ func (l *CLogger) Write(p []byte) (int, error) {
 		return 0, errors.New("No logger initialized")
 	}
 	message := C.CString(string(p))
-	C.callLogger(loggerFunc, l.level, message)
+	C.callLogger(loggerFunc, loggerCtx, l.level, message)
 	C.free(unsafe.Pointer(message))
 	return len(p), nil
 }
@@ -66,7 +67,7 @@ func init() {
 				n := runtime.Stack(buf, true)
 				buf[n] = 0
 				if uintptr(loggerFunc) != 0 {
-					C.callLogger(loggerFunc, 0, (*C.char)(unsafe.Pointer(&buf[0])))
+					C.callLogger(loggerFunc, loggerCtx, 0, (*C.char)(unsafe.Pointer(&buf[0])))
 				}
 			}
 		}
@@ -79,7 +80,8 @@ func wgEnableRoaming(enabled bool) {
 }
 
 //export wgSetLogger
-func wgSetLogger(loggerFn uintptr) {
+func wgSetLogger(context, loggerFn uintptr) {
+	loggerCtx = unsafe.Pointer(context)
 	loggerFunc = unsafe.Pointer(loggerFn)
 }
 
