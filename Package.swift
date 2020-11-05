@@ -16,8 +16,13 @@ let package = Package(
     targets: [
         .target(
             name: "WireGuardKit",
-            dependencies: ["libwg-go"],
+            dependencies: ["libwg-go", "WireGuardKitCTarget"],
             path: "WireGuardKit/Sources/WireGuardKit"
+        ),
+        .target(
+            name: "WireGuardKitCTarget",
+            dependencies: [],
+            path: "WireGuardKit/Sources/WireGuardKitCTarget"
         ),
         .target(
             name: "libwg-go",
