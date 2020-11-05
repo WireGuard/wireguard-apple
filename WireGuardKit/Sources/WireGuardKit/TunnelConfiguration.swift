@@ -3,14 +3,14 @@
 
 import Foundation
 
-final class TunnelConfiguration {
-    var name: String?
-    var interface: InterfaceConfiguration
-    let peers: [PeerConfiguration]
+public final class TunnelConfiguration {
+    public var name: String?
+    public var interface: InterfaceConfiguration
+    public let peers: [PeerConfiguration]
 
-    static let keyLength = 32
+    public static let keyLength = 32
 
-    init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
+    public init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
         self.name = name
@@ -24,7 +24,7 @@ final class TunnelConfiguration {
 }
 
 extension TunnelConfiguration: Equatable {
-    static func == (lhs: TunnelConfiguration, rhs: TunnelConfiguration) -> Bool {
+    public static func == (lhs: TunnelConfiguration, rhs: TunnelConfiguration) -> Bool {
         return lhs.name == rhs.name &&
             lhs.interface == rhs.interface &&
             Set(lhs.peers) == Set(rhs.peers)

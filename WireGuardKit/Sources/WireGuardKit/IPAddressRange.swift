@@ -4,9 +4,9 @@
 import Foundation
 import Network
 
-struct IPAddressRange {
-    let address: IPAddress
-    var networkPrefixLength: UInt8
+public struct IPAddressRange {
+    public let address: IPAddress
+    public let networkPrefixLength: UInt8
 
     init(address: IPAddress, networkPrefixLength: UInt8) {
         self.address = address
@@ -15,24 +15,24 @@ struct IPAddressRange {
 }
 
 extension IPAddressRange: Equatable {
-    static func == (lhs: IPAddressRange, rhs: IPAddressRange) -> Bool {
+    public static func == (lhs: IPAddressRange, rhs: IPAddressRange) -> Bool {
         return lhs.address.rawValue == rhs.address.rawValue && lhs.networkPrefixLength == rhs.networkPrefixLength
     }
 }
 
 extension IPAddressRange: Hashable {
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(address.rawValue)
         hasher.combine(networkPrefixLength)
     }
 }
 
 extension IPAddressRange {
-    var stringRepresentation: String {
+    public var stringRepresentation: String {
         return "\(address)/\(networkPrefixLength)"
     }
 
-    init?(from string: String) {
+    public init?(from string: String) {
         guard let parsed = IPAddressRange.parseAddressString(string) else { return nil }
         address = parsed.0
         networkPrefixLength = parsed.1

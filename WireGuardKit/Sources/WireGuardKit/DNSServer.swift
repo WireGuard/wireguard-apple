@@ -4,26 +4,26 @@
 import Foundation
 import Network
 
-struct DNSServer {
-    let address: IPAddress
+public struct DNSServer {
+    public let address: IPAddress
 
-    init(address: IPAddress) {
+    public init(address: IPAddress) {
         self.address = address
     }
 }
 
 extension DNSServer: Equatable {
-    static func == (lhs: DNSServer, rhs: DNSServer) -> Bool {
+    public static func == (lhs: DNSServer, rhs: DNSServer) -> Bool {
         return lhs.address.rawValue == rhs.address.rawValue
     }
 }
 
 extension DNSServer {
-    var stringRepresentation: String {
+    public var stringRepresentation: String {
         return "\(address)"
     }
 
-    init?(from addressString: String) {
+    public init?(from addressString: String) {
         if let addr = IPv4Address(addressString) {
             address = addr
         } else if let addr = IPv6Address(addressString) {
