@@ -18,10 +18,10 @@ $ cp WireGuard/WireGuard/Config/Developer.xcconfig.template WireGuard/WireGuard/
 $ vim WireGuard/WireGuard/Config/Developer.xcconfig
 ```
 
-- Install swiftlint and go 1.13.4:
+- Install swiftlint:
 
 ```
-$ brew install swiftlint go
+$ brew install swiftlint
 ```
 
 - Open project in Xcode:
