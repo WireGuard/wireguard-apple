@@ -166,13 +166,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5892BFC525593F0C000E678D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6FF4AC0C211EC46F002C96EB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6FDAA03421CE69D000FA6925;
-			remoteInfo = WireGuardGoBridgemacOS;
-		};
 		6F5D0C20218352EF000F85AD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 6FF4AC0C211EC46F002C96EB /* Project object */;
@@ -805,7 +798,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				5892BFC625593F0C000E678D /* PBXTargetDependency */,
 				6F70E23B22109DD3008BDFB4 /* PBXTargetDependency */,
 				6FB1BD9821D4BFE700A991BF /* PBXTargetDependency */,
 			);
@@ -1324,11 +1316,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5892BFC625593F0C000E678D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6FDAA03421CE69D000FA6925 /* WireGuardGoBridgemacOS */;
-			targetProxy = 5892BFC525593F0C000E678D /* PBXContainerItemProxy */;
-		};
 		6F5D0C21218352EF000F85AD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6F5D0C19218352EF000F85AD /* WireGuardNetworkExtensioniOS */;
