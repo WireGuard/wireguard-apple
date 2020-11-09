@@ -788,7 +788,6 @@
 			buildPhases = (
 				6FB1BDB821D4FA9100A991BF /* Strip Trailing Whitespace */,
 				6FB1BDB921D4FAD000A991BF /* Swiftlint */,
-				6FB1BDBA21D4FB0000A991BF /* Extract wireguard-go Version */,
 				6FB1BD5921D2607A00A991BF /* Sources */,
 				6FB1BD5A21D2607A00A991BF /* Frameworks */,
 				6FB1BD5B21D2607A00A991BF /* Resources */,
@@ -837,7 +836,6 @@
 			buildPhases = (
 				5F784E5721CDF6DD00B8D9A0 /* Strip Trailing Whitespace */,
 				5F45417A21C0902400994C13 /* Swiftlint */,
-				6B87860E2189532500C099FB /* Extract wireguard-go Version */,
 				6FF4AC10211EC46F002C96EB /* Sources */,
 				6FF4AC11211EC46F002C96EB /* Frameworks */,
 				6FF4AC12211EC46F002C96EB /* Resources */,
@@ -1048,25 +1046,6 @@
 			shellPath = /bin/sh;
 			shellScript = "find . -name '*.swift' -exec sed -i '' -E 's/[[:space:]]+$//g' {} +\n";
 		};
-		6B87860E2189532500C099FB /* Extract wireguard-go Version */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Extract wireguard-go Version";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "exec make -C \"$PROJECT_DIR/../wireguard-go-bridge\" version-header\n";
-			showEnvVarsInLog = 0;
-		};
 		6FB1BDB421D4F5CF00A991BF /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1120,25 +1099,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\nswiftlint\nelse\necho \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		6FB1BDBA21D4FB0000A991BF /* Extract wireguard-go Version */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Extract wireguard-go Version";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "exec make -C \"$PROJECT_DIR/../wireguard-go-bridge\" version-header\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
