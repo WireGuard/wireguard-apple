@@ -3,6 +3,7 @@
 
 import Cocoa
 import ServiceManagement
+import WireGuardKit
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -208,7 +209,7 @@ extension AppDelegate {
         }
         let appVersionString = [
             tr(format: "macAppVersion (%@)", appVersion),
-            tr(format: "macGoBackendVersion (%@)", WIREGUARD_GO_VERSION)
+            tr(format: "macGoBackendVersion (%@)", getWireGuardVersion())
         ].joined(separator: "\n")
         let donateString = NSMutableAttributedString(string: tr("donateLink"))
         donateString.addAttribute(.link, value: "https://www.wireguard.com/donations/", range: NSRange(location: 0, length: donateString.length))

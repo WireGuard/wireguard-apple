@@ -3,6 +3,7 @@
 
 import UIKit
 import os.log
+import WireGuardKit
 
 class SettingsTableViewController: UITableViewController {
 
@@ -152,7 +153,7 @@ extension SettingsTableViewController {
                 }
                 cell.value = appVersion
             } else if field == .goBackendVersion {
-                cell.value = WIREGUARD_GO_VERSION
+                cell.value = getWireGuardVersion()
             }
             return cell
         } else if field == .exportZipArchive {

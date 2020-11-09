@@ -2,6 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import NetworkExtension
+import WireGuardKit
 
 // Creates mock tunnels for the iOS Simulator.
 

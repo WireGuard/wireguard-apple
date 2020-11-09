@@ -2,9 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Foundation
-import Network
 import NetworkExtension
-import os.log
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 

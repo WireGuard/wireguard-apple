@@ -2,6 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Cocoa
+import WireGuardKit
 
 // We have this in a separate file because we don't want the network extension
 // code to see WireGuardAppError and tr(). Also, this extension is used only on macOS.

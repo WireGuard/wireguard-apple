@@ -4,6 +4,7 @@
 import UIKit
 import MobileCoreServices
 import UserNotifications
+import WireGuardKit
 
 class TunnelsListTableViewController: UIViewController {
 

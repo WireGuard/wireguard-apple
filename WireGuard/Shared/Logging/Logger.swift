@@ -3,6 +3,7 @@
 
 import Foundation
 import os.log
+import WireGuardKit
 
 public class Logger {
     enum LoggerError: Error {
@@ -49,7 +50,7 @@ public class Logger {
         if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             appVersion += " (\(appBuild))"
         }
-        let goBackendVersion = WIREGUARD_GO_VERSION
+        let goBackendVersion = getWireGuardVersion()
         Logger.global?.log(message: "App version: \(appVersion); Go backend version: \(goBackendVersion)")
     }
 }

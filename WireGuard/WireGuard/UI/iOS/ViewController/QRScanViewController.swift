@@ -3,6 +3,7 @@
 
 import AVFoundation
 import UIKit
+import WireGuardKit
 
 protocol QRScanViewControllerDelegate: class {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController, completionHandler: (() -> Void)?)

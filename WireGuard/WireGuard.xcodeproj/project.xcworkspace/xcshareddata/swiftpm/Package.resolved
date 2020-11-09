@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "WireGuardKit",
+        "repositoryURL": "https://git.zx2c4.com/wireguard-apple",
+        "state": {
+          "branch": "am/wg-adapter-rebased",
+          "revision": "ca605363c05cda61fbd21e031f3fb5eee7f259c8",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
