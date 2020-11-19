@@ -3,99 +3,87 @@
 
 import Foundation
 import NetworkExtension
+import WireGuardKit
+import os
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
-    private let dispatchQueue = DispatchQueue(label: "PacketTunnel", qos: .utility)
+    private lazy var adapter = WireGuardAdapter(with: self)
 
-    private var handle: Int32?
-    private var networkMonitor: NWPathMonitor?
-    private var ifname: String?
-    private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
+    override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+        let activationAttemptId = options?["activationAttemptId"] as? String
+        let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
 
-    deinit {
-        networkMonitor?.cancel()
-    }
+        Logger.configureGlobal(tagged: "NET", withFilePath: FileManager.logFileURL?.path)
 
-    override func startTunnel(options: [String: NSObject]?, completionHandler startTunnelCompletionHandler: @escaping (Error?) -> Void) {
-        dispatchQueue.async {
-            let activationAttemptId = options?["activationAttemptId"] as? String
-            let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
+        wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
 
-            guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
-                let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
-                    errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                    startTunnelCompletionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                    return
-            }
+        guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
+              let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
+            errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            return
+        }
 
-            self.configureLogger()
-            #if os(macOS)
-            wgEnableRoaming(true)
-            #endif
+        // Setup WireGuard logger
+        adapter.setLogHandler { logLevel, message in
+            wg_log(logLevel.osLogLevel, message: message)
+        }
 
-            wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
+        // Start the tunnel
+        adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
+            guard let adapterError = adapterError else {
+                let interfaceName = self.adapter.interfaceName ?? "unknown"
 
-            let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
-            guard let resolvedEndpoints = DNSResolver.resolveSync(endpoints: endpoints) else {
-                errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
-                startTunnelCompletionHandler(PacketTunnelProviderError.dnsResolutionFailure)
+                wg_log(.info, message: "Tunnel interface is \(interfaceName)")
+
+                completionHandler(nil)
                 return
             }
-            assert(endpoints.count == resolvedEndpoints.count)
 
-            self.packetTunnelSettingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
+            switch adapterError {
+            case .cannotLocateSocketDescriptor:
+                wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                completionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
 
-            self.setTunnelNetworkSettings(self.packetTunnelSettingsGenerator!.generateNetworkSettings()) { error in
-                self.dispatchQueue.async {
-                    if let error = error {
-                        wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
-                        errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
-                        startTunnelCompletionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
-                    } else {
-                        self.networkMonitor = NWPathMonitor()
-                        self.networkMonitor!.pathUpdateHandler = { [weak self] path in
-                            self?.pathUpdate(path: path)
-                        }
-                        self.networkMonitor!.start(queue: self.dispatchQueue)
+            case .dnsResolution(let dnsErrors):
+                let hostnamesWithDnsResolutionFailure = dnsErrors.map { $0.address }
+                    .joined(separator: ", ")
+                wg_log(.error, message: "DNS resolution failed for the following hostnames: \(hostnamesWithDnsResolutionFailure)")
+                errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
+                completionHandler(PacketTunnelProviderError.dnsResolutionFailure)
 
-                        let fileDescriptor = (self.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32) ?? -1
-                        if fileDescriptor < 0 {
-                            wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
-                            errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-                            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-                            return
-                        }
+            case .setNetworkSettings(let error):
+                wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
 
-                        self.ifname = Self.getInterfaceName(fileDescriptor: fileDescriptor)
-                        wg_log(.info, message: "Tunnel interface is \(self.ifname ?? "unknown")")
+            case .setNetworkSettingsTimeout:
+                wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings timing out")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
 
-                        let handle = self.packetTunnelSettingsGenerator!.uapiConfiguration()
-                            .withCString { return wgTurnOn($0, fileDescriptor) }
-                        if handle < 0 {
-                            wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(handle)")
-                            errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
-                            startTunnelCompletionHandler(PacketTunnelProviderError.couldNotStartBackend)
-                            return
-                        }
-                        self.handle = handle
-                        startTunnelCompletionHandler(nil)
-                    }
-                }
+            case .startWireGuardBackend(let errorCode):
+                wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(errorCode)")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
+                completionHandler(PacketTunnelProviderError.couldNotStartBackend)
+
+            case .invalidState:
+                // Must never happen
+                fatalError()
             }
         }
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        dispatchQueue.async {
-            self.networkMonitor?.cancel()
-            self.networkMonitor = nil
+        ErrorNotifier.removeLastErrorFile()
 
-            ErrorNotifier.removeLastErrorFile()
+        wg_log(.info, staticMessage: "Stopping tunnel")
 
-            wg_log(.info, staticMessage: "Stopping tunnel")
-            if let handle = self.handle {
-                wgTurnOff(handle)
+        adapter.stop { error in
+            if let error = error {
+                wg_log(.error, message: "Failed to stop WireGuard adapter: \(error.localizedDescription)")
             }
             completionHandler()
 
@@ -109,78 +97,31 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)? = nil) {
-        dispatchQueue.async {
-            guard let completionHandler = completionHandler else { return }
-            guard let handle = self.handle else {
-                completionHandler(nil)
-                return
-            }
+        guard let completionHandler = completionHandler else { return }
 
-            if messageData.count == 1 && messageData[0] == 0 {
-                if let settings = wgGetConfig(handle) {
-                    let data = String(cString: settings).data(using: .utf8)!
-                    completionHandler(data)
-                    free(settings)
-                } else {
-                    completionHandler(nil)
+        if messageData.count == 1 && messageData[0] == 0 {
+            adapter.getRuntimeConfiguration { settings in
+                var data: Data?
+                if let settings = settings {
+                    data = settings.data(using: .utf8)!
                 }
-            } else {
-                completionHandler(nil)
+                completionHandler(data)
             }
+        } else {
+            completionHandler(nil)
         }
     }
+}
 
-    private class func getInterfaceName(fileDescriptor: Int32) -> String? {
-        var ifnameBytes = [CChar](repeating: 0, count: Int(IF_NAMESIZE))
-
-        return ifnameBytes.withUnsafeMutableBufferPointer { bufferPointer -> String? in
-            guard let baseAddress = bufferPointer.baseAddress else { return nil }
-
-            var ifnameSize = socklen_t(bufferPointer.count)
-            let result = getsockopt(
-                fileDescriptor,
-                2 /* SYSPROTO_CONTROL */,
-                2 /* UTUN_OPT_IFNAME */,
-                baseAddress, &ifnameSize
-            )
-
-            if result == 0 {
-                return String(cString: baseAddress)
-            } else {
-                return nil
-            }
+extension WireGuardLogLevel {
+    var osLogLevel: OSLogType {
+        switch self {
+        case .debug:
+            return .debug
+        case .info:
+            return .info
+        case .error:
+            return .error
         }
-    }
-
-    private func configureLogger() {
-        Logger.configureGlobal(tagged: "NET", withFilePath: FileManager.logFileURL?.path)
-        wgSetLogger { level, msgC in
-            guard let msgC = msgC else { return }
-            let logType: OSLogType
-            switch level {
-            case 0:
-                logType = .debug
-            case 1:
-                logType = .info
-            case 2:
-                logType = .error
-            default:
-                logType = .default
-            }
-            wg_log(logType, message: String(cString: msgC))
-        }
-    }
-
-    private func pathUpdate(path: Network.NWPath) {
-        guard let handle = handle else { return }
-        wg_log(.debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
-
-        #if os(iOS)
-        if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
-            _ = packetTunnelSettingsGenerator.endpointUapiConfiguration()
-                .withCString { return wgSetConfig(handle, $0) }
-        }
-        #endif
-        wgBumpSockets(handle)
     }
 }
