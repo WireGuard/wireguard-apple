@@ -4,16 +4,8 @@
 import Foundation
 
 public struct PeerConfiguration {
-    public var publicKey: Data
-    public var preSharedKey: Data? {
-        didSet(value) {
-            if let value = value {
-                if value.count != TunnelConfiguration.keyLength {
-                    fatalError("Invalid preshared key")
-                }
-            }
-        }
-    }
+    public var publicKey: PublicKey
+    public var preSharedKey: PreSharedKey?
     public var allowedIPs = [IPAddressRange]()
     public var endpoint: Endpoint?
     public var persistentKeepAlive: UInt16?
@@ -21,11 +13,8 @@ public struct PeerConfiguration {
     public var txBytes: UInt64?
     public var lastHandshakeTime: Date?
 
-    public init(publicKey: Data) {
+    public init(publicKey: PublicKey) {
         self.publicKey = publicKey
-        if publicKey.count != TunnelConfiguration.keyLength {
-            fatalError("Invalid public key")
-        }
     }
 }
 

@@ -108,27 +108,24 @@ class TunnelEditViewController: NSViewController {
             let tunnelConfiguration = tunnel.tunnelConfiguration!
             nameRow.value = tunnel.name
             textView.string = tunnelConfiguration.asWgQuickConfig()
-            publicKeyRow.value = tunnelConfiguration.interface.publicKey.base64Key() ?? ""
-            textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64Key() ?? ""
+            publicKeyRow.value = tunnelConfiguration.interface.privateKey.publicKey.base64Key
+            textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64Key
             let singlePeer = tunnelConfiguration.peers.count == 1 ? tunnelConfiguration.peers.first : nil
             updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: singlePeer?.allowedIPs.map { $0.stringRepresentation })
             dnsServersAddedToAllowedIPs = excludePrivateIPsCheckbox.state == .on ? tunnelConfiguration.interface.dns.map { $0.stringRepresentation }.joined(separator: ", ") : nil
         } else {
             // Creating a new tunnel
-            let privateKey = Curve25519.generatePrivateKey()
-            let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-            let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64Key() ?? "")\n"
-            publicKeyRow.value = publicKey.base64Key() ?? ""
+            let privateKey = PrivateKey()
+            let bootstrappingText = "[Interface]\nPrivateKey = \(privateKey.base64Key)\n"
+            publicKeyRow.value = privateKey.publicKey.base64Key
             textView.string = bootstrappingText
             updateExcludePrivateIPsVisibility(singlePeerAllowedIPs: nil)
             dnsServersAddedToAllowedIPs = nil
         }
         privateKeyObservationToken = textView.observe(\.privateKeyString) { [weak publicKeyRow] textView, _ in
             if let privateKeyString = textView.privateKeyString,
-                let privateKey = Data(base64Key: privateKeyString),
-                privateKey.count == TunnelConfiguration.keyLength {
-                let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey)
-                publicKeyRow?.value = publicKey.base64Key() ?? ""
+               let privateKey = PrivateKey(base64Key: privateKeyString) {
+                publicKeyRow?.value = privateKey.publicKey.base64Key
             } else {
                 publicKeyRow?.value = ""
             }

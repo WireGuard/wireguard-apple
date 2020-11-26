@@ -8,15 +8,13 @@ public final class TunnelConfiguration {
     public var interface: InterfaceConfiguration
     public let peers: [PeerConfiguration]
 
-    public static let keyLength = 32
-
     public init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface
         self.peers = peers
         self.name = name
 
         let peerPublicKeysArray = peers.map { $0.publicKey }
-        let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+        let peerPublicKeysSet = Set<PublicKey>(peerPublicKeysArray)
         if peerPublicKeysArray.count != peerPublicKeysSet.count {
             fatalError("Two or more peers cannot have the same public key")
         }

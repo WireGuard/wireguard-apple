@@ -23,7 +23,9 @@ enum ZipArchiveError: WireGuardAppError {
     }
 }
 
-class ZipArchive {
+enum ZipArchive {}
+
+extension ZipArchive {
 
     static func archive(inputs: [(fileName: String, contents: Data)], to destinationURL: URL) throws {
         let destinationPath = destinationURL.path
@@ -34,8 +36,8 @@ class ZipArchive {
             let fileName = input.fileName
             let contents = input.contents
             zipOpenNewFileInZip(zipFile, fileName.cString(using: .utf8), nil, nil, 0, nil, 0, nil, Z_DEFLATED, Z_DEFAULT_COMPRESSION)
-            contents.withUnsafeUInt8Bytes { ptr -> Void in
-                zipWriteInFileInZip(zipFile, UnsafeRawPointer(ptr), UInt32(contents.count))
+            contents.withUnsafeBytes { rawBufferPointer -> Void in
+                zipWriteInFileInZip(zipFile, rawBufferPointer.baseAddress, UInt32(contents.count))
             }
             zipCloseFileInZip(zipFile)
         }

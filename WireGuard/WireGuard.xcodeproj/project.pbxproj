@@ -63,8 +63,6 @@
 		6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C3C217F09E9003482A3 /* TunnelViewModel.swift */; };
 		6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */; };
 		6F6483E7229293300075BA15 /* LaunchedAtLoginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6483E6229293300075BA15 /* LaunchedAtLoginDetector.swift */; };
-		6F6899A62180447E0012E523 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
-		6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
 		6F70E20E221058E1008BDFB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F70E20C221058DF008BDFB4 /* InfoPlist.strings */; };
 		6F70E20F221058E1008BDFB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F70E20C221058DF008BDFB4 /* InfoPlist.strings */; };
 		6F70E23D22109E15008BDFB4 /* WireGuardLoginItemHelper.app in Embed Login Item Helper */ = {isa = PBXBuildFile; fileRef = 6F70E22922106A2D008BDFB4 /* WireGuardLoginItemHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -109,8 +107,6 @@
 		6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
 		6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
 		6FB1BDC921D50F0300A991BF /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
-		6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A52180447E0012E523 /* x25519.c */; };
-		6FB1BDCB21D50F1700A991BF /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6899A7218044FC0012E523 /* Curve25519.swift */; };
 		6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
 		6FB1BDCD21D50F5300A991BF /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A821C451D100994C13 /* TunnelStatus.swift */; };
@@ -286,9 +282,6 @@
 		6F628C40217F47DB003482A3 /* TunnelDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelDetailTableViewController.swift; sourceTree = "<group>"; };
 		6F6483E6229293300075BA15 /* LaunchedAtLoginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchedAtLoginDetector.swift; sourceTree = "<group>"; };
 		6F689999218043390012E523 /* WireGuard-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuard-Bridging-Header.h"; sourceTree = "<group>"; };
-		6F6899A42180447E0012E523 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
-		6F6899A52180447E0012E523 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
-		6F6899A7218044FC0012E523 /* Curve25519.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Curve25519.swift; sourceTree = "<group>"; };
 		6F70E20D221058DF008BDFB4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = WireGuard/Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6F70E22922106A2D008BDFB4 /* WireGuardLoginItemHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuardLoginItemHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F70E23222106A31008BDFB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -480,16 +473,6 @@
 				6B5C5E26220A48D30024272E /* Keychain.swift */,
 			);
 			path = Shared;
-			sourceTree = "<group>";
-		};
-		6F6899A32180445A0012E523 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-				6F6899A52180447E0012E523 /* x25519.c */,
-				6F6899A42180447E0012E523 /* x25519.h */,
-				6F6899A7218044FC0012E523 /* Curve25519.swift */,
-			);
-			path = Crypto;
 			sourceTree = "<group>";
 		};
 		6F70E22A22106A2D008BDFB4 /* LoginItemHelper */ = {
@@ -689,7 +672,6 @@
 			isa = PBXGroup;
 			children = (
 				6F919ED3218C65C50023B400 /* Resources */,
-				6F6899A32180445A0012E523 /* Crypto */,
 				6F7774DD217181B1006A79B3 /* UI */,
 				6F7774ED21722D0C006A79B3 /* Tunnel */,
 				6FDEF7E72186320E00D8FBF6 /* ZipArchive */,
@@ -1160,8 +1142,6 @@
 				6F89E17C21F090CC00C97BB9 /* TunnelsTracker.swift in Sources */,
 				6B62E460220A6FA900EF34A6 /* PrivateDataConfirmation.swift in Sources */,
 				6FCD99B121E0EDA900BA4C82 /* TunnelEditViewController.swift in Sources */,
-				6FB1BDCA21D50F1700A991BF /* x25519.c in Sources */,
-				6FB1BDCB21D50F1700A991BF /* Curve25519.swift in Sources */,
 				6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,
@@ -1233,7 +1213,6 @@
 				5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */,
 				6F8F0D7422267AD2000E8335 /* ChevronCell.swift in Sources */,
 				6F61F1E921B932F700483816 /* WireGuardAppError.swift in Sources */,
-				6F6899A62180447E0012E523 /* x25519.c in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
 				6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */,
 				6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */,
@@ -1252,7 +1231,6 @@
 				6FE254FB219C10800028284D /* ZipImporter.swift in Sources */,
 				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
 				6F29A9432278518D00DC6A6B /* RecentTunnelsTracker.swift in Sources */,
-				6F6899A8218044FC0012E523 /* Curve25519.swift in Sources */,
 				6F0F44C9222D55BB00B0FF04 /* TextCell.swift in Sources */,
 				5F4541A021C2D6B700994C13 /* TunnelListCell.swift in Sources */,
 				5F9696B021CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift in Sources */,

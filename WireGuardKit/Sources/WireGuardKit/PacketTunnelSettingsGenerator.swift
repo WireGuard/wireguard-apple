@@ -18,9 +18,7 @@ class PacketTunnelSettingsGenerator {
     func endpointUapiConfiguration() -> String {
         var wgSettings = ""
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
-            if let publicKey = peer.publicKey.hexKey() {
-                wgSettings.append("public_key=\(publicKey)\n")
-            }
+            wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
             if let endpoint = resolvedEndpoints[index]?.withReresolvedIP() {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
@@ -31,9 +29,7 @@ class PacketTunnelSettingsGenerator {
 
     func uapiConfiguration() -> String {
         var wgSettings = ""
-        if let privateKey = tunnelConfiguration.interface.privateKey.hexKey() {
-            wgSettings.append("private_key=\(privateKey)\n")
-        }
+        wgSettings.append("private_key=\(tunnelConfiguration.interface.privateKey.hexKey)\n")
         if let listenPort = tunnelConfiguration.interface.listenPort {
             wgSettings.append("listen_port=\(listenPort)\n")
         }
@@ -42,10 +38,8 @@ class PacketTunnelSettingsGenerator {
         }
         assert(tunnelConfiguration.peers.count == resolvedEndpoints.count)
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
-            if let publicKey = peer.publicKey.hexKey() {
-                wgSettings.append("public_key=\(publicKey)\n")
-            }
-            if let preSharedKey = peer.preSharedKey?.hexKey() {
+            wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
+            if let preSharedKey = peer.preSharedKey?.hexKey {
                 wgSettings.append("preshared_key=\(preSharedKey)\n")
             }
             if let endpoint = resolvedEndpoints[index]?.withReresolvedIP() {

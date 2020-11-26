@@ -110,9 +110,9 @@ class TunnelViewModel {
                     scratchpad[field] = stringValue
                 }
                 if field == .privateKey {
-                    if stringValue.count == TunnelViewModel.keyLengthInBase64, let privateKey = Data(base64Key: stringValue), privateKey.count == TunnelConfiguration.keyLength {
-                        let publicKey = Curve25519.generatePublicKey(fromPrivateKey: privateKey).base64Key() ?? ""
-                        scratchpad[.publicKey] = publicKey
+                    if stringValue.count == TunnelViewModel.keyLengthInBase64,
+                       let privateKey = PrivateKey(base64Key: stringValue) {
+                        scratchpad[.publicKey] = privateKey.publicKey.base64Key
                     } else {
                         scratchpad.removeValue(forKey: .publicKey)
                     }
@@ -129,8 +129,8 @@ class TunnelViewModel {
         private static func createScratchPad(from config: InterfaceConfiguration, name: String) -> [InterfaceField: String] {
             var scratchpad = [InterfaceField: String]()
             scratchpad[.name] = name
-            scratchpad[.privateKey] = config.privateKey.base64Key() ?? ""
-            scratchpad[.publicKey] = config.publicKey.base64Key() ?? ""
+            scratchpad[.privateKey] = config.privateKey.base64Key
+            scratchpad[.publicKey] = config.privateKey.publicKey.base64Key
             if !config.addresses.isEmpty {
                 scratchpad[.addresses] = config.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
             }
@@ -159,7 +159,7 @@ class TunnelViewModel {
                 fieldsWithError.insert(.privateKey)
                 return .error(tr("alertInvalidInterfaceMessagePrivateKeyRequired"))
             }
-            guard let privateKey = Data(base64Key: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
+            guard let privateKey = PrivateKey(base64Key: privateKeyString) else {
                 fieldsWithError.insert(.privateKey)
                 return .error(tr("alertInvalidInterfaceMessagePrivateKeyInvalid"))
             }
@@ -252,12 +252,12 @@ class TunnelViewModel {
         var scratchpad = [PeerField: String]()
         var fieldsWithError = Set<PeerField>()
         var validatedConfiguration: PeerConfiguration?
-        var publicKey: Data? {
+        var publicKey: PublicKey? {
             if let validatedConfiguration = validatedConfiguration {
                 return validatedConfiguration.publicKey
             }
             if let scratchPadPublicKey = scratchpad[.publicKey] {
-                return Data(base64Key: scratchPadPublicKey)
+                return PublicKey(base64Key: scratchPadPublicKey)
             }
             return nil
         }
@@ -302,10 +302,8 @@ class TunnelViewModel {
 
         private static func createScratchPad(from config: PeerConfiguration) -> [PeerField: String] {
             var scratchpad = [PeerField: String]()
-            if let publicKey = config.publicKey.base64Key() {
-                scratchpad[.publicKey] = publicKey
-            }
-            if let preSharedKey = config.preSharedKey?.base64Key() {
+            scratchpad[.publicKey] = config.publicKey.base64Key
+            if let preSharedKey = config.preSharedKey?.base64Key {
                 scratchpad[.preSharedKey] = preSharedKey
             }
             if !config.allowedIPs.isEmpty {
@@ -338,14 +336,14 @@ class TunnelViewModel {
                 fieldsWithError.insert(.publicKey)
                 return .error(tr("alertInvalidPeerMessagePublicKeyRequired"))
             }
-            guard let publicKey = Data(base64Key: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
+            guard let publicKey = PublicKey(base64Key: publicKeyString) else {
                 fieldsWithError.insert(.publicKey)
                 return .error(tr("alertInvalidPeerMessagePublicKeyInvalid"))
             }
             var config = PeerConfiguration(publicKey: publicKey)
             var errorMessages = [String]()
             if let preSharedKeyString = scratchpad[.preSharedKey] {
-                if let preSharedKey = Data(base64Key: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength {
+                if let preSharedKey = PreSharedKey(base64Key: preSharedKeyString) {
                     config.preSharedKey = preSharedKey
                 } else {
                     fieldsWithError.insert(.preSharedKey)
@@ -560,7 +558,7 @@ class TunnelViewModel {
             }
 
             let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
-            let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+            let peerPublicKeysSet = Set<PublicKey>(peerPublicKeysArray)
             if peerPublicKeysArray.count != peerPublicKeysSet.count {
                 return .error(tr("alertInvalidPeerMessagePublicKeyDuplicated"))
             }

@@ -68,7 +68,7 @@ extension TunnelConfiguration {
         }
 
         let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
-        let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+        let peerPublicKeysSet = Set<PublicKey>(peerPublicKeysArray)
         if peerPublicKeysArray.count != peerPublicKeysSet.count {
             throw ParseError.multiplePeersWithSamePublicKey
         }
@@ -88,7 +88,7 @@ extension TunnelConfiguration {
         guard let privateKeyString = attributes["private_key"] else {
             throw ParseError.interfaceHasNoPrivateKey
         }
-        guard let privateKey = Data(hexKey: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
+        guard let privateKey = PrivateKey(hexKey: privateKeyString) else {
             throw ParseError.interfaceHasInvalidPrivateKey(privateKeyString)
         }
         var interface = InterfaceConfiguration(privateKey: privateKey)
@@ -107,18 +107,18 @@ extension TunnelConfiguration {
         guard let publicKeyString = attributes["public_key"] else {
             throw ParseError.peerHasNoPublicKey
         }
-        guard let publicKey = Data(hexKey: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
+        guard let publicKey = PublicKey(hexKey: publicKeyString) else {
             throw ParseError.peerHasInvalidPublicKey(publicKeyString)
         }
         var peer = PeerConfiguration(publicKey: publicKey)
         if let preSharedKeyString = attributes["preshared_key"] {
-            guard let preSharedKey = Data(hexKey: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else {
+            guard let preSharedKey = PreSharedKey(hexKey: preSharedKeyString) else {
                 throw ParseError.peerHasInvalidPreSharedKey(preSharedKeyString)
             }
             // TODO(zx2c4): does the compiler optimize this away?
             var accumulator: UInt8 = 0
-            for index in 0..<preSharedKey.count {
-                accumulator |= preSharedKey[index]
+            for index in 0..<preSharedKey.rawValue.count {
+                accumulator |= preSharedKey.rawValue[index]
             }
             if accumulator != 0 {
                 peer.preSharedKey = preSharedKey

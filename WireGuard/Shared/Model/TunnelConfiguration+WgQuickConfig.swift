@@ -112,7 +112,7 @@ extension TunnelConfiguration {
         }
 
         let peerPublicKeysArray = peerConfigurations.map { $0.publicKey }
-        let peerPublicKeysSet = Set<Data>(peerPublicKeysArray)
+        let peerPublicKeysSet = Set<PublicKey>(peerPublicKeysArray)
         if peerPublicKeysArray.count != peerPublicKeysSet.count {
             throw ParseError.multiplePeersWithSamePublicKey
         }
@@ -126,9 +126,7 @@ extension TunnelConfiguration {
 
     func asWgQuickConfig() -> String {
         var output = "[Interface]\n"
-        if let privateKey = interface.privateKey.base64Key() {
-            output.append("PrivateKey = \(privateKey)\n")
-        }
+        output.append("PrivateKey = \(interface.privateKey.base64Key)\n")
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
         }
@@ -146,10 +144,8 @@ extension TunnelConfiguration {
 
         for peer in peers {
             output.append("\n[Peer]\n")
-            if let publicKey = peer.publicKey.base64Key() {
-                output.append("PublicKey = \(publicKey)\n")
-            }
-            if let preSharedKey = peer.preSharedKey?.base64Key() {
+            output.append("PublicKey = \(peer.publicKey.base64Key)\n")
+            if let preSharedKey = peer.preSharedKey?.base64Key {
                 output.append("PresharedKey = \(preSharedKey)\n")
             }
             if !peer.allowedIPs.isEmpty {
@@ -171,7 +167,7 @@ extension TunnelConfiguration {
         guard let privateKeyString = attributes["privatekey"] else {
             throw ParseError.interfaceHasNoPrivateKey
         }
-        guard let privateKey = Data(base64Key: privateKeyString), privateKey.count == TunnelConfiguration.keyLength else {
+        guard let privateKey = PrivateKey(base64Key: privateKeyString) else {
             throw ParseError.interfaceHasInvalidPrivateKey(privateKeyString)
         }
         var interface = InterfaceConfiguration(privateKey: privateKey)
@@ -214,12 +210,12 @@ extension TunnelConfiguration {
         guard let publicKeyString = attributes["publickey"] else {
             throw ParseError.peerHasNoPublicKey
         }
-        guard let publicKey = Data(base64Key: publicKeyString), publicKey.count == TunnelConfiguration.keyLength else {
+        guard let publicKey = PublicKey(base64Key: publicKeyString) else {
             throw ParseError.peerHasInvalidPublicKey(publicKeyString)
         }
         var peer = PeerConfiguration(publicKey: publicKey)
         if let preSharedKeyString = attributes["presharedkey"] {
-            guard let preSharedKey = Data(base64Key: preSharedKeyString), preSharedKey.count == TunnelConfiguration.keyLength else {
+            guard let preSharedKey = PreSharedKey(base64Key: preSharedKeyString) else {
                 throw ParseError.peerHasInvalidPreSharedKey(preSharedKeyString)
             }
             peer.preSharedKey = preSharedKey
