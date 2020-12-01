@@ -109,7 +109,7 @@ extension Endpoint {
         hints.ai_family = AF_UNSPEC
         hints.ai_socktype = SOCK_DGRAM
         hints.ai_protocol = IPPROTO_UDP
-        hints.ai_flags = AI_DEFAULT
+        hints.ai_flags = 0 // We set this to zero so that we actually resolve this using DNS64
 
         var result: UnsafeMutablePointer<addrinfo>?
         defer {
