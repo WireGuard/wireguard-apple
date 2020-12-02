@@ -19,6 +19,7 @@ class PacketTunnelSettingsGenerator {
         var wgSettings = ""
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
+            // TODO: log the error returned by `withReresolvedIP`
             if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
