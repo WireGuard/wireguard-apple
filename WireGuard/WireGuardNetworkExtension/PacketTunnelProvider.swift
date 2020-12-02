@@ -42,8 +42,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
 
             switch adapterError {
-            case .cannotLocateSocketDescriptor:
-                wg_log(.error, staticMessage: "Starting tunnel failed: Could not determine file descriptor")
+            case .cannotLocateTunnelFileDescriptor:
+                wg_log(.error, staticMessage: "Starting tunnel failed: could not determine file descriptor")
                 errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
                 completionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
 

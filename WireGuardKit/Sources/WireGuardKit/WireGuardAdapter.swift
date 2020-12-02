@@ -6,8 +6,8 @@ import NetworkExtension
 import libwg_go
 
 public enum WireGuardAdapterError: Error {
-    /// Failure to locate socket descriptor.
-    case cannotLocateSocketDescriptor
+    /// Failure to locate tunnel file descriptor.
+    case cannotLocateTunnelFileDescriptor
 
     /// Failure to perform an operation in such state
     case invalidState
@@ -155,7 +155,7 @@ public class WireGuardAdapter {
             }
 
             guard let tunnelFileDescriptor = self.tunnelFileDescriptor else {
-                completionHandler(.cannotLocateSocketDescriptor)
+                completionHandler(.cannotLocateTunnelFileDescriptor)
                 return
             }
 
