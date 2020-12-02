@@ -7,9 +7,9 @@ import Security
 class Keychain {
     static func openReference(called ref: Data) -> String? {
         var result: CFTypeRef?
-        let ret =  SecItemCopyMatching([kSecClass as String: kSecClassGenericPassword,
-                                        kSecValuePersistentRef as String: ref,
-                                        kSecReturnData as String: true] as CFDictionary,
+        let ret = SecItemCopyMatching([kSecClass: kSecClassGenericPassword,
+                                        kSecValuePersistentRef: ref,
+                                        kSecReturnData: true] as CFDictionary,
                                        &result)
         if ret != errSecSuccess || result == nil {
             wg_log(.error, message: "Unable to open config from keychain: \(ret)")
@@ -28,20 +28,20 @@ class Keychain {
         if bundleIdentifier.hasSuffix(".network-extension") {
             bundleIdentifier.removeLast(".network-extension".count)
         }
-        var items: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecAttrLabel as String: "WireGuard Tunnel: " + name,
-                                    kSecAttrAccount as String: name + ": " + UUID().uuidString,
-                                    kSecAttrDescription as String: "wg-quick(8) config",
-                                    kSecAttrService as String: bundleIdentifier,
-                                    kSecValueData as String: value.data(using: .utf8) as Any,
-                                    kSecReturnPersistentRef as String: true]
+        var items: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
+                                    kSecAttrLabel: "WireGuard Tunnel: " + name,
+                                    kSecAttrAccount: name + ": " + UUID().uuidString,
+                                    kSecAttrDescription: "wg-quick(8) config",
+                                    kSecAttrService: bundleIdentifier,
+                                    kSecValueData: value.data(using: .utf8) as Any,
+                                    kSecReturnPersistentRef: true]
 
         #if os(iOS)
-        items[kSecAttrAccessGroup as String] = FileManager.appGroupId
-        items[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+        items[kSecAttrAccessGroup] = FileManager.appGroupId
+        items[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlock
         #elseif os(macOS)
-        items[kSecAttrSynchronizable as String] = false
-        items[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+        items[kSecAttrSynchronizable] = false
+        items[kSecAttrAccessible] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
 
         guard let extensionPath = Bundle.main.builtInPlugInsURL?.appendingPathComponent("WireGuardNetworkExtension.appex").path else {
             wg_log(.error, staticMessage: "Unable to determine app extension path")
@@ -60,14 +60,14 @@ class Keychain {
             return nil
         }
         var access: SecAccess?
-        ret = SecAccessCreate((items[kSecAttrLabel as String] as? String)! as CFString,
+        ret = SecAccessCreate((items[kSecAttrLabel] as? String)! as CFString,
                               [extensionApp!, mainApp!] as CFArray,
                               &access)
         if ret != errSecSuccess || access == nil {
             wg_log(.error, message: "Unable to create keychain ACL object: \(ret)")
             return nil
         }
-        items[kSecAttrAccess as String] = access!
+        items[kSecAttrAccess] = access!
         #else
         #error("Unimplemented")
         #endif
@@ -85,7 +85,7 @@ class Keychain {
     }
 
     static func deleteReference(called ref: Data) {
-        let ret = SecItemDelete([kSecValuePersistentRef as String: ref] as CFDictionary)
+        let ret = SecItemDelete([kSecValuePersistentRef: ref] as CFDictionary)
         if ret != errSecSuccess {
             wg_log(.error, message: "Unable to delete config from keychain: \(ret)")
         }
@@ -93,10 +93,10 @@ class Keychain {
 
     static func deleteReferences(except whitelist: Set<Data>) {
         var result: CFTypeRef?
-        let ret = SecItemCopyMatching([kSecClass as String: kSecClassGenericPassword,
-                                       kSecAttrService as String: Bundle.main.bundleIdentifier as Any,
-                                       kSecMatchLimit as String: kSecMatchLimitAll,
-                                       kSecReturnPersistentRef as String: true] as CFDictionary,
+        let ret = SecItemCopyMatching([kSecClass: kSecClassGenericPassword,
+                                       kSecAttrService: Bundle.main.bundleIdentifier as Any,
+                                       kSecMatchLimit: kSecMatchLimitAll,
+                                       kSecReturnPersistentRef: true] as CFDictionary,
                                       &result)
         if ret != errSecSuccess || result == nil {
             return
@@ -110,8 +110,8 @@ class Keychain {
     }
 
     static func verifyReference(called ref: Data) -> Bool {
-        return SecItemCopyMatching([kSecClass as String: kSecClassGenericPassword,
-                                    kSecValuePersistentRef as String: ref] as CFDictionary,
+        return SecItemCopyMatching([kSecClass: kSecClassGenericPassword,
+                                    kSecValuePersistentRef: ref] as CFDictionary,
                                    nil) != errSecItemNotFound
     }
 }
