@@ -1,4 +1,4 @@
-module WireGuardKitCTarget {
+module WireGuardKitC {
     umbrella header "include/WireGuardKitCTarget.h"
     export *
 }
