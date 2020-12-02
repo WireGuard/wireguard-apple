@@ -703,7 +703,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = $BUILD_DIR/../../SourcePackages/checkouts/Sources/WireGuardGo;
+			buildWorkingDirectory = "$(PROJECT_DIR)/Sources/WireGuardKitGo";
 			dependencies = (
 			);
 			name = WireGuardGoBridgemacOS;
@@ -717,7 +717,7 @@
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = $BUILD_DIR/../../SourcePackages/checkouts/Sources/WireGuardGo;
+			buildWorkingDirectory = "$(PROJECT_DIR)/Sources/WireGuardKitGo";
 			dependencies = (
 			);
 			name = WireGuardGoBridgeiOS;
