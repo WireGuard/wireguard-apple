@@ -2,7 +2,7 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Foundation
-import WireGuardKitCTarget
+import WireGuardKitC
 
 /// The class describing a private key used by WireGuard.
 public class PrivateKey: _BaseKey {

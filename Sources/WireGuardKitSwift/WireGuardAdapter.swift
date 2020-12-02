@@ -3,7 +3,7 @@
 
 import Foundation
 import NetworkExtension
-import libwg_go
+import WireGuardKitGo
 
 public enum WireGuardAdapterError: Error {
     /// Failure to locate tunnel file descriptor.

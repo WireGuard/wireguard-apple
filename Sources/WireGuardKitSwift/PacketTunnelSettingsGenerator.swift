@@ -4,7 +4,7 @@
 import Foundation
 import Network
 import NetworkExtension
-import WireGuardKitCTarget
+import WireGuardKitC
 
 class PacketTunnelSettingsGenerator {
     let tunnelConfiguration: TunnelConfiguration
