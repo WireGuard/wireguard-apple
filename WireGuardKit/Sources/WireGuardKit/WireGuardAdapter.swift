@@ -314,7 +314,7 @@ public class WireGuardAdapter {
         }
 
         let resolvedEndpoints = resolutionResults.map { (result) -> Endpoint? in
-            return try? result?.get()
+            return try! result?.get()
         }
 
         return resolvedEndpoints
