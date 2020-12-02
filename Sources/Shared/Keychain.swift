@@ -28,8 +28,9 @@ class Keychain {
         if bundleIdentifier.hasSuffix(".network-extension") {
             bundleIdentifier.removeLast(".network-extension".count)
         }
+        let itemLabel = "WireGuard Tunnel: \(name)"
         var items: [CFString: Any] = [kSecClass: kSecClassGenericPassword,
-                                    kSecAttrLabel: "WireGuard Tunnel: " + name,
+                                    kSecAttrLabel: itemLabel,
                                     kSecAttrAccount: name + ": " + UUID().uuidString,
                                     kSecAttrDescription: "wg-quick(8) config",
                                     kSecAttrService: bundleIdentifier,
@@ -60,9 +61,7 @@ class Keychain {
             return nil
         }
         var access: SecAccess?
-        ret = SecAccessCreate((items[kSecAttrLabel] as? String)! as CFString,
-                              [extensionApp!, mainApp!] as CFArray,
-                              &access)
+        ret = SecAccessCreate(itemLabel as CFString, [extensionApp!, mainApp!] as CFArray, &access)
         if ret != errSecSuccess || access == nil {
             wg_log(.error, message: "Unable to create keychain ACL object: \(ret)")
             return nil
