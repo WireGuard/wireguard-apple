@@ -55,7 +55,7 @@ public class WireGuardAdapter {
         return self.packetTunnelProvider?.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32
     }
 
-    /// Returns a Wireguard version.
+    /// Returns a WireGuard version.
     class var version: String {
         return String(cString: wgVersion())
     }

@@ -3,6 +3,6 @@
 
 import Foundation
 
-public func getWireGuardVersion() -> String {
+public var wireGuardVersion: String {
     return WireGuardAdapter.version
 }
