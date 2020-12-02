@@ -64,7 +64,7 @@ public class WireGuardAdapter {
 
         var buffer = [UInt8](repeating: 0, count: Int(IFNAMSIZ))
 
-        return buffer.withUnsafeMutableBufferPointer { (mutableBufferPointer) in
+        return buffer.withUnsafeMutableBufferPointer { mutableBufferPointer in
             guard let baseAddress = mutableBufferPointer.baseAddress else { return nil }
 
             var ifnameSize = socklen_t(IFNAMSIZ)
@@ -158,7 +158,7 @@ public class WireGuardAdapter {
             networkMonitor.start(queue: self.workQueue)
             self.networkMonitor = networkMonitor
 
-            self.updateNetworkSettings(tunnelConfiguration: tunnelConfiguration) { (settingsGenerator, error) in
+            self.updateNetworkSettings(tunnelConfiguration: tunnelConfiguration) { settingsGenerator, error in
                 if let error = error {
                     completionHandler(error)
                 } else {
@@ -212,7 +212,7 @@ public class WireGuardAdapter {
             // This will broadcast the `NEVPNStatusDidChange` notification to the GUI process.
             self.packetTunnelProvider?.reasserting = true
 
-            self.updateNetworkSettings(tunnelConfiguration: tunnelConfiguration) { (settingsGenerator, error) in
+            self.updateNetworkSettings(tunnelConfiguration: tunnelConfiguration) { settingsGenerator, error in
                 if let error = error {
                     completionHandler(error)
                 } else {
@@ -230,7 +230,7 @@ public class WireGuardAdapter {
     /// Setup WireGuard log handler.
     private func setupLogHandler() {
         let context = Unmanaged.passUnretained(self).toOpaque()
-        wgSetLogger(context) { (context, logLevel, message) in
+        wgSetLogger(context) { context, logLevel, message in
             guard let context = context, let message = message else { return }
 
             let unretainedSelf = Unmanaged<WireGuardAdapter>.fromOpaque(context)
@@ -251,7 +251,10 @@ public class WireGuardAdapter {
         let resolvedEndpoints: [Endpoint?]
 
         let resolvePeersResult = Result { try self.resolvePeers(for: tunnelConfiguration) }
-            .mapError { $0 as! WireGuardAdapterError }
+            .mapError { error -> WireGuardAdapterError in
+                // swiftlint:disable:next force_cast
+                return error as! WireGuardAdapterError
+            }
 
         switch resolvePeersResult {
         case .success(let endpoints):
@@ -271,10 +274,10 @@ public class WireGuardAdapter {
         condition.lock()
         defer { condition.unlock() }
 
-        self.packetTunnelProvider?.setTunnelNetworkSettings(networkSettings, completionHandler: { (error) in
+        self.packetTunnelProvider?.setTunnelNetworkSettings(networkSettings) { error in
             systemError = error
             condition.signal()
-        })
+        }
 
         // Packet tunnel's `setTunnelNetworkSettings` times out in certain
         // scenarios & never calls the given callback.
@@ -301,7 +304,7 @@ public class WireGuardAdapter {
     private func resolvePeers(for tunnelConfiguration: TunnelConfiguration) throws -> [Endpoint?] {
         let endpoints = tunnelConfiguration.peers.map { $0.endpoint }
         let resolutionResults = DNSResolver.resolveSync(endpoints: endpoints)
-        let resolutionErrors = resolutionResults.compactMap { (result) -> DNSResolutionError? in
+        let resolutionErrors = resolutionResults.compactMap { result -> DNSResolutionError? in
             if case .failure(let error) = result {
                 return error
             } else {
@@ -313,7 +316,8 @@ public class WireGuardAdapter {
             throw WireGuardAdapterError.dnsResolution(resolutionErrors)
         }
 
-        let resolvedEndpoints = resolutionResults.map { (result) -> Endpoint? in
+        let resolvedEndpoints = resolutionResults.map { result -> Endpoint? in
+            // swiftlint:disable:next force_try
             return try! result?.get()
         }
 

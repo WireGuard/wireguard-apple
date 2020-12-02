@@ -21,7 +21,7 @@ extension Array {
         let execute = queue?.sync ?? { $0() }
 
         execute {
-            DispatchQueue.concurrentPerform(iterations: self.count) { (index) in
+            DispatchQueue.concurrentPerform(iterations: self.count) { index in
                 let value = transform(self[index])
                 resultQueue.sync {
                     result[index] = value

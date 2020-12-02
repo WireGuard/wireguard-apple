@@ -1746,7 +1746,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://git.zx2c4.com/wireguard-apple";
 			requirement = {
-				branch = master;
+				branch = "am/wg-adapter-rebased";
 				kind = branch;
 			};
 		};

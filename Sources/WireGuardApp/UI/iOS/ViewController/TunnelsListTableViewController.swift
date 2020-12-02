@@ -417,12 +417,12 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
 }
 
 extension UISplitViewController {
-    func showDetailViewController(_ vc: UIViewController, sender: Any?, animated: Bool) {
+    func showDetailViewController(_ viewController: UIViewController, sender: Any?, animated: Bool) {
         if animated {
-            showDetailViewController(vc, sender: sender)
+            showDetailViewController(viewController, sender: sender)
         } else {
             UIView.performWithoutAnimation {
-                showDetailViewController(vc, sender: sender)
+                showDetailViewController(viewController, sender: sender)
             }
         }
     }

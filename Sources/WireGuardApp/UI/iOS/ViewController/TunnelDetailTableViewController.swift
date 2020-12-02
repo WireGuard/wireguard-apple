@@ -153,8 +153,8 @@ class TunnelDetailTableViewController: UITableViewController {
             }
         }!
         let firstPeerSectionIndex = interfaceSectionIndex + 1
-        var interfaceFieldIsVisible = self.interfaceFieldIsVisible
-        var peerFieldIsVisible = self.peerFieldIsVisible
+        let interfaceFieldIsVisible = self.interfaceFieldIsVisible
+        let peerFieldIsVisible = self.peerFieldIsVisible
 
         func handleSectionFieldsModified<T>(fields: [T], fieldIsVisible: [Bool], section: Int, changes: [T: TunnelViewModel.Changes.FieldChange]) {
             for (index, field) in fields.enumerated() {

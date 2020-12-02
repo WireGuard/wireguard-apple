@@ -12,25 +12,27 @@ extension DNSResolver {
     private static let resolverQueue = DispatchQueue(label: "DNSResolverQueue", qos: .default, attributes: .concurrent)
 
     static func resolveSync(endpoints: [Endpoint?]) -> [Result<Endpoint, DNSResolutionError>?] {
-        let isAllEndpointsAlreadyResolved = endpoints.allSatisfy({ (maybeEndpoint) -> Bool in
+        let isAllEndpointsAlreadyResolved = endpoints.allSatisfy { maybeEndpoint -> Bool in
             return maybeEndpoint?.hasHostAsIPAddress() ?? true
-        })
+        }
 
         if isAllEndpointsAlreadyResolved {
-            return endpoints.map { (endpoint) in
+            return endpoints.map { endpoint in
                 return endpoint.map { .success($0) }
             }
         }
 
-        return endpoints.concurrentMap(queue: resolverQueue) {
-            (endpoint) -> Result<Endpoint, DNSResolutionError>? in
+        return endpoints.concurrentMap(queue: resolverQueue) { endpoint -> Result<Endpoint, DNSResolutionError>? in
             guard let endpoint = endpoint else { return nil }
 
             if endpoint.hasHostAsIPAddress() {
                 return .success(endpoint)
             } else {
                 return Result { try DNSResolver.resolveSync(endpoint: endpoint) }
-                    .mapError { $0 as! DNSResolutionError }
+                    .mapError { error -> DNSResolutionError in
+                        // swiftlint:disable:next force_cast
+                        return error as! DNSResolutionError
+                    }
             }
         }
     }

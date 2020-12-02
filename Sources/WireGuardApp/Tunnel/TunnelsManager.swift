@@ -464,8 +464,8 @@ class TunnelsManager {
         }
     }
 
-    static func tunnelNameIsLessThan(_ a: String, _ b: String) -> Bool {
-        return a.compare(b, options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive, .numeric]) == .orderedAscending
+    static func tunnelNameIsLessThan(_ lhs: String, _ rhs: String) -> Bool {
+        return lhs.compare(rhs, options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive, .numeric]) == .orderedAscending
     }
 }
 
@@ -701,8 +701,8 @@ class CatalinaWorkaround {
     }
 
     func reinstateTunnelsDeletedOutsideApp() {
-        let rd = reinstationDataForTunnelsDeletedOutsideApp()
-        reinstateTunnels(ArraySlice(rd), completionHandler: nil)
+        let data = reinstationDataForTunnelsDeletedOutsideApp()
+        reinstateTunnels(ArraySlice(data), completionHandler: nil)
     }
 
     private func reinstateTunnels(_ rdArray: ArraySlice<ReinstationData>, completionHandler: (() -> Void)?) {

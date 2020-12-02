@@ -5,7 +5,7 @@ import Foundation
 import WireGuardKitC
 
 /// The class describing a private key used by WireGuard.
-public class PrivateKey: _BaseKey {
+public class PrivateKey: BaseKey {
     /// Derived public key
     public var publicKey: PublicKey {
         return rawValue.withUnsafeBytes { (privateKeyBufferPointer: UnsafeRawBufferPointer) -> PublicKey in
@@ -33,13 +33,13 @@ public class PrivateKey: _BaseKey {
 }
 
 /// The class describing a public key used by WireGuard.
-public class PublicKey: _BaseKey {}
+public class PublicKey: BaseKey {}
 
 /// The class describing a pre-shared key used by WireGuard.
-public class PreSharedKey: _BaseKey {}
+public class PreSharedKey: BaseKey {}
 
 /// The base key implementation. Should not be used directly.
-public class _BaseKey: RawRepresentable, Equatable, Hashable {
+public class BaseKey: RawRepresentable, Equatable, Hashable {
     /// Raw key representation
     public let rawValue: Data
 
@@ -98,7 +98,7 @@ public class _BaseKey: RawRepresentable, Equatable, Hashable {
         }
     }
 
-    public static func == (lhs: _BaseKey, rhs: _BaseKey) -> Bool {
+    public static func == (lhs: BaseKey, rhs: BaseKey) -> Bool {
         return lhs.rawValue.withUnsafeBytes { (lhsBytes: UnsafeRawBufferPointer) -> Bool in
             return rhs.rawValue.withUnsafeBytes { (rhsBytes: UnsafeRawBufferPointer) -> Bool in
                 return key_eq(

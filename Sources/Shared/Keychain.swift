@@ -21,18 +21,18 @@ class Keychain {
 
     static func makeReference(containing value: String, called name: String, previouslyReferencedBy oldRef: Data? = nil) -> Data? {
         var ret: OSStatus
-        guard var id = Bundle.main.bundleIdentifier else {
+        guard var bundleIdentifier = Bundle.main.bundleIdentifier else {
             wg_log(.error, staticMessage: "Unable to determine bundle identifier")
             return nil
         }
-        if id.hasSuffix(".network-extension") {
-            id.removeLast(".network-extension".count)
+        if bundleIdentifier.hasSuffix(".network-extension") {
+            bundleIdentifier.removeLast(".network-extension".count)
         }
         var items: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecAttrLabel as String: "WireGuard Tunnel: " + name,
                                     kSecAttrAccount as String: name + ": " + UUID().uuidString,
                                     kSecAttrDescription as String: "wg-quick(8) config",
-                                    kSecAttrService as String: id,
+                                    kSecAttrService as String: bundleIdentifier,
                                     kSecValueData as String: value.data(using: .utf8) as Any,
                                     kSecReturnPersistentRef as String: true]
 

@@ -47,7 +47,7 @@ extension ZipArchive {
     static func unarchive(url: URL, requiredFileExtensions: [String]) throws -> [(fileBaseName: String, contents: Data)] {
 
         var results = [(fileBaseName: String, contents: Data)]()
-        var requiredFileExtensionsLowercased = requiredFileExtensions.map { $0.lowercased() }
+        let requiredFileExtensionsLowercased = requiredFileExtensions.map { $0.lowercased() }
 
         guard let zipFile = unzOpen64(url.path) else {
             throw ZipArchiveError.cantOpenInputZipFile
@@ -62,8 +62,8 @@ extension ZipArchive {
             guard unzOpenCurrentFile(zipFile) == UNZ_OK else { throw ZipArchiveError.badArchive }
 
             let bufferSize = 16384 // 16 KiB
-            var fileNameBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
-            var dataBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
+            let fileNameBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
+            let dataBuffer = UnsafeMutablePointer<Int8>.allocate(capacity: bufferSize)
 
             defer {
                 fileNameBuffer.deallocate()

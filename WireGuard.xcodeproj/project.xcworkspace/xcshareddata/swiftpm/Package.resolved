@@ -5,8 +5,8 @@
         "package": "WireGuardKit",
         "repositoryURL": "https://git.zx2c4.com/wireguard-apple",
         "state": {
-          "branch": "master",
-          "revision": "737f847c0db36429f7136fb514409c22e13a70ee",
+          "branch": "am/wg-adapter-rebased",
+          "revision": "e52f83b915a985a945dff622e5f48fa52e96f045",
           "version": null
         }
       }
