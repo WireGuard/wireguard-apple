@@ -26,6 +26,13 @@ let package = Package(
         .target(
             name: "WireGuardKitGo",
             dependencies: [],
+            exclude: [
+                "goruntime-boottime-over-monotonic.diff",
+                "go.mod",
+                "go.sum",
+                "api-ios.go",
+                "Makefile"
+            ],
             publicHeadersPath: ".",
             linkerSettings: [.linkedLibrary("wg-go")]
         )
