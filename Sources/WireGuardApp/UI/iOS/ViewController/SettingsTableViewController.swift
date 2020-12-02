@@ -152,7 +152,7 @@ extension SettingsTableViewController {
                 }
                 cell.value = appVersion
             } else if field == .goBackendVersion {
-                cell.value = wireGuardVersion
+                cell.value = WIREGUARD_GO_VERSION
             }
             return cell
         } else if field == .exportZipArchive {

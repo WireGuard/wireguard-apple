@@ -27,9 +27,7 @@
 		585B106B2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
 		585B106C2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
 		585B106D2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
-		585B106E2577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B106F2577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
-		585B10702577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10712577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10722577E294004F691E /* Array+ConcurrentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104C2577E293004F691E /* Array+ConcurrentMap.swift */; };
 		585B10732577E294004F691E /* Array+ConcurrentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104C2577E293004F691E /* Array+ConcurrentMap.swift */; };
@@ -69,6 +67,8 @@
 		585B10952577E294004F691E /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10572577E293004F691E /* key.c */; };
 		5892BFA025558288000E678D /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5892BF9F25558288000E678D /* PacketTunnelProvider.swift */; };
 		5892BFA125558288000E678D /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5892BF9F25558288000E678D /* PacketTunnelProvider.swift */; };
+		58BA78D52577F9C6006FAEA0 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58DB6CD52577F95D00FB6B73 /* libwg-go.a */; };
+		58DB6CD62577F95D00FB6B73 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58DB6CD52577F95D00FB6B73 /* libwg-go.a */; };
 		5F45417D21C1B23600994C13 /* UITableViewCell+Reuse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F45417C21C1B23600994C13 /* UITableViewCell+Reuse.swift */; };
 		5F45418C21C2D48200994C13 /* TunnelEditKeyValueCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F45418B21C2D48200994C13 /* TunnelEditKeyValueCell.swift */; };
 		5F45419021C2D53800994C13 /* SwitchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F45418F21C2D53800994C13 /* SwitchCell.swift */; };
@@ -311,6 +311,7 @@
 		585B10572577E293004F691E /* key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = key.c; sourceTree = "<group>"; };
 		585B10592577E293004F691E /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		5892BF9F25558288000E678D /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		58DB6CD52577F95D00FB6B73 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F45417C21C1B23600994C13 /* UITableViewCell+Reuse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Reuse.swift"; sourceTree = "<group>"; };
 		5F45418B21C2D48200994C13 /* TunnelEditKeyValueCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelEditKeyValueCell.swift; sourceTree = "<group>"; };
 		5F45418F21C2D53800994C13 /* SwitchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCell.swift; sourceTree = "<group>"; };
@@ -440,6 +441,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B5CA6B1220DE4E900F126CF /* NetworkExtension.framework in Frameworks */,
+				58BA78D52577F9C6006FAEA0 /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B5CA6B2220DE4F400F126CF /* NetworkExtension.framework in Frameworks */,
+				58DB6CD62577F95D00FB6B73 /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +799,7 @@
 		6FF4AC452120B9E0002C96EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58DB6CD52577F95D00FB6B73 /* libwg-go.a */,
 				6FB1BDB621D4F8B800A991BF /* NetworkExtension.framework */,
 				6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */,
 			);
@@ -841,6 +845,7 @@
 			buildConfigurationList = 6F5D0C25218352EF000F85AD /* Build configuration list for PBXNativeTarget "WireGuardNetworkExtensioniOS" */;
 			buildPhases = (
 				5F45417B21C0906F00994C13 /* Swiftlint */,
+				58BA78EC2577FBDB006FAEA0 /* Extract wireguard-go Version */,
 				6F5D0C16218352EF000F85AD /* Sources */,
 				6F5D0C17218352EF000F85AD /* Frameworks */,
 				6F5D0C18218352EF000F85AD /* Resources */,
@@ -878,6 +883,7 @@
 			buildPhases = (
 				6FB1BDB821D4FA9100A991BF /* Strip Trailing Whitespace */,
 				6FB1BDB921D4FAD000A991BF /* Swiftlint */,
+				58BA78E12577FB03006FAEA0 /* Extract wireguard-go Version */,
 				6FB1BD5921D2607A00A991BF /* Sources */,
 				6FB1BD5A21D2607A00A991BF /* Frameworks */,
 				6FB1BD5B21D2607A00A991BF /* Resources */,
@@ -902,6 +908,7 @@
 			buildConfigurationList = 6FB1BD9C21D4BFE700A991BF /* Build configuration list for PBXNativeTarget "WireGuardNetworkExtensionmacOS" */;
 			buildPhases = (
 				6FB1BDB421D4F5CF00A991BF /* Swiftlint */,
+				58BA78ED2577FBF4006FAEA0 /* Extract wireguard-go Version */,
 				6FB1BD8D21D4BFE600A991BF /* Sources */,
 				6FB1BD8E21D4BFE600A991BF /* Frameworks */,
 				6FB1BD8F21D4BFE600A991BF /* Resources */,
@@ -924,6 +931,7 @@
 			buildPhases = (
 				5F784E5721CDF6DD00B8D9A0 /* Strip Trailing Whitespace */,
 				5F45417A21C0902400994C13 /* Swiftlint */,
+				58BA78E02577FABD006FAEA0 /* Extract wireguard-go Version */,
 				6FF4AC10211EC46F002C96EB /* Sources */,
 				6FF4AC11211EC46F002C96EB /* Frameworks */,
 				6FF4AC12211EC46F002C96EB /* Resources */,
@@ -1078,6 +1086,78 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		58BA78E02577FABD006FAEA0 /* Extract wireguard-go Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract wireguard-go Version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
+		};
+		58BA78E12577FB03006FAEA0 /* Extract wireguard-go Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract wireguard-go Version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
+		};
+		58BA78EC2577FBDB006FAEA0 /* Extract wireguard-go Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract wireguard-go Version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
+		};
+		58BA78ED2577FBF4006FAEA0 /* Extract wireguard-go Version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Extract wireguard-go Version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
+		};
 		5F45417A21C0902400994C13 /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1301,7 +1381,6 @@
 				6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */,
 				585B105C2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				6F907C9D224663A2003CED21 /* LogViewHelper.swift in Sources */,
-				585B10702577E294004F691E /* WireGuardAdapter.swift in Sources */,
 				6FB1BDC921D50F0300A991BF /* FileManager+Extension.swift in Sources */,
 				585B10942577E294004F691E /* key.c in Sources */,
 				585B10682577E294004F691E /* TunnelConfiguration.swift in Sources */,
@@ -1345,7 +1424,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FE1765A21C90E87002690EA /* LocalizationHelper.swift in Sources */,
-				585B106E2577E294004F691E /* WireGuardAdapter.swift in Sources */,
 				585B10762577E294004F691E /* DNSResolver.swift in Sources */,
 				6F29A94722787B1600DC6A6B /* QuickActionItem.swift in Sources */,
 				585B105A2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
