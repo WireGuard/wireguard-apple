@@ -20,11 +20,13 @@ let package = Package(
         ),
         .target(
             name: "WireGuardKitC",
-            dependencies: []
+            dependencies: [],
+            publicHeadersPath: "."
         ),
         .target(
             name: "WireGuardKitGo",
             dependencies: [],
+            publicHeadersPath: ".",
             linkerSettings: [.linkedLibrary("wg-go")]
         )
     ]
