@@ -10,12 +10,12 @@ let package = Package(
         .iOS(.v12)
     ],
     products: [
-        .library(name: "WireGuardKit", targets: ["WireGuardKitSwift"])
+        .library(name: "WireGuardKit", targets: ["WireGuardKit"])
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "WireGuardKitSwift",
+            name: "WireGuardKit",
             dependencies: ["WireGuardKitGo", "WireGuardKitC"]
         ),
         .target(
