@@ -40,8 +40,6 @@ $ open ./WireGuard/WireGuard.xcodeproj
    https://git.zx2c4.com/wireguard-apple
    ```
    
-   Choose `am/swiftpm` branch in the "Rules" section.
-   
 2. `WireGuardKit` links against `wireguard-go-bridge` library, but it cannot build it automatically
    due to Swift package manager limitations. So it needs a little help from a developer. 
    Please follow the instructions below to create a build target(s) for `wireguard-go-bridge`.
