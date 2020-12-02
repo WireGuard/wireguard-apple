@@ -451,7 +451,7 @@
 			path = View;
 			sourceTree = "<group>";
 		};
-		6F5D0C1B218352EF000F85AD /* Sources/WireGuardNetworkExtension */ = {
+		6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */ = {
 			isa = PBXGroup;
 			children = (
 				6F5D0C1E218352EF000F85AD /* Info.plist */,
@@ -461,10 +461,11 @@
 				6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */,
 				5892BF9F25558288000E678D /* PacketTunnelProvider.swift */,
 			);
+			name = WireGuardNetworkExtension;
 			path = Sources/WireGuardNetworkExtension;
 			sourceTree = "<group>";
 		};
-		6F5D0C432183B4A4000F85AD /* Sources/Shared */ = {
+		6F5D0C432183B4A4000F85AD /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				6FF3526A21C23F720008484E /* Logging */,
@@ -472,6 +473,7 @@
 				6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */,
 				6B5C5E26220A48D30024272E /* Keychain.swift */,
 			);
+			name = Shared;
 			path = Sources/Shared;
 			sourceTree = "<group>";
 		};
@@ -648,9 +650,9 @@
 			children = (
 				6F70E20C221058DF008BDFB4 /* InfoPlist.strings */,
 				6FE1765421C90BBE002690EA /* Localizable.strings */,
-				6F5D0C432183B4A4000F85AD /* Sources/Shared */,
-				6FF4AC16211EC46F002C96EB /* Sources/WireGuardApp */,
-				6F5D0C1B218352EF000F85AD /* Sources/WireGuardNetworkExtension */,
+				6F5D0C432183B4A4000F85AD /* Shared */,
+				6FF4AC16211EC46F002C96EB /* WireGuardApp */,
+				6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */,
 				6FF4AC15211EC46F002C96EB /* Products */,
 				6FF4AC452120B9E0002C96EB /* Frameworks */,
 			);
@@ -668,7 +670,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6FF4AC16211EC46F002C96EB /* Sources/WireGuardApp */ = {
+		6FF4AC16211EC46F002C96EB /* WireGuardApp */ = {
 			isa = PBXGroup;
 			children = (
 				6F919ED3218C65C50023B400 /* Resources */,
@@ -681,6 +683,7 @@
 				6FF4AC2B211EC776002C96EB /* Config.xcconfig */,
 				6F689999218043390012E523 /* WireGuard-Bridging-Header.h */,
 			);
+			name = WireGuardApp;
 			path = Sources/WireGuardApp;
 			sourceTree = "<group>";
 		};
