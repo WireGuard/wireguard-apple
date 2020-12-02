@@ -357,8 +357,7 @@ public class WireGuardAdapter {
     }
 }
 
-/// A enum describing Wireguard log levels defined in `api-ios.go` from `wireguard-apple`
-/// repository.
+/// A enum describing WireGuard log levels defined in `api-ios.go`.
 public enum WireGuardLogLevel: Int32 {
     case debug = 0
     case info = 1
