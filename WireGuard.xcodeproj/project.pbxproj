@@ -23,10 +23,6 @@
 		585B10672577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
 		585B10682577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
 		585B10692577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
-		585B106A2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
-		585B106B2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
-		585B106C2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
-		585B106D2577E294004F691E /* WireGuardKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104A2577E293004F691E /* WireGuardKit.swift */; };
 		585B106F2577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10712577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10722577E294004F691E /* Array+ConcurrentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104C2577E293004F691E /* Array+ConcurrentMap.swift */; };
@@ -296,7 +292,6 @@
 		585B10472577E293004F691E /* PeerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
 		585B10482577E293004F691E /* DNSServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
 		585B10492577E293004F691E /* TunnelConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelConfiguration.swift; sourceTree = "<group>"; };
-		585B104A2577E293004F691E /* WireGuardKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireGuardKit.swift; sourceTree = "<group>"; };
 		585B104B2577E293004F691E /* WireGuardAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireGuardAdapter.swift; sourceTree = "<group>"; };
 		585B104C2577E293004F691E /* Array+ConcurrentMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+ConcurrentMap.swift"; sourceTree = "<group>"; };
 		585B104D2577E293004F691E /* DNSResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
@@ -488,7 +483,6 @@
 				585B104F2577E293004F691E /* PrivateKey.swift */,
 				585B10492577E293004F691E /* TunnelConfiguration.swift */,
 				585B104B2577E293004F691E /* WireGuardAdapter.swift */,
-				585B104A2577E293004F691E /* WireGuardKit.swift */,
 			);
 			name = WireGuardKit;
 			path = Sources/WireGuardKit;
@@ -1279,7 +1273,6 @@
 				6F5A2B4621AFDED40081EDD8 /* FileManager+Extension.swift in Sources */,
 				585B10772577E294004F691E /* DNSResolver.swift in Sources */,
 				585B10872577E294004F691E /* IPAddressRange.swift in Sources */,
-				585B106B2577E294004F691E /* WireGuardKit.swift in Sources */,
 				6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */,
 				5F9696B121CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				585B10832577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */,
@@ -1349,7 +1342,6 @@
 				6B62E460220A6FA900EF34A6 /* PrivateDataConfirmation.swift in Sources */,
 				585B107C2577E294004F691E /* IPAddress+AddrInfo.swift in Sources */,
 				6FCD99B121E0EDA900BA4C82 /* TunnelEditViewController.swift in Sources */,
-				585B106C2577E294004F691E /* WireGuardKit.swift in Sources */,
 				6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
 				585B10882577E294004F691E /* IPAddressRange.swift in Sources */,
@@ -1398,7 +1390,6 @@
 				6B5C5E2A220A48D30024272E /* Keychain.swift in Sources */,
 				585B10792577E294004F691E /* DNSResolver.swift in Sources */,
 				585B10892577E294004F691E /* IPAddressRange.swift in Sources */,
-				585B106D2577E294004F691E /* WireGuardKit.swift in Sources */,
 				6FB1BDA421D4F53300A991BF /* Logger.swift in Sources */,
 				6FB1BDA521D4F53300A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				585B10852577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */,
@@ -1482,7 +1473,6 @@
 				6FB1017921C57DE600766195 /* MockTunnels.swift in Sources */,
 				6B707D8421F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */,
 				6FDEF806218725D200D8FBF6 /* SettingsTableViewController.swift in Sources */,
-				585B106A2577E294004F691E /* WireGuardKit.swift in Sources */,
 				5F4541A221C2D6DF00994C13 /* BorderedTextButton.swift in Sources */,
 				585B10662577E294004F691E /* TunnelConfiguration.swift in Sources */,
 				6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */,
