@@ -239,7 +239,7 @@ public class WireGuardAdapter {
             let swiftString = String(cString: message).trimmingCharacters(in: .newlines)
             let tunnelLogLevel = WireGuardLogLevel(rawValue: logLevel) ?? .debug
 
-            unretainedSelf.handleLogLine(level: tunnelLogLevel, message: swiftString)
+            unretainedSelf.logHandler(tunnelLogLevel, swiftString)
         }
     }
 
@@ -316,33 +316,20 @@ public class WireGuardAdapter {
         return resolvedEndpoints
     }
 
-    /// Private helper to pass the logs coming from WireGuard to
-    /// - Parameters:
-    ///   - level: log level
-    ///   - message: message
-    private func handleLogLine(level: WireGuardLogLevel, message: String) {
-        workQueue.async {
-            self.logHandler?(level, message)
-        }
-    }
-
     /// Helper method used by network path monitor.
     /// - Parameter path: new network path
     private func didReceivePathUpdate(path: Network.NWPath) {
+        guard let handle = self.wireguardHandle else { return }
 
-        if let handle = self.wireguardHandle {
-            self.handleLogLine(level: .debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
+        self.logHandler(.debug, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
 
-            #if os(iOS)
-            if let settingsGenerator = self.settingsGenerator {
-                wgSetConfig(handle, settingsGenerator.endpointUapiConfiguration())
-            }
-
-            // TODO: dynamically turn on or off WireGuard backend when entering airplane mode
-            #endif
-
-            wgBumpSockets(handle)
+        #if os(iOS)
+        if let settingsGenerator = self.settingsGenerator {
+            wgSetConfig(handle, settingsGenerator.endpointUapiConfiguration())
         }
+        #endif
+
+        wgBumpSockets(handle)
     }
 }
 
