@@ -56,7 +56,7 @@ public class WireGuardAdapter {
     }
 
     /// Returns a WireGuard version.
-    class var version: String {
+    class var backendVersion: String {
         return String(cString: wgVersion())
     }
 
