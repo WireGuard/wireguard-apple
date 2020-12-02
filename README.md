@@ -14,8 +14,8 @@ $ cd wireguard-apple
 - Rename and populate developer team ID file:
 
 ```
-$ cp WireGuard/WireGuard/Config/Developer.xcconfig.template WireGuard/WireGuard/Config/Developer.xcconfig
-$ vim WireGuard/WireGuard/Config/Developer.xcconfig
+$ cp Sources/WireGuardApp/Config/Developer.xcconfig.template Sources/WireGuardApp/Config/Developer.xcconfig
+$ vim Sources/WireGuardApp/Config/Developer.xcconfig
 ```
 
 - Install swiftlint and go 1.13.4:
@@ -27,7 +27,7 @@ $ brew install swiftlint go
 - Open project in Xcode:
 
 ```
-$ open ./WireGuard/WireGuard.xcodeproj
+$ open WireGuard.xcodeproj
 ```
 
 - Flip switches, press buttons, and make whirling noises until Xcode builds it.
