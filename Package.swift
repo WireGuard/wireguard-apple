@@ -10,24 +10,21 @@ let package = Package(
         .iOS(.v12)
     ],
     products: [
-        .library(name: "WireGuardKit", targets: ["WireGuardKit"])
+        .library(name: "WireGuardKit", targets: ["WireGuardKitSwift"])
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "WireGuardKit",
-            dependencies: ["libwg-go", "WireGuardKitCTarget"],
-            path: "WireGuardKit/Sources/WireGuardKit"
+            name: "WireGuardKitSwift",
+            dependencies: ["WireGuardKitGo", "WireGuardKitC"]
         ),
         .target(
-            name: "WireGuardKitCTarget",
-            dependencies: [],
-            path: "WireGuardKit/Sources/WireGuardKitCTarget"
+            name: "WireGuardKitC",
+            dependencies: []
         ),
         .target(
-            name: "libwg-go",
+            name: "WireGuardKitGo",
             dependencies: [],
-            path: "WireGuardKit/Sources/libwg-go",
             linkerSettings: [.linkedLibrary("wg-go")]
         )
     ]
