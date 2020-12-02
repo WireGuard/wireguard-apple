@@ -35,7 +35,7 @@ public class WireGuardAdapter {
     private weak var packetTunnelProvider: NEPacketTunnelProvider?
 
     /// Log handler closure.
-    private var logHandler: LogHandler?
+    private let logHandler: LogHandler
 
     /// WireGuard internal handle returned by `wgTurnOn` that's used to associate the calls
     /// with the specific WireGuard tunnel.
@@ -91,14 +91,18 @@ public class WireGuardAdapter {
     /// Designated initializer.
     /// - Parameter packetTunnelProvider: an instance of `NEPacketTunnelProvider`. Internally stored
     ///   as a weak reference.
-    public init(with packetTunnelProvider: NEPacketTunnelProvider) {
+    /// - Parameter logHandler: a log handler closure.
+    public init(with packetTunnelProvider: NEPacketTunnelProvider, logHandler: @escaping LogHandler) {
         self.packetTunnelProvider = packetTunnelProvider
+        self.logHandler = logHandler
+
+        setupLogHandler()
     }
 
     deinit {
-        // Force deactivate logger to make sure that no further calls to the instance of this class
+        // Force remove logger to make sure that no further calls to the instance of this class
         // can happen after deallocation.
-        deactivateLogHandler()
+        wgSetLogger(nil, nil)
 
         // Cancel network monitor
         networkMonitor?.cancel()
@@ -126,20 +130,6 @@ public class WireGuardAdapter {
             } else {
                 completionHandler(nil)
             }
-        }
-    }
-
-    /// Set log handler.
-    /// - Parameter logHandler: log handler closure
-    public func setLogHandler(_ logHandler: LogHandler?) {
-        workQueue.async {
-            self.logHandler = logHandler
-        }
-
-        if logHandler == nil {
-            deactivateLogHandler()
-        } else {
-            activateLogHandler()
         }
     }
 
@@ -247,8 +237,8 @@ public class WireGuardAdapter {
 
     // MARK: - Private methods
 
-    /// Install WireGuard log handler.
-    private func activateLogHandler() {
+    /// Setup WireGuard log handler.
+    private func setupLogHandler() {
         let context = Unmanaged.passUnretained(self).toOpaque()
         wgSetLogger(context) { (context, logLevel, message) in
             guard let context = context, let message = message else { return }
@@ -261,11 +251,6 @@ public class WireGuardAdapter {
 
             unretainedSelf.handleLogLine(level: tunnelLogLevel, message: swiftString)
         }
-    }
-
-    /// Uninstall WireGuard log handler.
-    private func deactivateLogHandler() {
-        wgSetLogger(nil, nil)
     }
 
     /// Resolve endpoints and update network configuration.

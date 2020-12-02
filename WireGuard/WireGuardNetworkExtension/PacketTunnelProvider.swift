@@ -8,7 +8,11 @@ import os
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
-    private lazy var adapter = WireGuardAdapter(with: self)
+    private lazy var adapter: WireGuardAdapter = {
+        return WireGuardAdapter(with: self) { logLevel, message in
+            wg_log(logLevel.osLogLevel, message: message)
+        }
+    }()
 
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
@@ -23,11 +27,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
-        }
-
-        // Setup WireGuard logger
-        adapter.setLogHandler { logLevel, message in
-            wg_log(logLevel.osLogLevel, message: message)
         }
 
         // Start the tunnel
