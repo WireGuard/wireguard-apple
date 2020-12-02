@@ -1,4 +1,5 @@
-#include "key.h"
+#include "../WireGuardKitC/WireGuardKitC.h"
+#include "wireguard-go-version.h"
 
 #include "unzip.h"
 #include "zip.h"
