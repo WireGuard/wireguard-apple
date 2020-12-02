@@ -3,7 +3,6 @@
 
 import Cocoa
 import ServiceManagement
-import WireGuardKit
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {

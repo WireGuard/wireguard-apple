@@ -3,7 +3,6 @@
 
 import Foundation
 import NetworkExtension
-import WireGuardKit
 import os
 
 class PacketTunnelProvider: NEPacketTunnelProvider {

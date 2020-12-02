@@ -2,7 +2,6 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import UIKit
-import WireGuardKit
 
 protocol TunnelEditTableViewControllerDelegate: class {
     func tunnelSaved(tunnel: TunnelContainer)

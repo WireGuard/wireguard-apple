@@ -2,7 +2,6 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import NetworkExtension
-import WireGuardKit
 
 enum PacketTunnelProviderError: String, Error {
     case savedProtocolConfigurationIsInvalid

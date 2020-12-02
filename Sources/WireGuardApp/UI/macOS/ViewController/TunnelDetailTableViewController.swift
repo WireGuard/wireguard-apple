@@ -2,7 +2,6 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Cocoa
-import WireGuardKit
 
 class TunnelDetailTableViewController: NSViewController {
 

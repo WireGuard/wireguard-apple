@@ -2,7 +2,10 @@
 // Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 
 import Foundation
+
+#if SWIFT_PACKAGE
 import WireGuardKitC
+#endif
 
 /// The class describing a private key used by WireGuard.
 public class PrivateKey: BaseKey {

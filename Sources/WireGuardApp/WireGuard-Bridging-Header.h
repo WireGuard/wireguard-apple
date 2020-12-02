@@ -1,3 +1,5 @@
+#include "key.h"
+
 #include "unzip.h"
 #include "zip.h"
 #include "ringlogger.h"

@@ -3,7 +3,6 @@
 
 import Foundation
 import os.log
-import WireGuardKit
 
 public class Logger {
     enum LoggerError: Error {
