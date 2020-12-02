@@ -44,9 +44,6 @@ public class WireGuardAdapter {
     /// Private queue used to synchronize access to `WireGuardAdapter` members.
     private let workQueue = DispatchQueue(label: "WireGuardAdapterWorkQueue")
 
-    /// Flag that tells if the adapter has already started.
-    private var isStarted = false
-
     /// Packet tunnel settings generator.
     private var settingsGenerator: PacketTunnelSettingsGenerator?
 
@@ -139,7 +136,7 @@ public class WireGuardAdapter {
     ///   - completionHandler: completion handler.
     public func start(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
         workQueue.async {
-            guard !self.isStarted else {
+            guard self.wireguardHandle == nil else {
                 completionHandler(.invalidState)
                 return
             }
@@ -170,7 +167,6 @@ public class WireGuardAdapter {
 
                     if handle >= 0 {
                         self.wireguardHandle = handle
-                        self.isStarted = true
                     } else {
                         returnError = .startWireGuardBackend(handle)
                     }
@@ -185,7 +181,7 @@ public class WireGuardAdapter {
     /// - Parameter completionHandler: completion handler.
     public func stop(completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
         workQueue.async {
-            guard self.isStarted else {
+            guard let handle = self.wireguardHandle else {
                 completionHandler(.invalidState)
                 return
             }
@@ -193,12 +189,8 @@ public class WireGuardAdapter {
             self.networkMonitor?.cancel()
             self.networkMonitor = nil
 
-            if let handle = self.wireguardHandle {
-                wgTurnOff(handle)
-                self.wireguardHandle = nil
-            }
-
-            self.isStarted = false
+            wgTurnOff(handle)
+            self.wireguardHandle = nil
 
             completionHandler(nil)
         }
@@ -210,7 +202,7 @@ public class WireGuardAdapter {
     ///   - completionHandler: completion handler.
     public func update(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
         workQueue.async {
-            guard self.isStarted else {
+            guard let handle = self.wireguardHandle else {
                 completionHandler(.invalidState)
                 return
             }
@@ -224,9 +216,7 @@ public class WireGuardAdapter {
                 if let error = error {
                     completionHandler(error)
                 } else {
-                    if let handle = self.wireguardHandle {
-                        wgSetConfig(handle, settingsGenerator!.uapiConfiguration())
-                    }
+                    wgSetConfig(handle, settingsGenerator!.uapiConfiguration())
                     completionHandler(nil)
                 }
 
@@ -339,7 +329,6 @@ public class WireGuardAdapter {
     /// Helper method used by network path monitor.
     /// - Parameter path: new network path
     private func didReceivePathUpdate(path: Network.NWPath) {
-        guard self.isStarted else { return }
 
         if let handle = self.wireguardHandle {
             self.handleLogLine(level: .debug, message: "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
