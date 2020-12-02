@@ -77,11 +77,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        ErrorNotifier.removeLastErrorFile()
-
         wg_log(.info, staticMessage: "Stopping tunnel")
 
         adapter.stop { error in
+            ErrorNotifier.removeLastErrorFile()
+
             if let error = error {
                 wg_log(.error, message: "Failed to stop WireGuard adapter: \(error.localizedDescription)")
             }
