@@ -263,7 +263,6 @@ public class WireGuardAdapter {
 
         let settingsGenerator = PacketTunnelSettingsGenerator(tunnelConfiguration: tunnelConfiguration, resolvedEndpoints: resolvedEndpoints)
         let networkSettings = settingsGenerator.generateNetworkSettings()
-        self.settingsGenerator = settingsGenerator
 
         var systemError: Error?
         let condition = NSCondition()
@@ -283,6 +282,11 @@ public class WireGuardAdapter {
 
         if condition.wait(until: Date().addingTimeInterval(setTunnelNetworkSettingsTimeout)) {
             let returnError = systemError.map { WireGuardAdapterError.setNetworkSettings($0) }
+
+            // Only assign `settingsGenerator` when `setTunnelNetworkSettings` succeeded.
+            if returnError == nil {
+                self.settingsGenerator = settingsGenerator
+            }
 
             completionHandler(settingsGenerator, returnError)
         } else {
