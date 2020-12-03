@@ -54,7 +54,7 @@ $ open WireGuard.xcodeproj
      the "External Build Tool Configuration":
      
      ```
-     $BUILD_DIR/../../SourcePackages/checkouts/Sources/WireGuardGo
+     $BUILD_DIR/../../SourcePackages/checkouts/wireguard-apple/Sources/WireGuardKitGo
      ```
      
    - Switch to "Build Settings" and find `SDKROOT`.
