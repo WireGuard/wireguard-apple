@@ -336,7 +336,11 @@ public class WireGuardAdapter {
 
         #if os(iOS)
         if let settingsGenerator = self.settingsGenerator {
-            wgSetConfig(handle, settingsGenerator.endpointUapiConfiguration())
+            let (wgSettings, resolutionErrors) = settingsGenerator.endpointUapiConfiguration()
+            for error in resolutionErrors {
+                self.logHandler(.error, "Failed to re-resolve \(error.address): \(error.errorDescription ?? "(nil)")")
+            }
+            wgSetConfig(handle, wgSettings)
         }
         #endif
 

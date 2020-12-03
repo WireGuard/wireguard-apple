@@ -18,17 +18,28 @@ class PacketTunnelSettingsGenerator {
         self.resolvedEndpoints = resolvedEndpoints
     }
 
-    func endpointUapiConfiguration() -> String {
+    func endpointUapiConfiguration() -> (String, [DNSResolutionError]) {
+        var resolutionErrors = [DNSResolutionError]()
         var wgSettings = ""
         for (index, peer) in tunnelConfiguration.peers.enumerated() {
             wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
-            // TODO: log the error returned by `withReresolvedIP`
-            if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
+            let result = Result { try resolvedEndpoints[index]?.withReresolvedIP() }
+                .mapError { error -> DNSResolutionError in
+                    // swiftlint:disable:next force_cast
+                    return error as! DNSResolutionError
+                }
+
+            switch result {
+            case .success(.some(let endpoint)):
                 if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
+            case .success(.none):
+                break
+            case .failure(let error):
+                resolutionErrors.append(error)
             }
         }
-        return wgSettings
+        return (wgSettings, resolutionErrors)
     }
 
     func uapiConfiguration() -> String {
