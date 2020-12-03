@@ -9,19 +9,19 @@ public enum WireGuardAdapterError: Error {
     /// Failure to locate tunnel file descriptor.
     case cannotLocateTunnelFileDescriptor
 
-    /// Failure to perform an operation in such state
+    /// Failure to perform an operation in such state.
     case invalidState
 
-    /// Failure to resolve endpoints
+    /// Failure to resolve endpoints.
     case dnsResolution([DNSResolutionError])
 
-    /// Failure to set network settings
+    /// Failure to set network settings.
     case setNetworkSettings(Error)
 
-    /// Timeout when calling to set network settings
+    /// Timeout when calling to set network settings.
     case setNetworkSettingsTimeout
 
-    /// Failure to start WireGuard backend
+    /// Failure to start WireGuard backend.
     case startWireGuardBackend(Int32)
 }
 
