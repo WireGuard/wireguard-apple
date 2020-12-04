@@ -12,11 +12,7 @@ extension IPv4Address {
             return Data(bytes: &ptr.pointee.sin_addr, count: MemoryLayout<in_addr>.size)
         }
 
-        if let ipAddress = IPv4Address(addressData) {
-            self = ipAddress
-        } else {
-            return nil
-        }
+        self.init(addressData)
     }
 }
 
@@ -28,10 +24,6 @@ extension IPv6Address {
             return Data(bytes: &ptr.pointee.sin6_addr, count: MemoryLayout<in6_addr>.size)
         }
 
-        if let ipAddress = IPv6Address(addressData) {
-            self = ipAddress
-        } else {
-            return nil
-        }
+        self.init(addressData)
     }
 }
