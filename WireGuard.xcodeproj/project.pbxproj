@@ -839,7 +839,6 @@
 			buildConfigurationList = 6F5D0C25218352EF000F85AD /* Build configuration list for PBXNativeTarget "WireGuardNetworkExtensioniOS" */;
 			buildPhases = (
 				5F45417B21C0906F00994C13 /* Swiftlint */,
-				58BA78EC2577FBDB006FAEA0 /* Extract wireguard-go Version */,
 				6F5D0C16218352EF000F85AD /* Sources */,
 				6F5D0C17218352EF000F85AD /* Frameworks */,
 				6F5D0C18218352EF000F85AD /* Resources */,
@@ -902,7 +901,6 @@
 			buildConfigurationList = 6FB1BD9C21D4BFE700A991BF /* Build configuration list for PBXNativeTarget "WireGuardNetworkExtensionmacOS" */;
 			buildPhases = (
 				6FB1BDB421D4F5CF00A991BF /* Swiftlint */,
-				58BA78ED2577FBF4006FAEA0 /* Extract wireguard-go Version */,
 				6FB1BD8D21D4BFE600A991BF /* Sources */,
 				6FB1BD8E21D4BFE600A991BF /* Frameworks */,
 				6FB1BD8F21D4BFE600A991BF /* Resources */,
@@ -1099,42 +1097,6 @@
 			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
 		};
 		58BA78E12577FB03006FAEA0 /* Extract wireguard-go Version */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Extract wireguard-go Version";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
-		};
-		58BA78EC2577FBDB006FAEA0 /* Extract wireguard-go Version */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Extract wireguard-go Version";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "exec make -C \"$PROJECT_DIR/Sources/WireGuardKitGo\" version-header\n";
-		};
-		58BA78ED2577FBF4006FAEA0 /* Extract wireguard-go Version */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

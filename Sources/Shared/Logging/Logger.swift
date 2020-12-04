@@ -49,7 +49,8 @@ public class Logger {
         if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
             appVersion += " (\(appBuild))"
         }
-        Logger.global?.log(message: "App version: \(appVersion); Go backend version: \(WIREGUARD_GO_VERSION)")
+
+        Logger.global?.log(message: "App version: \(appVersion)")
     }
 }
 
