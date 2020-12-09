@@ -31,7 +31,7 @@ class PacketTunnelSettingsGenerator {
 
             switch result {
             case .success(.some(let endpoint)):
-                if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
+                if case .name = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             case .success(.none):
                 break
@@ -58,7 +58,7 @@ class PacketTunnelSettingsGenerator {
                 wgSettings.append("preshared_key=\(preSharedKey)\n")
             }
             if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
-                if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
+                if case .name = endpoint.host { assert(false, "Endpoint is not resolved") }
                 wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
             }
             let persistentKeepAlive = peer.persistentKeepAlive ?? 0

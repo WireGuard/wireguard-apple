@@ -266,7 +266,7 @@ extension TunnelEditTableViewController {
                 guard let self = self else { return }
                 let isAllowedIPsChanged = self.tunnelViewModel.updateDNSServersInAllowedIPsIfRequired(oldDNSServers: oldValue, newDNSServers: newValue)
                 if isAllowedIPsChanged {
-                    let section = self.sections.firstIndex { if case .peer(_) = $0 { return true } else { return false } }
+                    let section = self.sections.firstIndex { if case .peer = $0 { return true } else { return false } }
                     if let section = section, let row = self.peerFields.firstIndex(of: .allowedIPs) {
                         self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .none)
                     }
