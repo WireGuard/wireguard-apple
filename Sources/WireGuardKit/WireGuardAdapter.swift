@@ -386,16 +386,18 @@ public class WireGuardAdapter {
     private func didReceivePathUpdate(path: Network.NWPath) {
         self.logHandler(.debug, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
 
+        #if os(macOS)
+        if case .started(let handle, _) = self.state {
+            wgBumpSockets(handle)
+        }
+        #elseif os(iOS)
         switch self.state {
         case .started(let handle, let settingsGenerator):
             if path.status.isSatisfiable {
-                #if os(iOS)
                 let (wgConfig, resolutionResults) = settingsGenerator.endpointUapiConfiguration()
                 self.logEndpointResolutionResults(resolutionResults)
 
                 wgSetConfig(handle, wgConfig)
-                #endif
-
                 wgBumpSockets(handle)
             } else {
                 self.logHandler(.info, "Connectivity offline, pausing backend.")
@@ -427,6 +429,9 @@ public class WireGuardAdapter {
             // no-op
             break
         }
+        #else
+        #error("Unsupported")
+        #endif
     }
 }
 
