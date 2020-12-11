@@ -1,0 +1,97 @@
+"actionCancel" = "Cancel·la";
+"actionSave" = "Guarda";
+"tunnelsListSettingsButtonTitle" = "Configuració";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Afegir un túnel";
+"tunnelsListSwipeDeleteButtonTitle" = "Elimina";
+"tunnelsListSelectButtonTitle" = "Selecciona";
+"tunnelsListSelectAllButtonTitle" = "Selecciona tots";
+"tunnelsListDeleteButtonTitle" = "Elimina";
+"tunnelsListSelectedTitle (%d)" = "%d seleccionat(s)";
+"macToggleStatusButtonDeactivate" = "Desactiva";
+"macToggleStatusButtonDeactivating" = "Desactivant…";
+"macToggleStatusButtonReasserting" = "Reactivant…";
+"macToggleStatusButtonRestarting" = "S'està reiniciant…";
+"macToggleStatusButtonWaiting" = "Esperant…";
+
+"tunnelSectionTitleInterface" = "Interfície";
+
+"tunnelInterfaceName" = "Nom";
+"tunnelInterfacePrivateKey" = "Clau privada";
+"tunnelInterfacePublicKey" = "Clau pública";
+"tunnelInterfaceGenerateKeypair" = "Genera una parella de claus";
+"tunnelInterfaceAddresses" = "Adreces";
+"tunnelInterfaceDNS" = "Servidors DNS";
+"tunnelInterfaceStatus" = "Estat";
+
+"tunnelSectionTitlePeer" = "Parell";
+
+"tunnelPeerPublicKey" = "Clau pública";
+"tunnelPeerAllowedIPs" = "IPs permeses";
+"tunnelPeerRxBytes" = "Dades rebudes";
+"tunnelPeerTxBytes" = "Dades enviades";
+"tunnelPeerExcludePrivateIPs" = "Exclou IPs privades";
+"tunnelOnDemandEthernet" = "Ethernet";
+
+"tunnelOnDemandAnySSID" = "Qualsevol SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Només aquestes SSIDs";
+"tunnelOnDemandExceptTheseSSIDs" = "Excepte aquestes SSIDs";
+"tunnelOnDemandOnlySSID (%d)" = "Només %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Només %d SSIDs";
+"tunnelOnDemandExceptSSID (%d)" = "Excepte %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "Excepte %d SSIDs";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Afegir SSIDs";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Afegir connectada: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Afegir nova";
+
+"tunnelOnDemandKey" = "Sota demanda";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d segons";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ hores";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minuts";
+
+"tunnelPeerPresharedKeyEnabled" = "activat";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Parell no vàlid";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Clau pública del parell requerida";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Les IPs permeses de parells han de ser una llista separada per comes, opcionalment en notació CIDR";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Dos o més parells no poden tindre la mateixa clau pública";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Escaneja un codi QR";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Càmera no suportada";
+"alertScanQRCodeCameraUnsupportedMessage" = "Aquest dispositiu no pot escanejar codis QR";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Codi QR no vàlid";
+"alertScanQRCodeInvalidQRCodeMessage" = "El QR escanejat no és una configuració de WireGuard vàlida";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Codi no vàlid";
+"alertScanQRCodeUnreadableQRCodeMessage" = "El codi escanejat no s'ha pogut llegir";
+
+// Settings UI
+
+"settingsViewTitle" = "Configuració";
+
+"settingsSectionTitleAbout" = "Quant a";
+
+"settingsSectionTitleTunnelLog" = "Registre";
+"settingsViewLogButtonTitle" = "Mostra el registre";
+
+// Log view
+
+"logViewTitle" = "Registre";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Ha fallat l'exportació";
+
+"alertUnableToWriteLogTitle" = "Ha fallat l'exportació";
+"macMenuManageTunnels" = "Gestiona túnels";
+"macMenuCut" = "Talla";
+"macMenuCopy" = "Copia";

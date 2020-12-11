@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2020 WireGuard LLC. All Rights Reserved.
-
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
 // Generic alert action names
+
 
 "actionOK" = "OK";
 "actionCancel" = "Annulla";
@@ -78,13 +78,13 @@
 "tunnelSectionTitlePeer" = "Peer";
 
 "tunnelPeerPublicKey" = "Chiave pubblica";
-"tunnelPeerPreSharedKey" = "Chiave condivisa";
+"tunnelPeerPreSharedKey" = "Chiave pre-condivisa";
 "tunnelPeerEndpoint" = "Endpoint";
-"tunnelPeerPersistentKeepalive" = "Tieni sempre attivo";
+"tunnelPeerPersistentKeepalive" = "Keepalive permanente";
 "tunnelPeerAllowedIPs" = "IP consentiti";
 "tunnelPeerRxBytes" = "Dati ricevuti";
 "tunnelPeerTxBytes" = "Dati inviati";
-"tunnelPeerLastHandshakeTime" = "Ultimo handshake";
+"tunnelPeerLastHandshakeTime" = "Ultima negoziazione";
 "tunnelPeerExcludePrivateIPs" = "Escludi IP privati";
 
 "tunnelSectionTitleOnDemand" = "Attivazione su richiesta";
@@ -103,18 +103,18 @@
 "tunnelOnDemandExceptSSIDs (%d)" = "Tranne %d SSID";
 "tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
 
-"tunnelOnDemandSSIDViewTitle" = "SSIDs";
-"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
-"tunnelOnDemandNoSSIDs" = "Nessun SSIDs";
-"tunnelOnDemandSectionTitleAddSSIDs" = "Aggiungi SSIDs";
-"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Aggiungi connessione %@";
+"tunnelOnDemandSSIDViewTitle" = "SSID";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID";
+"tunnelOnDemandNoSSIDs" = "Nessun SSID";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Aggiungi SSID";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Aggiungi connessione: %@";
 "tunnelOnDemandAddMessageAddNewSSID" = "Aggiungi nuovo";
 
 "tunnelOnDemandKey" = "Su richiesta";
 "tunnelOnDemandOptionOff" = "Off";
-"tunnelOnDemandOptionWiFiOnly" = "Solo Wi-1Fi";
-"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi o dati";
-"tunnelOnDemandOptionCellularOnly" = "Solo dati";
+"tunnelOnDemandOptionWiFiOnly" = "Solo Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi o cellulare";
+"tunnelOnDemandOptionCellularOnly" = "Solo cellulare";
 "tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi o ethernet";
 "tunnelOnDemandOptionEthernetOnly" = "Solo ethernet";
 
@@ -122,7 +122,7 @@
 
 "deletePeerButtonTitle" = "Elimina peer";
 "deletePeerConfirmationAlertButtonTitle" = "Elimina";
-"deletePeerConfirmationAlertMessage" = "Eliminare questo peer?";
+"deletePeerConfirmationAlertMessage" = "Vuoi eliminare questo peer?";
 
 "deleteTunnelButtonTitle" = "Elimina tunnel";
 "deleteTunnelConfirmationAlertButtonTitle" = "Elimina";
@@ -253,7 +253,7 @@
 "alertTunnelActivationSavedConfigFailureMessage" = "Impossibile recuperare le Informazioni del tunnel dalla configurazione salvata.";
 "alertTunnelActivationBackendFailureMessage" = "Impossibile attivare la libreria del backend Go.";
 "alertTunnelActivationFileDescriptorFailureMessage" = "Impossibile determinare il descrittore file del dispositivo TUN.";
-"alertTunnelActivationSetNetworkSettingsMessage" = "Impossibile applicare le Impostazioni di rete all'oggetto del tunnel.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Impossibile applicare le impostazioni di rete all'oggetto del tunnel.";
 
 "alertTunnelActivationFailureOnDemandAddendum" = " Questo tunnel è stato attivato su richiesta, per cui potrebbe essere riattivato automaticamente dal sistema operativo. Puoi disabilitare Attiva su richiesta in questa applicazione modificando la configurazione del tunnel.";
 

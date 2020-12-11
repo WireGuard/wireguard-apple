@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "예";
+"actionCancel" = "취소";
+"actionSave" = "저장";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "설정";
+"tunnelsListSwipeDeleteButtonTitle" = "삭제";
+"tunnelsListSelectButtonTitle" = "선택";
+"tunnelsListSelectAllButtonTitle" = "모두 선택";
+"tunnelsListDeleteButtonTitle" = "삭제";
+"tunnelsListSelectedTitle (%d)" = "%d 선택됨";
+
+"tunnelSectionTitleStatus" = "상태";
+"tunnelInterfacePrivateKey" = "비밀키";
+"tunnelInterfacePublicKey" = "공개키";
+"tunnelInterfaceDNS" = "DNS 서버";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "카메라 지원 안 됨";
+"alertScanQRCodeCameraUnsupportedMessage" = "이 장치로는 QR코드를 스캔할 수 없습니다";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "유효하지 않은 QR코드";
+"alertScanQRCodeInvalidQRCodeMessage" = "스캔된 QR코드는 유효한 WireGuard 설정이 아닙니다";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "유효하지 않은 코드입니다";
+
+// Settings UI
+
+"settingsViewTitle" = "설정";

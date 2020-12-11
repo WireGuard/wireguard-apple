@@ -1,0 +1,191 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "Aceptar";
+"actionCancel" = "Cancelar";
+"actionSave" = "Guardar";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Preferencias";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Agregar un túnel";
+"tunnelsListSwipeDeleteButtonTitle" = "Eliminar";
+"tunnelsListSelectButtonTitle" = "Seleccionar";
+"tunnelsListSelectAllButtonTitle" = "Seleccionar todo";
+"tunnelsListDeleteButtonTitle" = "Eliminar";
+"tunnelsListSelectedTitle (%d)" = "%d seleccionado";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Añadir un nuevo túnel WireGuard";
+"addTunnelMenuImportFile" = "Crear desde archivo";
+"addTunnelMenuQRCode" = "Crear desde código QR";
+"addTunnelMenuFromScratch" = "Crear desde cero";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "%d túneles creados";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "Creado %1$d de %2$d túneles desde archivos importados";
+
+"alertImportedFromZipTitle (%d)" = "Creados %d túneles";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Creado %1$d de %2$d túneles a partir del archivo zip";
+
+"alertBadConfigImportTitle" = "No se puede importar túnel";
+"alertBadConfigImportMessage (%@)" = "El archivo ‘%@’ no contiene una configuración válida de WireGuard";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Eliminar";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "¿Eliminar túnel %d?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "¿Eliminar %d túneles?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Nueva configuración";
+"editTunnelViewTitle" = "Editar configuración";
+
+"tunnelSectionTitleStatus" = "Estado";
+
+"tunnelStatusInactive" = "Inactivo";
+"tunnelStatusActivating" = "Activando";
+"tunnelStatusActive" = "Activo";
+"tunnelStatusDeactivating" = "Desactivando";
+"tunnelStatusReasserting" = "Reactivando";
+"tunnelStatusRestarting" = "Reiniciando";
+"tunnelStatusWaiting" = "Esperando";
+
+"macToggleStatusButtonActivate" = "Activo";
+"macToggleStatusButtonActivating" = "Activando…";
+"macToggleStatusButtonDeactivate" = "Desactivar";
+"macToggleStatusButtonDeactivating" = "Desactivando…";
+"macToggleStatusButtonReasserting" = "Reactivando…";
+"macToggleStatusButtonRestarting" = "Reiniciando…";
+"macToggleStatusButtonWaiting" = "Esperando…";
+
+"tunnelSectionTitleInterface" = "Interfaz";
+
+"tunnelInterfaceName" = "Nombre";
+"tunnelInterfacePrivateKey" = "Clave privada";
+"tunnelInterfacePublicKey" = "Clave pública";
+"tunnelInterfaceGenerateKeypair" = "Generar par de claves";
+"tunnelInterfaceAddresses" = "Direcciones";
+"tunnelInterfaceListenPort" = "Puerto de escucha";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "Servidores DNS";
+"tunnelInterfaceStatus" = "Estado";
+
+"tunnelSectionTitlePeer" = "Par";
+
+"tunnelPeerPublicKey" = "Clave pública";
+"tunnelPeerPreSharedKey" = "Clave precompartida";
+"tunnelPeerEndpoint" = "Punto final";
+"tunnelPeerPersistentKeepalive" = "Mantenimiento persistente";
+"tunnelPeerAllowedIPs" = "IPs permitidas";
+"tunnelPeerRxBytes" = "Datos recibidos";
+"tunnelPeerTxBytes" = "Datos enviados";
+"tunnelPeerLastHandshakeTime" = "Último saludo de manos";
+"tunnelPeerExcludePrivateIPs" = "Excluir direcciones privadas";
+
+"tunnelSectionTitleOnDemand" = "Activación bajo demanda";
+
+"tunnelOnDemandCellular" = "Celular";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSIDs";
+
+"tunnelOnDemandAnySSID" = "Cualquier SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Sólo estos SSIDs";
+"tunnelOnDemandExceptTheseSSIDs" = "Excepto estos SSIDs";
+"tunnelOnDemandOnlySSID (%d)" = "Sólo %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Sólo %d SSIDs";
+"tunnelOnDemandExceptSSID (%d)" = "Excepto %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "Excepto %d SSIDs";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSIDs";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
+"tunnelOnDemandNoSSIDs" = "Sin SSIDs";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Añadir SSIDs";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Añadir conectado: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Añadir nuevo";
+
+"tunnelOnDemandKey" = "Bajo demanda";
+"tunnelOnDemandOptionOff" = "Desactivado";
+"tunnelOnDemandOptionWiFiOnly" = "Sólo Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi o celular";
+"tunnelOnDemandOptionCellularOnly" = "Solo celular";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi o ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Sólo Ethernet";
+
+"addPeerButtonTitle" = "Añadir par";
+
+"deletePeerButtonTitle" = "Eliminar par";
+"deletePeerConfirmationAlertButtonTitle" = "Eliminar";
+"deletePeerConfirmationAlertMessage" = "¿Eliminar este par?";
+
+"deleteTunnelButtonTitle" = "Eliminar túnel";
+"deleteTunnelConfirmationAlertButtonTitle" = "Eliminar";
+"deleteTunnelConfirmationAlertMessage" = "¿Eliminar túnel %d?";
+
+"tunnelEditPlaceholderTextRequired" = "Requerido";
+"tunnelEditPlaceholderTextOptional" = "Opcional";
+"tunnelEditPlaceholderTextAutomatic" = "Automático";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Altamente recomendado";
+"tunnelEditPlaceholderTextOff" = "Desactivado";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "cada %@ segundos";
+"tunnelHandshakeTimestampNow" = "Ahora";
+"tunnelHandshakeTimestampSystemClockBackward" = "(Sistema de reloj herido hacia atrás)";
+"tunnelHandshakeTimestampAgo (%@)" = "hace %@";
+"tunnelHandshakeTimestampYear (%d)" = "%d año";
+"tunnelHandshakeTimestampYears (%d)" = "%d años";
+"tunnelHandshakeTimestampDay (%d)" = "%d día";
+"tunnelHandshakeTimestampDays (%d)" = "%d dias";
+"tunnelHandshakeTimestampHour (%d)" = "%d hora";
+"tunnelHandshakeTimestampHours (%d)" = "%d horas";
+"tunnelHandshakeTimestampMinute (%d)" = "%d minuto";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d minutos";
+"tunnelHandshakeTimestampSecond (%d)" = "%d segundo";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d segundos";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ horas";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minutos";
+
+"tunnelPeerPresharedKeyEnabled" = "activado";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "Interfaz inválida";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Se requiere nombre de interfaz";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "La clave privada de la interfaz es necesaria";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "La clave privada de interfaz debe ser una clave de 32 bytes en la codificación base64";
+"alertInvalidInterfaceMessageAddressInvalid" = "Las direcciones de la interfaz deben ser una lista de direcciones IP separadas por comas, opcionalmente en notaciòn CIDR";
+"alertInvalidInterfaceMessageListenPortInvalid" = "El puerto de escucha de la interfaz debe estar entre 0 y 65535, o no especificado";
+"alertInvalidInterfaceMessageMTUInvalid" = "La MTU de la interfaz debe estar entre 576 y 65535, o no especificada";
+"alertInvalidInterfaceMessageDNSInvalid" = "Los servidores DNS de la interfaz deben ser una lista de direcciones IP separadas por comas";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Par inválido";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "La clave pública del par es necesaria";
+"alertInvalidPeerMessagePublicKeyInvalid" = "La clave pública del par debe ser de 32 bytes en codificación base64";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "La clave precompartida del par debe ser de 32 bytes en codificación base64";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Las IPs permitidas del par deben ser una lista de direcciones IP separadas por comas, opcionalmente en notación CIDR";
+"alertInvalidPeerMessageEndpointInvalid" = "El punto final del par debe ser de la forma ‘host:port’ o ‘[host]:port’";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "El keepalive persistente del par debe estar entre 0 y 65535, o no especificado";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Dos o mas pares no pueden tener la misma llave pùblica";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Escanear código QR";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Exportación de registros fallida";
+
+"alertNoTunnelsToExportTitle" = "Nada para exportar";

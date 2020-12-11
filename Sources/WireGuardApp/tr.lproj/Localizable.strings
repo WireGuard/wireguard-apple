@@ -1,0 +1,445 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "TAMAM";
+"actionCancel" = "İptal";
+"actionSave" = "Kaydet";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Ayarlar";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Tünel ekle";
+"tunnelsListSwipeDeleteButtonTitle" = "Sil";
+"tunnelsListSelectButtonTitle" = "Seç";
+"tunnelsListSelectAllButtonTitle" = "Tümünü Seç";
+"tunnelsListDeleteButtonTitle" = "Sil";
+"tunnelsListSelectedTitle (%d)" = "%d seçildi";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Yeni bir WireGuard tüneli ekle";
+"addTunnelMenuImportFile" = "Dosya veya arşivden ekle";
+"addTunnelMenuQRCode" = "QR kodundan ekle";
+"addTunnelMenuFromScratch" = "Sıfırdan oluştur";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "%d tünel oluşturuldu";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "İçeri aktarılan dosyalardan %1$d/%2$d tünel oluşturuldu";
+
+"alertImportedFromZipTitle (%d)" = "%d tünel oluşturuldu";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Zip arşivinden %1$d/%2$d tünel oluşturuldu";
+
+"alertBadConfigImportTitle" = "Tünel içeri aktarılamıyor";
+"alertBadConfigImportMessage (%@)" = "‘%@’ dosyası geçerli bir WireGuard konfigürasyonu içermiyor";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Sil";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d tüneli silinsin mi?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "%d tünelleri silinsin mi?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Yeni konfigürasyon";
+"editTunnelViewTitle" = "Konfigürasyonu düzenle";
+
+"tunnelSectionTitleStatus" = "Durum";
+
+"tunnelStatusInactive" = "Aktif değil";
+"tunnelStatusActivating" = "Etkinleştiriliyor";
+"tunnelStatusActive" = "Etkin";
+"tunnelStatusDeactivating" = "Devre dışı bırakılıyor";
+"tunnelStatusReasserting" = "Yeniden etkinleştiriliyor";
+"tunnelStatusRestarting" = "Yeniden başlatılıyor";
+"tunnelStatusWaiting" = "Bekleniyor";
+
+"macToggleStatusButtonActivate" = "Etkinleştir";
+"macToggleStatusButtonActivating" = "Etkinleştiriliyor…";
+"macToggleStatusButtonDeactivate" = "Devre dışı bırak";
+"macToggleStatusButtonDeactivating" = "Devre dışı bırakılıyor…";
+"macToggleStatusButtonReasserting" = "Yeniden etkinleştiriliyor…";
+"macToggleStatusButtonRestarting" = "Yeniden başlatılıyor…";
+"macToggleStatusButtonWaiting" = "Bekleniyor…";
+
+"tunnelSectionTitleInterface" = "Arayüz";
+
+"tunnelInterfaceName" = "İsim";
+"tunnelInterfacePrivateKey" = "Özel anahtar";
+"tunnelInterfacePublicKey" = "Açık anahtar";
+"tunnelInterfaceGenerateKeypair" = "Anahtar çifti oluştur";
+"tunnelInterfaceAddresses" = "Adresler";
+"tunnelInterfaceListenPort" = "Dinlenen port";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS sunucuları";
+"tunnelInterfaceStatus" = "Durum";
+
+"tunnelSectionTitlePeer" = "Eş";
+
+"tunnelPeerPublicKey" = "Genel anahtar";
+"tunnelPeerPreSharedKey" = "Önceden paylaşılan anahtar";
+"tunnelPeerEndpoint" = "Uç nokta";
+"tunnelPeerPersistentKeepalive" = "Kalıcı canlı tutma";
+"tunnelPeerAllowedIPs" = "İzin verilen IP’ler";
+"tunnelPeerRxBytes" = "Veri alındı";
+"tunnelPeerTxBytes" = "Veri gönderildi";
+"tunnelPeerLastHandshakeTime" = "En son el sıkışma";
+"tunnelPeerExcludePrivateIPs" = "Özel IP’leri hariç tut";
+
+"tunnelSectionTitleOnDemand" = "İsteğe Bağlı Etkinleştirme";
+
+"tunnelOnDemandCellular" = "Hücresel";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSID’ler";
+
+"tunnelOnDemandAnySSID" = "Herhangi bir SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Yalnızca bu SSID’ler";
+"tunnelOnDemandExceptTheseSSIDs" = "Bu SSID’ler dışında";
+"tunnelOnDemandOnlySSID (%d)" = "Sadece %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Sadece %d SSID’ler";
+"tunnelOnDemandExceptSSID (%d)" = "%d SSID hariç";
+"tunnelOnDemandExceptSSIDs (%d)" = "%d SSID’leri hariç";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSID’ler";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID’ler";
+"tunnelOnDemandNoSSIDs" = "SSID yok";
+"tunnelOnDemandSectionTitleAddSSIDs" = "SSID’ler ekleyin";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Bağlanılanı ekle: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Yeni ekle";
+
+"tunnelOnDemandKey" = "Talep üzerine";
+"tunnelOnDemandOptionOff" = "Kapalı";
+"tunnelOnDemandOptionWiFiOnly" = "Sadece Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi veya hücresel";
+"tunnelOnDemandOptionCellularOnly" = "Sadece hücresel";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi veya ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Sadece ethernet";
+
+"addPeerButtonTitle" = "Eş ekle";
+
+"deletePeerButtonTitle" = "Eşi sil";
+"deletePeerConfirmationAlertButtonTitle" = "Sil";
+"deletePeerConfirmationAlertMessage" = "Bu eş silinsin mi?";
+
+"deleteTunnelButtonTitle" = "Tüneli sil";
+"deleteTunnelConfirmationAlertButtonTitle" = "Sil";
+"deleteTunnelConfirmationAlertMessage" = "Bu tünel silinsin mi?";
+
+"tunnelEditPlaceholderTextRequired" = "Gerekli";
+"tunnelEditPlaceholderTextOptional" = "İsteğe bağlı";
+"tunnelEditPlaceholderTextAutomatic" = "Otomatik";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Kesinlikle önerilir";
+"tunnelEditPlaceholderTextOff" = "Kapalı";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "her %@ saniyede";
+"tunnelHandshakeTimestampNow" = "Şimdi";
+"tunnelHandshakeTimestampSystemClockBackward" = "(Sistem saati geriye doğru sarılı)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ önce";
+"tunnelHandshakeTimestampYear (%d)" = "%d yıl";
+"tunnelHandshakeTimestampYears (%d)" = "%d yıl";
+"tunnelHandshakeTimestampDay (%d)" = "%d gün";
+"tunnelHandshakeTimestampDays (%d)" = "%d gün";
+"tunnelHandshakeTimestampHour (%d)" = "%d saat";
+"tunnelHandshakeTimestampHours (%d)" = "%d saat";
+"tunnelHandshakeTimestampMinute (%d)" = "%d dakika";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d dakika";
+"tunnelHandshakeTimestampSecond (%d)" = "%d saniye";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d saniye";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ saat";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ dakika";
+
+"tunnelPeerPresharedKeyEnabled" = "etkinleştirildi";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "Geçersiz arayüz";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Arayüz ismi gerekli";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Arayüz’ün özel anahtarı gerekli";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Arayüz’ün özel anahtarı base64 kodlamalı bir 32-byte anahtar olmalı";
+"alertInvalidInterfaceMessageAddressInvalid" = "Arayüz adresleri, isteğe bağlı olarak CIDR gösteriminde virgülle ayrılmış IP adreslerinin bir listesi olmalıdır";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Arayüzün dinleme bağlantı noktası 0 ile 65535 arasında veya belirtilmemiş olmalıdır";
+"alertInvalidInterfaceMessageMTUInvalid" = "Arayüzün MTU’su 576 ile 65535 arasında veya belirtilmemiş olmalıdır";
+"alertInvalidInterfaceMessageDNSInvalid" = "Arayüzün DNS sunucuları, virgülle ayrılmış IP adreslerinin bir listesi olmalıdır";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Geçersiz eş";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Eşin genel anahtarı gerekli";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Eşin genel anahtarı, base64 ile kodlanmış 32 baytlık bir anahtar olmalıdır";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Eşlerin önceden paylaşılan anahtarı, base64 ile kodlanmış 32 baytlık bir anahtar olmalıdır";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Eşlerin izin verilen IP’leri, isteğe bağlı olarak CIDR gösteriminde virgülle ayrılmış IP adreslerinin bir listesi olmalıdır";
+"alertInvalidPeerMessageEndpointInvalid" = "Eşin uç noktası \"host:port\" veya \"[host]: port\" biçiminde olmalıdır";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Eşin sürekli canlı tutulması 0 ile 65535 arasında veya belirtilmemiş olmalıdır";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "İki veya daha fazla eş aynı ortak anahtara sahip olamaz";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "QR kodu tara";
+"scanQRCodeTipText" = "İpucu: `qrencode -t ansiutf8 < tunnel.conf` ile oluşturun";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Kamera Desteklenmiyor";
+"alertScanQRCodeCameraUnsupportedMessage" = "Bu cihaz QR kodlarını tarayamaz";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Geçersiz QR Kodu";
+"alertScanQRCodeInvalidQRCodeMessage" = "Taranan QR kodu geçerli bir WireGuard yapılandırması değil";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Geçersiz Kod";
+"alertScanQRCodeUnreadableQRCodeMessage" = "Taranan kod okunamadı";
+
+"alertScanQRCodeNamePromptTitle" = "Lütfen taranan tünele bir isim verin";
+
+// Settings UI
+
+"settingsViewTitle" = "Ayarlar";
+
+"settingsSectionTitleAbout" = "Hakkında";
+"settingsVersionKeyWireGuardForIOS" = "iOS için WireGuard";
+"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+
+"settingsSectionTitleExportConfigurations" = "Yapılandırmaları dışa aktar";
+"settingsExportZipButtonTitle" = "Zip arşivini dışa aktar";
+
+"settingsSectionTitleTunnelLog" = "Günlük";
+"settingsViewLogButtonTitle" = "Günlüğü görüntüle";
+
+// Log view
+
+"logViewTitle" = "Günlük";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Günlük dışa aktarılamadı";
+"alertUnableToRemovePreviousLogMessage" = "Önceden var olan günlük temizlenemedi";
+
+"alertUnableToWriteLogTitle" = "Günlük dışa aktarılamadı";
+"alertUnableToWriteLogMessage" = "Günlükler dosyaya yazılamıyor";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "Zip arşivi okunamıyor";
+"alertCantOpenInputZipFileMessage" = "Zip arşivi okunamadı.";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Zip arşivi oluşturulamıyor";
+"alertCantOpenOutputZipFileForWritingMessage" = "Zip dosyası yazmak için açılamadı.";
+
+"alertBadArchiveTitle" = "Zip arşivi okunamıyor";
+"alertBadArchiveMessage" = "Kötü veya bozuk zip arşivi.";
+
+"alertNoTunnelsToExportTitle" = "Dışa aktarılacak bir şey yok";
+"alertNoTunnelsToExportMessage" = "Dışa aktarılacak tünel yok";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "Zip arşivinde tünel yok";
+"alertNoTunnelsInImportedZipArchiveMessage" = "Zip arşivinde .conf tünel dosyası bulunamadı.";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "Dosyadan içe aktarılamıyor";
+"alertCantOpenInputConfFileMessage (%@)" = "‘%@’ dosyası okunamadı.";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "Aktivasyon hatası";
+"alertTunnelActivationFailureMessage" = "Tünel etkinleştirilemedi. Lütfen internete bağlı olduğunuzdan emin olun.";
+"alertTunnelActivationSavedConfigFailureMessage" = "Kaydedilen yapılandırmadan tünel bilgileri alınamıyor.";
+"alertTunnelActivationBackendFailureMessage" = "Go Backend kitaplığı açılamıyor.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "TUN cihaz dosyası tanımlayıcısı belirlenemiyor.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Tünel nesnesine ağ ayarları uygulanamıyor.";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " Bu tünelde İsteğe Bağlı Etkinleştirme özelliği etkinleştirilmiştir, bu nedenle bu tünel işletim sistemi tarafından otomatik olarak yeniden etkinleştirilebilir. Tünel yapılandırmasını düzenleyerek bu uygulamada İsteğe Bağlı Etkinleştir’i kapatabilirsiniz.";
+
+"alertTunnelDNSFailureTitle" = "DNS çözümleme hatası";
+"alertTunnelDNSFailureMessage" = "Bir veya daha fazla uç nokta alanı çözülemedi.";
+
+"alertTunnelNameEmptyTitle" = "İsim sağlanmadı";
+"alertTunnelNameEmptyMessage" = "Boş bir isimle tünel oluşturulamaz";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Bu isim zaten var";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "Bu isimde bir tünel zaten var";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Aktivasyon sürüyor";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "Tünel halihazırda aktif veya aktif olma sürecinde";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "Tüneller listelenemiyor";
+"alertSystemErrorOnAddTunnelTitle" = "Tünel oluşturulamıyor";
+"alertSystemErrorOnModifyTunnelTitle" = "Tünel değiştirilemiyor";
+"alertSystemErrorOnRemoveTunnelTitle" = "Tünel kaldırılamıyor";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "Aktivasyon hatası";
+"alertTunnelActivationSystemErrorMessage (%@)" = "Tünel etkinleştirilemedi. %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "Yapılandırma geçersiz.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "Yapılandırma devre dışı bırakıldı.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "Bağlantı başarısız oldu.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "Yapılandırma eski.";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Yapılandırmanın okunması veya yazılması başarısız oldu.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "Bilinmeyen sistem hatası.";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "Ağlar: %@";
+"macMenuNetworksNone" = "Ağlar: Yok";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "Tünelleri Yönet";
+"macMenuImportTunnels" = "Tünelleri Dosyadan İçe Aktar…";
+"macMenuAddEmptyTunnel" = "Boş Tünel Ekle…";
+"macMenuViewLog" = "Günlüğü Görüntüle";
+"macMenuExportTunnels" = "Tünelleri Zip'e Aktar…";
+"macMenuAbout" = "WireGuard Hakkında";
+"macMenuQuit" = "WireGuard’dan Çık";
+
+"macMenuHideApp" = "WireGuard’ı Gizle";
+"macMenuHideOtherApps" = "Diğerlerini Gizle";
+"macMenuShowAllApps" = "Tümünü Göster";
+
+"macMenuFile" = "Dosya";
+"macMenuCloseWindow" = "Pencereyi Kapat";
+
+"macMenuEdit" = "Düzenle";
+"macMenuCut" = "Kes";
+"macMenuCopy" = "Kopyala";
+"macMenuPaste" = "Yapıştır";
+"macMenuSelectAll" = "Tümünü Seç";
+
+"macMenuTunnel" = "Tünel";
+"macMenuToggleStatus" = "Durumu Değiştir";
+"macMenuEditTunnel" = "Düzenle…";
+"macMenuDeleteSelected" = "Seçileni Sil";
+
+"macMenuWindow" = "Pencere";
+"macMenuMinimize" = "Küçült";
+"macMenuZoom" = "Yakınlaştır";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "WireGuard Tünellerini Yönet";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "‘%@’ silmek istediğinizden emin misiniz?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "%d tünellerini silmek istediğinizden emin misiniz?";
+"macDeleteTunnelConfirmationAlertInfo" = "Bu eylemi geri alamazsınız.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Sil";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "İptal";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Siliniyor…";
+
+"macButtonImportTunnels" = "Tünelleri dosyadan içe aktar";
+"macSheetButtonImport" = "İçe aktar";
+
+"macNameFieldExportLog" = "Günlüğü şuraya kaydet:";
+"macSheetButtonExportLog" = "Kaydet";
+
+"macNameFieldExportZip" = "Tünelleri şuraya aktar:";
+"macSheetButtonExportZip" = "Kaydet";
+
+"macButtonDeleteTunnels (%d)" = "%d tünellerini sil";
+
+"macButtonEdit" = "Düzenle";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "Talep üzerine:";
+"macFieldOnDemandSSIDs" = "SSID’ler:";
+
+// Mac status display
+
+"macStatus (%@)" = "Durum: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "Yoksay";
+"macEditSave" = "Kaydet";
+
+"macAlertNameIsEmpty" = "İsim gereklidir";
+"macAlertDuplicateName (%@)" = "‘%@’ ismiyle başka bir tünel zaten var.";
+
+"macAlertInvalidLine (%@)" = "Geçersiz satır: ‘%@’.";
+
+"macAlertNoInterface" = "Yapılandırmanın bir ‘Arayüz’ bölümü olmalıdır.";
+"macAlertMultipleInterfaces" = "Yapılandırmada yalnızca bir ‘Arayüz’ bölümü olmalıdır.";
+"macAlertPrivateKeyInvalid" = "Özel anahtar geçersiz.";
+"macAlertListenPortInvalid (%@)" = "Dinleme bağlantı noktası ‘%@’ geçersiz.";
+"macAlertAddressInvalid (%@)" = "‘%@’ adresi geçersiz.";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ geçersiz.";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ geçersiz.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Arayüz tanınmayan ‘%@’ anahtarı içeriyor";
+"macAlertInfoUnrecognizedInterfaceKey" = "Geçerli anahtarlar şunlardır: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ ve ‘MTU’.";
+
+"macAlertPublicKeyInvalid" = "Genel anahtar geçersiz";
+"macAlertPreSharedKeyInvalid" = "Önceden paylaşılan anahtar geçersiz";
+"macAlertAllowedIPInvalid (%@)" = "İzin verilen IP ‘%@’ geçersiz";
+"macAlertEndpointInvalid (%@)" = "‘%@’ uç noktası geçersiz";
+"macAlertPersistentKeepliveInvalid (%@)" = "Sürekli canlı tutma değeri ‘%@’ geçersiz";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Eş tanınmayan ‘%@’ anahtarı içeriyor";
+"macAlertInfoUnrecognizedPeerKey" = "Geçerli anahtarlar şunlardır: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ ve ‘PersistentKeepalive’";
+
+"macAlertMultipleEntriesForKey (%@)" = "‘%@’ anahtarı için bölüm başına yalnızca bir giriş olmalıdır";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "Uygulama sürümü: %@";
+"macGoBackendVersion (%@)" = "Go backend sürümü: %@";
+
+// Privacy
+
+"macExportPrivateData" = "tünel özel anahtarlarını dışa aktar";
+"macViewPrivateData" = "tünel özel anahtarlarını görüntüle";
+"iosExportPrivateData" = "Tünel özel anahtarlarını dışa aktarmak için kimlik doğrulaması yapın.";
+"iosViewPrivateData" = "Tünel özel anahtarlarını görüntülemek için kimlik doğrulaması yapın.";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "Tünel yöneticisini kapatmak mı yoksa WireGuard’dan tamamen çıkmak mı istiyorsunuz?";
+"macConfirmAndQuitAlertInfo" = "Tünel yöneticisini kapatırsanız, WireGuard menü çubuğu simgesinden kullanılmaya devam edecektir.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Tünel yöneticisini kapatırsanız, WireGuard menü çubuğu simgesinden kullanılmaya devam edecektir.\n\nWireGuard’dan tamamen çıkarsanız, o anda aktif olan tünelin ('%@') siz bu uygulamadan veya Sistem Tercihlerindeki Ağ paneli aracılığıyla devre dışı bırakana kadar hâlâ etkin kalacağını unutmayın.";
+"macConfirmAndQuitAlertQuitWireGuard" = "WireGuard’dan Çık";
+"macConfirmAndQuitAlertCloseWindow" = "Tünel Yöneticisini Kapat";
+
+"macAppExitingWithActiveTunnelMessage" = "WireGuard aktif bir tünelle çıkıyor";
+"macAppExitingWithActiveTunnelInfo" = "Tünel, çıktıktan sonra aktif kalacaktır. Bu uygulamayı yeniden açarak veya Sistem Tercihlerindeki Ağ panelinden devre dışı bırakabilirsiniz.";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "Tüneli düzenle (⌘E)";
+"macToolTipToggleStatus" = "Durumu değiştir (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "Zaman";
+"macLogColumnTitleLogMessage" = "Günlük mesajı";
+"macLogButtonTitleClose" = "Kapat";
+"macLogButtonTitleSave" = "Kaydet…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "Bu tünelin yapılandırması anahtar zincirinde bulunamıyor.";
+"macUnusableTunnelInfo" = "Bu tünelin başka bir kullanıcı tarafından oluşturulması durumunda, yalnızca bu kullanıcı bu tüneli görüntüleyebilir, düzenleyebilir veya etkinleştirebilir.";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Tüneli sil";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store, WireGuard’ı güncellemek istiyor";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Lütfen ‘%@’ tüneli için isteğe bağlı’yı kapatın, devre dışı bırakın ve ardından App Store’da güncellemeye devam edin.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Lütfen ‘%@’ tünelini devre dışı bırakın ve ardından App Store’da güncellemeye devam edin.";
+
+// Donation
+
+"donateLink" = "♥ WireGuard Projesine Bağış Yapın";

@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "好";
+"actionCancel" = "取消";
+"actionSave" = "儲存";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "設定";
+"tunnelsListCenteredAddTunnelButtonTitle" = "新增通道";
+"tunnelsListSwipeDeleteButtonTitle" = "刪除";
+"tunnelsListSelectButtonTitle" = "選擇";
+"tunnelsListSelectAllButtonTitle" = "全選";
+"tunnelsListDeleteButtonTitle" = "刪除";
+"tunnelsListSelectedTitle (%d)" = "已選擇了 %d";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "新增一個 WireGuard 通道";
+"addTunnelMenuImportFile" = "從檔案或是壓縮檔中建立";
+"addTunnelMenuQRCode" = "從 QR code 中建立";
+"addTunnelMenuFromScratch" = "從空白開始建立";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "已建立 %d 個通道";
+
+"alertImportedFromZipTitle (%d)" = "已建立 %d 個通道";
+
+"alertBadConfigImportTitle" = "無法匯入通道";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "刪除";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "是否刪除 %d 個通道？";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "是否刪除 %d 個通道？";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "新增設定";
+"editTunnelViewTitle" = "修改設定";
+
+"tunnelSectionTitleStatus" = "ㄓ望太";
+
+"tunnelStatusInactive" = "未啟用";
+"tunnelStatusActivating" = "啟用中";
+"tunnelStatusActive" = "已啟用";
+"tunnelStatusDeactivating" = "停用中";
+"tunnelStatusReasserting" = "重新啟用中";
+"tunnelStatusRestarting" = "重新啟動中";
+"tunnelStatusWaiting" = "等待中";
+
+"macToggleStatusButtonActivate" = "啟動";
+"macToggleStatusButtonActivating" = "啟動中...";
+"macToggleStatusButtonDeactivate" = "停用";
+"macToggleStatusButtonDeactivating" = "停用中...";
+"macToggleStatusButtonReasserting" = "重新啟用中...";
+"macToggleStatusButtonRestarting" = "重新啟動中....";
+"macToggleStatusButtonWaiting" = "等待中...";
+
+"tunnelSectionTitleInterface" = "介面";
+
+"tunnelInterfaceName" = "名稱";
+"tunnelInterfacePrivateKey" = "私人金鑰";
+"tunnelInterfacePublicKey" = "公開金鑰";
+"tunnelInterfaceGenerateKeypair" = "產生金鑰對";
+"tunnelInterfaceListenPort" = "監聽埠";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS 伺服器";
+"tunnelEditPlaceholderTextAutomatic" = "自動";
+"tunnelHandshakeTimestampNow" = "現在";
+
+// Settings UI
+
+"settingsViewTitle" = "設定";
+
+"settingsSectionTitleAbout" = "關於";
+"macMenuAbout" = "關於 WireGuard";
+"macMenuQuit" = "離開 WireGuard";
+
+"macMenuHideApp" = "隱藏 WireGuard";
+"macMenuCut" = "剪下";
+"macMenuCopy" = "複製";
+"macMenuPaste" = "貼上";
+"macMenuSelectAll" = "全選";
+"macMenuMinimize" = "最小化";

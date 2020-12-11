@@ -1,0 +1,190 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "OK";
+"actionCancel" = "Anuluj";
+"actionSave" = "Zapisz";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Ustawienia";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Dodaj tunel";
+"tunnelsListSwipeDeleteButtonTitle" = "Usuń";
+"tunnelsListSelectButtonTitle" = "Wybierz";
+"tunnelsListSelectAllButtonTitle" = "Wybierz wszystko";
+"tunnelsListDeleteButtonTitle" = "Usuń";
+"tunnelsListSelectedTitle (%d)" = "%d wybrano";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Dodaj nowy tunel WireGuard";
+"addTunnelMenuImportFile" = "Utwórz z pliku lub archiwum";
+"addTunnelMenuQRCode" = "Utwórz za pomocą kodu QR";
+"addTunnelMenuFromScratch" = "Utwórz od podstaw";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Usunąć %d tunel?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Usunąć %d tunele(i)?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Nowa konfiguracja";
+"editTunnelViewTitle" = "Edytuj konfigurację";
+
+"tunnelSectionTitleStatus" = "Status";
+
+"tunnelInterfaceName" = "Nazwa";
+"tunnelInterfacePrivateKey" = "Klucz prywatny";
+"tunnelInterfacePublicKey" = "Klucz publiczny";
+"tunnelInterfaceAddresses" = "Adresy";
+"tunnelInterfaceListenPort" = "Port nasłuchu";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "Serwery DNS";
+"tunnelInterfaceStatus" = "Status";
+
+"tunnelPeerPublicKey" = "Klucz publiczny";
+"tunnelPeerAllowedIPs" = "Dozwolone adresy IP";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandKey" = "Na żądanie";
+"tunnelOnDemandOptionWiFiOnly" = "Tylko Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi i dane sieci komórkowej";
+"tunnelOnDemandOptionCellularOnly" = "Tylko dane sieci komórkowej";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi lub sieć ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Tylko sieć ethernet";
+"deletePeerConfirmationAlertButtonTitle" = "Usuń";
+
+"deleteTunnelButtonTitle" = "Usuń tunel";
+"deleteTunnelConfirmationAlertButtonTitle" = "Usuń";
+"deleteTunnelConfirmationAlertMessage" = "Usunąć ten tunel?";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "co %@ sekund";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ temu";
+"tunnelHandshakeTimestampYear (%d)" = "%d rok";
+"tunnelHandshakeTimestampYears (%d)" = "%d lat/lata";
+"tunnelHandshakeTimestampDay (%d)" = "%d dzień";
+"tunnelHandshakeTimestampDays (%d)" = "%d dni";
+"tunnelHandshakeTimestampHour (%d)" = "%d godzina";
+"tunnelHandshakeTimestampHours (%d)" = "%d godzin";
+"tunnelHandshakeTimestampMinute (%d)" = "%d minuta";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d minut";
+"tunnelHandshakeTimestampSecond (%d)" = "%d sekunda";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d sekund";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ godziny";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minuty";
+
+"tunnelPeerPresharedKeyEnabled" = "włączony";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Skanuj kod QR";
+"scanQRCodeTipText" = "Wskazówka: wygeneruj za pomocą `qrencode -t ansiutf8 < tunnel.conf`";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Nieprawidłowy kod QR";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Nieprawidłowy kod";
+
+// Settings UI
+
+"settingsViewTitle" = "Ustawienia";
+
+"settingsSectionTitleAbout" = "O programie";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard dla iOS";
+
+"settingsSectionTitleTunnelLog" = "Log";
+"settingsViewLogButtonTitle" = "Wyświetl log";
+
+// Log view
+
+"logViewTitle" = "Log";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Nie można utworzyć archiwum ZIP";
+"alertCantOpenOutputZipFileForWritingMessage" = "Nie udało się otworzyć pliku ZIP do zapisu.";
+
+"alertBadArchiveTitle" = "Nie można odczytać archiwum ZIP";
+"alertBadArchiveMessage" = "Niewłaściwe lub uszkodzone archiwum ZIP.";
+
+"alertNoTunnelsToExportTitle" = "Nie ma nic do wyeksportowania";
+"alertNoTunnelsToExportMessage" = "Nie ma żadnych tuneli do wyeksportowania";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "Brak tuneli w archiwum ZIP";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Nazwa już istnieje";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "Tunel o tej nazwie już istnieje";
+"alertSystemErrorOnAddTunnelTitle" = "Nie można utworzyć tunelu";
+"alertSystemErrorOnModifyTunnelTitle" = "Nie można zmodyfikować tunelu";
+"alertSystemErrorOnRemoveTunnelTitle" = "Nie można usunąć tunelu";
+
+"macMenuTitle" = "WireGuard";
+"macMenuImportTunnels" = "Importuj tunel(e) z pliku…";
+"macMenuAddEmptyTunnel" = "Dodaj pusty tunel…";
+"macMenuViewLog" = "Wyświetl log";
+"macMenuExportTunnels" = "Wyeksportuj tunele do pliku ZIP…";
+"macMenuAbout" = "Informacje o WireGuard";
+"macMenuQuit" = "Wyjdź z programu WireGuard";
+
+"macMenuHideApp" = "Ukryj program WireGuard";
+
+"macMenuFile" = "Plik";
+"macMenuCloseWindow" = "Zamknij okno";
+
+"macMenuEdit" = "Edycja";
+"macMenuCut" = "Wytnij";
+"macMenuCopy" = "Kopiuj";
+"macMenuPaste" = "Wklej";
+"macMenuSelectAll" = "Wybierz wszystko";
+
+"macMenuTunnel" = "Tunel";
+"macMenuEditTunnel" = "Edytuj…";
+"macMenuDeleteSelected" = "Usuń wybrane";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "Zarządzaj tunelami WireGuard";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Czy na pewno chcesz usunąć ‘%@’?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Czy na pewno chcesz usunąć %d tunele(i)?";
+"macDeleteTunnelConfirmationAlertInfo" = "Nie możesz cofnąć tej czynności.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Usuń";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Anuluj";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Usuwanie…";
+
+"macButtonImportTunnels" = "Importuj tunel(e) z pliku";
+
+"macNameFieldExportLog" = "Zapisz log do:";
+"macSheetButtonExportLog" = "Zapisz";
+
+"macNameFieldExportZip" = "Wyeksportuj tunele do:";
+"macSheetButtonExportZip" = "Zapisz";
+
+"macButtonEdit" = "Edytuj";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macEditSave" = "Zapisz";
+
+"macAlertNameIsEmpty" = "Nazwa jest wymagana";
+"macAlertPrivateKeyInvalid" = "Klucz prywatny jest nieprawidłowy.";
+"macAlertAddressInvalid (%@)" = "Adres \"%@\" jest nieprawidłowy.";
+"macAlertMTUInvalid (%@)" = "Wartość MTU ‘%@’ jest nieprawidłowa.";
+
+"macAlertPublicKeyInvalid" = "Klucz publiczny jest nieprawidłowy";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "Wersja aplikacji: %@";
+"macGoBackendVersion (%@)" = "Wersja backend'u Go: %@";
+"macConfirmAndQuitAlertQuitWireGuard" = "Wyjdź z programu WireGuard";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "Edytuj tunel (⌘E)";
+"macToolTipToggleStatus" = "Przełącz stan (⌘T)";
+"macLogButtonTitleClose" = "Zamknij";
+"macLogButtonTitleSave" = "Zapisz…";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Usuń tunel";

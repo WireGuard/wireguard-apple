@@ -1,0 +1,94 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "OK";
+"actionCancel" = "Batal";
+"actionSave" = "Simpan";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Pengaturan";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Tambahkan Tunnel (terowongan bawah tanah digital)";
+"tunnelsListSwipeDeleteButtonTitle" = "Hapus";
+"tunnelsListSelectButtonTitle" = "Pilih";
+"tunnelsListSelectAllButtonTitle" = "Pilih Semua";
+"tunnelsListDeleteButtonTitle" = "Hapus";
+"tunnelsListSelectedTitle (%d)" = "%d dipilih";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Tambahkan tunnel Wireguard";
+"addTunnelMenuImportFile" = "Tambahkan dari file yang sudah ada";
+"addTunnelMenuQRCode" = "Tambahkan dengan memindai QR code";
+"addTunnelMenuFromScratch" = "Buat dari awal";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "Dibuat %d tunnel";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "Telah dibuat %1$d dari %2$d tunel yang ada pada file";
+
+"alertImportedFromZipTitle (%d)" = "Telah dibuat %d tunel";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Telah dibuat %1$d dari %2$d tunel pada file terkompresi";
+
+"alertBadConfigImportTitle" = "Tidak dapat membuat tunel";
+"alertBadConfigImportMessage (%@)" = "File ini ‘%@’ tidak terdapat pengaturan WireGuard yang benar";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Hapus";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Hapus %d tunel?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Hapus %d tunel?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Pengaturan Baru";
+"editTunnelViewTitle" = "Mengubah pengaturan";
+
+"tunnelSectionTitleStatus" = "Status";
+
+"tunnelStatusInactive" = "Tidak aktif";
+"tunnelStatusActivating" = "Mengaktifkan";
+"tunnelStatusActive" = "Aktif";
+"tunnelStatusDeactivating" = "Menonaktifkan";
+"tunnelStatusReasserting" = "Mengaktifkan ulang";
+"tunnelStatusRestarting" = "Memulai kembali";
+"tunnelStatusWaiting" = "Menunggu";
+
+"macToggleStatusButtonActivate" = "Mengaktifkan";
+"macToggleStatusButtonActivating" = "Mengaktifkan…";
+"macToggleStatusButtonDeactivate" = "Menonaktifkan";
+"macToggleStatusButtonDeactivating" = "Menonaktifkan…";
+"macToggleStatusButtonReasserting" = "Mengaktifkan ulang…";
+"macToggleStatusButtonRestarting" = "Memulai kembali…";
+"macToggleStatusButtonWaiting" = "Menunggu…";
+
+"tunnelSectionTitleInterface" = "Antarmuka";
+
+"tunnelInterfaceName" = "Nama";
+"tunnelInterfacePrivateKey" = "Private key (Kunci Pribadi)";
+"tunnelInterfacePublicKey" = "Public key";
+"tunnelInterfaceGenerateKeypair" = "Membuat keypair";
+"tunnelInterfaceAddresses" = "Alamat";
+"tunnelInterfaceListenPort" = "Memantau port";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "Server DNS";
+"tunnelInterfaceStatus" = "Status";
+
+"tunnelSectionTitlePeer" = "Peer";
+
+"tunnelPeerPublicKey" = "Public key";
+"tunnelPeerPreSharedKey" = "Preshared key";
+"tunnelPeerEndpoint" = "Endpoint";
+"tunnelPeerPersistentKeepalive" = "Persistent keepalive";
+"tunnelPeerAllowedIPs" = "IP yang diperbolehkan";
+"tunnelPeerRxBytes" = "Data diterima";
+"tunnelPeerTxBytes" = "Data terkirim";
+"tunnelPeerLastHandshakeTime" = "Handshake Terakhir";
+"tunnelPeerExcludePrivateIPs" = "Tanpa IP private";
+
+"tunnelSectionTitleOnDemand" = "Aktivasi Sesuai Permintaan";
+
+"tunnelOnDemandCellular" = "Cellular";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";

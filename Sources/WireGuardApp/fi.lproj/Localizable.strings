@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "OK";
+"actionCancel" = "Peruuta";
+"actionSave" = "Tallenna";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Asetukset";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Lisää tunneli";
+
+"tunnelInterfaceName" = "Nimi";
+"tunnelInterfacePrivateKey" = "Yksityinen avain";
+"tunnelInterfacePublicKey" = "Julkinen avain";
+"tunnelInterfaceGenerateKeypair" = "Luo avainpari";
+"tunnelInterfaceAddresses" = "Osoitteet";
+
+"tunnelPeerPublicKey" = "Julkinen avain";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSID:t";
+
+"tunnelOnDemandAnySSID" = "Mikä tahansa SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Vain nämä SSID:t";
+"tunnelOnDemandExceptTheseSSIDs" = "Poislukien SSID:t";
+
+"tunnelOnDemandKey" = "Tarvittaessa";
+"tunnelOnDemandOptionOff" = "Pois päältä";
+"tunnelOnDemandOptionWiFiOnly" = "Vain Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi tai mobiiliverkko";
+"tunnelOnDemandOptionCellularOnly" = "Vain mobiilidata";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi tai Ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Vain Ethernet";
+
+"deleteTunnelButtonTitle" = "Poista tunneli";
+"deleteTunnelConfirmationAlertButtonTitle" = "Poista";
+"deleteTunnelConfirmationAlertMessage" = "Poistetaanko tämä tunneli?";
+
+"tunnelEditPlaceholderTextRequired" = "Pakollinen";
+"tunnelEditPlaceholderTextOptional" = "Valinnainen";
+"tunnelEditPlaceholderTextAutomatic" = "Automaattinen";
+"tunnelEditPlaceholderTextOff" = "Pois päältä";
+"tunnelHandshakeTimestampNow" = "Nyt";
