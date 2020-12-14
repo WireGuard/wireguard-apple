@@ -51,7 +51,7 @@ class TunnelListCell: UITableViewCell {
         statusSwitch.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            contentView.trailingAnchor.constraint(equalTo: statusSwitch.trailingAnchor)
+            statusSwitch.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
         ])
 
         contentView.addSubview(busyIndicator)
