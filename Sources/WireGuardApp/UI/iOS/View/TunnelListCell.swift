@@ -29,15 +29,14 @@ class TunnelListCell: UITableViewCell {
     }()
 
     let busyIndicator: UIActivityIndicatorView = {
+        let busyIndicator: UIActivityIndicatorView
         if #available(iOS 13.0, *) {
-            let busyIndicator = UIActivityIndicatorView(style: .medium)
-            busyIndicator.hidesWhenStopped = true
-            return busyIndicator
+            busyIndicator = UIActivityIndicatorView(style: .medium)
         } else {
-            let busyIndicator = UIActivityIndicatorView(style: .gray)
-            busyIndicator.hidesWhenStopped = true
-            return busyIndicator
+            busyIndicator = UIActivityIndicatorView(style: .gray)
         }
+        busyIndicator.hidesWhenStopped = true
+        return busyIndicator
     }()
 
     let statusSwitch = UISwitch()
