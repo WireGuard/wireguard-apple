@@ -146,8 +146,8 @@ extension SettingsTableViewController {
             cell.copyableGesture = false
             cell.key = field.localizedUIString
             if field == .iosAppVersion {
-                var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
-                if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                var appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown version"
+                if let appBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
                     appVersion += " (\(appBuild))"
                 }
                 cell.value = appVersion
