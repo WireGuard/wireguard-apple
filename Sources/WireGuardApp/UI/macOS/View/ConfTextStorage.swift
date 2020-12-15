@@ -67,7 +67,7 @@ class ConfTextStorage: NSTextStorage {
     override func replaceCharacters(in range: NSRange, with str: String) {
         beginEditing()
         backingStore.replaceCharacters(in: range, with: str)
-        edited(.editedCharacters, range: range, changeInLength: str.count - range.length)
+        edited(.editedCharacters, range: range, changeInLength: str.utf16.count - range.length)
         endEditing()
     }
 
@@ -94,6 +94,7 @@ class ConfTextStorage: NSTextStorage {
 
     func evaluateExcludePrivateIPs(highlightSpans: UnsafePointer<highlight_span>) {
         var spans = highlightSpans
+        let string = backingStore.string
         enum FieldType: String {
             case dns
             case allowedips
@@ -102,7 +103,7 @@ class ConfTextStorage: NSTextStorage {
         resetLastPeer()
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
-            var substring = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string.lowercased()
+            var substring = String(string.substring(higlightSpan: span)).lowercased()
 
             if span.type == HighlightError {
                 resetLastPeer()
@@ -123,8 +124,9 @@ class ConfTextStorage: NSTextStorage {
                 let next = spans.successor()
                 let nextnext = next.successor()
                 if next.pointee.type == HighlightDelimiter && nextnext.pointee.type == HighlightCidr {
-                    substring += backingStore.attributedSubstring(from: NSRange(location: next.pointee.start, length: next.pointee.len)).string +
-                                 backingStore.attributedSubstring(from: NSRange(location: nextnext.pointee.start, length: nextnext.pointee.len)).string
+                    let delimiter = string.substring(higlightSpan: next.pointee)
+                    let cidr = string.substring(higlightSpan: nextnext.pointee)
+                    substring += delimiter + cidr
                 }
                 lastOnePeerAllowedIPs.append(substring)
             } else if span.type == HighlightPublicKey {
@@ -139,7 +141,8 @@ class ConfTextStorage: NSTextStorage {
         hasError = false
         privateKeyString = nil
 
-        let fullTextRange = NSRange(location: 0, length: (backingStore.string as NSString).length)
+        let string = backingStore.string
+        let fullTextRange = NSRange(..<string.endIndex, in: string)
 
         backingStore.beginEditing()
         let defaultAttributes: [NSAttributedString.Key: Any] = [
@@ -147,15 +150,19 @@ class ConfTextStorage: NSTextStorage {
             .font: defaultFont
         ]
         backingStore.setAttributes(defaultAttributes, range: fullTextRange)
-        var spans = highlight_config(backingStore.string)!
+        var spans = highlight_config(string)!
         evaluateExcludePrivateIPs(highlightSpans: spans)
 
         let spansStart = spans
         while spans.pointee.type != HighlightEnd {
             let span = spans.pointee
 
-            let range = NSRange(location: span.start, length: span.len)
+            let startIndex = string.utf8.index(string.startIndex, offsetBy: span.start)
+            let endIndex = string.utf8.index(startIndex, offsetBy: span.len)
+            let range = NSRange(startIndex..<endIndex, in: string)
+
             backingStore.setAttributes(nonColorAttributes(for: span.type), range: range)
+
             let color = textColorTheme.colorMap[span.type.rawValue, default: textColorTheme.defaultColor]
             backingStore.addAttribute(.foregroundColor, value: color, range: range)
 
@@ -164,7 +171,7 @@ class ConfTextStorage: NSTextStorage {
             }
 
             if span.type == HighlightPrivateKey {
-                privateKeyString = backingStore.attributedSubstring(from: NSRange(location: span.start, length: span.len)).string
+                privateKeyString = String(string.substring(higlightSpan: span))
             }
 
             spans = spans.successor()
@@ -177,4 +184,13 @@ class ConfTextStorage: NSTextStorage {
         endEditing()
     }
 
+}
+
+private extension String {
+    func substring(higlightSpan span: highlight_span) -> Substring {
+        let startIndex = self.utf8.index(self.utf8.startIndex, offsetBy: span.start)
+        let endIndex = self.utf8.index(startIndex, offsetBy: span.len)
+
+        return self[startIndex..<endIndex]
+    }
 }
