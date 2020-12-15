@@ -56,7 +56,6 @@ var tunnelHandles = make(map[int32]tunnelHandle)
 
 func init() {
 	versionString = C.CString(device.WireGuardGoVersion)
-	device.RoamingDisabled = true
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
 	go func() {
@@ -72,11 +71,6 @@ func init() {
 			}
 		}
 	}()
-}
-
-//export wgEnableRoaming
-func wgEnableRoaming(enabled bool) {
-	device.RoamingDisabled = !enabled
 }
 
 //export wgSetLogger
@@ -149,14 +143,17 @@ func wgTurnOff(tunnelHandle int32) {
 
 //export wgSetConfig
 func wgSetConfig(tunnelHandle int32, settings *C.char) int64 {
-	device, ok := tunnelHandles[tunnelHandle]
+	dev, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return 0
 	}
-	err := device.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
+	err := dev.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
 	if err != nil {
-		device.Error.Println(err)
-		return err.ErrorCode()
+		dev.Error.Println(err)
+		if ipcErr, ok := err.(*device.IPCError); ok {
+			return ipcErr.ErrorCode()
+		}
+		return -1
 	}
 	return 0
 }
@@ -185,6 +182,15 @@ func wgBumpSockets(tunnelHandle int32) {
 	}
 	device.BindUpdate()
 	device.SendKeepalivesToPeersWithCurrentKeypair()
+}
+
+//export wgDisableSomeRoamingForBrokenMobileSemantics
+func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
+	device, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return
+	}
+	device.DisableSomeRoamingForBrokenMobileSemantics()
 }
 
 //export wgVersion
