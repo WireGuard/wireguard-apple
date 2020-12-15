@@ -5,16 +5,16 @@ import UIKit
 
 class TunnelListCell: UITableViewCell {
     var tunnel: TunnelContainer? {
-        didSet(value) {
+        didSet {
             // Bind to the tunnel's name
             nameLabel.text = tunnel?.name ?? ""
             nameObservationToken = tunnel?.observe(\.name) { [weak self] tunnel, _ in
                 self?.nameLabel.text = tunnel.name
             }
             // Bind to the tunnel's status
-            update(from: tunnel?.status)
+            update(from: tunnel?.status, animated: false)
             statusObservationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
-                self?.update(from: tunnel.status)
+                self?.update(from: tunnel.status, animated: true)
             }
         }
     }
@@ -82,12 +82,12 @@ class TunnelListCell: UITableViewCell {
         onSwitchToggled?(statusSwitch.isOn)
     }
 
-    private func update(from status: TunnelStatus?) {
+    private func update(from status: TunnelStatus?, animated: Bool) {
         guard let status = status else {
-            reset()
+            reset(animated: animated)
             return
         }
-        statusSwitch.isOn = !(status == .deactivating || status == .inactive)
+        statusSwitch.setOn(!(status == .deactivating || status == .inactive), animated: animated)
         statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
         if status == .inactive || status == .active {
             busyIndicator.stopAnimating()
@@ -105,14 +105,14 @@ class TunnelListCell: UITableViewCell {
         statusSwitch.isEnabled = !editing
     }
 
-    private func reset() {
-        statusSwitch.isOn = false
+    private func reset(animated: Bool) {
+        statusSwitch.setOn(false, animated: animated)
         statusSwitch.isUserInteractionEnabled = false
         busyIndicator.stopAnimating()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        reset()
+        reset(animated: false)
     }
 }
