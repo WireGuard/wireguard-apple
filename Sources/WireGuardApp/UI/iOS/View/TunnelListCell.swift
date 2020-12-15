@@ -41,8 +41,8 @@ class TunnelListCell: UITableViewCell {
 
     let statusSwitch = UISwitch()
 
-    private var statusObservationToken: AnyObject?
-    private var nameObservationToken: AnyObject?
+    private var statusObservationToken: NSKeyValueObservation?
+    private var nameObservationToken: NSKeyValueObservation?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
