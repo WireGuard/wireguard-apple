@@ -133,8 +133,10 @@ extension TunnelConfiguration {
             let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
             output.append("Address = \(addressString)\n")
         }
-        if !interface.dns.isEmpty {
-            let dnsString = interface.dns.map { $0.stringRepresentation }.joined(separator: ", ")
+        if !interface.dns.isEmpty || !interface.dnsSearch.isEmpty {
+            var dnsLine = interface.dns.map { $0.stringRepresentation }
+            dnsLine.append(contentsOf: interface.dnsSearch)
+            let dnsString = dnsLine.joined(separator: ", ")
             output.append("DNS = \(dnsString)\n")
         }
         if let mtu = interface.mtu {
@@ -188,13 +190,16 @@ extension TunnelConfiguration {
         }
         if let dnsString = attributes["dns"] {
             var dnsServers = [DNSServer]()
+            var dnsSearch = [String]()
             for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
-                guard let dnsServer = DNSServer(from: dnsServerString) else {
-                    throw ParseError.interfaceHasInvalidDNS(dnsServerString)
+                if let dnsServer = DNSServer(from: dnsServerString) {
+                    dnsServers.append(dnsServer)
+                } else {
+                    dnsSearch.append(dnsServerString)
                 }
-                dnsServers.append(dnsServer)
             }
             interface.dns = dnsServers
+            interface.dnsSearch = dnsSearch
         }
         if let mtuString = attributes["mtu"] {
             guard let mtu = UInt16(mtuString) else {

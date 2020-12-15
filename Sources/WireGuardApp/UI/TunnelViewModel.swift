@@ -139,8 +139,10 @@ class TunnelViewModel {
             if let mtu = config.mtu {
                 scratchpad[.mtu] = String(mtu)
             }
-            if !config.dns.isEmpty {
-                scratchpad[.dns] = config.dns.map { $0.stringRepresentation }.joined(separator: ", ")
+            if !config.dns.isEmpty || !config.dnsSearch.isEmpty {
+                var dns = config.dns.map { $0.stringRepresentation }
+                dns.append(contentsOf: config.dnsSearch)
+                scratchpad[.dns] = dns.joined(separator: ", ")
             }
             return scratchpad
         }
@@ -194,15 +196,16 @@ class TunnelViewModel {
             }
             if let dnsString = scratchpad[.dns] {
                 var dnsServers = [DNSServer]()
+                var dnsSearch = [String]()
                 for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
                     if let dnsServer = DNSServer(from: dnsServerString) {
                         dnsServers.append(dnsServer)
                     } else {
-                        fieldsWithError.insert(.dns)
-                        errorMessages.append(tr("alertInvalidInterfaceMessageDNSInvalid"))
+                        dnsSearch.append(dnsServerString)
                     }
                 }
                 config.dns = dnsServers
+                config.dnsSearch = dnsSearch
             }
 
             guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
