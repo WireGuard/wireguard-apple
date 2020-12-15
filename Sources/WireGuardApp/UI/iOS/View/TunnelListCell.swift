@@ -47,38 +47,50 @@ class TunnelListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.addSubview(statusSwitch)
-        statusSwitch.translatesAutoresizingMaskIntoConstraints = false
+        accessoryType = .disclosureIndicator
+
+        for subview in [statusSwitch, busyIndicator, nameLabel] {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(subview)
+        }
+
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        let nameLabelBottomConstraint =
+            contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1)
+        nameLabelBottomConstraint.priority = .defaultLow
+
         NSLayoutConstraint.activate([
             statusSwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
-        ])
+            statusSwitch.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            statusSwitch.leadingAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.trailingAnchor, multiplier: 1),
 
-        contentView.addSubview(busyIndicator)
-        busyIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            statusSwitch.leadingAnchor.constraint(equalToSystemSpacingAfter: busyIndicator.trailingAnchor, multiplier: 1)
-        ])
-
-        contentView.addSubview(nameLabel)
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        let bottomAnchorConstraint = contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: nameLabel.bottomAnchor, multiplier: 1)
-        bottomAnchorConstraint.priority = .defaultLow
-        NSLayoutConstraint.activate([
             nameLabel.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
+            nameLabelBottomConstraint,
             nameLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leadingAnchor, multiplier: 1),
-            busyIndicator.leadingAnchor.constraint(equalToSystemSpacingAfter: nameLabel.trailingAnchor, multiplier: 1),
-            bottomAnchorConstraint
-        ])
 
-        accessoryType = .disclosureIndicator
+            busyIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            busyIndicator.leadingAnchor.constraint(equalToSystemSpacingAfter: nameLabel.trailingAnchor, multiplier: 1)
+        ])
 
         statusSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
     }
 
-    @objc func switchToggled() {
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        reset(animated: false)
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        statusSwitch.isEnabled = !editing
+    }
+
+    @objc private func switchToggled() {
         onSwitchToggled?(statusSwitch.isOn)
     }
 
@@ -96,23 +108,9 @@ class TunnelListCell: UITableViewCell {
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        statusSwitch.isEnabled = !editing
-    }
-
     private func reset(animated: Bool) {
         statusSwitch.setOn(false, animated: animated)
         statusSwitch.isUserInteractionEnabled = false
         busyIndicator.stopAnimating()
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        reset(animated: false)
     }
 }
