@@ -87,15 +87,12 @@ class TunnelListCell: UITableViewCell {
             reset()
             return
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak statusSwitch, weak busyIndicator] in
-            guard let statusSwitch = statusSwitch, let busyIndicator = busyIndicator else { return }
-            statusSwitch.isOn = !(status == .deactivating || status == .inactive)
-            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
-            if status == .inactive || status == .active {
-                busyIndicator.stopAnimating()
-            } else {
-                busyIndicator.startAnimating()
-            }
+        statusSwitch.isOn = !(status == .deactivating || status == .inactive)
+        statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+        if status == .inactive || status == .active {
+            busyIndicator.stopAnimating()
+        } else {
+            busyIndicator.startAnimating()
         }
     }
 

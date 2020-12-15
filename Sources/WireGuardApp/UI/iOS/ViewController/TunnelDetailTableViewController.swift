@@ -343,10 +343,8 @@ extension TunnelDetailTableViewController {
                 text = tr("tunnelStatusWaiting")
             }
             cell.textLabel?.text = text
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) { [weak cell] in
-                cell?.switchView.isOn = !(status == .deactivating || status == .inactive)
-                cell?.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
-            }
+            cell.switchView.isOn = !(status == .deactivating || status == .inactive)
+            cell.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
             cell.isEnabled = status == .active || status == .inactive
         }
 
