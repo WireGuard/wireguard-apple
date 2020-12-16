@@ -83,11 +83,15 @@ class PacketTunnelSettingsGenerator {
          */
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "127.0.0.1")
 
-        let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
-        let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
-        dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
-        dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
-        networkSettings.dnsSettings = dnsSettings
+        if !tunnelConfiguration.interface.dnsSearch.isEmpty || !tunnelConfiguration.interface.dns.isEmpty {
+            let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
+            let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
+            dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
+            if !tunnelConfiguration.interface.dns.isEmpty {
+                dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+            }
+            networkSettings.dnsSettings = dnsSettings
+        }
 
         let mtu = tunnelConfiguration.interface.mtu ?? 0
 
