@@ -21,9 +21,6 @@ public enum WireGuardAdapterError: Error {
     /// Failure to set network settings.
     case setNetworkSettings(Error)
 
-    /// Timeout when calling to set network settings.
-    case setNetworkSettingsTimeout
-
     /// Failure to start WireGuard backend.
     case startWireGuardBackend(Int32)
 }
@@ -304,7 +301,7 @@ public class WireGuardAdapter {
                 throw WireGuardAdapterError.setNetworkSettings(systemError)
             }
         } else {
-            throw WireGuardAdapterError.setNetworkSettingsTimeout
+            self.logHandler(.error, "setTunnelNetworkSettings timed out after 5 seconds; proceeding anyway")
         }
     }
 
