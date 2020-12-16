@@ -3,6 +3,23 @@ set -e
 curl -Lo - https://crowdin.com/backend/download/project/wireguard.zip | bsdtar -C Sources/WireGuardApp -x -f - --strip-components 3 wireguard-apple
 find Sources/WireGuardApp/*.lproj -type f -empty -delete
 find Sources/WireGuardApp/*.lproj -type d -empty -delete
+declare -A ALL_BASE
+while read -r key eq rest; do
+	[[ $key == \"* && $key == *\" && $eq == = ]] || continue
+	ALL_BASE["$key"]="$rest"
+done < Sources/WireGuardApp/Base.lproj/Localizable.strings
+for f in Sources/WireGuardApp/*.lproj/Localizable.strings; do
+	unset FOUND
+	declare -A FOUND
+	while read -r key eq _; do
+		[[ $key == \"* && $key == *\" && $eq == = ]] || continue
+		FOUND["$key"]=1
+	done < "$f"
+	for key in "${!ALL_BASE[@]}"; do
+		[[ ${FOUND["$key"]} -eq 1 ]] && continue
+		echo "$key = ${ALL_BASE["$key"]}"
+	done >> "$f"
+done < Sources/WireGuardApp/Base.lproj/Localizable.strings
 git add Sources/WireGuardApp/*.lproj
 
 declare -A LOCALE_MAP
