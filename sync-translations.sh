@@ -23,11 +23,14 @@ done < Sources/WireGuardApp/Base.lproj/Localizable.strings
 git add Sources/WireGuardApp/*.lproj
 
 declare -A LOCALE_MAP
+[[ $(< WireGuard.xcodeproj/project.pbxproj) =~ [[:space:]]([0-9A-F]{24})\ /\*\ Base\ \*/, ]]
+base_id="${BASH_REMATCH[1]:0:16}"
+idx=$(( "0x${BASH_REMATCH[1]:16}" ))
 while read -r filename; do
 	l="$(basename "$(dirname "$filename")" .lproj)"
 	[[ $l == Base ]] && continue
-	read -r -n 24 hex < <(LC_ALL=C tr -dc "A-F0-9" < /dev/urandom)
-	LOCALE_MAP["$l"]="$hex"
+	((++idx))
+	LOCALE_MAP["$l"]="$(printf '%s%08X' "$base_id" $idx)"
 done < <(find Sources/WireGuardApp -name Localizable.strings -type f)
 
 inkr=0 inls=0 inlsc=0
@@ -43,6 +46,7 @@ while IFS= read -r line; do
 		echo "$line"
 		printf '\t\t\t\tBase,\n\t\t\t\ten,\n'
 		for l in "${!LOCALE_MAP[@]}"; do
+			[[ $l == *-* ]] && l="\"$l\""
 			printf '\t\t\t\t%s,\n' "$l"
 		done
 		inkr=1
