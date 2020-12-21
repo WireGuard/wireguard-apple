@@ -169,7 +169,20 @@ class TunnelsManager {
     }
 
     func addMultiple(tunnelConfigurations: [TunnelConfiguration], completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
-        addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, lastError: nil, completionHandler: completionHandler)
+        // Temporarily pause observation of changes to VPN configurations to prevent the feedback
+        // loop that causes `reload()` to be called on each newly added tunnel, which significantly
+        // impacts performance.
+        configurationsObservationToken = nil
+
+        self.addMultiple(tunnelConfigurations: ArraySlice(tunnelConfigurations), numberSuccessful: 0, lastError: nil) { [weak self] numSucceeded, error in
+            completionHandler(numSucceeded, error)
+
+            // Restart observation of changes to VPN configrations.
+            self?.startObservingTunnelConfigurations()
+
+            // Force reload all configurations to make sure that all tunnels are up to date.
+            self?.reload()
+        }
     }
 
     private func addMultiple(tunnelConfigurations: ArraySlice<TunnelConfiguration>, numberSuccessful: UInt, lastError: TunnelsManagerError?, completionHandler: @escaping (UInt, TunnelsManagerError?) -> Void) {
@@ -296,7 +309,20 @@ class TunnelsManager {
     }
 
     func removeMultiple(tunnels: [TunnelContainer], completionHandler: @escaping (TunnelsManagerError?) -> Void) {
-        removeMultiple(tunnels: ArraySlice(tunnels), completionHandler: completionHandler)
+        // Temporarily pause observation of changes to VPN configurations to prevent the feedback
+        // loop that causes `reload()` to be called for each removed tunnel, which significantly
+        // impacts performance.
+        configurationsObservationToken = nil
+
+        removeMultiple(tunnels: ArraySlice(tunnels)) { [weak self] error in
+            completionHandler(error)
+
+            // Restart observation of changes to VPN configrations.
+            self?.startObservingTunnelConfigurations()
+
+            // Force reload all configurations to make sure that all tunnels are up to date.
+            self?.reload()
+        }
     }
 
     private func removeMultiple(tunnels: ArraySlice<TunnelContainer>, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
