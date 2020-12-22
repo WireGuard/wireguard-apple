@@ -11,7 +11,6 @@ class SettingsTableViewController: UITableViewController {
         case goBackendVersion
         case exportZipArchive
         case viewLog
-        case donateLink
 
         var localizedUIString: String {
             switch self {
@@ -19,13 +18,12 @@ class SettingsTableViewController: UITableViewController {
             case .goBackendVersion: return tr("settingsVersionKeyWireGuardGoBackend")
             case .exportZipArchive: return tr("settingsExportZipButtonTitle")
             case .viewLog: return tr("settingsViewLogButtonTitle")
-            case .donateLink: return tr("donateLink")
             }
         }
     }
 
     let settingsFieldsBySection: [[SettingsFields]] = [
-        [.iosAppVersion, .goBackendVersion, .donateLink],
+        [.iosAppVersion, .goBackendVersion],
         [.exportZipArchive],
         [.viewLog]
     ]
@@ -146,8 +144,8 @@ extension SettingsTableViewController {
             cell.copyableGesture = false
             cell.key = field.localizedUIString
             if field == .iosAppVersion {
-                var appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown version"
-                if let appBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                var appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown version"
+                if let appBuild = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String {
                     appVersion += " (\(appBuild))"
                 }
                 cell.value = appVersion
@@ -167,15 +165,6 @@ extension SettingsTableViewController {
             cell.buttonText = field.localizedUIString
             cell.onTapped = { [weak self] in
                 self?.presentLogView()
-            }
-            return cell
-        } else if field == .donateLink {
-            let cell: ButtonCell = tableView.dequeueReusableCell(for: indexPath)
-            cell.buttonText = field.localizedUIString
-            cell.onTapped = {
-                if let url = URL(string: "https://www.wireguard.com/donations/"), UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url, options: [:])
-                }
             }
             return cell
         }

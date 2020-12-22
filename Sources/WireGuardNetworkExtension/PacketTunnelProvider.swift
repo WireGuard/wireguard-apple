@@ -57,11 +57,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
                 completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
 
-            case .setNetworkSettingsTimeout:
-                wg_log(.error, message: "Starting tunnel failed with setTunnelNetworkSettings timing out")
-                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
-                completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
-
             case .startWireGuardBackend(let errorCode):
                 wg_log(.error, message: "Starting tunnel failed with wgTurnOn returning \(errorCode)")
                 errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)

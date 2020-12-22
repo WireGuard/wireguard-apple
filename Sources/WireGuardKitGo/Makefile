@@ -3,8 +3,8 @@
 # Copyright (C) 2018-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
 
 # These are generally passed to us by xcode, but we set working defaults for standalone compilation too.
-ARCHS ?= arm64 armv7
-SDK_NAME ?= iphoneos
+ARCHS ?= x86_64 #TODO: add arm64 to this list once we support apple silicon
+SDK_NAME ?= macosx
 SDKROOT ?= $(shell xcrun --sdk $(SDK_NAME) --show-sdk-path)
 CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
 CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
@@ -14,9 +14,8 @@ LIPO ?= lipo
 DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
 BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
 
-CFLAGS_PREFIX := $(if $(DEPLOYMENT_TARGET_CLANG_FLAG_NAME),-$(DEPLOYMENT_TARGET_CLANG_FLAG_NAME)=$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)),) -Wno-unused-command-line-argument -isysroot $(SDKROOT) -arch
+CFLAGS_PREFIX := $(if $(DEPLOYMENT_TARGET_CLANG_FLAG_NAME),-$(DEPLOYMENT_TARGET_CLANG_FLAG_NAME)=$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)),) -isysroot $(SDKROOT) -arch
 GOARCH_arm64 := arm64
-GOARCH_armv7 := arm
 GOARCH_x86_64 := amd64
 
 build: $(DESTDIR)/libwg-go.a

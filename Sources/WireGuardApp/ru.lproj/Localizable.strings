@@ -1,0 +1,445 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "ОК";
+"actionCancel" = "Отмена";
+"actionSave" = "Сохранить";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Настройки";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Добавить туннель";
+"tunnelsListSwipeDeleteButtonTitle" = "Удалить";
+"tunnelsListSelectButtonTitle" = "Выбрать";
+"tunnelsListSelectAllButtonTitle" = "Выбрать всё";
+"tunnelsListDeleteButtonTitle" = "Удалить";
+"tunnelsListSelectedTitle (%d)" = "Выбрано: %d";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Добавить новый туннель WireGuard";
+"addTunnelMenuImportFile" = "Создать из файла или архива";
+"addTunnelMenuQRCode" = "Создать из QR-кода";
+"addTunnelMenuFromScratch" = "Создать с нуля";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "Создано туннелей: %d";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "Создано туннелей из импортированных файлов: %1$d из %2$d";
+
+"alertImportedFromZipTitle (%d)" = "Создано туннелей: %d";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Создано туннелей из zip-архива: %1$d из %2$d";
+
+"alertBadConfigImportTitle" = "Не удалось импортировать туннель";
+"alertBadConfigImportMessage (%@)" = "Файл ‘%@’ не содержит корректной конфигурации WireGuard";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Удалить";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Удалить выбранный туннель?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Удалить выбранные туннели?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Новая конфигурация";
+"editTunnelViewTitle" = "Редактировать конфигурацию";
+
+"tunnelSectionTitleStatus" = "Статус";
+
+"tunnelStatusInactive" = "Отключен";
+"tunnelStatusActivating" = "Подключение";
+"tunnelStatusActive" = "Подключен";
+"tunnelStatusDeactivating" = "Отключение";
+"tunnelStatusReasserting" = "Переподключение";
+"tunnelStatusRestarting" = "Перезапуск";
+"tunnelStatusWaiting" = "Ожидание";
+
+"macToggleStatusButtonActivate" = "Подключен";
+"macToggleStatusButtonActivating" = "Подключение…";
+"macToggleStatusButtonDeactivate" = "Отключен";
+"macToggleStatusButtonDeactivating" = "Отключение…";
+"macToggleStatusButtonReasserting" = "Переподключение…";
+"macToggleStatusButtonRestarting" = "Перезапуск…";
+"macToggleStatusButtonWaiting" = "Ожидание…";
+
+"tunnelSectionTitleInterface" = "Интерфейс";
+
+"tunnelInterfaceName" = "Имя";
+"tunnelInterfacePrivateKey" = "Приватный ключ";
+"tunnelInterfacePublicKey" = "Публичный ключ";
+"tunnelInterfaceGenerateKeypair" = "Сгенерировать ключи";
+"tunnelInterfaceAddresses" = "IP-адреса";
+"tunnelInterfaceListenPort" = "Порт";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS-серверы";
+"tunnelInterfaceStatus" = "Статус";
+
+"tunnelSectionTitlePeer" = "Пир";
+
+"tunnelPeerPublicKey" = "Публичный ключ";
+"tunnelPeerPreSharedKey" = "Общий ключ";
+"tunnelPeerEndpoint" = "IP-адрес сервера";
+"tunnelPeerPersistentKeepalive" = "Поддерживание соединения";
+"tunnelPeerAllowedIPs" = "Разрешенные IP-адреса";
+"tunnelPeerRxBytes" = "Получено данных";
+"tunnelPeerTxBytes" = "Отправлено данных";
+"tunnelPeerLastHandshakeTime" = "Последнее рукопожатие";
+"tunnelPeerExcludePrivateIPs" = "Исключить частные IP-адреса";
+
+"tunnelSectionTitleOnDemand" = "Автоподключение";
+
+"tunnelOnDemandCellular" = "Сотовая сеть";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSIDs";
+
+"tunnelOnDemandAnySSID" = "Любой SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Только эти SSIDs";
+"tunnelOnDemandExceptTheseSSIDs" = "Кроме этих SSIDs";
+"tunnelOnDemandOnlySSID (%d)" = "Только %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Только %d SSIDs";
+"tunnelOnDemandExceptSSID (%d)" = "Кроме %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "Кроме %d SSIDs";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSIDs";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDs";
+"tunnelOnDemandNoSSIDs" = "Нет SSIDs";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Добавить SSIDs";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Добавлено соединение: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Добавить новый";
+
+"tunnelOnDemandKey" = "Автоподключение";
+"tunnelOnDemandOptionOff" = "Выключить";
+"tunnelOnDemandOptionWiFiOnly" = "Только Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi или сотовая сеть";
+"tunnelOnDemandOptionCellularOnly" = "Только Сотовая сеть";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi или Ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Только Ethernet";
+
+"addPeerButtonTitle" = "Добавить пира";
+
+"deletePeerButtonTitle" = "Удалить пира";
+"deletePeerConfirmationAlertButtonTitle" = "Удалить";
+"deletePeerConfirmationAlertMessage" = "Удалить этого пира?";
+
+"deleteTunnelButtonTitle" = "Удалить туннель";
+"deleteTunnelConfirmationAlertButtonTitle" = "Удалить";
+"deleteTunnelConfirmationAlertMessage" = "Удалить этот туннель?";
+
+"tunnelEditPlaceholderTextRequired" = "Обязательно";
+"tunnelEditPlaceholderTextOptional" = "Необязательно";
+"tunnelEditPlaceholderTextAutomatic" = "Автоматически";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Настоятельно рекомендуется";
+"tunnelEditPlaceholderTextOff" = "Выключить";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "каждые %@ - интервал в секундах";
+"tunnelHandshakeTimestampNow" = "Сейчас";
+"tunnelHandshakeTimestampSystemClockBackward" = "(Системные часы переведены назад)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ назад";
+"tunnelHandshakeTimestampYear (%d)" = "%dг";
+"tunnelHandshakeTimestampYears (%d)" = "%dг";
+"tunnelHandshakeTimestampDay (%d)" = "%dд";
+"tunnelHandshakeTimestampDays (%d)" = "%dд";
+"tunnelHandshakeTimestampHour (%d)" = "%dч";
+"tunnelHandshakeTimestampHours (%d)" = "%dч";
+"tunnelHandshakeTimestampMinute (%d)" = "%dмин";
+"tunnelHandshakeTimestampMinutes (%d)" = "%dмин";
+"tunnelHandshakeTimestampSecond (%d)" = "%dсек";
+"tunnelHandshakeTimestampSeconds (%d)" = "%dс";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ч";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@мин";
+
+"tunnelPeerPresharedKeyEnabled" = "включен";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "Недопустимый интерфейс";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Введите имя интерфейса";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Введите приватный ключ интерфейса";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Приватный ключ интерфейса должен быть 32-байтным в кодировке base64";
+"alertInvalidInterfaceMessageAddressInvalid" = "IP-адреса интерфейса должны быть списком, разделенные запятыми, желательно с комментариями CIDR";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Порт интерфейса должен быть от 0 до 65535, или не указан";
+"alertInvalidInterfaceMessageMTUInvalid" = "MTU интерфейса должен быть между 576 и 65535, или не указан";
+"alertInvalidInterfaceMessageDNSInvalid" = "DNS-серверы интерфейса должны быть списком, разделенные запятыми";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Недопустимый пир";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Необходимо указать публичный ключ пира";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Публичный ключ пира должен быть 32-байтным в кодировке base64";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Общий ключ пира должен быть 32-байтным в кодировке base64";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Разрешенные IP-адреса пиров должны быть списком, разделенные запятыми, желательно с комментариями CIDR";
+"alertInvalidPeerMessageEndpointInvalid" = "IP-адрес сервера должен быть в формате ’host:port’ или ’[host]:port’";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Значение поддерживания соединения пира должно быть от 0 до 65535, или не указано";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Два или более пиров не могут иметь один и тот же публичный ключ";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Сканирование QR-кода";
+"scanQRCodeTipText" = "Совет: сгенерируйте с `qrencode -t ansiutf8 < tunnel.conf`";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Камера не поддерживается";
+"alertScanQRCodeCameraUnsupportedMessage" = "Это устройство не может сканировать QR-коды";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Недопустимый QR-код";
+"alertScanQRCodeInvalidQRCodeMessage" = "Отсканированный QR-код не является конфигурацией WireGuard";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Недопустимый код";
+"alertScanQRCodeUnreadableQRCodeMessage" = "Не удалось прочитать отсканированный код";
+
+"alertScanQRCodeNamePromptTitle" = "Задайте имя отсканированному туннелю";
+
+// Settings UI
+
+"settingsViewTitle" = "Настройки";
+
+"settingsSectionTitleAbout" = "О программе";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard для iOS";
+"settingsVersionKeyWireGuardGoBackend" = "Бэкенд WireGuard";
+
+"settingsSectionTitleExportConfigurations" = "Экспорт конфигураций";
+"settingsExportZipButtonTitle" = "Экспорт zip-архива";
+
+"settingsSectionTitleTunnelLog" = "Журнал";
+"settingsViewLogButtonTitle" = "Просмотреть журнал";
+
+// Log view
+
+"logViewTitle" = "Журнал";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Ошибка экспорта журнала";
+"alertUnableToRemovePreviousLogMessage" = "Не удалось очистить уже существующий журнал";
+
+"alertUnableToWriteLogTitle" = "Ошибка экспорта журнала";
+"alertUnableToWriteLogMessage" = "Невозможно записать журнал в файл";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "Невозможно прочитать zip-архив";
+"alertCantOpenInputZipFileMessage" = "Невозможно прочитать zip-архив.";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Невозможно создать zip-архив";
+"alertCantOpenOutputZipFileForWritingMessage" = "Не удалось открыть zip-архив для записи.";
+
+"alertBadArchiveTitle" = "Невозможно прочитать zip-архив";
+"alertBadArchiveMessage" = "Некорректный или поврежденный zip-архив.";
+
+"alertNoTunnelsToExportTitle" = "Нет данных для экспорта";
+"alertNoTunnelsToExportMessage" = "Нет туннелей для экспорта";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "В zip-архиве нет туннелей";
+"alertNoTunnelsInImportedZipArchiveMessage" = "В zip-архиве не найдено файлов туннеля .conf.";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "Невозможно импортировать из файла";
+"alertCantOpenInputConfFileMessage (%@)" = "Не удалось прочитать файл ’%@’.";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "Ошибка подключения";
+"alertTunnelActivationFailureMessage" = "Туннель не может быть подключен. Убедитесь, что вы подключены к Интернету.";
+"alertTunnelActivationSavedConfigFailureMessage" = "Не удается получить информацию о туннеле из сохраненной конфигурации.";
+"alertTunnelActivationBackendFailureMessage" = "Не удалось включить библиотеку бэкэнд.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "Не удалось определить дескриптор файла TUN устройства.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Невозможно применить сетевые настройки к объекту туннеля.";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " Включено автоподключение этого туннеля, поэтому этот туннель может быть автоматически переподключен операционной системой. Вы можете отключить автоподключение в этом приложении, отредактировав конфигурацию туннеля.";
+
+"alertTunnelDNSFailureTitle" = "Ошибка при разрешении DNS";
+"alertTunnelDNSFailureMessage" = "Один или несколько IP-адресов серверов не могут быть разрешены.";
+
+"alertTunnelNameEmptyTitle" = "Имя не указано";
+"alertTunnelNameEmptyMessage" = "Невозможно создать туннель с пустым именем";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Такое имя уже существует";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "Туннель с таким именем уже существует";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Подключение в процессе";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "Туннель уже подключен или в процессе подключения";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "Не удалось отобразить туннели";
+"alertSystemErrorOnAddTunnelTitle" = "Невозможно создать туннель";
+"alertSystemErrorOnModifyTunnelTitle" = "Не удалось изменить туннель";
+"alertSystemErrorOnRemoveTunnelTitle" = "Не удалось удалить туннель";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "Ошибка подключения";
+"alertTunnelActivationSystemErrorMessage (%@)" = "Не удалось подключить туннель. %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "Недопустимая конфигурация.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "Конфигурация отключена.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "Ошибка соединения.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "Конфигурация устарела.";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Ошибка чтения или записи конфигурации.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "Неизвестная системная ошибка.";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "Сети: %@";
+"macMenuNetworksNone" = "Сети отсутствуют";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "Управление туннелями";
+"macMenuImportTunnels" = "Импорт туннелей из файла…";
+"macMenuAddEmptyTunnel" = "Добавить пустой туннель…";
+"macMenuViewLog" = "Просмотреть журнал";
+"macMenuExportTunnels" = "Экспорт туннелей в zip-архив…";
+"macMenuAbout" = "О WireGuard";
+"macMenuQuit" = "Выйти из WireGuard";
+
+"macMenuHideApp" = "Скрыть WireGuard";
+"macMenuHideOtherApps" = "Скрыть другие";
+"macMenuShowAllApps" = "Показать всё";
+
+"macMenuFile" = "Файл";
+"macMenuCloseWindow" = "Закрыть окно";
+
+"macMenuEdit" = "Редактировать";
+"macMenuCut" = "Вырезать";
+"macMenuCopy" = "Копировать";
+"macMenuPaste" = "Вставить";
+"macMenuSelectAll" = "Выбрать всё";
+
+"macMenuTunnel" = "Туннель";
+"macMenuToggleStatus" = "Переключить статус";
+"macMenuEditTunnel" = "Редактировать…";
+"macMenuDeleteSelected" = "Удалить выбранное";
+
+"macMenuWindow" = "Окно";
+"macMenuMinimize" = "Свернуть";
+"macMenuZoom" = "Изменить масштаб";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "Управлять туннелями WireGuard";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Вы уверены, что хотите удалить ‘%@’?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Вы уверены, что хотите удалить выбранные туннели?";
+"macDeleteTunnelConfirmationAlertInfo" = "Данное действие невозможно отменить.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Удалить";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Отмена";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Удаление…";
+
+"macButtonImportTunnels" = "Импорт туннелей из файла…";
+"macSheetButtonImport" = "Импорт";
+
+"macNameFieldExportLog" = "Сохранить журнал в:";
+"macSheetButtonExportLog" = "Сохранить";
+
+"macNameFieldExportZip" = "Экспортировать туннели в:";
+"macSheetButtonExportZip" = "Сохранить";
+
+"macButtonDeleteTunnels (%d)" = "Удалить выбранные туннели?";
+
+"macButtonEdit" = "Редактировать";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "Автоподключение:";
+"macFieldOnDemandSSIDs" = "SSIDs:";
+
+// Mac status display
+
+"macStatus (%@)" = "Статус: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "Отменить";
+"macEditSave" = "Сохранить";
+
+"macAlertNameIsEmpty" = "Имя обязательно";
+"macAlertDuplicateName (%@)" = "Туннель с именем ’%@’ уже существует.";
+
+"macAlertInvalidLine (%@)" = "Недопустимая строка: ’%@’.";
+
+"macAlertNoInterface" = "Конфигурация должна иметь раздел ’Интерфейс’.";
+"macAlertMultipleInterfaces" = "Конфигурация должна иметь только одну секцию ’Интерфейс’.";
+"macAlertPrivateKeyInvalid" = "Недопустимый приватный ключ.";
+"macAlertListenPortInvalid (%@)" = "Недопустимый порт ’%@’.";
+"macAlertAddressInvalid (%@)" = "IP-адрес ’%@’ недопустим.";
+"macAlertDNSInvalid (%@)" = "DNS-сервер ’%@’ недопустим.";
+"macAlertMTUInvalid (%@)" = "MTU ’%@’ недопустим.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Интерфейс содержит нераспознанный ключ ‘%@’";
+"macAlertInfoUnrecognizedInterfaceKey" = "Допустимые ключи: «Приветный ключ», «Порт», «IP-адрес», «DNS» и «MTU».";
+
+"macAlertPublicKeyInvalid" = "Недопустимый публичный ключ";
+"macAlertPreSharedKeyInvalid" = "Общий ключ недопустим";
+"macAlertAllowedIPInvalid (%@)" = "Разрешенный IP-адрес ‘%@’ недопустим";
+"macAlertEndpointInvalid (%@)" = "IP-адрес сервера ’%@’ недопустим";
+"macAlertPersistentKeepliveInvalid (%@)" = "Значение поддерживания соединения ‘%@’ недопустимо";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Пир содержит нераспознанный ключ ‘%@’";
+"macAlertInfoUnrecognizedPeerKey" = "Допустимые ключи: «Публичный ключ», «Общий ключ», «Разрешенные IP-адреса», «IP-адрес сервера» и «Поддерживание соединения»";
+
+"macAlertMultipleEntriesForKey (%@)" = "В секции пира должна быть только одна запись ключа ‘%@’";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "Версия приложения: %@";
+"macGoBackendVersion (%@)" = "Версия Бэкенд: %@";
+
+// Privacy
+
+"macExportPrivateData" = "экспорт приватных ключей туннеля";
+"macViewPrivateData" = "просмотр приватных ключей туннеля";
+"iosExportPrivateData" = "Аутентификация для экспорта приватных ключей туннеля.";
+"iosViewPrivateData" = "Аутентификация для просмотра приватных ключей туннеля.";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "Вы хотите закрыть менеджер туннелей или полностью выйти из WireGuard?";
+"macConfirmAndQuitAlertInfo" = "Если вы закроете менеджер туннелей, WireGuard будет по-прежнему доступен из значка в строке меню.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Если вы закроете менеджер туннелей, WireGuard будет по-прежнему доступен из значка в строке меню.\n\nОбратите внимание, что если вы выйдете из WireGuard полностью, текущий активный туннель (’%@’) будет оставаться активным до тех пор, пока вы не отключите его из этого приложения или через панель «Сеть» в Системных настройках.";
+"macConfirmAndQuitAlertQuitWireGuard" = "Выйти из WireGuard";
+"macConfirmAndQuitAlertCloseWindow" = "Закрыть менеджер туннелей";
+
+"macAppExitingWithActiveTunnelMessage" = "Выход из WireGuard с активным туннелем";
+"macAppExitingWithActiveTunnelInfo" = "После выхода туннель будет оставаться подключенным. Вы можете отключить его повторно открыв это приложение или через панель \"Сеть\" в Системных настройках.";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "Редактировать туннель (⌘E)";
+"macToolTipToggleStatus" = "Переключить статус (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "Время";
+"macLogColumnTitleLogMessage" = "Сообщение Журнала";
+"macLogButtonTitleClose" = "Закрыть";
+"macLogButtonTitleSave" = "Сохранить…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "Конфигурация для этого туннеля не найдена в связке ключей.";
+"macUnusableTunnelInfo" = "В случае, если этот туннель был создан другим пользователем, только тот пользователь может просматривать, редактировать или активировать этот туннель.";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Удалить туннель";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store хотел бы обновить WireGuard";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Пожалуйста, отключите автоподключение туннеля ‘%@’, а затем продолжите обновление в App Store.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Пожалуйста, отключите туннель ‘%@’ и затем продолжите обновление в App Store.";
+
+// Donation
+
+"donateLink" = "♥ Пожертвовать проекту WireGuard";

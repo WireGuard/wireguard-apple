@@ -1,0 +1,445 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "ਠੀਕ ਹੈ";
+"actionCancel" = "ਰੱਦ ਕਰੋ";
+"actionSave" = "ਸੰਭਾਲੋ";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "ਵਾਇਰਗਾਰਡ";
+"tunnelsListSettingsButtonTitle" = "ਸੈਟਿੰਗਾਂ";
+"tunnelsListCenteredAddTunnelButtonTitle" = "ਟਨਲ ਜੋੜੋ";
+"tunnelsListSwipeDeleteButtonTitle" = "ਹਟਾਓ";
+"tunnelsListSelectButtonTitle" = "ਚੁਣੋ";
+"tunnelsListSelectAllButtonTitle" = "ਸਭ ਚੁਣੋ";
+"tunnelsListDeleteButtonTitle" = "ਹਟਾਓ";
+"tunnelsListSelectedTitle (%d)" = "%d ਚੁਣੇ ਗਏ";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "ਨਵੀਂ ਵਾਇਰਗਾਰਡ ਟਨਲ ਬਣਾਓ";
+"addTunnelMenuImportFile" = "ਫ਼ਾਇਲ ਜਾਂ ਅਕਾਇਵ ਤੋਂ ਬਣਾਓ";
+"addTunnelMenuQRCode" = "QR ਕੋਡ ਤੋਂ ਬਣਾਓ";
+"addTunnelMenuFromScratch" = "ਮੁੱਢ ਤੋਂ ਬਣਾਓ";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "%d ਟਨਲ ਬਣਾਈਆਂ";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "ਇੰਪੋਰਟ ਕੀਤੀਆਂ ਫ਼ਾਇਲਾਂ ਤੋਂ %2$d ਟਨਲਾਂ ਵਿੱਚੋਂ %1$d ਬਣਾਈਆਂ";
+
+"alertImportedFromZipTitle (%d)" = "%d ਟਨਲ ਬਣਾਈਆਂ";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਤੋਂ %2$d ਟਨਲਾਂ ਵਿੱਚੋਂ %1$d ਬਣਾਈਆਂ";
+
+"alertBadConfigImportTitle" = "ਟਨਲ ਇੰਪੋਰਟ ਕਰਨ ਲਈ ਅਸਮਰੱਥ";
+"alertBadConfigImportMessage (%@)" = "ਫ਼ਾਇਲ ‘%@’ ਵਿੱਚ ਵਾਜਬ WireGuard ਸੰਰਚਨਾ ਨਹੀਂ ਰੱਖਦੀ ਹੈ";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "ਹਟਾਓ";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d ਟਨਲ ਹਟਾਉਣੀ ਹੈ?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "%d ਟਨਲਾਂ ਹਟਾਉਣੀਆਂ ਹਨ?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "ਨਵੀਂ ਸੰਰਚਨਾ";
+"editTunnelViewTitle" = "ਸੰਰਚਨਾ ਨੂੰ ਸੋਧੋ";
+
+"tunnelSectionTitleStatus" = "ਸਥਿਤੀ";
+
+"tunnelStatusInactive" = "ਨਾ-ਸਰਗਰਮ";
+"tunnelStatusActivating" = "ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ";
+"tunnelStatusActive" = "ਸਰਗਰਮ";
+"tunnelStatusDeactivating" = "ਨਾ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ";
+"tunnelStatusReasserting" = "ਮੁੜ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ";
+"tunnelStatusRestarting" = "ਮੁੜ-ਸ਼ੁਰੂ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ";
+"tunnelStatusWaiting" = "ਉਡੀਕ ਹੋ ਰਹੀ ਹੈ";
+
+"macToggleStatusButtonActivate" = "ਸਰਗਰਮ ਕਰੋ";
+"macToggleStatusButtonActivating" = "ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…";
+"macToggleStatusButtonDeactivate" = "ਨਾ-ਸਰਗਰਮ";
+"macToggleStatusButtonDeactivating" = "ਨਾ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…";
+"macToggleStatusButtonReasserting" = "ਮੁੜ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…";
+"macToggleStatusButtonRestarting" = "ਮੁੜ-ਸ਼ੁਰੂ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…";
+"macToggleStatusButtonWaiting" = "ਉਡੀਕ ਹੋ ਰਹੀ ਹੈ…";
+
+"tunnelSectionTitleInterface" = "ਇੰਟਰਫੇਸ";
+
+"tunnelInterfaceName" = "ਨਾਂ";
+"tunnelInterfacePrivateKey" = "ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀ";
+"tunnelInterfacePublicKey" = "ਪਬਲਿਕ ਕੁੰਜੀ";
+"tunnelInterfaceGenerateKeypair" = "ਕੁੰਜੀ-ਜੋੜਾ ਤਿਆਰ ਕਰੋ";
+"tunnelInterfaceAddresses" = "ਸਿਰਨਾਵੇ";
+"tunnelInterfaceListenPort" = "ਸੁਣਨ ਵਾਲੀ ਪੋਰਟ";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "DNS ਸਰਵਰ";
+"tunnelInterfaceStatus" = "ਸਥਿਤੀ";
+
+"tunnelSectionTitlePeer" = "ਪੀਅਰ";
+
+"tunnelPeerPublicKey" = "ਪਬਲਿਕ ਕੁੰਜੀ";
+"tunnelPeerPreSharedKey" = "ਤਰਜੀਹੀ ਕੁੰਜੀ";
+"tunnelPeerEndpoint" = "ਐਂਡ-ਪੁਆਇੰਟ";
+"tunnelPeerPersistentKeepalive" = "ਸਥਿਰ ਲਗਾਤਾਰ ਜਾਰੀ ਰੱਖੋ";
+"tunnelPeerAllowedIPs" = "ਮਨਜ਼ੂਰ ਕੀਤੇ IP";
+"tunnelPeerRxBytes" = "ਮਿਲਿਆ ਡਾਟਾ";
+"tunnelPeerTxBytes" = "ਭੇਜਿਆ ਡਾਟਾ";
+"tunnelPeerLastHandshakeTime" = "ਆਖਰੀ ਹੈਂਡ-ਸ਼ੇਕ";
+"tunnelPeerExcludePrivateIPs" = "ਪ੍ਰਾਈਵੇਟ IP ਅਲਹਿਦਾ ਰੱਖੋ";
+
+"tunnelSectionTitleOnDemand" = "ਲੋੜ ਸਮੇਂ ਸਰਗਰਮ ਕਰੋ";
+
+"tunnelOnDemandCellular" = "ਸੈਲੂਲਰ";
+"tunnelOnDemandEthernet" = "ਈਥਰਨੈੱਟ";
+"tunnelOnDemandWiFi" = "ਵਾਈ-ਫ਼ਾਈ";
+"tunnelOnDemandSSIDsKey" = "SSID";
+
+"tunnelOnDemandAnySSID" = "ਕੋਈ ਵੀ SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "ਸਿਰਫ਼ ਇਹੀ SSID ਹੀ";
+"tunnelOnDemandExceptTheseSSIDs" = "ਇਹਨਾਂ SSID ਤੋਂ ਬਿਨਾਂ";
+"tunnelOnDemandOnlySSID (%d)" = "ਸਿਰਫ਼ %d SSID ਹੀ";
+"tunnelOnDemandOnlySSIDs (%d)" = "ਸਿਰਫ਼ %d SSID ਹੀ";
+"tunnelOnDemandExceptSSID (%d)" = "%d SSID ਤੋਂ ਬਿਨਾਂ";
+"tunnelOnDemandExceptSSIDs (%d)" = "%d SSID ਤੋਂ ਬਿਨਾਂ";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSID";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID";
+"tunnelOnDemandNoSSIDs" = "ਕੋਈ SSID ਨਹੀਂ ਹੈ";
+"tunnelOnDemandSectionTitleAddSSIDs" = "SSID ਜੋੜੋ";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "ਕਨੈਕਟ ਹੋਏ ਜੋੜੋ: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "ਨਵਾਂ SSID ਜੋੜੋ";
+
+"tunnelOnDemandKey" = "ਲੋੜ ਮੁਤਾਬਕ";
+"tunnelOnDemandOptionOff" = "ਬੰਦ";
+"tunnelOnDemandOptionWiFiOnly" = "ਸਿਰਫ਼ ਵਾਈ-ਫ਼ਾਈ";
+"tunnelOnDemandOptionWiFiOrCellular" = "ਵਾਈ-ਫ਼ਾਈ ਜਾਂ ਸੈਲੂਲਰ";
+"tunnelOnDemandOptionCellularOnly" = "ਸਿਰਫ਼ ਸੈਲੂਲਰ ਹੀ";
+"tunnelOnDemandOptionWiFiOrEthernet" = "ਵਾਈ-ਫ਼ਾਈ ਜਾਂ ਈਥਰਨੈੱਟ";
+"tunnelOnDemandOptionEthernetOnly" = "ਸਿਰਫ਼ ਈਥਰਨੈੱਟ ਹੀ";
+
+"addPeerButtonTitle" = "ਪੀਅਰ ਜੋੜੋ";
+
+"deletePeerButtonTitle" = "ਪੀਅਰ ਨੂੰ ਹਟਾਓ";
+"deletePeerConfirmationAlertButtonTitle" = "ਹਟਾਓ";
+"deletePeerConfirmationAlertMessage" = "ਇਹ ਪੀਅਰ ਹਟਾਉਣਾ ਹੈ?";
+
+"deleteTunnelButtonTitle" = "ਟਨਲ ਨੂੰ ਹਟਾਓ";
+"deleteTunnelConfirmationAlertButtonTitle" = "ਹਟਾਓ";
+"deleteTunnelConfirmationAlertMessage" = "ਇਹ ਟਨਲ ਹਟਾਉਣੀ ਹੈ?";
+
+"tunnelEditPlaceholderTextRequired" = "ਲੋੜੀਂਦਾ";
+"tunnelEditPlaceholderTextOptional" = "ਚੋਣਵਾਂ";
+"tunnelEditPlaceholderTextAutomatic" = "ਆਪਣੇ-ਆਪ";
+"tunnelEditPlaceholderTextStronglyRecommended" = "ਜ਼ੋਰਦਾਰ ਸਿਫਾਰਸ਼ ਕੀਤੀ";
+"tunnelEditPlaceholderTextOff" = "ਬੰਦ";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "ਹਰ %@ ਸਕਿੰਟ";
+"tunnelHandshakeTimestampNow" = "ਹੁਣ";
+"tunnelHandshakeTimestampSystemClockBackward" = "(ਸਿਸਟਮ ਘੜੀ ਪੁੱਠੀ ਮੋੜੀ ਜਾਂਦੀ ਹੈ)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ ਪਹਿਲਾਂ";
+"tunnelHandshakeTimestampYear (%d)" = "%d ਸਾਲ";
+"tunnelHandshakeTimestampYears (%d)" = "%d ਸਾਲ";
+"tunnelHandshakeTimestampDay (%d)" = "%d ਦਿਨ";
+"tunnelHandshakeTimestampDays (%d)" = "%d ਦਿਨ";
+"tunnelHandshakeTimestampHour (%d)" = "%d ਘੰਟਾ";
+"tunnelHandshakeTimestampHours (%d)" = "%d ਘੰਟੇ";
+"tunnelHandshakeTimestampMinute (%d)" = "%d ਮਿੰਟ";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d ਮਿੰਟ";
+"tunnelHandshakeTimestampSecond (%d)" = "%d ਸਕਿੰਟ";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d ਸਕਿੰਟ";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ ਘੰਟੇ";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ ਮਿੰਟ";
+
+"tunnelPeerPresharedKeyEnabled" = "ਸਮਰੱਥ ਹੈ";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "ਅਵੈਧ ਇੰਟਰਫੇਸ";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "ਇੰਟਰਫੇਸ ਦਾ ਨਾਂ ਚਾਹੀਦਾ ਹੈ";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "ਇੰਟਰਫੇਸ ਦੀ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "ਇੰਟਰਫੇਸ ਦੀ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀ base64 ਇੰਕੋਡਿੰਗ ਵਿੱਚ 32-ਬਾਈਟ ਕੁੰਜੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidInterfaceMessageAddressInvalid" = "ਇੰਟਰਫੇਸ ਐਡਰੈਸ ਕਾਮਿਆਂ ਰਾਹੀਂ ਵੱਖ ਕੀਤੇ ਹੋਏ IP ਐਡਰੈਸ, ਚੋਣਵੇਂ ਵਿੱਚ CIDR ਰੂਪ ਵਿੱਚ ਸੂਚੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidInterfaceMessageListenPortInvalid" = "ਇੰਟਰਪੇਸ ਦੀ ਸੁਣਨ ਪੋਰਟ 0 ਤੋਂ 65535 ਵਿੱਚ ਜਾਂ ਨਾ ਦਿੱਤੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidInterfaceMessageMTUInvalid" = "ਇੰਟਰਫੇਸ ਦਾ MTU 576 ਤੋਂ 65535 ਦੇ ਵਿਚਾਲੇ ਜਾਂ ਨਾ ਦਿੱਤਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ";
+"alertInvalidInterfaceMessageDNSInvalid" = "ਇੰਟਰਫੇਸ ਦੇ DNS ਸਰਵਰ ਕਾਮਿਆਂ ਰਾਹੀਂ ਵੱਖ ਕੀਤੇ IP ਐਡਰੈਸ ਦੀ ਸੂਚੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "ਗ਼ੈਰਵਾਜਬ ਪੀਅਰ";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "ਪੀਅਰ ਦੀ ਪਬਲਿਕ ਕੁੰਜੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidPeerMessagePublicKeyInvalid" = "ਪੀਅਰ ਦੀ ਪਬਲਿਕ ਕੁੰਜੀ base64 ਇੰਕੋਡਿੰਗ ਵਿੱਚ 32-ਬਾਈਟ ਕੁੰਜੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "ਪੀਅਰ ਦੀ ਪਹਿਲਾਂ-ਸਾਂਝੀ ਕੀਤੀ ਕੁੰਜੀ base64 ਇੰਕੋਡਿੰਗ ਵਿੱਚ 32-ਬਾਈਟ ਕੁੰਜੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "ਪੀਅਰ ਦੇ ਮਨਜ਼ੂਰ ਕੀਤੇ IP ਕਾਮਿਆਂ ਰਾਹੀਂ ਵੱਖ ਕੀਤੇ ਹੋਏ IP ਐਡਰੈਸ, ਚੋਣਵੇਂ ਵਿੱਚ CIDR ਰੂਪ ਵਿੱਚ ਸੂਚੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+"alertInvalidPeerMessageEndpointInvalid" = "ਪੀਅਰ ਦਾ ਐਂਡ-ਪੁਆਇੰਟ ‘host:port’ ਜਾਂ ‘[host]:port’ ਰੂਪ ਵਿੱਚ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "ਪੀਅਰ ਦਾ ਅਟੱਲ keepalive 0 ਤੋਂ 65535 ਵਿਚਾਲੇ ਜਾਂ ਨਾ ਦਿੱਤਾ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "ਦੋ ਜਾਂ ਵੱਧ ਪੀਅਰਾਂ ਦੀ ਇੱਕ ਪਬਲਿਕ ਕੁੰਜੀ ਨਹੀਂ ਹੋ ਸਕਦੀ ਹੈ";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "QR ਕੋਡ ਸਕੈਨ ਕਰੋ";
+"scanQRCodeTipText" = "ਟੋਟਕਾ: `qrencode -t ansiutf8 < tunnel.conf` ਨਾਲ ਬਣਾਓ";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "ਕੈਮਰਾ ਗ਼ੈਰ-ਸਹਾਇਕ ਹੈ";
+"alertScanQRCodeCameraUnsupportedMessage" = "ਇਹ ਡਿਵਾਈਸ QR ਕੋਡ ਸਕੈਨ ਨਹੀਂ ਕਰਨ ਸਕਦਾ ਹੈ";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "ਅਯੋਗ QR ਕੋਡ";
+"alertScanQRCodeInvalidQRCodeMessage" = "ਸਕੈਨ ਕੀਤਾ QR ਕੋਡ ਵਾਜਬ ਵਾਇਰਗਾਰਡ ਸੰਰਚਨਾ ਨਹੀਂ ਹੈ";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "ਅਯੋਗ ਕੋਡ";
+"alertScanQRCodeUnreadableQRCodeMessage" = "ਸਕੈਨ ਕੀਤਾ ਕੋਡ ਪੜ੍ਹਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ";
+
+"alertScanQRCodeNamePromptTitle" = "ਸਕੈਨ ਕੀਤੀ ਟਨਲ ਲਈ ਨਾਂ ਦਿਓ";
+
+// Settings UI
+
+"settingsViewTitle" = "ਸੈਟਿੰਗਾਂ";
+
+"settingsSectionTitleAbout" = "ਇਸ ਬਾਰੇ";
+"settingsVersionKeyWireGuardForIOS" = "iOS ਲਈ ਵਾਇਰਗਾਰਡ";
+"settingsVersionKeyWireGuardGoBackend" = "ਵਾਇਰਗਾਰਡ ਗੋ ਬੈਕਐਂਡ";
+
+"settingsSectionTitleExportConfigurations" = "ਸੰਰਚਨਾ ਬਰਾਮਦ ਕਰੋ";
+"settingsExportZipButtonTitle" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਬਰਾਮਦ ਕਰੋ";
+
+"settingsSectionTitleTunnelLog" = "ਲਾਗ";
+"settingsViewLogButtonTitle" = "ਲਾਗ ਵੇਖੋ";
+
+// Log view
+
+"logViewTitle" = "ਲਾਗ";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "ਲਾਗ ਬਰਾਮਦ ਕਰਨਾ ਅਸਫ਼ਲ ਹੈ";
+"alertUnableToRemovePreviousLogMessage" = "ਪਹਿਲਾਂ-ਮੌਜੂਦਾ ਲਾਗ ਨੂੰ ਸਾਫ਼ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ ਹੈ";
+
+"alertUnableToWriteLogTitle" = "ਲਾਗ ਬਰਾਮਦ ਕਰਨਾ ਅਸਫ਼ਲ ਹੈ";
+"alertUnableToWriteLogMessage" = "ਲਾਗ ਫ਼ਾਇਲ ਵਿੱਚ ਲਿਖਣ ਲਈ ਅਸਮਰੱਥ ਹੈ";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "ਜ਼ਿਪ ਅਕਾਇਵ ਪੜ੍ਹਨ ਲਈ ਅਸਮਰੱਥ ਹੈ";
+"alertCantOpenInputZipFileMessage" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਪੜ੍ਹਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ।";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਬਣਾਉਣ ਲਈ ਅਸਮਰੱਥ ਹੈ";
+"alertCantOpenOutputZipFileForWritingMessage" = "ਲਿਖਣ ਲਈ ਜ਼ਿੱਪ ਫ਼ਾਇਲ ਖੋਲ੍ਹੀ ਨਹੀਂ ਜਾ ਸਕੀ।";
+
+"alertBadArchiveTitle" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਪੜ੍ਹਨ ਲਈ ਅਸਮਰੱਥ";
+"alertBadArchiveMessage" = "ਖ਼ਰਾਬ ਜਾਂ ਨਿਕਾਰਾ ਜ਼ਿੱਪ ਅਕਾਇਵ ਹੈ।";
+
+"alertNoTunnelsToExportTitle" = "ਬਰਾਮਦ ਕਰਨ ਲਈ ਕੁਝ ਨਹੀਂ ਹੈ";
+"alertNoTunnelsToExportMessage" = "ਬਰਾਮਦ ਕਰਨ ਲਈ ਕੋਈ ਟਨਲ ਨਹੀਂ ਹੈ";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਵਿੱਚ ਕੋਈ ਟਨਲ ਨਹੀਂ ਹੈ";
+"alertNoTunnelsInImportedZipArchiveMessage" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਵਿੱਚ ਕੋਈ .conf ਟਨਲ ਫ਼ਾਇਲਾਂ ਨਹੀਂ ਲੱਭੀਆਂ।";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "ਫ਼ਾਇਲ ਤੋਂ ਦਰਾਮਦ ਕਰਨ ਲਈ ਅਸਮਰੱਥ";
+"alertCantOpenInputConfFileMessage (%@)" = "ਫ਼ਾਇਲ ‘%@’ ਪੜ੍ਹਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ।";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "ਸਰਗਰਮ ਕਰਨਾ ਅਸਫ਼ਲ ਹੈ";
+"alertTunnelActivationFailureMessage" = "ਟਨਲ ਨੂੰ ਸਰਗਰਮ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। ਯਕੀਨੀ ਬਣਾਓ ਕਿ ਤੁਸੀਂ ਇੰਟਰਨੈੱਟ ਨਾਲ ਕਨੈਕਟ ਹੈ।";
+"alertTunnelActivationSavedConfigFailureMessage" = "ਸੰਭਾਲੀ ਸੰਰਚਨਾ ਤੋਂ ਟਨਲ ਜਾਣਕਾਰੀ ਲੈਣ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
+"alertTunnelActivationBackendFailureMessage" = "Go ਬੈਕਐਂਡ ਲਾਇਬਰੇਰੀ ਚਾਲੂ ਕਰਨ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
+"alertTunnelActivationFileDescriptorFailureMessage" = "TUN ਡਿਵਾਈਸ ਫ਼ਾਇਲ ਵਰਣਨ ਪਤਾ ਲਗਾਉਣ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
+"alertTunnelActivationSetNetworkSettingsMessage" = "ਨੈੱਟਵਰਕ ਸੈਟਿੰਗਾਂ ਟਨਲ ਆਬਜੈਕਟ ਉੱਤੇ ਲਾਗੂ ਕਰਨ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " ਇਹ ਟਨਲ ਲਈ ਲੋੜ ਮਤੁਾਬਕ ਸਰਗਰਮ ਕਰਨ ਲਈ ਸਮਰੱਥ ਕੀਤਾ ਹੈ, ਇਸਕਰਕੇ ਇਹ ਟਨਲ ਨੂੰ ਓਪਰੇਟਿੰਗ ਸਿਸਟਮ ਵਲੋਂ ਆਪਣੇ-ਆਪ ਹੀ ਮੁੜ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ। ਤੁਸੀਂ ਟਨਲ ਸੰਰਚਨਾ ਨੂੰ ਸੋਧ ਕੇ ਇਸ ਐਪ ਵਿੱਚ ਲੋੜ ਮੁਤਾਬਕ ਸਰਗਰਮ ਨੂੰ ਬੰਦ ਕਰ ਸਕਦੇ ਹੋ।";
+
+"alertTunnelDNSFailureTitle" = "DNS ਹੱਲ ਕਰਨ ਲਈ ਅਸਫ਼ਲ ਹੈ";
+"alertTunnelDNSFailureMessage" = "ਇੱਕ ਜਾਂ ਵੱਧ ਐਂਡ-ਪੁਆਇੰਟ ਡੋਮੇਨ ਹੱਲ ਨਹੀਂ ਕੀਤੀਆਂ ਜਾ ਸਕੀਆਂ।";
+
+"alertTunnelNameEmptyTitle" = "ਕੋਈ ਨਾਂ ਨਹੀਂ ਦਿੱਤਾ";
+"alertTunnelNameEmptyMessage" = "ਖਾਲੀ ਨਾਂ ਨਾਲ ਟਨਲ ਨਹੀਂ ਬਣਾਈ ਜਾ ਸਕਦੀ ਹੈ";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "ਨਾਂ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "ਉਸ ਨਾਂ ਨਾਲ ਟਨਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "ਸਰਗਰਮ ਕਰਨਾ ਜਾਰੀ ਹੈ";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "ਟਨਲ ਪਹਿਲਾਂ ਹੀ ਸਰਗਰਮ ਹੈ ਜਾਂ ਸਰਗਰਮ ਕਰਨ ਦੀ ਕਾਰਵਾਈ ਜਾਰੀ ਹੈ";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "ਟਨਲਾਂ ਦੀ ਸੂਚੀ ਦਿਖਾਉਣ ਲਈ ਅਸਮਰੱਥ";
+"alertSystemErrorOnAddTunnelTitle" = "ਟਨਲ ਬਣਾਉਣ ਲਈ ਅਸਮਰੱਥ";
+"alertSystemErrorOnModifyTunnelTitle" = "ਟਨਲ ਸੋਧਣ ਲਈ ਅਸਮਰੱਥ";
+"alertSystemErrorOnRemoveTunnelTitle" = "ਟਨਲ ਹਟਾਉਣ ਲਈ ਅਸਮਰੱਥ";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "ਸਰਗਰਮ ਕਰਨਾ ਅਸਫ਼ਲ ਹੈ";
+"alertTunnelActivationSystemErrorMessage (%@)" = "ਟਨਲ ਨੂੰ ਸਰਗਰਮ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਿਆ। %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "ਸੰਰਚਨਾ ਅਵੈਧ ਹੈ।";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "ਸੰਰਚਨਾ ਅਸਮਰੱਥ ਹੈ।";
+"alertSystemErrorMessageTunnelConnectionFailed" = "ਕਨੈਕਸ਼ਨ ਅਸਫ਼ਲ ਹੈ।";
+"alertSystemErrorMessageTunnelConfigurationStale" = "ਸੰਰਚਨਾ ਅਟਕ ਗਈ ਹੈ।";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "ਸੰਰਚਨਾ ਪੜ੍ਹਨ ਜਾਂ ਲਿਖਣ ਲਈ ਅਸਫ਼ਲ ਹੈ।";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "ਅਣਪਛਾਤੀ ਸਿਸਟਮ ਗਲਤੀ ਹੈ।";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "ਨੈੱਟਵਰਕ: %@";
+"macMenuNetworksNone" = "ਨੈੱਟਵਰਕ: ਕੋਈ ਨਹੀਂ";
+
+"macMenuTitle" = "ਵਾਇਰਗਾਰਡ";
+"macMenuManageTunnels" = "ਟਨਲ ਦਾ ਇੰਤਜ਼ਾਮ ਕਰੋ";
+"macMenuImportTunnels" = "ਫ਼ਾਇਲ ਤੋਂ ਟਨਲ ਦਰਾਮਦ ਕਰੋ…";
+"macMenuAddEmptyTunnel" = "…ਖਾਲੀ ਟਨਲ ਜੋੜੋ";
+"macMenuViewLog" = "ਲਾਗ ਵੇਖੋ";
+"macMenuExportTunnels" = "ਟਨਲ ਨੂੰ ਜ਼ਿੱਪ ਵਜੋਂ ਬਰਾਮਦ ਕਰੋ…";
+"macMenuAbout" = "ਵਾਇਰਗਾਰਡ ਬਾਰੇ";
+"macMenuQuit" = "ਵਾਇਰਗਾਰਡ ਚੋਂ ਬਾਹਰ ਜਾਓ";
+
+"macMenuHideApp" = "ਵਾਇਰਗਾਰਡ ਲੁਕਾਓ";
+"macMenuHideOtherApps" = "ਹੋਰ ਲੁਕਾਓ";
+"macMenuShowAllApps" = "ਸਭ ਵੇਖਾਓ";
+
+"macMenuFile" = "ਫ਼ਾਇਲ";
+"macMenuCloseWindow" = "ਵਿੰਡੋ ਨੂੰ ਬੰਦ ਕਰੋ";
+
+"macMenuEdit" = "ਸੋਧੋ";
+"macMenuCut" = "ਕੱਟੋ";
+"macMenuCopy" = "ਕਾਪੀ ਕਰੋ";
+"macMenuPaste" = "ਚੇਪੋ";
+"macMenuSelectAll" = "ਸਭ ਚੁਣੋ";
+
+"macMenuTunnel" = "ਟਨਲ";
+"macMenuToggleStatus" = "ਸਥਿਤੀ ਪਲਟੋ";
+"macMenuEditTunnel" = "ਸੋਧੋ…";
+"macMenuDeleteSelected" = "ਚੁਣੇ ਨੂੰ ਹਟਾਓ";
+
+"macMenuWindow" = "ਵਿੰਡੋ";
+"macMenuMinimize" = "ਘੱਟੋ-ਘੱਟ";
+"macMenuZoom" = "ਜ਼ੂਮ";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "ਵਾਇਰਗਰਾਡ ਟਨਲਾਂ ਦਾ ਇੰਤਜ਼ਾਮ ਕਰੋ";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "ਕੀ ਤੁਸੀਂ ‘%@’ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "ਕੀ ਤੁਸੀਂ %d ਟਨਲਾਂ ਨੂੰ ਹਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"macDeleteTunnelConfirmationAlertInfo" = "ਤੁਸੀ ਇਹ ਕਾਰਵਾਈ ਵਾਪਸ ਨਹੀਂ ਲੈ ਸਕਦੇ ਹੋ।";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "ਹਟਾਓ";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "ਰੱਦ ਕਰੋ";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "ਹਟਾਇਆ ਜਾ ਰਿਹਾ ਹੈ…";
+
+"macButtonImportTunnels" = "ਫ਼ਾਇਲ ਤੋਂ ਟਨਲ ਦਰਾਮਦ ਕਰੋ";
+"macSheetButtonImport" = "ਦਰਾਮਦ";
+
+"macNameFieldExportLog" = "ਲਾਗ ਸੰਭਾਲੋ:";
+"macSheetButtonExportLog" = "ਸੰਭਾਲੋ";
+
+"macNameFieldExportZip" = "ਟਨਲ ਬਰਾਮਦ ਕਰੋ:";
+"macSheetButtonExportZip" = "ਸੰਭਾਲੋ";
+
+"macButtonDeleteTunnels (%d)" = "%d ਟਨਲਾਂ ਹਟਾਓ";
+
+"macButtonEdit" = "ਸੋਧੋ";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "ਲੋੜ ਮੁਤਾਬਕ:";
+"macFieldOnDemandSSIDs" = "SSID:";
+
+// Mac status display
+
+"macStatus (%@)" = "ਸਥਿਤੀ: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "ਖਾਰਜ ਕਰੋ";
+"macEditSave" = "ਸੰਭਾਲੋ";
+
+"macAlertNameIsEmpty" = "ਨਾਂ ਚਾਹੀਦਾ ਹੈ।";
+"macAlertDuplicateName (%@)" = "ਨਾਂ  ‘%@’ ਨਾਲ ਟਨਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ।";
+
+"macAlertInvalidLine (%@)" = "ਗ਼ੈਰਵਾਜਬ ਲਾਈਨ: ‘%@’।";
+
+"macAlertNoInterface" = "ਸੰਰਚਨਾ ਵਿੱਚ ‘Interface’ ਭਾਗ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।";
+"macAlertMultipleInterfaces" = "ਸੰਰਚਨਾ ਵਿੱਚ ਸਿਰਫ਼ ਇੱਕ ਹੀ ‘Interface’ ਭਾਗ ਹੋਣਾ ਚਾਹੀਦਾ ਹੈ।";
+"macAlertPrivateKeyInvalid" = "ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀ ਗ਼ੈਰਵਾਜਬ ਹੈ।";
+"macAlertListenPortInvalid (%@)" = "ਸੁਣਨ ਵਾਲੀ ਪੋਰਟ ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ।";
+"macAlertAddressInvalid (%@)" = "ਸਿਰਨਾਵਾਂ ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ।";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ।";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ।";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "ਇੰਟਰਫੇਸ ਵਿੱਚ ਬੇਪਛਾਣ ਸ਼ਬਦ ‘%@’";
+"macAlertInfoUnrecognizedInterfaceKey" = "ਵਾਜਬ ਸ਼ਬਦ ਹਨ: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ ਅਤੇ ‘MTU’।";
+
+"macAlertPublicKeyInvalid" = "ਪਬਲਿਕ ਕੁੰਜੀ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ";
+"macAlertPreSharedKeyInvalid" = "ਪ੍ਰੀ-ਸ਼ੇਅਰ ਕੀਤੀ ਕੁੰਜੀ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ।";
+"macAlertAllowedIPInvalid (%@)" = "ਮਨਜ਼ੂਰ ਕੀਤਾ IP ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ";
+"macAlertEndpointInvalid (%@)" = "ਐਂਡ-ਪੁਆਇੰਟ ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ";
+"macAlertPersistentKeepliveInvalid (%@)" = "Persistent keepalive ਮੁੱਲ ‘%@’ ਗ਼ੈਰ-ਵਾਜਬ ਹੈ";
+
+"macAlertUnrecognizedPeerKey (%@)" = "ਪੀਅਰ ਵਿੱਚ ਬੇਪਛਾਣ ਸ਼ਬਦ ‘%@’";
+"macAlertInfoUnrecognizedPeerKey" = "ਵਾਜਬ ਸ਼ਬਦ ਹਨ: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ ਅਤੇ ‘PersistentKeepalive’";
+
+"macAlertMultipleEntriesForKey (%@)" = "ਸ਼ਬਦ ‘%@’ ਲਈ ਹਰ ਭਾਗ ਵਿੱਚ ਇੱਕ ਹੀ ਐਂਟਰੀ ਹੋਣੀ ਚਾਹੀਦੀ ਹੈ";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "ਐਪ ਵਰਜ਼ਨ: %@";
+"macGoBackendVersion (%@)" = "Go ਬੈਕਐਂਡ ਵਰਜ਼ਨ: %@";
+
+// Privacy
+
+"macExportPrivateData" = "ਟਨਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਬਰਾਮਦ ਕਰੋ";
+"macViewPrivateData" = "ਟਨਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਵੇਖੋ";
+"iosExportPrivateData" = "ਟਨਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਨੂੰ ਬਰਾਮਦ ਕਰਨ ਲਈ ਪਰਮਾਣਕਿਤਾ।";
+"iosViewPrivateData" = "ਟਨਲ ਪ੍ਰਾਈਵੇਟ ਕੁੰਜੀਆਂ ਨੂੰ ਵੇਖਣ ਲਈ ਪਰਮਾਣਕਿਤਾ।";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "ਕੀ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਨੂੰ ਬੰਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਜਾਂ ਪੂਰੇ ਵਾਇਰਗਾਰਡ ਤੋਂ ਬਾਹਰ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"macConfirmAndQuitAlertInfo" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਵਾਇਰਗਾਰਡ ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਵਾਇਰਗਾਰਡ ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।\n\nਯਾਦ ਰੱਕੋ ਕਿ ਜੇ ਤੁਸੀਂ ਪੂਰੇ ਵਾਇਰਗਾਰਡ ਨੂੰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਪੂਰੀ ਸਰਗਰਮ ਟਨਲ ('%@') ਫੇਰ ਵੀ ਸਰਗਰਮ ਰਹੇਗਾ, ਜਦੋਂ ਤੱਕ ਕਿ ਤੁਸੀਂ ਇਸ ਨੂੰ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਜਾਂ ਸਿਸਟਮ ਪਸੰਦਾਂ (System Preferences) ਵਿੱਚ ਨੈੱਟਵਰਕ (Network) ਪੈਨਲ ਰਾਹੀਂ ਨਾ-ਸਰਗਰਮ ਕਰ ਦਿੰਦੇ ਹੋ।";
+"macConfirmAndQuitAlertQuitWireGuard" = "ਵਾਇਰਗਾਰਡ ਚੋਂ ਬਾਹਰ ਜਾਓ";
+"macConfirmAndQuitAlertCloseWindow" = "ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰੋ";
+
+"macAppExitingWithActiveTunnelMessage" = "ਵਾਇਰਗਾਰਡ ਸਰਗਰਮ ਟਨਲ ਨਾਲ ਮੌਜੂਦ ਹੈ";
+"macAppExitingWithActiveTunnelInfo" = "ਟਨਲ ਬੰਦ ਕਰਨ ਦੇ ਬਾਅਦ ਵੀ ਸਰਗਰਮ ਰਹੇਗੀ। ਤੁਸੀਂ ਇਸ ਐਪਲੀਕੇਸ਼ਨ ਨੂੰ ਮੁੜ ਖੋਲ੍ਹ ਕੇ ਜਾਂ ਸਿਸਟਮ ਪਸੰਦਾਂ (System Preferences) ਵਿੱਚੋਂ ਨੈੱਟਵਰਕ ਪੈਨਲ (Network) ਰਾਹੀਂ ਇਹਨੂੰ ਅਸਮਰੱਥ ਕਰ ਸਕਦੇ ਹੋ।";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "ਟਨਲ ਨੂੰ ਸੋਧੋ (⌘E)";
+"macToolTipToggleStatus" = "ਸਥਿਤੀ ਪਲਟੋ (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "ਸਮਾਂ";
+"macLogColumnTitleLogMessage" = "ਲਾਗ ਸੁਨੇਹੇ";
+"macLogButtonTitleClose" = "ਬੰਦ ਕਰੋ";
+"macLogButtonTitleSave" = "ਸੰਭਾਲੋ…";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "ਇਸ ਟਨਲ ਲਈ ਸੰਰਚਨਾ ਨੂੰ ਕੀ-ਚੇਨ ਵਿੱਚ ਲੱਭਿਆ ਨਹੀਂ ਜਾ ਸਕਦਾ ਹੈ।";
+"macUnusableTunnelInfo" = "ਜੇ ਇਹ ਟਨਲ ਨੂੰ ਹੋਰ ਵਰਤੋਂਕਾਰ ਵਜੋਂ ਬਣਾਇਆ ਗਿਆ ਤਾਂ ਸਿਰਫ਼ ਉਹੀ ਵਰਤੋਂਕਾਰ ਇਸ ਟਨਲ ਨੂੰ ਵੇਖ, ਸੋਧ ਜਾਂ ਸਰਗਰਮ ਕਰ ਸਕਦਾ ਹੈ।";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "ਟਨਲ ਨੂੰ ਹਟਾਓ";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store ਵਾਇਰਗਾਰਡ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨਾ ਚਾਹੁੰਦਾ ਹੈ";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "ਟਨਲ ‘%@’ ਲਈ ਲੋੜ ਮੁਤਾਬਕ ਅਸਮਰੱਥ ਕਰੋ, ਇਸ ਨੂੰ ਨਾ-ਸਰਗਰਮ ਕਰੋ ਅਤੇ ਤਦ App Store ਰਾਹੀਂ ਅੱਪਡੇਟ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ।";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "ਟਨਲ ‘%@’ ਨੂੰ ਨਾ-ਸਰਗਰਮ ਕਰੋ ਅਤੇ ਤਦ App Store ਰਾਹੀਂ ਅੱਪਡੇਟ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ।";
+
+// Donation
+
+"donateLink" = "♥ ਵਾਇਰਗਾਰਡ ਪਰੋਜੈਕਟ ਨੂੰ ਦਾਨ ਦਿਓ";

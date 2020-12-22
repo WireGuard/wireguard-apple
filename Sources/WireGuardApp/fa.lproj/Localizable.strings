@@ -1,0 +1,404 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "باشه";
+"actionCancel" = "لغو";
+"actionSave" = "ذخیره";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "تنظیمات";
+"tunnelsListCenteredAddTunnelButtonTitle" = "اضافه کردن تونل";
+"tunnelsListSwipeDeleteButtonTitle" = "حذف";
+"tunnelsListSelectButtonTitle" = "انتخاب";
+"tunnelsListSelectAllButtonTitle" = "انتخاب همه";
+"tunnelsListDeleteButtonTitle" = "حذف";
+"tunnelsListSelectedTitle (%d)" = "%d انتخاب شد";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "اضافه کردن تونل جدید وایرگارد";
+"addTunnelMenuImportFile" = "ساختن از طریق پرونده یا آرشیو";
+"addTunnelMenuQRCode" = "ساختن از طریق QR کد";
+"addTunnelMenuFromScratch" = "ساختن از طریق خراش دادن";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "تونل %d ساخته شد";
+
+"alertImportedFromZipTitle (%d)" = "%d تونل ایجاد شد";
+
+"alertBadConfigImportTitle" = "نمی‌توان تونل را وارد کرد";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "حذف";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "تونل %d حذف شود؟";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "%d تونل حذف شود؟";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "پیکربندی جدید";
+"editTunnelViewTitle" = "ویرایش پیکربندی";
+
+"tunnelSectionTitleStatus" = "وضعیت";
+
+"tunnelStatusInactive" = "غیرفعال";
+"tunnelStatusActivating" = "در حال فعال‌سازی";
+"tunnelStatusActive" = "فعال";
+"tunnelStatusDeactivating" = "در حال غیرفعال‌سازی";
+"tunnelStatusReasserting" = "در حال فعال‌سازی مجدد";
+"tunnelStatusRestarting" = "در حال راه‌اندازی مجدد";
+"tunnelStatusWaiting" = "در حال انتظار";
+
+"macToggleStatusButtonActivate" = "فعال‌سازی";
+"macToggleStatusButtonActivating" = "در حال فعال‌سازی…";
+"macToggleStatusButtonDeactivate" = "غیر فعال‌سازی";
+"macToggleStatusButtonDeactivating" = "در حال غیرفعال‌سازی…";
+"macToggleStatusButtonReasserting" = "در حال فعال‌سازی مجدد…";
+"macToggleStatusButtonRestarting" = "در حال راه‌اندازی دوباره…";
+"macToggleStatusButtonWaiting" = "در حال انتظار…";
+
+"tunnelSectionTitleInterface" = "رابط";
+
+"tunnelInterfaceName" = "نام";
+"tunnelInterfacePrivateKey" = "کلید خصوصی";
+"tunnelInterfacePublicKey" = "کلید عمومی";
+"tunnelInterfaceGenerateKeypair" = "ساختن جفت‌کلید";
+"tunnelInterfaceAddresses" = "نشانی‌ها";
+"tunnelInterfaceListenPort" = "پورت شنود";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "سرورهای DNS";
+"tunnelInterfaceStatus" = "وضعیت";
+
+"tunnelSectionTitlePeer" = "همتا";
+
+"tunnelPeerPublicKey" = "کلید عمومی";
+"tunnelPeerPreSharedKey" = "کلید از پیش تقسیم شده";
+"tunnelPeerEndpoint" = "نقطه پایان";
+"tunnelPeerPersistentKeepalive" = "زنده نگه‌داشتن پیوسته";
+"tunnelPeerAllowedIPs" = "IPهای مجاز";
+"tunnelPeerRxBytes" = "داده دریافت شد";
+"tunnelPeerTxBytes" = "داده فرستاده شده";
+"tunnelPeerLastHandshakeTime" = "آخرین handshake";
+"tunnelPeerExcludePrivateIPs" = "مستثنی کردن IPهای خصوصی";
+
+"tunnelSectionTitleOnDemand" = "فعال‌سازی هنگام-درخواست";
+
+"tunnelOnDemandCellular" = "داده همراه";
+"tunnelOnDemandEthernet" = "اترنت";
+"tunnelOnDemandWiFi" = "وای-فای";
+"tunnelOnDemandSSIDsKey" = "SSIDها";
+
+"tunnelOnDemandAnySSID" = "هر SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "فقط این SSIDها";
+"tunnelOnDemandExceptTheseSSIDs" = "به‌جز این SSIDها";
+"tunnelOnDemandOnlySSID (%d)" = "تنها %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "تنها %d SSID";
+"tunnelOnDemandExceptSSID (%d)" = "به‌جز %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "به‌جز %d SSID";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSIDها";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSIDها";
+"tunnelOnDemandNoSSIDs" = "هیچ SSIDای";
+"tunnelOnDemandSectionTitleAddSSIDs" = "افزودن SSIDها";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "افزودن متصل: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "افزودن جدید";
+
+"tunnelOnDemandKey" = "هنگام درخواست";
+"tunnelOnDemandOptionOff" = "خاموش";
+"tunnelOnDemandOptionWiFiOnly" = "فقط هنگام استفاده از Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "وای‌فای یا داده همراه";
+"tunnelOnDemandOptionCellularOnly" = "فقط داده همراه";
+"tunnelOnDemandOptionWiFiOrEthernet" = "وای‌فای یا اترنت";
+"tunnelOnDemandOptionEthernetOnly" = "تنها اترنت";
+
+"addPeerButtonTitle" = "افزودن همتا";
+
+"deletePeerButtonTitle" = "حذف همتا";
+"deletePeerConfirmationAlertButtonTitle" = "حذف";
+"deletePeerConfirmationAlertMessage" = "این همتا حذف شود؟";
+
+"deleteTunnelButtonTitle" = "حذف تونل";
+"deleteTunnelConfirmationAlertButtonTitle" = "حذف";
+"deleteTunnelConfirmationAlertMessage" = "این تونل حذف شود؟";
+
+"tunnelEditPlaceholderTextRequired" = "الزامی است";
+"tunnelEditPlaceholderTextOptional" = "دلخواه";
+"tunnelEditPlaceholderTextAutomatic" = "خودکار";
+"tunnelEditPlaceholderTextStronglyRecommended" = "بسیار پیشنهاد می‌شود";
+"tunnelEditPlaceholderTextOff" = "خاموش";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "هر %@ ثانیه";
+"tunnelHandshakeTimestampNow" = "هم اکنون";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ پیش";
+"tunnelHandshakeTimestampYear (%d)" = "%d سال";
+"tunnelHandshakeTimestampYears (%d)" = "%d سال";
+"tunnelHandshakeTimestampDay (%d)" = "%d روز";
+"tunnelHandshakeTimestampDays (%d)" = "%d روز";
+"tunnelHandshakeTimestampHour (%d)" = "%d ساعت";
+"tunnelHandshakeTimestampHours (%d)" = "%d ساعت";
+"tunnelHandshakeTimestampMinute (%d)" = "%d دقیقه";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d دقیقه";
+"tunnelHandshakeTimestampSecond (%d)" = "%d ثانیه";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d ثانیه";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ ساعت";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ دقیقه";
+
+"tunnelPeerPresharedKeyEnabled" = "فعال شده";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "رابط نامعتبر است";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "نام رابط الزامی است";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "کلید خصوصی رابط الزامی است";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "همتای نامعتبر";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "اسکن کد QR";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "دوربین پشتیبانی نمی‌شود";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "کد QR نامعتبر";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "کد نامعتبر";
+
+// Settings UI
+
+"settingsViewTitle" = "تنظیمات";
+
+"settingsSectionTitleAbout" = "درباره ما";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard برای iOS";
+"settingsExportZipButtonTitle" = "برون‌بری بایگانی زیپ";
+
+"settingsSectionTitleTunnelLog" = "گزارش رویداد";
+"settingsViewLogButtonTitle" = "مشاهده‌ی گزارش رویداد";
+
+// Log view
+
+"logViewTitle" = "گزارش وقایع";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "برون‌برد گزارش رویداد ناموفق بود";
+
+"alertUnableToWriteLogTitle" = "برون‌برد گزارش رویداد ناموفق بود";
+
+"alertBadArchiveTitle" = "نمی‌توان آرشیو زیپ را خواند";
+"alertBadArchiveMessage" = "آرشیو زیپ، بد یا خراب است.";
+
+"alertNoTunnelsToExportTitle" = "چیزی برای برون‌بری نیست";
+"alertNoTunnelsToExportMessage" = "تونلی برای برون‌بری نیست";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "هیچ تونلی در آرشیو زیپ نیست";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "شکست در فعال‌سازی";
+
+"alertTunnelNameEmptyTitle" = "نامی افزوده نشده";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "نام از قبل وجود دارد";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "در حال فعال‌سازی";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "نمی‌توان تونل‌ها را فهرست کرد";
+"alertSystemErrorOnAddTunnelTitle" = "نمی‌توان تونل را ساخت";
+"alertSystemErrorOnModifyTunnelTitle" = "نمی‌توان تونل را ویرایش کرد";
+"alertSystemErrorOnRemoveTunnelTitle" = "نمی‌توان تونل را حذف کرد";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "شکست در فعال‌سازی";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "پیکربندی نامعتبر است.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "پیکربندی غیرفعال است.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "ﺍﺗﺼﺎﻝ ﻧﺎﻣﻮﻓﻖ ﺑﻮﺩ.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "پیکربندی کهنه است.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "خطای ناشناخته سیستم.";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "شبکه‌ها: %@";
+"macMenuNetworksNone" = "شبکه‌ها: هیچی";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "مدیریت تونل‌ها";
+"macMenuImportTunnels" = "وارد کردن تونل(ها) از پرونده…";
+"macMenuAddEmptyTunnel" = "افزودن تونل خالی…";
+"macMenuViewLog" = "مشاهده گزارش رویداد";
+"macMenuExportTunnels" = "برون‌بری تونل‌ها در پرونده زیپ…";
+"macMenuAbout" = "درباره WireGuard";
+"macMenuQuit" = "خروج از WireGuard";
+
+"macMenuHideApp" = "WireGuard را پنهان کن";
+"macMenuHideOtherApps" = "پنهان کردن دیگران";
+"macMenuShowAllApps" = "نمایش همه";
+
+"macMenuFile" = "پرونده";
+"macMenuCloseWindow" = "بستن پنجره";
+
+"macMenuEdit" = "ویرایش";
+"macMenuCut" = "برش";
+"macMenuCopy" = "روگرفت";
+"macMenuPaste" = "جای‌گذاری";
+"macMenuSelectAll" = "انتخاب همه";
+
+"macMenuTunnel" = "تونل";
+"macMenuEditTunnel" = "ویرایش…";
+"macMenuDeleteSelected" = "حذف انتخاب شده‌ها";
+
+"macMenuWindow" = "پنجره";
+"macMenuMinimize" = "کوچک‌سازی";
+"macMenuZoom" = "بزرگ‌نمايی";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "مدیریت تونل‌های WireGuard";
+"macDeleteTunnelConfirmationAlertInfo" = "شما نمی‌توانید این عمل را خنثی کنید.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "حذف";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "لغو";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "در حال حذف…";
+
+"macButtonImportTunnels" = "وارد کردن تونل(ها) از پرونده";
+"macSheetButtonImport" = "واردکردن";
+
+"macNameFieldExportLog" = "ذخیره گزارش رویداد به:";
+"macSheetButtonExportLog" = "ذخیره";
+
+"macNameFieldExportZip" = "برون‌بری تونل‌ها به:";
+"macSheetButtonExportZip" = "ذخیره";
+
+"macButtonDeleteTunnels (%d)" = "حذف %d تونل";
+
+"macButtonEdit" = "ویرایش";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "هنگام-درخواست:";
+"macFieldOnDemandSSIDs" = "SSIDها:";
+
+// Mac status display
+
+"macStatus (%@)" = "وضعیت: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "لغو";
+"macEditSave" = "ذخیره";
+
+"macAlertNameIsEmpty" = "نام الزامی است";
+"macAlertDuplicateName (%@)" = "تونلی دیگر با این نام موجود است ‘%@’.";
+
+"macAlertInvalidLine (%@)" = "خط نامعتبر: ‘%@’.";
+"macAlertPrivateKeyInvalid" = "کلید خصوصی نامعتبر است.";
+"macAlertListenPortInvalid (%@)" = "پورت شنود ‘%@’ نامعتبر است.";
+"macAlertAddressInvalid (%@)" = "نشانی ‘%@’ نامعتبر است.";
+"macAlertDNSInvalid (%@)" = "DNS ‘%@’ نامعتبر است.";
+"macAlertMTUInvalid (%@)" = "MTU ‘%@’ نامعتبر است.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "رابط دارای کلید ناشناخته می‌باشد ‘%@’";
+
+"macAlertPublicKeyInvalid" = "کلید عمومی نامعتبر است";
+"macAlertPreSharedKeyInvalid" = "کلید از پیش تقسیم شده نامعتبر است";
+"macAlertAllowedIPInvalid (%@)" = "IP مجاز ‘%@’ نامعتبر است";
+"macAlertEndpointInvalid (%@)" = "نقطه پایان ‘%@’ نامعتبر است";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "نگارش برنامه: %@";
+
+// Privacy
+
+"macExportPrivateData" = "برو‌ن‌بری کلید‌های خصوصی تونل";
+"macViewPrivateData" = "مشاهده کلید‌های خصوصی تونل";
+"macConfirmAndQuitAlertQuitWireGuard" = "خروج از WireGuard";
+"macConfirmAndQuitAlertCloseWindow" = "بستن مدیر تونل‌ها";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "ویرایش تونل (⌘E)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "زمان";
+"macLogColumnTitleLogMessage" = "پیام گزارش رویداد";
+"macLogButtonTitleClose" = "بستن";
+"macLogButtonTitleSave" = "ذخیره…";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "حذف تونل";
+
+// Donation
+
+"donateLink" = "♥ کمک مالی به پروژه WireGuard";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Interface’s listen port must be between 0 and 65535, or unspecified";
+"tunnelHandshakeTimestampSystemClockBackward" = "(System clock wound backwards)";
+"macAlertNoInterface" = "Configuration must have an ‘Interface’ section.";
+"alertScanQRCodeCameraUnsupportedMessage" = "This device is not able to scan QR codes";
+"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
+"macUnusableTunnelInfo" = "In case this tunnel was created by another user, only that user can view, edit, or activate this tunnel.";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "The tunnel is already active or in the process of being activated";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Unable to apply network settings to tunnel object.";
+"alertCantOpenInputConfFileTitle" = "Unable to import from file";
+"alertScanQRCodeInvalidQRCodeMessage" = "The scanned QR code is not a valid WireGuard configuration";
+"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
+"alertTunnelActivationSavedConfigFailureMessage" = "Unable to retrieve tunnel information from the saved configuration.";
+"macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ and ‘MTU’.";
+"alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
+"alertInvalidInterfaceMessageMTUInvalid" = "Interface’s MTU must be between 576 and 65535, or unspecified";
+"alertUnableToWriteLogMessage" = "Unable to write logs to file";
+"alertTunnelActivationFailureOnDemandAddendum" = " This tunnel has Activate On Demand enabled, so this tunnel might be re-activated automatically by the OS. You may turn off Activate On Demand in this app by editing the tunnel configuration.";
+"alertInvalidPeerMessageEndpointInvalid" = "Peer’s endpoint must be of the form ‘host:port’ or ‘[host]:port’";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Two or more peers cannot have the same public key";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Peer’s preshared key must be a 32-byte key in base64 encoding";
+"macAppExitingWithActiveTunnelInfo" = "The tunnel will remain active after exiting. You may disable it by reopening this application or through the Network panel in System Preferences.";
+"alertTunnelActivationFailureMessage" = "The tunnel could not be activated. Please ensure that you are connected to the Internet.";
+"alertCantOpenInputZipFileMessage" = "The zip archive could not be read.";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Interface’s private key must be a 32-byte key in base64 encoding";
+"alertInvalidInterfaceMessageDNSInvalid" = "Interface’s DNS servers must be a list of comma-separated IP addresses";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Peer’s persistent keepalive must be between 0 to 65535, or unspecified";
+"alertInvalidPeerMessagePublicKeyRequired" = "Peer’s public key is required";
+"alertCantOpenOutputZipFileForWritingMessage" = "Could not open zip file for writing.";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Peer’s public key must be a 32-byte key in base64 encoding";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
+"macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
+"alertTunnelDNSFailureMessage" = "One or more endpoint domains could not be resolved.";
+"alertInvalidInterfaceMessageAddressInvalid" = "Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation";
+"alertTunnelDNSFailureTitle" = "DNS resolution failure";
+"macMenuToggleStatus" = "Toggle Status";
+"alertCantOpenInputZipFileTitle" = "Unable to read zip archive";
+"alertScanQRCodeUnreadableQRCodeMessage" = "The scanned code could not be read";
+"macAlertMultipleInterfaces" = "Configuration must have only one ‘Interface’ section.";
+"macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
+"macUnusableTunnelMessage" = "The configuration for this tunnel cannot be found in the keychain.";
+"iosViewPrivateData" = "Authenticate to view tunnel private keys.";
+"macToolTipToggleStatus" = "Toggle status (⌘T)";
+"scanQRCodeTipText" = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`";
+"macAlertInfoUnrecognizedPeerKey" = "Valid keys are: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ and ‘PersistentKeepalive’";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Peer’s allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "A tunnel with that name already exists";
+"iosExportPrivateData" = "Authenticate to export tunnel private keys.";
+"alertScanQRCodeNamePromptTitle" = "Please name the scanned tunnel";
+"alertUnableToRemovePreviousLogMessage" = "The pre-existing log could not be cleared";
+"alertTunnelActivationBackendFailureMessage" = "Unable to turn on Go backend library.";
+"settingsSectionTitleExportConfigurations" = "Export configurations";
+"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"alertCantOpenOutputZipFileForWritingTitle" = "Unable to create zip archive";
+"alertNoTunnelsInImportedZipArchiveMessage" = "No .conf tunnel files were found inside the zip archive.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "Unable to determine TUN device file descriptor.";

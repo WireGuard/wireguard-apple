@@ -10,6 +10,7 @@ public struct InterfaceConfiguration {
     public var listenPort: UInt16?
     public var mtu: UInt16?
     public var dns = [DNSServer]()
+    public var dnsSearch = [String]()
 
     public init(privateKey: PrivateKey) {
         self.privateKey = privateKey
@@ -25,6 +26,7 @@ extension InterfaceConfiguration: Equatable {
             lhsAddresses == rhsAddresses &&
             lhs.listenPort == rhs.listenPort &&
             lhs.mtu == rhs.mtu &&
-            lhs.dns == rhs.dns
+            lhs.dns == rhs.dns &&
+            lhs.dnsSearch == rhs.dnsSearch
     }
 }

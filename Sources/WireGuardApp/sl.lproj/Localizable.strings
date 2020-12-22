@@ -1,0 +1,445 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Generic alert action names
+
+
+"actionOK" = "V redu";
+"actionCancel" = "Prekliči";
+"actionSave" = "Shrani";
+
+// Tunnels list UI
+
+"tunnelsListTitle" = "WireGuard";
+"tunnelsListSettingsButtonTitle" = "Nastavitve";
+"tunnelsListCenteredAddTunnelButtonTitle" = "Dodaj tunel";
+"tunnelsListSwipeDeleteButtonTitle" = "Izbriši";
+"tunnelsListSelectButtonTitle" = "Izberi";
+"tunnelsListSelectAllButtonTitle" = "Izberi vse";
+"tunnelsListDeleteButtonTitle" = "Izbriši";
+"tunnelsListSelectedTitle (%d)" = "Izbranih: %d";
+
+// Tunnels list menu
+
+"addTunnelMenuHeader" = "Dodaj nov tunel WireGuard";
+"addTunnelMenuImportFile" = "Uvozi iz datoteke ali arhiva";
+"addTunnelMenuQRCode" = "Skeniraj kodo QR";
+"addTunnelMenuFromScratch" = "Ustvari na novo";
+
+// Tunnels list alerts
+
+"alertImportedFromMultipleFilesTitle (%d)" = "Ustvarjenih tunelov: %d";
+"alertImportedFromMultipleFilesMessage (%1$d of %2$d)" = "Ustvarjenih tunelov iz uvoženih datotek: %1$d od %2$d";
+
+"alertImportedFromZipTitle (%d)" = "Ustvarjenih tunelov: %d";
+"alertImportedFromZipMessage (%1$d of %2$d)" = "Ustvarjenih tunelov iz arhiva zip: %1$d od %2$d";
+
+"alertBadConfigImportTitle" = "Tunela ni mogoče uvoziti";
+"alertBadConfigImportMessage (%@)" = "Datoteka \"%@\" ne vsebuje veljavne konfiguracije WireGuard";
+
+"deleteTunnelsConfirmationAlertButtonTitle" = "Izbriši";
+"deleteTunnelConfirmationAlertButtonMessage (%d)" = "Izbrišem %d tunel?";
+"deleteTunnelsConfirmationAlertButtonMessage (%d)" = "Izbrišem izbrane tunele?";
+
+// Tunnel detail and edit UI
+
+"newTunnelViewTitle" = "Nova konfiguracija";
+"editTunnelViewTitle" = "Uredi konfiguracijo";
+
+"tunnelSectionTitleStatus" = "Preklopi status";
+
+"tunnelStatusInactive" = "Neaktivno";
+"tunnelStatusActivating" = "Se aktivira";
+"tunnelStatusActive" = "Aktivno";
+"tunnelStatusDeactivating" = "Se deaktivira";
+"tunnelStatusReasserting" = "Se reaktivira";
+"tunnelStatusRestarting" = "Se ponovno zaganja";
+"tunnelStatusWaiting" = "Čaka";
+
+"macToggleStatusButtonActivate" = "Aktviraj";
+"macToggleStatusButtonActivating" = "Aktiviram …";
+"macToggleStatusButtonDeactivate" = "Deaktiviraj";
+"macToggleStatusButtonDeactivating" = "Deaktiviram …";
+"macToggleStatusButtonReasserting" = "Reaktiviram …";
+"macToggleStatusButtonRestarting" = "Ponovno zaganjam …";
+"macToggleStatusButtonWaiting" = "Čakam …";
+
+"tunnelSectionTitleInterface" = "Vmesnik";
+
+"tunnelInterfaceName" = "Ime";
+"tunnelInterfacePrivateKey" = "Zasebni ključ";
+"tunnelInterfacePublicKey" = "Javni ključ";
+"tunnelInterfaceGenerateKeypair" = "Naredi nov par ključev";
+"tunnelInterfaceAddresses" = "Naslovi";
+"tunnelInterfaceListenPort" = "Vrata poslušanja";
+"tunnelInterfaceMTU" = "MTU";
+"tunnelInterfaceDNS" = "Strežniki DNS";
+"tunnelInterfaceStatus" = "Status";
+
+"tunnelSectionTitlePeer" = "Vrstnik";
+
+"tunnelPeerPublicKey" = "Javni ključ";
+"tunnelPeerPreSharedKey" = "Ključ v skupni rabi";
+"tunnelPeerEndpoint" = "Končna točka";
+"tunnelPeerPersistentKeepalive" = "Trajno ohranjanje povezave";
+"tunnelPeerAllowedIPs" = "Dovoljeni IP-ji";
+"tunnelPeerRxBytes" = "Prejeti podatki";
+"tunnelPeerTxBytes" = "Poslani podatki";
+"tunnelPeerLastHandshakeTime" = "Zadnje rokovanje";
+"tunnelPeerExcludePrivateIPs" = "Izključi zasebne IP-je";
+
+"tunnelSectionTitleOnDemand" = "Aktivacija na zahtevo";
+
+"tunnelOnDemandCellular" = "Mobilni podatki";
+"tunnelOnDemandEthernet" = "Ethernet";
+"tunnelOnDemandWiFi" = "Wi-Fi";
+"tunnelOnDemandSSIDsKey" = "SSID-ji";
+
+"tunnelOnDemandAnySSID" = "Katerikoli SSID";
+"tunnelOnDemandOnlyTheseSSIDs" = "Samo ti SSID-ji";
+"tunnelOnDemandExceptTheseSSIDs" = "Razen teh SSID-jev";
+"tunnelOnDemandOnlySSID (%d)" = "Samo %d SSID";
+"tunnelOnDemandOnlySSIDs (%d)" = "Samo SSID-jev: %d";
+"tunnelOnDemandExceptSSID (%d)" = "Razen %d SSID";
+"tunnelOnDemandExceptSSIDs (%d)" = "Razen SSID-jev: %d";
+"tunnelOnDemandSSIDOptionDescriptionMac (%1$@: %2$@)" = "%1$@: %2$@";
+
+"tunnelOnDemandSSIDViewTitle" = "SSID-ji";
+"tunnelOnDemandSectionTitleSelectedSSIDs" = "SSID-ji";
+"tunnelOnDemandNoSSIDs" = "Brez SSID-jev";
+"tunnelOnDemandSectionTitleAddSSIDs" = "Dodaj SSID-je";
+"tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Dodaj povezane: %@";
+"tunnelOnDemandAddMessageAddNewSSID" = "Dodaj nov";
+
+"tunnelOnDemandKey" = "Na zahtevo";
+"tunnelOnDemandOptionOff" = "Izklopljeno";
+"tunnelOnDemandOptionWiFiOnly" = "Samo Wi-Fi";
+"tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi ali mobilni podatki";
+"tunnelOnDemandOptionCellularOnly" = "Samo mobilni podatki";
+"tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi ali Ethernet";
+"tunnelOnDemandOptionEthernetOnly" = "Samo Ethernet";
+
+"addPeerButtonTitle" = "Dodaj vrstnika";
+
+"deletePeerButtonTitle" = "Izbriši vrstnika";
+"deletePeerConfirmationAlertButtonTitle" = "Izbriši";
+"deletePeerConfirmationAlertMessage" = "Izbrišem tega vrstnika?";
+
+"deleteTunnelButtonTitle" = "Izbriši tunel";
+"deleteTunnelConfirmationAlertButtonTitle" = "Izbriši";
+"deleteTunnelConfirmationAlertMessage" = "Izbrišem za tunel?";
+
+"tunnelEditPlaceholderTextRequired" = "Zahtevano";
+"tunnelEditPlaceholderTextOptional" = "Izbirno";
+"tunnelEditPlaceholderTextAutomatic" = "Samodejno";
+"tunnelEditPlaceholderTextStronglyRecommended" = "Toplo priporočeno";
+"tunnelEditPlaceholderTextOff" = "Izklopljeno";
+
+"tunnelPeerPersistentKeepaliveValue (%@)" = "v %@-sekundnih intervalih";
+"tunnelHandshakeTimestampNow" = "Zdaj";
+"tunnelHandshakeTimestampSystemClockBackward" = "(Sistemska ura prevrtena nazaj)";
+"tunnelHandshakeTimestampAgo (%@)" = "%@ nazaj";
+"tunnelHandshakeTimestampYear (%d)" = "%d leto";
+"tunnelHandshakeTimestampYears (%d)" = "%d let";
+"tunnelHandshakeTimestampDay (%d)" = "%d dan";
+"tunnelHandshakeTimestampDays (%d)" = "%d dni";
+"tunnelHandshakeTimestampHour (%d)" = "%d uro";
+"tunnelHandshakeTimestampHours (%d)" = "%d ur";
+"tunnelHandshakeTimestampMinute (%d)" = "%d minuto";
+"tunnelHandshakeTimestampMinutes (%d)" = "%d minut";
+"tunnelHandshakeTimestampSecond (%d)" = "%d sekundo";
+"tunnelHandshakeTimestampSeconds (%d)" = "%d sekund";
+
+"tunnelHandshakeTimestampHours hh:mm:ss (%@)" = "%@ ur";
+"tunnelHandshakeTimestampMinutes mm:ss (%@)" = "%@ minut";
+
+"tunnelPeerPresharedKeyEnabled" = "omogočen";
+
+// Error alerts while creating / editing a tunnel configuration
+/* Alert title for error in the interface data */
+
+"alertInvalidInterfaceTitle" = "Neveljaven vmesnik";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidInterfaceMessageNameRequired" = "Ime vmesnika je obvezno";
+"alertInvalidInterfaceMessagePrivateKeyRequired" = "Zasebni ključ vmesnika je obvezen";
+"alertInvalidInterfaceMessagePrivateKeyInvalid" = "Zasebni ključ vmesnika mora biti 32-bajtni ključ v zapisu Base64";
+"alertInvalidInterfaceMessageAddressInvalid" = "Omrežni naslovi vmesnikov morajo biti v seznamu ločeni z vejico, izbirno v zapisu CIDR";
+"alertInvalidInterfaceMessageListenPortInvalid" = "Vrata na katerih vmesnik posluša morajo biti med 0 in 65535 ali nedoločena";
+"alertInvalidInterfaceMessageMTUInvalid" = "Največja transportna enota (MTU) vmesnika mora biti med 576 in 65535, ali nedoločena";
+"alertInvalidInterfaceMessageDNSInvalid" = "Strežniki DNS za vmesnik morajo biti v seznamu, kjer so naslovi IP ločeni z vejico";
+
+/* Alert title for error in the peer data */
+"alertInvalidPeerTitle" = "Neveljaven vrstnik";
+
+/* Any one of the following alert messages can go with the above title */
+"alertInvalidPeerMessagePublicKeyRequired" = "Javni ključ vrstnika je obvezen";
+"alertInvalidPeerMessagePublicKeyInvalid" = "Vrstnikov javni ključ mora biti 32-bajtni ključ v zapisu Base64";
+"alertInvalidPeerMessagePreSharedKeyInvalid" = "Vrstnikov ključ v skupni rabi mora biti 32-bajtni ključ v zapisu Base64";
+"alertInvalidPeerMessageAllowedIPsInvalid" = "Omrežni naslovi vrstnika morajo biti v seznamu ločeni z vejico, izbirno v zapisu CIDR";
+"alertInvalidPeerMessageEndpointInvalid" = "Končna točka vrstnika mora biti v obliki 'gostitelj:vrata' ali '[gostitelj]:vrata'";
+"alertInvalidPeerMessagePersistentKeepaliveInvalid" = "Trajno ohranjanje povezave vrstnika mora biti med 0 in 65535, ali nedoločeno";
+"alertInvalidPeerMessagePublicKeyDuplicated" = "Dva ali več vrstnikov ne more imeti enakega javnega ključa";
+
+// Scanning QR code UI
+
+"scanQRCodeViewTitle" = "Skeniraj kodo QR";
+"scanQRCodeTipText" = "Namig: generirajte z `qrencode -t ansiutf8 tunnel.conf`";
+
+// Scanning QR code alerts
+
+"alertScanQRCodeCameraUnsupportedTitle" = "Fotoaparat ni podprt";
+"alertScanQRCodeCameraUnsupportedMessage" = "Ta naprava ne more skenirati kod QR";
+
+"alertScanQRCodeInvalidQRCodeTitle" = "Neveljavna koda QR";
+"alertScanQRCodeInvalidQRCodeMessage" = "Skenirana koda QR ni veljavna konfiguracija WireGuard";
+
+"alertScanQRCodeUnreadableQRCodeTitle" = "Neveljavna koda";
+"alertScanQRCodeUnreadableQRCodeMessage" = "Skenirane kode ni bilo mogoče prebrati";
+
+"alertScanQRCodeNamePromptTitle" = "Poimenujte skeniran tunel";
+
+// Settings UI
+
+"settingsViewTitle" = "Nastavitve";
+
+"settingsSectionTitleAbout" = "O programu";
+"settingsVersionKeyWireGuardForIOS" = "WireGuard za iOS";
+"settingsVersionKeyWireGuardGoBackend" = "Verzija wireguard-go";
+
+"settingsSectionTitleExportConfigurations" = "Izvozi konfiguracije";
+"settingsExportZipButtonTitle" = "Izvoz arhiva zip";
+
+"settingsSectionTitleTunnelLog" = "Dnevnik";
+"settingsViewLogButtonTitle" = "Prikaži dnevnik";
+
+// Log view
+
+"logViewTitle" = "Dnevnik";
+
+// Log alerts
+
+"alertUnableToRemovePreviousLogTitle" = "Izvažanje dnevnika ni uspelo";
+"alertUnableToRemovePreviousLogMessage" = "Prešnjega dnevnika ni bilo mogoče izbrisati";
+
+"alertUnableToWriteLogTitle" = "Izvažanje dnevnika ni uspelo";
+"alertUnableToWriteLogMessage" = "Ne morem zapisati dnevnikov v datoteko";
+
+// Zip import / export error alerts
+
+"alertCantOpenInputZipFileTitle" = "Arhiva zip ni bilo mogoče prebrati";
+"alertCantOpenInputZipFileMessage" = "Arhiva zip ni bilo mogoče prebrati.";
+
+"alertCantOpenOutputZipFileForWritingTitle" = "Arhiva zip ni bilo mogoče ustvariti";
+"alertCantOpenOutputZipFileForWritingMessage" = "Ne morem odpreti arhiva zip za zapisovanje.";
+
+"alertBadArchiveTitle" = "Arhiva zip ni bilo mogoče prebrati";
+"alertBadArchiveMessage" = "Pokvarjen arhiv zip.";
+
+"alertNoTunnelsToExportTitle" = "Ničesar ni za izvoz";
+"alertNoTunnelsToExportMessage" = "Ni tunelov za izvoz";
+
+"alertNoTunnelsInImportedZipArchiveTitle" = "V arhivu zip ni tunelov";
+"alertNoTunnelsInImportedZipArchiveMessage" = "V arhivu zip ni bilo najdenih konfiguracijskih datotek za tunele.";
+
+// Conf import error alerts
+
+"alertCantOpenInputConfFileTitle" = "Uvoz iz datoteke ni uspel";
+"alertCantOpenInputConfFileMessage (%@)" = "Datoteke \"%@\" ni bilo mogoče prebrati.";
+
+// Tunnel management error alerts
+
+"alertTunnelActivationFailureTitle" = "Napaka pri aktivaciji";
+"alertTunnelActivationFailureMessage" = "Tunela ni bilo mogoče aktivirati. Zagotovite, da imate vzpostavljeno spletno povezavo.";
+"alertTunnelActivationSavedConfigFailureMessage" = "Informacije o tunelu ni bilo mogoče pridobiti iz shranjene konfiguracije.";
+"alertTunnelActivationBackendFailureMessage" = "Zaledne knjižnice Go ni bilo mogoče vključiti.";
+"alertTunnelActivationFileDescriptorFailureMessage" = "Deskriptorja datoteke naprave TUN ni mogoče določiti.";
+"alertTunnelActivationSetNetworkSettingsMessage" = "Objektu tunela ni mogoče nastaviti omrežnih nastavitev.";
+
+"alertTunnelActivationFailureOnDemandAddendum" = " Ta tunel ima omogočeno aktivacijo na zahtevo, tako, da ga operacijski sistem lahko aktivira samodejno. To lahko onemogočite v tej aplikaciji z urejanjem konfiguracije tunela.";
+
+"alertTunnelDNSFailureTitle" = "Napaka pri razrešitvi DNS";
+"alertTunnelDNSFailureMessage" = "Eno ali več domen končnih točk ni bilo mogoče razrešiti.";
+
+"alertTunnelNameEmptyTitle" = "Ime ni bilo podano";
+"alertTunnelNameEmptyMessage" = "Ne morem ustvariti tunela s praznim imenom";
+
+"alertTunnelAlreadyExistsWithThatNameTitle" = "Ime že obstaja";
+"alertTunnelAlreadyExistsWithThatNameMessage" = "Tunel s tem imenom že obstaja";
+
+"alertTunnelActivationErrorTunnelIsNotInactiveTitle" = "Aktivacija v teku";
+"alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "Tunel že aktiven ali v procesu aktivacije";
+
+// Tunnel management error alerts on system error
+/* The alert message that goes with the following titles would be
+   one of the alertSystemErrorMessage* listed further down */
+
+"alertSystemErrorOnListingTunnelsTitle" = "Tunelov ni bilo mogoče našteti";
+"alertSystemErrorOnAddTunnelTitle" = "Tunela ni bilo mogoče ustvariti";
+"alertSystemErrorOnModifyTunnelTitle" = "Tunela ni bilo spremeniti";
+"alertSystemErrorOnRemoveTunnelTitle" = "Tunela ni bilo mogoče odstraniti";
+
+/* The alert message for this alert shall include
+ one of the alertSystemErrorMessage* listed further down */
+"alertTunnelActivationSystemErrorTitle" = "Napaka pri aktivaciji";
+"alertTunnelActivationSystemErrorMessage (%@)" = "Tunel ni bilo mogoče aktivirati. %@";
+
+/* alertSystemErrorMessage* messages */
+"alertSystemErrorMessageTunnelConfigurationInvalid" = "Konfiguracija ni veljavna.";
+"alertSystemErrorMessageTunnelConfigurationDisabled" = "Konfiguracija je onemogočena.";
+"alertSystemErrorMessageTunnelConnectionFailed" = "Povezava ni uspela.";
+"alertSystemErrorMessageTunnelConfigurationStale" = "Konfiguracije je zastarala.";
+"alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Branje ali pisanje konfiguracije ni uspelo.";
+"alertSystemErrorMessageTunnelConfigurationUnknown" = "Neznana sistemska napaka.";
+
+// Mac status bar menu / pulldown menu / main menu
+
+"macMenuNetworks (%@)" = "Omrežja: %@";
+"macMenuNetworksNone" = "Ni omrežij";
+
+"macMenuTitle" = "WireGuard";
+"macMenuManageTunnels" = "Upravljaj tunele";
+"macMenuImportTunnels" = "Uvozi tunele iz datoteke …";
+"macMenuAddEmptyTunnel" = "Dodaj prazen tunel …";
+"macMenuViewLog" = "Pokaži dnevnik";
+"macMenuExportTunnels" = "Izvozi tunele v datoteko zip …";
+"macMenuAbout" = "O aplikaciji WireGuard";
+"macMenuQuit" = "Končaj WireGuard";
+
+"macMenuHideApp" = "Skrij WireGuard";
+"macMenuHideOtherApps" = "Skrij druge";
+"macMenuShowAllApps" = "Prikaži vse";
+
+"macMenuFile" = "Datoteka";
+"macMenuCloseWindow" = "Zapri okno";
+
+"macMenuEdit" = "Uredi";
+"macMenuCut" = "Izreži";
+"macMenuCopy" = "Kopiraj";
+"macMenuPaste" = "Prilepi";
+"macMenuSelectAll" = "Izberi vse";
+
+"macMenuTunnel" = "Tunel";
+"macMenuToggleStatus" = "Preklopi status";
+"macMenuEditTunnel" = "Uredi …";
+"macMenuDeleteSelected" = "Izbriši izbrano";
+
+"macMenuWindow" = "Okno";
+"macMenuMinimize" = "Pomanjšaj";
+"macMenuZoom" = "Povečava";
+
+// Mac manage tunnels window
+
+"macWindowTitleManageTunnels" = "Upravljaj tunele WireGuard";
+
+"macDeleteTunnelConfirmationAlertMessage (%@)" = "Ali ste prepričani, da želite izbrisati \"%@\"?";
+"macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Ali ste prepričani, da želite izbrisati izbrane tunele?";
+"macDeleteTunnelConfirmationAlertInfo" = "Tega dejanja ne morete razveljaviti.";
+"macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Izbriši";
+"macDeleteTunnelConfirmationAlertButtonTitleCancel" = "Prekliči";
+"macDeleteTunnelConfirmationAlertButtonTitleDeleting" = "Brišem …";
+
+"macButtonImportTunnels" = "Uvozi tunele iz datoteke";
+"macSheetButtonImport" = "Uvozi";
+
+"macNameFieldExportLog" = "Shrani dnevnik v:";
+"macSheetButtonExportLog" = "Shrani";
+
+"macNameFieldExportZip" = "Izvozi tunele v:";
+"macSheetButtonExportZip" = "Shrani";
+
+"macButtonDeleteTunnels (%d)" = "Izbriši tunelov: %d";
+
+"macButtonEdit" = "Uredi";
+
+// Mac detail/edit view fields
+
+"macFieldKey (%@)" = "%@:";
+"macFieldOnDemand" = "Na zahtevo:";
+"macFieldOnDemandSSIDs" = "SSID-ji:";
+
+// Mac status display
+
+"macStatus (%@)" = "Status: %@";
+
+// Mac editing config
+
+"macEditDiscard" = "Zavrzi";
+"macEditSave" = "Shrani";
+
+"macAlertNameIsEmpty" = "Ime je obvezno";
+"macAlertDuplicateName (%@)" = "Drug tunel z imenom \"%@\" že obstaja.";
+
+"macAlertInvalidLine (%@)" = "Neveljavna vrstica: \"%@\".";
+
+"macAlertNoInterface" = "Konfiguracija mora imeti odsek \"Interface\".";
+"macAlertMultipleInterfaces" = "Konfiguracija mora imeti le en odsek \"Interface\".";
+"macAlertPrivateKeyInvalid" = "Zasebni ključ ni veljaven.";
+"macAlertListenPortInvalid (%@)" = "Vrata poslušanja \"%@\" niso veljavna.";
+"macAlertAddressInvalid (%@)" = "Naslov \"%@\" ni veljaven.";
+"macAlertDNSInvalid (%@)" = "DNS \"%@\" ni veljaven.";
+"macAlertMTUInvalid (%@)" = "Vrednost MTU \"%@\" ni veljavna.";
+
+"macAlertUnrecognizedInterfaceKey (%@)" = "Vmesnik vsebuje neprepoznan ključ \"%@\"";
+"macAlertInfoUnrecognizedInterfaceKey" = "Veljavna polja so: \"PrivateKey\", \"ListenPort\", \"Address\", \"DNS\" in \"MTU\".";
+
+"macAlertPublicKeyInvalid" = "Javni ključ ni veljaven";
+"macAlertPreSharedKeyInvalid" = "Ključ v skupni rabi ni veljaven";
+"macAlertAllowedIPInvalid (%@)" = "Dovoljen naslov IP \"%@\" ni veljaven";
+"macAlertEndpointInvalid (%@)" = "Končna točka \"%@\" ni veljavna";
+"macAlertPersistentKeepliveInvalid (%@)" = "Vrednost \"%@\" za trajno ohranjanje povezave ni veljavna";
+
+"macAlertUnrecognizedPeerKey (%@)" = "Vrstnik vsebuje neprepoznan ključ \"%@\"";
+"macAlertInfoUnrecognizedPeerKey" = "Veljavna polja so: \"PublicKey\", \"PresharedKey\", \"AllowedIPs\", \"Endpoint\" in \"PersistentKeepalive\"";
+
+"macAlertMultipleEntriesForKey (%@)" = "Obstajati bi moral samo en vnos na odsek za ključ \"%@\"";
+
+// Mac about dialog
+
+"macAppVersion (%@)" = "Verzija aplikacije: %@";
+"macGoBackendVersion (%@)" = "Verzija wireguard-go: %@";
+
+// Privacy
+
+"macExportPrivateData" = "izvozi zasebne ključe tunela";
+"macViewPrivateData" = "prikaži zasebne ključe tunela";
+"iosExportPrivateData" = "Za izvoz zasebnih ključev tunelov se prijavite.";
+"iosViewPrivateData" = "Za ogled zasebnih ključev tunelov se prijavite.";
+
+// Mac alert
+
+"macConfirmAndQuitAlertMessage" = "Ali želite zapreti upravljalca tunelov ali končati WireGuard v celoti?";
+"macConfirmAndQuitAlertInfo" = "Če zaprete upravljalca tunelov, bo WireGuard še naprej na voljo preko ikone v meniju.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Če zaprete upravljalca tunelov, bo WireGuard še naprej na voljo preko ikone v meniju.\n\nPomnite: če zaprete WireGuard bo trenutni aktiven tunel (\"%@\") ostal aktiven dokler ga ne deaktivirate preko te aplikacije ali preko omrežne plošče v sistemskih nastavitvah.";
+"macConfirmAndQuitAlertQuitWireGuard" = "Končaj WireGuard";
+"macConfirmAndQuitAlertCloseWindow" = "Zapri upravljalca tunelov";
+
+"macAppExitingWithActiveTunnelMessage" = "WireGuard se končuje z aktivnim tunelom";
+"macAppExitingWithActiveTunnelInfo" = "Tunel bo ostal aktiven po izhodu. Lahko ga onemogočite po ponovnem odprtju aplikacije ali preko omrežne plošče v sistemskih nastavitvah.";
+
+// Mac tooltip
+
+"macToolTipEditTunnel" = "Uredi tunel (⌘E)";
+"macToolTipToggleStatus" = "Preklopi status (⌘T)";
+
+// Mac log view
+
+"macLogColumnTitleTime" = "Čas";
+"macLogColumnTitleLogMessage" = "Sporočilo dnevnika";
+"macLogButtonTitleClose" = "Zapri";
+"macLogButtonTitleSave" = "Shrani …";
+
+// Mac unusable tunnel view
+
+"macUnusableTunnelMessage" = "Konfiguracije za ta tunel ni bilo mogoče najti verigi ključev.";
+"macUnusableTunnelInfo" = "V primeru, da je tunel ustvaril drug uporabnik, lahko tunel vidi, uredi ali aktivira le tisti uporabnik.";
+"macUnusableTunnelButtonTitleDeleteTunnel" = "Izbriši tunel";
+
+// Mac App Store updating alert
+
+"macAppStoreUpdatingAlertMessage" = "App Store bi rad posodobil WireGuard";
+"macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Onemogočite aktivacijo na zahtevo za tunel \"%@\", ga deaktivirajte in nadaljujte posodobitev iz trgovine App Store.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Prosimo deaktivirajte tunel \"%@\" in nadaljuje posodobitev v trgovini App Store.";
+
+// Donation
+
+"donateLink" = "♥ Donirajte projektu WireGuard";

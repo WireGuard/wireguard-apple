@@ -17,16 +17,18 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
-	"golang.org/x/sys/unix"
-	"golang.zx2c4.com/wireguard/device"
-	"golang.zx2c4.com/wireguard/tun"
 	"log"
 	"math"
 	"os"
 	"os/signal"
 	"runtime"
 	"strings"
+	"time"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
+	"golang.zx2c4.com/wireguard/device"
+	"golang.zx2c4.com/wireguard/tun"
 )
 
 var loggerFunc unsafe.Pointer
@@ -56,7 +58,6 @@ var tunnelHandles = make(map[int32]tunnelHandle)
 
 func init() {
 	versionString = C.CString(device.WireGuardGoVersion)
-	device.RoamingDisabled = true
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
 	go func() {
@@ -72,11 +73,6 @@ func init() {
 			}
 		}
 	}()
-}
-
-//export wgEnableRoaming
-func wgEnableRoaming(enabled bool) {
-	device.RoamingDisabled = !enabled
 }
 
 //export wgSetLogger
@@ -111,16 +107,16 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		return -1
 	}
 	logger.Info.Println("Attaching to interface")
-	device := device.NewDevice(tun, logger)
+	dev := device.NewDevice(tun, logger)
 
-	setError := device.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
+	setError := dev.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
 	if setError != nil {
 		logger.Error.Println(setError)
 		unix.Close(dupTunFd)
 		return -1
 	}
 
-	device.Up()
+	dev.Up()
 	logger.Info.Println("Device started")
 
 	var i int32
@@ -133,30 +129,33 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		unix.Close(dupTunFd)
 		return -1
 	}
-	tunnelHandles[i] = tunnelHandle{device, logger}
+	tunnelHandles[i] = tunnelHandle{dev, logger}
 	return i
 }
 
 //export wgTurnOff
 func wgTurnOff(tunnelHandle int32) {
-	device, ok := tunnelHandles[tunnelHandle]
+	dev, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return
 	}
 	delete(tunnelHandles, tunnelHandle)
-	device.Close()
+	dev.Close()
 }
 
 //export wgSetConfig
 func wgSetConfig(tunnelHandle int32, settings *C.char) int64 {
-	device, ok := tunnelHandles[tunnelHandle]
+	dev, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return 0
 	}
-	err := device.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
+	err := dev.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
 	if err != nil {
-		device.Error.Println(err)
-		return err.ErrorCode()
+		dev.Error.Println(err)
+		if ipcErr, ok := err.(*device.IPCError); ok {
+			return ipcErr.ErrorCode()
+		}
+		return -1
 	}
 	return 0
 }
@@ -179,12 +178,31 @@ func wgGetConfig(tunnelHandle int32) *C.char {
 
 //export wgBumpSockets
 func wgBumpSockets(tunnelHandle int32) {
-	device, ok := tunnelHandles[tunnelHandle]
+	dev, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return
 	}
-	device.BindUpdate()
-	device.SendKeepalivesToPeersWithCurrentKeypair()
+	go func() {
+		for i := 0; i < 10; i++ {
+			err := dev.BindUpdate()
+			if err == nil {
+				dev.SendKeepalivesToPeersWithCurrentKeypair()
+				return
+			}
+			dev.Error.Printf("Unable to update bind, try %d: %v", i+1, err)
+			time.Sleep(time.Second / 2)
+		}
+		dev.Error.Println("Gave up trying to update bind; tunnel is likely dysfunctional")
+	}()
+}
+
+//export wgDisableSomeRoamingForBrokenMobileSemantics
+func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
+	dev, ok := tunnelHandles[tunnelHandle]
+	if !ok {
+		return
+	}
+	dev.DisableSomeRoamingForBrokenMobileSemantics()
 }
 
 //export wgVersion

@@ -9,6 +9,9 @@ import NetworkExtension
 import WireGuardKitC
 #endif
 
+/// A type alias for `Result` type that holds a tuple with source and resolved endpoint.
+typealias EndpointResolutionResult = Result<(Endpoint, Endpoint), DNSResolutionError>
+
 class PacketTunnelSettingsGenerator {
     let tunnelConfiguration: TunnelConfiguration
     let resolvedEndpoints: [Endpoint?]
@@ -18,31 +21,27 @@ class PacketTunnelSettingsGenerator {
         self.resolvedEndpoints = resolvedEndpoints
     }
 
-    func endpointUapiConfiguration() -> (String, [DNSResolutionError]) {
-        var resolutionErrors = [DNSResolutionError]()
+    func endpointUapiConfiguration() -> (String, [EndpointResolutionResult?]) {
+        var resolutionResults = [EndpointResolutionResult?]()
         var wgSettings = ""
-        for (index, peer) in tunnelConfiguration.peers.enumerated() {
-            wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
-            let result = Result { try resolvedEndpoints[index]?.withReresolvedIP() }
-                .mapError { error -> DNSResolutionError in
-                    // swiftlint:disable:next force_cast
-                    return error as! DNSResolutionError
-                }
 
-            switch result {
-            case .success(.some(let endpoint)):
-                if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
-                wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
-            case .success(.none):
-                break
-            case .failure(let error):
-                resolutionErrors.append(error)
+        assert(tunnelConfiguration.peers.count == resolvedEndpoints.count)
+        for (peer, resolvedEndpoint) in zip(self.tunnelConfiguration.peers, self.resolvedEndpoints) {
+            wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
+
+            let result = resolvedEndpoint.map(Self.reresolveEndpoint)
+            if case .success((_, let resolvedEndpoint)) = result {
+                if case .name = resolvedEndpoint.host { assert(false, "Endpoint is not resolved") }
+                wgSettings.append("endpoint=\(resolvedEndpoint.stringRepresentation)\n")
             }
+            resolutionResults.append(result)
         }
-        return (wgSettings, resolutionErrors)
+
+        return (wgSettings, resolutionResults)
     }
 
-    func uapiConfiguration() -> String {
+    func uapiConfiguration() -> (String, [EndpointResolutionResult?]) {
+        var resolutionResults = [EndpointResolutionResult?]()
         var wgSettings = ""
         wgSettings.append("private_key=\(tunnelConfiguration.interface.privateKey.hexKey)\n")
         if let listenPort = tunnelConfiguration.interface.listenPort {
@@ -52,15 +51,19 @@ class PacketTunnelSettingsGenerator {
             wgSettings.append("replace_peers=true\n")
         }
         assert(tunnelConfiguration.peers.count == resolvedEndpoints.count)
-        for (index, peer) in tunnelConfiguration.peers.enumerated() {
+        for (peer, resolvedEndpoint) in zip(self.tunnelConfiguration.peers, self.resolvedEndpoints) {
             wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
             if let preSharedKey = peer.preSharedKey?.hexKey {
                 wgSettings.append("preshared_key=\(preSharedKey)\n")
             }
-            if let endpoint = try? resolvedEndpoints[index]?.withReresolvedIP() {
-                if case .name(_, _) = endpoint.host { assert(false, "Endpoint is not resolved") }
-                wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
+
+            let result = resolvedEndpoint.map(Self.reresolveEndpoint)
+            if case .success((_, let resolvedEndpoint)) = result {
+                if case .name = resolvedEndpoint.host { assert(false, "Endpoint is not resolved") }
+                wgSettings.append("endpoint=\(resolvedEndpoint.stringRepresentation)\n")
             }
+            resolutionResults.append(result)
+
             let persistentKeepAlive = peer.persistentKeepAlive ?? 0
             wgSettings.append("persistent_keepalive_interval=\(persistentKeepAlive)\n")
             if !peer.allowedIPs.isEmpty {
@@ -68,7 +71,7 @@ class PacketTunnelSettingsGenerator {
                 peer.allowedIPs.forEach { wgSettings.append("allowed_ip=\($0.stringRepresentation)\n") }
             }
         }
-        return wgSettings
+        return (wgSettings, resolutionResults)
     }
 
     func generateNetworkSettings() -> NEPacketTunnelNetworkSettings {
@@ -80,10 +83,15 @@ class PacketTunnelSettingsGenerator {
          */
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "127.0.0.1")
 
-        let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
-        let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
-        dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
-        networkSettings.dnsSettings = dnsSettings
+        if !tunnelConfiguration.interface.dnsSearch.isEmpty || !tunnelConfiguration.interface.dns.isEmpty {
+            let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
+            let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
+            dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
+            if !tunnelConfiguration.interface.dns.isEmpty {
+                dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+            }
+            networkSettings.dnsSettings = dnsSettings
+        }
 
         let mtu = tunnelConfiguration.interface.mtu ?? 0
 
@@ -162,5 +170,13 @@ class PacketTunnelSettingsGenerator {
             }
         }
         return (ipv4IncludedRoutes, ipv6IncludedRoutes)
+    }
+
+    private class func reresolveEndpoint(endpoint: Endpoint) -> EndpointResolutionResult {
+        return Result { (endpoint, try endpoint.withReresolvedIP()) }
+            .mapError { error -> DNSResolutionError in
+                // swiftlint:disable:next force_cast
+                return error as! DNSResolutionError
+            }
     }
 }

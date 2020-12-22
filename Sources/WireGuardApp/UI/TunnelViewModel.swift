@@ -139,8 +139,10 @@ class TunnelViewModel {
             if let mtu = config.mtu {
                 scratchpad[.mtu] = String(mtu)
             }
-            if !config.dns.isEmpty {
-                scratchpad[.dns] = config.dns.map { $0.stringRepresentation }.joined(separator: ", ")
+            if !config.dns.isEmpty || !config.dnsSearch.isEmpty {
+                var dns = config.dns.map { $0.stringRepresentation }
+                dns.append(contentsOf: config.dnsSearch)
+                scratchpad[.dns] = dns.joined(separator: ", ")
             }
             return scratchpad
         }
@@ -194,15 +196,16 @@ class TunnelViewModel {
             }
             if let dnsString = scratchpad[.dns] {
                 var dnsServers = [DNSServer]()
+                var dnsSearch = [String]()
                 for dnsServerString in dnsString.splitToArray(trimmingCharacters: .whitespacesAndNewlines) {
                     if let dnsServer = DNSServer(from: dnsServerString) {
                         dnsServers.append(dnsServer)
                     } else {
-                        fieldsWithError.insert(.dns)
-                        errorMessages.append(tr("alertInvalidInterfaceMessageDNSInvalid"))
+                        dnsSearch.append(dnsServerString)
                     }
                 }
                 config.dns = dnsServers
+                config.dnsSearch = dnsSearch
             }
 
             guard errorMessages.isEmpty else { return .error(errorMessages.first!) }
@@ -395,12 +398,13 @@ class TunnelViewModel {
 
         static let ipv4DefaultRouteString = "0.0.0.0/0"
         static let ipv4DefaultRouteModRFC1918String = [ // Set of all non-private IPv4 IPs
-            "0.0.0.0/5", "8.0.0.0/7", "11.0.0.0/8", "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3",
-            "64.0.0.0/2", "128.0.0.0/3", "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12",
-            "172.32.0.0/11", "172.64.0.0/10", "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7",
-            "176.0.0.0/4", "192.0.0.0/9", "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16",
-            "192.170.0.0/15", "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10",
-            "193.0.0.0/8", "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
+            "1.0.0.0/8", "2.0.0.0/8", "3.0.0.0/8", "4.0.0.0/6", "8.0.0.0/7", "11.0.0.0/8",
+            "12.0.0.0/6", "16.0.0.0/4", "32.0.0.0/3", "64.0.0.0/2", "128.0.0.0/3",
+            "160.0.0.0/5", "168.0.0.0/6", "172.0.0.0/12", "172.32.0.0/11", "172.64.0.0/10",
+            "172.128.0.0/9", "173.0.0.0/8", "174.0.0.0/7", "176.0.0.0/4", "192.0.0.0/9",
+            "192.128.0.0/11", "192.160.0.0/13", "192.169.0.0/16", "192.170.0.0/15",
+            "192.172.0.0/14", "192.176.0.0/12", "192.192.0.0/10", "193.0.0.0/8",
+            "194.0.0.0/7", "196.0.0.0/6", "200.0.0.0/5", "208.0.0.0/4"
         ]
 
         static func excludePrivateIPsFieldStates(isSinglePeer: Bool, allowedIPs: Set<String>) -> (shouldAllowExcludePrivateIPsControl: Bool, excludePrivateIPsValue: Bool) {

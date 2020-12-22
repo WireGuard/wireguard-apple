@@ -70,7 +70,7 @@ class ConfTextView: NSTextView {
     }
 
     func setConfText(_ text: String) {
-        let fullTextRange = NSRange(location: 0, length: (string as NSString).length)
+        let fullTextRange = NSRange(..<string.endIndex, in: string)
         if shouldChangeText(in: fullTextRange, replacementString: text) {
             replaceCharacters(in: fullTextRange, with: text)
             didChangeText()

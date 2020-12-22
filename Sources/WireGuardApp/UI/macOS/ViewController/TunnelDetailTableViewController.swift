@@ -246,7 +246,7 @@ class TunnelDetailTableViewController: NSViewController {
             var modifiedRowIndices = IndexSet()
             for (index, field) in fields.enumerated() {
                 guard let change = changes[field] else { continue }
-                if case .modified(_) = change {
+                if case .modified = change {
                     let row = modelRowsInSection[0 ..< index].filter { $0.isVisible }.count
                     modifiedRowIndices.insert(rowOffset + row)
                 }
