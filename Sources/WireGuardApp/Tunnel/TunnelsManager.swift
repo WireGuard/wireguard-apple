@@ -23,9 +23,9 @@ class TunnelsManager {
     private var tunnels: [TunnelContainer]
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
-    private var statusObservationToken: AnyObject?
-    private var waiteeObservationToken: AnyObject?
-    private var configurationsObservationToken: AnyObject?
+    private var statusObservationToken: NotificationToken?
+    private var waiteeObservationToken: NSKeyValueObservation?
+    private var configurationsObservationToken: NotificationToken?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
         tunnels = tunnelProviders.map { TunnelContainer(tunnel: $0) }.sorted { TunnelsManager.tunnelNameIsLessThan($0.name, $1.name) }
@@ -406,7 +406,7 @@ class TunnelsManager {
     }
 
     private func startObservingTunnelStatuses() {
-        statusObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
+        statusObservationToken = NotificationCenter.default.observe(name: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
             guard let self = self,
                 let session = statusChangeNotification.object as? NETunnelProviderSession,
                 let tunnelProvider = session.manager as? NETunnelProviderManager,
@@ -438,7 +438,7 @@ class TunnelsManager {
     }
 
     func startObservingTunnelConfigurations() {
-        configurationsObservationToken = NotificationCenter.default.addObserver(forName: .NEVPNConfigurationChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
+        configurationsObservationToken = NotificationCenter.default.observe(name: .NEVPNConfigurationChange, object: nil, queue: OperationQueue.main) { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
                 // We schedule reload() in a subsequent runloop to ensure that the completion handler of loadAllFromPreferences
                 // (reload() calls loadAllFromPreferences) is called after the completion handler of the saveToPreferences or

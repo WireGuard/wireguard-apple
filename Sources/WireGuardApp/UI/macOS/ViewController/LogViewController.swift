@@ -18,6 +18,9 @@ class LogViewController: NSViewController {
         }
     }
 
+    private var boundsChangedNotificationToken: NotificationToken?
+    private var frameChangedNotificationToken: NotificationToken?
+
     let scrollView: NSScrollView = {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
@@ -104,13 +107,13 @@ class LogViewController: NSViewController {
         clipView.documentView = tableView
         scrollView.contentView = clipView
 
-        _ = NotificationCenter.default.addObserver(forName: NSView.boundsDidChangeNotification, object: clipView, queue: OperationQueue.main) { [weak self] _ in
+        boundsChangedNotificationToken = NotificationCenter.default.observe(name: NSView.boundsDidChangeNotification, object: clipView, queue: OperationQueue.main) { [weak self] _ in
             guard let self = self else { return }
             let lastVisibleRowIndex = self.tableView.row(at: NSPoint(x: 0, y: self.scrollView.contentView.documentVisibleRect.maxY - 1))
             self.isInScrolledToEndMode = lastVisibleRowIndex < 0 || lastVisibleRowIndex == self.logEntries.count - 1
         }
 
-        _ = NotificationCenter.default.addObserver(forName: NSView.frameDidChangeNotification, object: tableView, queue: OperationQueue.main) { [weak self] _ in
+        frameChangedNotificationToken = NotificationCenter.default.observe(name: NSView.frameDidChangeNotification, object: tableView, queue: OperationQueue.main) { [weak self] _ in
             guard let self = self else { return }
             if self.isInScrolledToEndMode {
                 DispatchQueue.main.async {
