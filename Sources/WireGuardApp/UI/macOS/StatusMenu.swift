@@ -14,8 +14,14 @@ class StatusMenu: NSMenu {
     var statusMenuItem: NSMenuItem?
     var networksMenuItem: NSMenuItem?
     var deactivateMenuItem: NSMenuItem?
-    var firstTunnelMenuItemIndex = 0
-    var numberOfTunnelMenuItems = 0
+
+    private let tunnelsBreakdownMenu = NSMenu()
+    private let tunnelsMenuItem = NSMenuItem(title: tr("macTunnelsMenuTitle"), action: nil, keyEquivalent: "")
+    private let tunnelsMenuSeparatorItem = NSMenuItem.separator()
+
+    private var firstTunnelMenuItemIndex = 0
+    private var numberOfTunnelMenuItems = 0
+    private var tunnelsPresentationStyle = StatusMenuTunnelsPresentationStyle.inline
 
     var currentTunnel: TunnelContainer? {
         didSet {
@@ -26,16 +32,20 @@ class StatusMenu: NSMenu {
 
     init(tunnelsManager: TunnelsManager) {
         self.tunnelsManager = tunnelsManager
+
         super.init(title: tr("macMenuTitle"))
 
         addStatusMenuItems()
         addItem(NSMenuItem.separator())
 
+        tunnelsMenuItem.submenu = tunnelsBreakdownMenu
+        addItem(tunnelsMenuItem)
+
         firstTunnelMenuItemIndex = numberOfItems
-        let isAdded = addTunnelMenuItems()
-        if isAdded {
-            addItem(NSMenuItem.separator())
-        }
+        populateInitialTunnelMenuItems()
+
+        addItem(tunnelsMenuSeparatorItem)
+
         addTunnelManagementItems()
         addItem(NSMenuItem.separator())
         addApplicationItems()
@@ -108,15 +118,6 @@ class StatusMenu: NSMenu {
         deactivateMenuItem.isHidden = tunnel.status != .active
     }
 
-    func addTunnelMenuItems() -> Bool {
-        let numberOfTunnels = tunnelsManager.numberOfTunnels()
-        for index in 0 ..< tunnelsManager.numberOfTunnels() {
-            let tunnel = tunnelsManager.tunnel(at: index)
-            insertTunnelMenuItem(for: tunnel, at: numberOfTunnelMenuItems)
-        }
-        return numberOfTunnels > 0
-    }
-
     func addTunnelManagementItems() {
         let manageItem = NSMenuItem(title: tr("macMenuManageTunnels"), action: #selector(manageTunnelsClicked), keyEquivalent: "")
         manageItem.target = self
@@ -166,34 +167,121 @@ class StatusMenu: NSMenu {
 
 extension StatusMenu {
     func insertTunnelMenuItem(for tunnel: TunnelContainer, at tunnelIndex: Int) {
-        let menuItem = TunnelMenuItem(tunnel: tunnel, action: #selector(tunnelClicked(sender:)))
-        menuItem.target = self
-        menuItem.isHidden = !tunnel.isTunnelAvailableToUser
-        insertItem(menuItem, at: firstTunnelMenuItemIndex + tunnelIndex)
-        if numberOfTunnelMenuItems == 0 {
-            insertItem(NSMenuItem.separator(), at: firstTunnelMenuItemIndex + tunnelIndex + 1)
+        let nextNumberOfTunnels = numberOfTunnelMenuItems + 1
+
+        guard !reparentTunnelMenuItems(nextNumberOfTunnels: nextNumberOfTunnels) else {
+            return
         }
-        numberOfTunnelMenuItems += 1
+
+        let menuItem = makeTunnelItem(tunnel: tunnel)
+        switch tunnelsPresentationStyle {
+        case .submenu:
+            tunnelsBreakdownMenu.insertItem(menuItem, at: tunnelIndex)
+        case .inline:
+            insertItem(menuItem, at: firstTunnelMenuItemIndex + tunnelIndex)
+        }
+
+        numberOfTunnelMenuItems = nextNumberOfTunnels
+        updateTunnelsMenuItemVisibility()
     }
 
     func removeTunnelMenuItem(at tunnelIndex: Int) {
-        removeItem(at: firstTunnelMenuItemIndex + tunnelIndex)
-        numberOfTunnelMenuItems -= 1
-        if numberOfTunnelMenuItems == 0 {
-            if let firstItem = item(at: firstTunnelMenuItemIndex), firstItem.isSeparatorItem {
-                removeItem(at: firstTunnelMenuItemIndex)
-            }
+        let nextNumberOfTunnels = numberOfTunnelMenuItems - 1
+
+        guard !reparentTunnelMenuItems(nextNumberOfTunnels: nextNumberOfTunnels) else {
+            return
         }
+
+        switch tunnelsPresentationStyle {
+        case .submenu:
+            tunnelsBreakdownMenu.removeItem(at: tunnelIndex)
+        case .inline:
+            removeItem(at: firstTunnelMenuItemIndex + tunnelIndex)
+        }
+
+        numberOfTunnelMenuItems = nextNumberOfTunnels
+        updateTunnelsMenuItemVisibility()
     }
 
     func moveTunnelMenuItem(from oldTunnelIndex: Int, to newTunnelIndex: Int) {
-        guard let oldMenuItem = item(at: firstTunnelMenuItemIndex + oldTunnelIndex) as? TunnelMenuItem else { return }
-        let oldMenuItemTunnel = oldMenuItem.tunnel
-        removeItem(at: firstTunnelMenuItemIndex + oldTunnelIndex)
-        let menuItem = TunnelMenuItem(tunnel: oldMenuItemTunnel, action: #selector(tunnelClicked(sender:)))
-        menuItem.target = self
-        insertItem(menuItem, at: firstTunnelMenuItemIndex + newTunnelIndex)
+        let tunnel = tunnelsManager.tunnel(at: newTunnelIndex)
+        let menuItem = makeTunnelItem(tunnel: tunnel)
 
+        switch tunnelsPresentationStyle {
+        case .submenu:
+            tunnelsBreakdownMenu.removeItem(at: oldTunnelIndex)
+            tunnelsBreakdownMenu.insertItem(menuItem, at: newTunnelIndex)
+        case .inline:
+            removeItem(at: firstTunnelMenuItemIndex + oldTunnelIndex)
+            insertItem(menuItem, at: firstTunnelMenuItemIndex + newTunnelIndex)
+        }
+    }
+
+    private func makeTunnelItem(tunnel: TunnelContainer) -> TunnelMenuItem {
+        let menuItem = TunnelMenuItem(tunnel: tunnel, action: #selector(tunnelClicked(sender:)))
+        menuItem.target = self
+        menuItem.isHidden = !tunnel.isTunnelAvailableToUser
+        return menuItem
+    }
+
+    private func populateInitialTunnelMenuItems() {
+        let numberOfTunnels = tunnelsManager.numberOfTunnels()
+        let initialStyle = tunnelsPresentationStyle.preferredPresentationStyle(numberOfTunnels: numberOfTunnels)
+
+        tunnelsPresentationStyle = initialStyle
+        switch initialStyle {
+        case .inline:
+            numberOfTunnelMenuItems = addTunnelMenuItems(into: self, at: firstTunnelMenuItemIndex)
+        case .submenu:
+            numberOfTunnelMenuItems = addTunnelMenuItems(into: tunnelsBreakdownMenu, at: 0)
+        }
+
+        updateTunnelsMenuItemVisibility()
+    }
+
+    private func reparentTunnelMenuItems(nextNumberOfTunnels: Int) -> Bool {
+        let nextStyle = tunnelsPresentationStyle.preferredPresentationStyle(numberOfTunnels: nextNumberOfTunnels)
+
+        switch (tunnelsPresentationStyle, nextStyle) {
+        case (.inline, .submenu):
+            tunnelsPresentationStyle = nextStyle
+            for index in (0..<numberOfTunnelMenuItems).reversed() {
+                removeItem(at: firstTunnelMenuItemIndex + index)
+            }
+            numberOfTunnelMenuItems = addTunnelMenuItems(into: tunnelsBreakdownMenu, at: 0)
+            updateTunnelsMenuItemVisibility()
+            return true
+
+        case (.submenu, .inline):
+            tunnelsPresentationStyle = nextStyle
+            tunnelsBreakdownMenu.removeAllItems()
+            numberOfTunnelMenuItems = addTunnelMenuItems(into: self, at: firstTunnelMenuItemIndex)
+            updateTunnelsMenuItemVisibility()
+            return true
+
+        case (.submenu, .submenu), (.inline, .inline):
+            return false
+        }
+    }
+
+    private func addTunnelMenuItems(into menu: NSMenu, at startIndex: Int) -> Int {
+        let numberOfTunnels = tunnelsManager.numberOfTunnels()
+        for tunnelIndex in 0..<numberOfTunnels {
+            let tunnel = tunnelsManager.tunnel(at: tunnelIndex)
+            let menuItem = makeTunnelItem(tunnel: tunnel)
+            menu.insertItem(menuItem, at: startIndex + tunnelIndex)
+        }
+        return numberOfTunnels
+    }
+
+    private func updateTunnelsMenuItemVisibility() {
+        switch tunnelsPresentationStyle {
+        case .inline:
+            tunnelsMenuItem.isHidden = true
+        case .submenu:
+            tunnelsMenuItem.isHidden = false
+        }
+        tunnelsMenuSeparatorItem.isHidden = numberOfTunnelMenuItems == 0
     }
 }
 
@@ -230,5 +318,22 @@ class TunnelMenuItem: NSMenuItem {
     func updateStatus() {
         let shouldShowCheckmark = (tunnel.status != .inactive && tunnel.status != .deactivating)
         state = shouldShowCheckmark ? .on : .off
+    }
+}
+
+private enum StatusMenuTunnelsPresentationStyle {
+    case inline
+    case submenu
+
+    func preferredPresentationStyle(numberOfTunnels: Int) -> StatusMenuTunnelsPresentationStyle {
+        let maxInlineTunnels = 10
+
+        if case .inline = self, numberOfTunnels > maxInlineTunnels {
+            return .submenu
+        } else if case .submenu = self, numberOfTunnels <= maxInlineTunnels {
+            return .inline
+        } else {
+            return self
+        }
     }
 }

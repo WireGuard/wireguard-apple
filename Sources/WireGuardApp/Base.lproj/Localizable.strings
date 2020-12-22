@@ -297,6 +297,7 @@
 "macMenuNetworksNone" = "Networks: None";
 
 "macMenuTitle" = "WireGuard";
+"macTunnelsMenuTitle" = "Tunnels";
 "macMenuManageTunnels" = "Manage Tunnels";
 "macMenuImportTunnels" = "Import Tunnel(s) from File…";
 "macMenuAddEmptyTunnel" = "Add Empty Tunnel…";
