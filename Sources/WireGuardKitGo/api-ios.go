@@ -14,15 +14,12 @@ package main
 import "C"
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
 	"log"
 	"math"
 	"os"
 	"os/signal"
 	"runtime"
-	"strings"
 	"time"
 	"unsafe"
 
@@ -109,9 +106,9 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 	logger.Info.Println("Attaching to interface")
 	dev := device.NewDevice(tun, logger)
 
-	setError := dev.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
-	if setError != nil {
-		logger.Error.Println(setError)
+	err = dev.IpcSet(C.GoString(settings))
+	if err != nil {
+		logger.Error.Println(err)
 		unix.Close(dupTunFd)
 		return -1
 	}
@@ -149,7 +146,7 @@ func wgSetConfig(tunnelHandle int32, settings *C.char) int64 {
 	if !ok {
 		return 0
 	}
-	err := dev.IpcSetOperation(bufio.NewReader(strings.NewReader(C.GoString(settings))))
+	err := dev.IpcSet(C.GoString(settings))
 	if err != nil {
 		dev.Error.Println(err)
 		if ipcErr, ok := err.(*device.IPCError); ok {
@@ -166,14 +163,11 @@ func wgGetConfig(tunnelHandle int32) *C.char {
 	if !ok {
 		return nil
 	}
-	settings := new(bytes.Buffer)
-	writer := bufio.NewWriter(settings)
-	err := device.IpcGetOperation(writer)
+	settings, err := device.IpcGet()
 	if err != nil {
 		return nil
 	}
-	writer.Flush()
-	return C.CString(settings.String())
+	return C.CString(settings)
 }
 
 //export wgBumpSockets
