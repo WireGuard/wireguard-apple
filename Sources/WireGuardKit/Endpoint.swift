@@ -52,6 +52,7 @@ extension Endpoint {
             let startOfHost = string.index(after: string.startIndex)
             guard let endOfHost = string.dropFirst().firstIndex(of: "]") else { return nil }
             let afterEndOfHost = string.index(after: endOfHost)
+            if afterEndOfHost == string.endIndex { return nil }
             guard string[afterEndOfHost] == ":" else { return nil }
             startOfPort = string.index(after: afterEndOfHost)
             hostString = String(string[startOfHost ..< endOfHost])
