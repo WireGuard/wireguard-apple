@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Copyright © 2018-2020 WireGuard LLC. All Rights Reserved.
 // Generic alert action names
 
 
@@ -233,6 +233,7 @@
 "macConfirmAndQuitAlertCloseWindow" = "Close Tunnels Manager";
 "macMenuFile" = "File";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
+"macTunnelsMenuTitle" = "Tunnels";
 "alertTunnelActivationSystemErrorTitle" = "Activation failure";
 "alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface’s private key is required";
 "tunnelOnDemandAnySSID" = "Any SSID";

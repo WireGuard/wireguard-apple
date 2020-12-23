@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Copyright © 2018-2020 WireGuard LLC. All Rights Reserved.
 // Generic alert action names
 
 
@@ -389,6 +389,7 @@
 "macUnusableTunnelMessage" = "The configuration for this tunnel cannot be found in the keychain.";
 "iosViewPrivateData" = "Authenticate to view tunnel private keys.";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
+"macTunnelsMenuTitle" = "Tunnels";
 "scanQRCodeTipText" = "Tip: Generate with `qrencode -t ansiutf8 < tunnel.conf`";
 "macAlertInfoUnrecognizedPeerKey" = "Valid keys are: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ and ‘PersistentKeepalive’";
 "alertInvalidPeerMessageAllowedIPsInvalid" = "Peer’s allowed IPs must be a list of comma-separated IP addresses, optionally in CIDR notation";

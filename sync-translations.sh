@@ -23,7 +23,7 @@ done < Sources/WireGuardApp/Base.lproj/Localizable.strings
 git add Sources/WireGuardApp/*.lproj
 
 declare -A LOCALE_MAP
-[[ $(< WireGuard.xcodeproj/project.pbxproj) =~ [[:space:]]([0-9A-F]{24})\ /\*\ Base\ \*/, ]]
+[[ $(< WireGuard.xcodeproj/project.pbxproj) =~ [[:space:]]([0-9A-F]{24})\ /\*\ Base\ \*/\ =\ [^$'\n']*Base\.lproj/Localizable\.strings ]]
 base_id="${BASH_REMATCH[1]:0:16}"
 idx=$(( "0x${BASH_REMATCH[1]:16}" ))
 while read -r filename; do

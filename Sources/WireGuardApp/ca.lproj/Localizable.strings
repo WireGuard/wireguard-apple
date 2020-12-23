@@ -235,6 +235,7 @@
 "macMenuFile" = "File";
 "tunnelStatusActivating" = "Activating";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
+"macTunnelsMenuTitle" = "Tunnels";
 "alertTunnelActivationSystemErrorTitle" = "Activation failure";
 "alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface’s private key is required";
 "alertNoTunnelsToExportTitle" = "Nothing to export";

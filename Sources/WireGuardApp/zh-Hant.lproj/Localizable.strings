@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2019 WireGuard LLC. All Rights Reserved.
+// Copyright © 2018-2020 WireGuard LLC. All Rights Reserved.
 // Generic alert action names
 
 
@@ -42,7 +42,7 @@
 "newTunnelViewTitle" = "新增設定";
 "editTunnelViewTitle" = "修改設定";
 
-"tunnelSectionTitleStatus" = "ㄓ望太";
+"tunnelSectionTitleStatus" = "狀態";
 
 "tunnelStatusInactive" = "未啟用";
 "tunnelStatusActivating" = "啟用中";
@@ -69,6 +69,7 @@
 "tunnelInterfaceListenPort" = "監聽埠";
 "tunnelInterfaceMTU" = "MTU";
 "tunnelInterfaceDNS" = "DNS 伺服器";
+"tunnelInterfaceStatus" = "狀態";
 "tunnelEditPlaceholderTextAutomatic" = "自動";
 "tunnelHandshakeTimestampNow" = "現在";
 
@@ -85,6 +86,7 @@
 "macMenuCopy" = "複製";
 "macMenuPaste" = "貼上";
 "macMenuSelectAll" = "全選";
+"macMenuToggleStatus" = "切換狀態";
 "macMenuMinimize" = "最小化";
 "macMenuDeleteSelected" = "Delete Selected";
 "alertSystemErrorMessageTunnelConfigurationInvalid" = "The configuration is invalid.";
@@ -162,7 +164,6 @@
 "alertUnableToRemovePreviousLogTitle" = "Log export failed";
 "alertTunnelActivationFailureMessage" = "The tunnel could not be activated. Please ensure that you are connected to the Internet.";
 "tunnelOnDemandOptionEthernetOnly" = "Ethernet only";
-"tunnelInterfaceStatus" = "Status";
 "macMenuHideOtherApps" = "Hide Others";
 "alertCantOpenInputZipFileMessage" = "The zip archive could not be read.";
 "alertInvalidInterfaceMessagePrivateKeyInvalid" = "Interface’s private key must be a 32-byte key in base64 encoding";
@@ -206,7 +207,6 @@
 "alertTunnelDNSFailureTitle" = "DNS resolution failure";
 "tunnelOnDemandEthernet" = "Ethernet";
 "macLogButtonTitleSave" = "Save…";
-"macMenuToggleStatus" = "Toggle Status";
 "deletePeerButtonTitle" = "Delete peer";
 "tunnelPeerRxBytes" = "Data received";
 "alertCantOpenInputZipFileTitle" = "Unable to read zip archive";
@@ -233,6 +233,7 @@
 "macConfirmAndQuitAlertCloseWindow" = "Close Tunnels Manager";
 "macMenuFile" = "File";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
+"macTunnelsMenuTitle" = "Tunnels";
 "alertTunnelActivationSystemErrorTitle" = "Activation failure";
 "alertInvalidInterfaceMessagePrivateKeyRequired" = "Interface’s private key is required";
 "tunnelOnDemandAnySSID" = "Any SSID";
