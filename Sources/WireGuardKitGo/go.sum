@@ -20,5 +20,5 @@ golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9sn
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/text v0.3.3/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
 golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
-golang.zx2c4.com/wireguard v0.0.20201119-0.20201223104851-e467e07bbf51 h1:F62E0jQdNkXUnELQw+NaOnMxdEnnGScuywq0NdB4YTQ=
-golang.zx2c4.com/wireguard v0.0.20201119-0.20201223104851-e467e07bbf51/go.mod h1:ITsWNpkFv78VPB7f8MiyuxeEMcHR4jfxHGCJLPP3GHs=
+golang.zx2c4.com/wireguard v0.0.20201119-0.20201223215156-09728dc6b340 h1:X6jrf2sUEj3n+q2oB/I3C088vQFKREz2UzgVJ8wENtI=
+golang.zx2c4.com/wireguard v0.0.20201119-0.20201223215156-09728dc6b340/go.mod h1:ITsWNpkFv78VPB7f8MiyuxeEMcHR4jfxHGCJLPP3GHs=
