@@ -138,10 +138,10 @@ class TunnelsManager {
         let activeTunnel = tunnels.first { $0.status == .active || $0.status == .activating }
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
-            guard error == nil else {
-                wg_log(.error, message: "Add: Saving configuration failed: \(error!)")
+            if let error = error {
+                wg_log(.error, message: "Add: Saving configuration failed: \(error)")
                 (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
-                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error!)))
+                completionHandler(.failure(TunnelsManagerError.systemErrorOnAddTunnel(systemError: error)))
                 return
             }
 
@@ -235,10 +235,10 @@ class TunnelsManager {
         onDemandOption.apply(on: tunnelProviderManager)
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
-            guard error == nil else {
+            if let error = error {
                 //TODO: the passwordReference for the old one has already been removed at this point and we can't easily roll back!
-                wg_log(.error, message: "Modify: Saving configuration failed: \(error!)")
-                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error!))
+                wg_log(.error, message: "Modify: Saving configuration failed: \(error)")
+                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
                 return
             }
             guard let self = self else { return }
@@ -266,12 +266,12 @@ class TunnelsManager {
                 // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
                 tunnelProviderManager.loadFromPreferences { error in
                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-                    guard error == nil else {
-                        wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error!)")
-                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error!))
-                        return
+                    if let error = error {
+                        wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error)")
+                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                    } else {
+                        completionHandler(nil)
                     }
-                    completionHandler(nil)
                 }
             } else {
                 completionHandler(nil)
@@ -291,9 +291,9 @@ class TunnelsManager {
         #error("Unimplemented")
         #endif
         tunnelProviderManager.removeFromPreferences { [weak self] error in
-            guard error == nil else {
-                wg_log(.error, message: "Remove: Saving configuration failed: \(error!)")
-                completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel(systemError: error!))
+            if let error = error {
+                wg_log(.error, message: "Remove: Saving configuration failed: \(error)")
+                completionHandler(TunnelsManagerError.systemErrorOnRemoveTunnel(systemError: error))
                 return
             }
             if let self = self, let index = self.tunnels.firstIndex(of: tunnel) {
