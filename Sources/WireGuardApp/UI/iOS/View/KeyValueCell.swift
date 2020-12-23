@@ -116,8 +116,6 @@ class KeyValueCell: UITableViewCell {
         expandToFitValueLabelConstraint.isActive = true
 
         contentView.addSubview(valueLabelScrollView)
-
-        contentView.addSubview(valueLabelScrollView)
         valueLabelScrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             valueLabelScrollView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
