@@ -1,11 +1,12 @@
 // Developer.xcconfig
 
 // You Apple developer account's Team ID
-DEVELOPMENT_TEAM = 27XTSJS68A
+DEVELOPMENT_TEAM = 5LHJJ5JW3C
 
 // The bundle identifier of the apps.
 // Should be an app id created at developer.apple.com
-// with Network Extensions capabilty.
-APP_ID_IOS = com.mobilepatagonia.wireguard.ios
-APP_ID_MACOS = com.mobilepatagonia.wireguard.macos
+// with Network Extensions capability.
+
+APP_ID_IOS = com.virtualshield.testwireguard.ios
+APP_ID_MACOS = com.virtualshield.testwireguard.macos
 
