@@ -113,38 +113,26 @@ class PacketTunnelSettingsGenerator {
             networkSettings.mtu = NSNumber(value: mtu)
         }
 
-        let (ipv4Routes, ipv6Routes) = routes()
+        let (ipv4Addresses, ipv6Addresses) = addresses()
         let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
 
-        let ipv4Settings = NEIPv4Settings(addresses: ipv4Routes.map { $0.destinationAddress }, subnetMasks: ipv4Routes.map { $0.destinationSubnetMask })
+        let ipv4Settings = NEIPv4Settings(addresses: ipv4Addresses.map { $0.destinationAddress }, subnetMasks: ipv4Addresses.map { $0.destinationSubnetMask })
         ipv4Settings.includedRoutes = ipv4IncludedRoutes
         networkSettings.ipv4Settings = ipv4Settings
 
-        let ipv6Settings = NEIPv6Settings(addresses: ipv6Routes.map { $0.destinationAddress }, networkPrefixLengths: ipv6Routes.map { $0.destinationNetworkPrefixLength })
+        let ipv6Settings = NEIPv6Settings(addresses: ipv6Addresses.map { $0.destinationAddress }, networkPrefixLengths: ipv6Addresses.map { $0.destinationNetworkPrefixLength })
         ipv6Settings.includedRoutes = ipv6IncludedRoutes
         networkSettings.ipv6Settings = ipv6Settings
 
         return networkSettings
     }
 
-    private func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
-        let length: UInt8 = addressRange.networkPrefixLength
-        assert(length <= 32)
-        var octets: [UInt8] = [0, 0, 0, 0]
-        let subnetMask: UInt32 = length > 0 ? ~UInt32(0) << (32 - length) : UInt32(0)
-        octets[0] = UInt8(truncatingIfNeeded: subnetMask >> 24)
-        octets[1] = UInt8(truncatingIfNeeded: subnetMask >> 16)
-        octets[2] = UInt8(truncatingIfNeeded: subnetMask >> 8)
-        octets[3] = UInt8(truncatingIfNeeded: subnetMask)
-        return octets.map { String($0) }.joined(separator: ".")
-    }
-
-    private func routes() -> ([NEIPv4Route], [NEIPv6Route]) {
+    private func addresses() -> ([NEIPv4Route], [NEIPv6Route]) {
         var ipv4Routes = [NEIPv4Route]()
         var ipv6Routes = [NEIPv6Route]()
         for addressRange in tunnelConfiguration.interface.addresses {
             if addressRange.address is IPv4Address {
-                ipv4Routes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: ipv4SubnetMaskString(of: addressRange)))
+                ipv4Routes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: "\(addressRange.subnetMask())"))
             } else if addressRange.address is IPv6Address {
                 /* Big fat ugly hack for broken iOS networking stack: the smallest prefix that will have
                  * any effect on iOS is a /120, so we clamp everything above to /120. This is potentially
@@ -160,10 +148,23 @@ class PacketTunnelSettingsGenerator {
     private func includedRoutes() -> ([NEIPv4Route], [NEIPv6Route]) {
         var ipv4IncludedRoutes = [NEIPv4Route]()
         var ipv6IncludedRoutes = [NEIPv6Route]()
+
+        for addressRange in tunnelConfiguration.interface.addresses {
+            if addressRange.address is IPv4Address {
+                let route = NEIPv4Route(destinationAddress: "\(addressRange.maskedAddress())", subnetMask: "\(addressRange.subnetMask())")
+                route.gatewayAddress = "\(addressRange.address)"
+                ipv4IncludedRoutes.append(route)
+            } else if addressRange.address is IPv6Address {
+                let route = NEIPv6Route(destinationAddress: "\(addressRange.maskedAddress())", networkPrefixLength: NSNumber(value: addressRange.networkPrefixLength))
+                route.gatewayAddress = "\(addressRange.address)"
+                ipv6IncludedRoutes.append(route)
+            }
+        }
+
         for peer in tunnelConfiguration.peers {
             for addressRange in peer.allowedIPs {
                 if addressRange.address is IPv4Address {
-                    ipv4IncludedRoutes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: ipv4SubnetMaskString(of: addressRange)))
+                    ipv4IncludedRoutes.append(NEIPv4Route(destinationAddress: "\(addressRange.address)", subnetMask: "\(addressRange.subnetMask())"))
                 } else if addressRange.address is IPv6Address {
                     ipv6IncludedRoutes.append(NEIPv6Route(destinationAddress: "\(addressRange.address)", networkPrefixLength: NSNumber(value: addressRange.networkPrefixLength)))
                 }
