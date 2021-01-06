@@ -395,6 +395,7 @@ extension TunnelDetailTableViewController {
             let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
             cell.key = field.localizedUIString
             cell.value = onDemandViewModel.localizedInterfaceDescription
+            cell.copyableGesture = false
             return cell
         } else {
             assert(field == .ssid)
@@ -402,6 +403,7 @@ extension TunnelDetailTableViewController {
                 let cell: KeyValueCell = tableView.dequeueReusableCell(for: indexPath)
                 cell.key = field.localizedUIString
                 cell.value = onDemandViewModel.ssidOption.localizedUIString
+                cell.copyableGesture = false
                 return cell
             } else {
                 let cell: ChevronCell = tableView.dequeueReusableCell(for: indexPath)
