@@ -60,6 +60,7 @@ class SSIDOptionEditTableViewController: UITableViewController {
         tableView.register(TextCell.self)
         tableView.isEditing = true
         tableView.allowsSelectionDuringEditing = true
+        tableView.keyboardDismissMode = .onDrag
     }
 
     func loadSections() {
@@ -188,6 +189,7 @@ extension SSIDOptionEditTableViewController {
     private func selectedSSIDCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: EditableTextCell = tableView.dequeueReusableCell(for: indexPath)
         cell.message = selectedSSIDs[indexPath.row]
+        cell.placeholder = tr("tunnelOnDemandSSIDTextFieldPlaceholder")
         cell.isEditing = true
         cell.onValueBeingEdited = { [weak self, weak cell] text in
             guard let self = self, let cell = cell else { return }

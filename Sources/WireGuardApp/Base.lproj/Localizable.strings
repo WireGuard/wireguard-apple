@@ -109,6 +109,7 @@
 "tunnelOnDemandSectionTitleAddSSIDs" = "Add SSIDs";
 "tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Add connected: %@";
 "tunnelOnDemandAddMessageAddNewSSID" = "Add new";
+"tunnelOnDemandSSIDTextFieldPlaceholder" = "SSID";
 
 "tunnelOnDemandKey" = "On demand";
 "tunnelOnDemandOptionOff" = "Off";

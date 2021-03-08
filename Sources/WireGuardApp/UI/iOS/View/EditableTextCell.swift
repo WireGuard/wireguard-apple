@@ -9,6 +9,11 @@ class EditableTextCell: UITableViewCell {
         set(value) { valueTextField.text = value }
     }
 
+    var placeholder: String? {
+        get { return valueTextField.placeholder }
+        set(value) { valueTextField.placeholder = value }
+    }
+
     let valueTextField: UITextField = {
         let valueTextField = UITextField()
         valueTextField.textAlignment = .left
@@ -29,12 +34,13 @@ class EditableTextCell: UITableViewCell {
         valueTextField.delegate = self
         contentView.addSubview(valueTextField)
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
-        let bottomAnchorConstraint = contentView.layoutMarginsGuide.bottomAnchor.constraint(equalToSystemSpacingBelow: valueTextField.bottomAnchor, multiplier: 1)
+        // Reduce the bottom margin by 0.5pt to maintain the default cell height (44pt)
+        let bottomAnchorConstraint = contentView.layoutMarginsGuide.bottomAnchor.constraint(equalTo: valueTextField.bottomAnchor, constant: -0.5)
         bottomAnchorConstraint.priority = .defaultLow
         NSLayoutConstraint.activate([
-            valueTextField.leadingAnchor.constraint(equalToSystemSpacingAfter: contentView.layoutMarginsGuide.leadingAnchor, multiplier: 1),
-            contentView.layoutMarginsGuide.trailingAnchor.constraint(equalToSystemSpacingAfter: valueTextField.trailingAnchor, multiplier: 1),
-            valueTextField.topAnchor.constraint(equalToSystemSpacingBelow: contentView.layoutMarginsGuide.topAnchor, multiplier: 1),
+            valueTextField.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            contentView.layoutMarginsGuide.trailingAnchor.constraint(equalTo: valueTextField.trailingAnchor),
+            contentView.layoutMarginsGuide.topAnchor.constraint(equalTo: valueTextField.topAnchor),
             bottomAnchorConstraint
         ])
     }
@@ -50,6 +56,7 @@ class EditableTextCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         message = ""
+        placeholder = nil
     }
 }
 
