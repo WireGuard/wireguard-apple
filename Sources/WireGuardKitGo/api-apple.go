@@ -14,36 +14,41 @@ package main
 import "C"
 
 import (
-	"errors"
-	"log"
+	"fmt"
 	"math"
 	"os"
 	"os/signal"
 	"runtime"
+	"runtime/debug"
+	"strings"
 	"time"
 	"unsafe"
 
 	"golang.org/x/sys/unix"
+	"golang.zx2c4.com/wireguard/conn"
 	"golang.zx2c4.com/wireguard/device"
 	"golang.zx2c4.com/wireguard/tun"
 )
 
 var loggerFunc unsafe.Pointer
 var loggerCtx unsafe.Pointer
-var versionString *C.char
 
-type CLogger struct {
-	level C.int
+type CLogger int
+
+func cstring(s string) *C.char {
+	b, err := unix.BytePtrFromString(s)
+	if err != nil {
+		b := [1]C.char{}
+		return &b[0]
+	}
+	return (*C.char)(unsafe.Pointer(b))
 }
 
-func (l *CLogger) Write(p []byte) (int, error) {
+func (l CLogger) Printf(format string, args ...interface{}) {
 	if uintptr(loggerFunc) == 0 {
-		return 0, errors.New("No logger initialized")
+		return
 	}
-	message := C.CString(string(p))
-	C.callLogger(loggerFunc, loggerCtx, l.level, message)
-	C.free(unsafe.Pointer(message))
-	return len(p), nil
+	C.callLogger(loggerFunc, loggerCtx, C.int(l), cstring(fmt.Sprintf(format, args...)))
 }
 
 type tunnelHandle struct {
@@ -54,7 +59,6 @@ type tunnelHandle struct {
 var tunnelHandles = make(map[int32]tunnelHandle)
 
 func init() {
-	versionString = C.CString(device.WireGuardGoVersion)
 	signals := make(chan os.Signal)
 	signal.Notify(signals, unix.SIGUSR2)
 	go func() {
@@ -81,40 +85,39 @@ func wgSetLogger(context, loggerFn uintptr) {
 //export wgTurnOn
 func wgTurnOn(settings *C.char, tunFd int32) int32 {
 	logger := &device.Logger{
-		Debug: log.New(&CLogger{level: 0}, "", 0),
-		Info:  log.New(&CLogger{level: 1}, "", 0),
-		Error: log.New(&CLogger{level: 2}, "", 0),
+		Verbosef: CLogger(0).Printf,
+		Errorf:   CLogger(1).Printf,
 	}
 	dupTunFd, err := unix.Dup(int(tunFd))
 	if err != nil {
-		logger.Error.Println(err)
+		logger.Errorf("Unable to dup tun fd: %v", err)
 		return -1
 	}
 
 	err = unix.SetNonblock(dupTunFd, true)
 	if err != nil {
-		logger.Error.Println(err)
+		logger.Errorf("Unable to set tun fd as non blocking: %v", err)
 		unix.Close(dupTunFd)
 		return -1
 	}
 	tun, err := tun.CreateTUNFromFile(os.NewFile(uintptr(dupTunFd), "/dev/tun"), 0)
 	if err != nil {
-		logger.Error.Println(err)
+		logger.Errorf("Unable to create new tun device from fd: %v", err)
 		unix.Close(dupTunFd)
 		return -1
 	}
-	logger.Info.Println("Attaching to interface")
-	dev := device.NewDevice(tun, logger)
+	logger.Verbosef("Attaching to interface")
+	dev := device.NewDevice(tun, conn.NewStdNetBind(), logger)
 
 	err = dev.IpcSet(C.GoString(settings))
 	if err != nil {
-		logger.Error.Println(err)
+		logger.Errorf("Unable to set IPC settings: %v", err)
 		unix.Close(dupTunFd)
 		return -1
 	}
 
 	dev.Up()
-	logger.Info.Println("Device started")
+	logger.Verbosef("Device started")
 
 	var i int32
 	for i = 0; i < math.MaxInt32; i++ {
@@ -148,7 +151,7 @@ func wgSetConfig(tunnelHandle int32, settings *C.char) int64 {
 	}
 	err := dev.IpcSet(C.GoString(settings))
 	if err != nil {
-		dev.Error.Println(err)
+		dev.Errorf("Unable to set IPC settings: %v", err)
 		if ipcErr, ok := err.(*device.IPCError); ok {
 			return ipcErr.ErrorCode()
 		}
@@ -183,10 +186,10 @@ func wgBumpSockets(tunnelHandle int32) {
 				dev.SendKeepalivesToPeersWithCurrentKeypair()
 				return
 			}
-			dev.Error.Printf("Unable to update bind, try %d: %v", i+1, err)
+			dev.Errorf("Unable to update bind, try %d: %v", i+1, err)
 			time.Sleep(time.Second / 2)
 		}
-		dev.Error.Println("Gave up trying to update bind; tunnel is likely dysfunctional")
+		dev.Errorf("Gave up trying to update bind; tunnel is likely dysfunctional")
 	}()
 }
 
@@ -201,7 +204,20 @@ func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
 
 //export wgVersion
 func wgVersion() *C.char {
-	return versionString
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return C.CString("unknown")
+	}
+	for _, dep := range info.Deps {
+		if dep.Path == "golang.zx2c4.com/wireguard" {
+			parts := strings.Split(dep.Version, "-")
+			if len(parts) == 3 && len(parts[2]) == 12 {
+				return C.CString(parts[2][:7])
+			}
+			return C.CString(dep.Version)
+		}
+	}
+	return C.CString("unknown")
 }
 
 func main() {}

@@ -62,7 +62,10 @@ public class WireGuardAdapter {
 
     /// Returns a WireGuard version.
     class var backendVersion: String {
-        return String(cString: wgVersion())
+        guard let ver = wgVersion() else { return "unknown" }
+        let str = String(cString: ver)
+        free(UnsafeMutableRawPointer(mutating: ver))
+        return str
     }
 
     /// Returns the tunnel device interface name, or nil on error.
@@ -265,7 +268,7 @@ public class WireGuardAdapter {
                 .takeUnretainedValue()
 
             let swiftString = String(cString: message).trimmingCharacters(in: .newlines)
-            let tunnelLogLevel = WireGuardLogLevel(rawValue: logLevel) ?? .debug
+            let tunnelLogLevel = WireGuardLogLevel(rawValue: logLevel) ?? .verbose
 
             unretainedSelf.logHandler(tunnelLogLevel, swiftString)
         }
@@ -369,9 +372,9 @@ public class WireGuardAdapter {
             switch result {
             case .success((let sourceEndpoint, let resolvedEndpoint)):
                 if sourceEndpoint.host == resolvedEndpoint.host {
-                    self.logHandler(.debug, "DNS64: mapped \(sourceEndpoint.host) to itself.")
+                    self.logHandler(.verbose, "DNS64: mapped \(sourceEndpoint.host) to itself.")
                 } else {
-                    self.logHandler(.debug, "DNS64: mapped \(sourceEndpoint.host) to \(resolvedEndpoint.host)")
+                    self.logHandler(.verbose, "DNS64: mapped \(sourceEndpoint.host) to \(resolvedEndpoint.host)")
                 }
             case .failure(let resolutionError):
                 self.logHandler(.error, "Failed to resolve endpoint \(resolutionError.address): \(resolutionError.errorDescription ?? "(nil)")")
@@ -382,7 +385,7 @@ public class WireGuardAdapter {
     /// Helper method used by network path monitor.
     /// - Parameter path: new network path
     private func didReceivePathUpdate(path: Network.NWPath) {
-        self.logHandler(.debug, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
+        self.logHandler(.verbose, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
 
         #if os(macOS)
         if case .started(let handle, _) = self.state {
@@ -399,7 +402,7 @@ public class WireGuardAdapter {
                 wgDisableSomeRoamingForBrokenMobileSemantics(handle)
                 wgBumpSockets(handle)
             } else {
-                self.logHandler(.info, "Connectivity offline, pausing backend.")
+                self.logHandler(.verbose, "Connectivity offline, pausing backend.")
 
                 self.state = .temporaryShutdown(settingsGenerator)
                 wgTurnOff(handle)
@@ -408,7 +411,7 @@ public class WireGuardAdapter {
         case .temporaryShutdown(let settingsGenerator):
             guard path.status.isSatisfiable else { return }
 
-            self.logHandler(.info, "Connectivity online, resuming backend.")
+            self.logHandler(.verbose, "Connectivity online, resuming backend.")
 
             do {
                 try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
@@ -436,9 +439,8 @@ public class WireGuardAdapter {
 
 /// A enum describing WireGuard log levels defined in `api-ios.go`.
 public enum WireGuardLogLevel: Int32 {
-    case debug = 0
-    case info = 1
-    case error = 2
+    case verbose = 0
+    case error = 1
 }
 
 private extension Network.NWPath.Status {

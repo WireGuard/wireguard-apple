@@ -1,4 +1,4 @@
-From aa85e0f90c9031ff5be32296e9fed1637a2eceae Mon Sep 17 00:00:00 2001
+From 516dc0c15ff1ab781e0677606b5be72919251b3e Mon Sep 17 00:00:00 2001
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 Date: Wed, 9 Dec 2020 14:07:06 +0100
 Subject: [PATCH] runtime: use libc_mach_continuous_time in nanotime on Darwin
@@ -18,23 +18,23 @@ Change-Id: Ia3282e8bd86f95ad2b76427063e60a005563f4eb
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/runtime/sys_darwin.go b/src/runtime/sys_darwin.go
-index 06474434c9..6f7ca37122 100644
+index 4a3f2fc453..4a69403b32 100644
 --- a/src/runtime/sys_darwin.go
 +++ b/src/runtime/sys_darwin.go
-@@ -469,7 +469,7 @@ func setNonblock(fd int32) {
+@@ -440,7 +440,7 @@ func setNonblock(fd int32) {
  //go:cgo_import_dynamic libc_usleep usleep "/usr/lib/libSystem.B.dylib"
  
  //go:cgo_import_dynamic libc_mach_timebase_info mach_timebase_info "/usr/lib/libSystem.B.dylib"
 -//go:cgo_import_dynamic libc_mach_absolute_time mach_absolute_time "/usr/lib/libSystem.B.dylib"
 +//go:cgo_import_dynamic libc_mach_continuous_time mach_continuous_time "/usr/lib/libSystem.B.dylib"
- //go:cgo_import_dynamic libc_gettimeofday gettimeofday "/usr/lib/libSystem.B.dylib"
+ //go:cgo_import_dynamic libc_clock_gettime clock_gettime "/usr/lib/libSystem.B.dylib"
  //go:cgo_import_dynamic libc_sigaction sigaction "/usr/lib/libSystem.B.dylib"
  //go:cgo_import_dynamic libc_pthread_sigmask pthread_sigmask "/usr/lib/libSystem.B.dylib"
 diff --git a/src/runtime/sys_darwin_amd64.s b/src/runtime/sys_darwin_amd64.s
-index 825852d673..5a8b994fb1 100644
+index 630fb5df64..4499c88802 100644
 --- a/src/runtime/sys_darwin_amd64.s
 +++ b/src/runtime/sys_darwin_amd64.s
-@@ -109,7 +109,7 @@ TEXT runtime·nanotime_trampoline(SB),NOSPLIT,$0
+@@ -114,7 +114,7 @@ TEXT runtime·nanotime_trampoline(SB),NOSPLIT,$0
  	PUSHQ	BP
  	MOVQ	SP, BP
  	MOVQ	DI, BX
@@ -44,10 +44,10 @@ index 825852d673..5a8b994fb1 100644
  	MOVL	timebase<>+machTimebaseInfo_numer(SB), SI
  	MOVL	timebase<>+machTimebaseInfo_denom(SB), DI // atomic read
 diff --git a/src/runtime/sys_darwin_arm64.s b/src/runtime/sys_darwin_arm64.s
-index 585d4f2c64..c556d88730 100644
+index 96d2ed1076..f046545395 100644
 --- a/src/runtime/sys_darwin_arm64.s
 +++ b/src/runtime/sys_darwin_arm64.s
-@@ -135,7 +135,7 @@ GLOBL timebase<>(SB),NOPTR,$(machTimebaseInfo__size)
+@@ -143,7 +143,7 @@ GLOBL timebase<>(SB),NOPTR,$(machTimebaseInfo__size)
  
  TEXT runtime·nanotime_trampoline(SB),NOSPLIT,$40
  	MOVD	R0, R19
@@ -57,5 +57,5 @@ index 585d4f2c64..c556d88730 100644
  	MOVW	timebase<>+machTimebaseInfo_numer(SB), R20
  	MOVD	$timebase<>+machTimebaseInfo_denom(SB), R21
 -- 
-2.29.2
+2.30.1
 

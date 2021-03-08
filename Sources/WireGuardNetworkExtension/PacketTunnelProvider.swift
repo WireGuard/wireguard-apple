@@ -109,10 +109,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 extension WireGuardLogLevel {
     var osLogLevel: OSLogType {
         switch self {
-        case .debug:
+        case .verbose:
             return .debug
-        case .info:
-            return .info
         case .error:
             return .error
         }
