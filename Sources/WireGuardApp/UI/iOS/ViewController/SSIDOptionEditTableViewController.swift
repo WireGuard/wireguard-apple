@@ -3,6 +3,7 @@
 
 import UIKit
 import SystemConfiguration.CaptiveNetwork
+import NetworkExtension
 
 protocol SSIDOptionEditTableViewControllerDelegate: class {
     func ssidOptionSaved(option: ActivateOnDemandViewModel.OnDemandSSIDOption, ssids: [String])
@@ -39,9 +40,16 @@ class SSIDOptionEditTableViewController: UITableViewController {
         selectedOption = option
         selectedSSIDs = ssids
         super.init(style: .grouped)
-        connectedSSID = getConnectedSSID()
         loadSections()
-        loadAddSSIDRows()
+        addSSIDRows.removeAll()
+        addSSIDRows.append(.addNewSSID)
+
+        getConnectedSSID { [weak self] ssid in
+            guard let self = self else { return }
+            self.connectedSSID = ssid
+            self.updateCurrentSSIDEntry()
+            self.updateTableViewAddSSIDRows()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -72,14 +80,14 @@ class SSIDOptionEditTableViewController: UITableViewController {
         }
     }
 
-    func loadAddSSIDRows() {
-        addSSIDRows.removeAll()
-        if let connectedSSID = connectedSSID {
-            if !selectedSSIDs.contains(connectedSSID) {
-                addSSIDRows.append(.addConnectedSSID(connectedSSID: connectedSSID))
+    func updateCurrentSSIDEntry() {
+        if let connectedSSID = connectedSSID, !selectedSSIDs.contains(connectedSSID) {
+            if let first = addSSIDRows.first, case .addNewSSID = first {
+                addSSIDRows.insert(.addConnectedSSID(connectedSSID: connectedSSID), at: 0)
             }
+        } else if let first = addSSIDRows.first, case .addConnectedSSID = first {
+            addSSIDRows.removeFirst()
         }
-        addSSIDRows.append(.addNewSSID)
     }
 
     func updateTableViewAddSSIDRows() {
@@ -195,7 +203,7 @@ extension SSIDOptionEditTableViewController {
             guard let self = self, let cell = cell else { return }
             if let row = self.tableView.indexPath(for: cell)?.row {
                 self.selectedSSIDs[row] = text
-                self.loadAddSSIDRows()
+                self.updateCurrentSSIDEntry()
                 self.updateTableViewAddSSIDRows()
             }
         }
@@ -226,7 +234,7 @@ extension SSIDOptionEditTableViewController {
             } else {
                 tableView.reloadRows(at: [indexPath], with: .automatic)
             }
-            loadAddSSIDRows()
+            updateCurrentSSIDEntry()
             updateTableViewAddSSIDRows()
         case .addSSIDs:
             assert(editingStyle == .insert)
@@ -246,7 +254,7 @@ extension SSIDOptionEditTableViewController {
             } else {
                 tableView.insertRows(at: [indexPath], with: .automatic)
             }
-            loadAddSSIDRows()
+            updateCurrentSSIDEntry()
             updateTableViewAddSSIDRows()
             if newSSID.isEmpty {
                 if let selectedSSIDCell = tableView.cellForRow(at: indexPath) as? EditableTextCell {
@@ -254,6 +262,31 @@ extension SSIDOptionEditTableViewController {
                 }
             }
         }
+    }
+
+    private func getConnectedSSID(completionHandler: @escaping (String?) -> Void) {
+        #if targetEnvironment(simulator)
+        completionHandler("Simulator Wi-Fi")
+        #else
+        if #available(iOS 14, *) {
+            NEHotspotNetwork.fetchCurrent { hotspotNetwork in
+                completionHandler(hotspotNetwork?.ssid)
+            }
+        } else {
+            if let supportedInterfaces = CNCopySupportedInterfaces() as? [CFString] {
+                for interface in supportedInterfaces {
+                    if let networkInfo = CNCopyCurrentNetworkInfo(interface) {
+                        if let ssid = (networkInfo as NSDictionary)[kCNNetworkInfoKeySSID as String] as? String {
+                            completionHandler(!ssid.isEmpty ? ssid : nil)
+                            return
+                        }
+                    }
+                }
+            }
+
+            completionHandler(nil)
+        }
+        #endif
     }
 }
 
@@ -292,14 +325,3 @@ extension SSIDOptionEditTableViewController {
     }
 }
 
-private func getConnectedSSID() -> String? {
-    guard let supportedInterfaces = CNCopySupportedInterfaces() as? [CFString] else { return nil }
-    for interface in supportedInterfaces {
-        if let networkInfo = CNCopyCurrentNetworkInfo(interface) {
-            if let ssid = (networkInfo as NSDictionary)[kCNNetworkInfoKeySSID as String] as? String {
-                return !ssid.isEmpty ? ssid : nil
-            }
-        }
-    }
-    return nil
-}
