@@ -17,7 +17,7 @@
 "tunnelsListSelectAllButtonTitle" = "Select All";
 "tunnelsListDeleteButtonTitle" = "Delete";
 "tunnelsListSelectedTitle (%d)" = "%d selected";
-"tunnelListCaptionOnDemand" = "On Demand";
+"tunnelsListOnDemandActiveCellSubTitle" = "On-Demand is enabled";
 
 // Tunnels list menu
 
