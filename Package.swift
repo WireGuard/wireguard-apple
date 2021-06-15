@@ -30,7 +30,7 @@ let package = Package(
                 "goruntime-boottime-over-monotonic.diff",
                 "go.mod",
                 "go.sum",
-                "api-ios.go",
+                "api-apple.go",
                 "Makefile"
             ],
             publicHeadersPath: ".",
