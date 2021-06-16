@@ -57,7 +57,14 @@ public class WireGuardAdapter {
 
     /// Tunnel device file descriptor.
     private var tunnelFileDescriptor: Int32? {
-        return self.packetTunnelProvider?.packetFlow.value(forKeyPath: "socket.fileDescriptor") as? Int32
+        var buf = [CChar](repeating: 0, count: Int(IFNAMSIZ))
+        for fd: Int32 in 0...1024 {
+            var len = socklen_t(buf.count)
+            if getsockopt(fd, SYSPROTO_CONTROL, 2, &buf, &len) == 0 && String(cString: buf).hasPrefix("utun") {
+                return fd
+            }
+        }
+        return nil
     }
 
     /// Returns a WireGuard version.
