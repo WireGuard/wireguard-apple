@@ -75,6 +75,8 @@ $ open WireGuard.xcodeproj
 5. iOS only: Locate Bitcode settings under your application target, Build settings -> Enable Bitcode, 
    change the corresponding value to "No".
    
+6. Ensure the Network Extension's Bundle Identifier matches what is being called in code. For example, if your appID is `com.company.app` ensure your extension is `com.company.app.network-extension`. Alternatively, change the `providerBundleIdentifier` from `NETunnelProviderProtocol+Extension.swift` to match your Network Extension. If these are mis-matched the app extension will not launch, and the error will cryptically tell you this by asking you to check your Internet connection.
+   
 Note that if you ship your app for both iOS and macOS, make sure to repeat the steps 2-4 twice, 
 once per platform.
 
