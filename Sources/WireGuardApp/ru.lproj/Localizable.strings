@@ -55,9 +55,9 @@
 "tunnelStatusRestarting" = "Перезапуск";
 "tunnelStatusWaiting" = "Ожидание";
 
-"macToggleStatusButtonActivate" = "Подключен";
+"macToggleStatusButtonActivate" = "Подключить";
 "macToggleStatusButtonActivating" = "Подключение…";
-"macToggleStatusButtonDeactivate" = "Отключен";
+"macToggleStatusButtonDeactivate" = "Отключить";
 "macToggleStatusButtonDeactivating" = "Отключение…";
 "macToggleStatusButtonReasserting" = "Переподключение…";
 "macToggleStatusButtonRestarting" = "Перезапуск…";
@@ -80,7 +80,7 @@
 "tunnelPeerPublicKey" = "Публичный ключ";
 "tunnelPeerPreSharedKey" = "Общий ключ";
 "tunnelPeerEndpoint" = "IP-адрес сервера";
-"tunnelPeerPersistentKeepalive" = "Поддерживание соединения";
+"tunnelPeerPersistentKeepalive" = "Поддержание соединения";
 "tunnelPeerAllowedIPs" = "Разрешенные IP-адреса";
 "tunnelPeerRxBytes" = "Получено данных";
 "tunnelPeerTxBytes" = "Отправлено данных";
@@ -118,11 +118,11 @@
 "tunnelOnDemandOptionWiFiOrEthernet" = "Wi-Fi или Ethernet";
 "tunnelOnDemandOptionEthernetOnly" = "Только Ethernet";
 
-"addPeerButtonTitle" = "Добавить пира";
+"addPeerButtonTitle" = "Добавить пир";
 
-"deletePeerButtonTitle" = "Удалить пира";
+"deletePeerButtonTitle" = "Удалить пир";
 "deletePeerConfirmationAlertButtonTitle" = "Удалить";
-"deletePeerConfirmationAlertMessage" = "Удалить этого пира?";
+"deletePeerConfirmationAlertMessage" = "Удалить этот пир?";
 
 "deleteTunnelButtonTitle" = "Удалить туннель";
 "deleteTunnelConfirmationAlertButtonTitle" = "Удалить";
@@ -196,7 +196,7 @@
 "alertScanQRCodeUnreadableQRCodeTitle" = "Недопустимый код";
 "alertScanQRCodeUnreadableQRCodeMessage" = "Не удалось прочитать отсканированный код";
 
-"alertScanQRCodeNamePromptTitle" = "Задайте имя отсканированному туннелю";
+"alertScanQRCodeNamePromptTitle" = "Задайте имя сканированному из QR-кода туннелю";
 
 // Settings UI
 
