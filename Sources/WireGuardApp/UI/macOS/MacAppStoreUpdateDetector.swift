@@ -13,7 +13,7 @@ class MacAppStoreUpdateDetector {
         wg_log(.debug, message: "aevt/quit Apple event received from executable: \(executablePath)")
         if executablePath.hasPrefix("/System/Library/") {
             let executableName = URL(fileURLWithPath: executablePath, isDirectory: false).lastPathComponent
-            return executableName == "com.apple.CommerceKit.StoreAEService"
+            return executableName.hasPrefix("com.apple.") && executableName.hasSuffix(".StoreAEService")
         }
         return false
     }
