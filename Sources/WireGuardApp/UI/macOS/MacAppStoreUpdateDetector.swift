@@ -8,8 +8,9 @@ class MacAppStoreUpdateDetector {
         guard isQuitEvent(quitAppleEvent) else { return false }
         guard let senderPIDDescriptor = quitAppleEvent.attributeDescriptor(forKeyword: keySenderPIDAttr) else { return false }
         let pid = senderPIDDescriptor.int32Value
+        wg_log(.debug, message: "aevt/quit Apple event received from pid: \(pid)")
         guard let executablePath = getExecutablePath(from: pid) else { return false }
-        wg_log(.debug, message: "aevt/quit Apple event received from: \(executablePath)")
+        wg_log(.debug, message: "aevt/quit Apple event received from executable: \(executablePath)")
         if executablePath.hasPrefix("/System/Library/") {
             let executableName = URL(fileURLWithPath: executablePath, isDirectory: false).lastPathComponent
             return executableName == "com.apple.CommerceKit.StoreAEService"
