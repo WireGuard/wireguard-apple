@@ -342,6 +342,36 @@ class TunnelsManager {
         }
     }
 
+    func setOnDemandEnabled(_ isOnDemandEnabled: Bool, on tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+        let tunnelProviderManager = tunnel.tunnelProvider
+        guard tunnelProviderManager.isOnDemandEnabled != isOnDemandEnabled else {
+            completionHandler(nil)
+            return
+        }
+        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && isOnDemandEnabled
+        tunnelProviderManager.isOnDemandEnabled = isOnDemandEnabled
+        tunnelProviderManager.saveToPreferences { error in
+            if let error = error {
+                wg_log(.error, message: "Modify On-Demand: Saving configuration failed: \(error)")
+                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                return
+            }
+            if isActivatingOnDemand {
+                tunnelProviderManager.loadFromPreferences { error in
+                    tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
+                    if let error = error {
+                        wg_log(.error, message: "Modify On-Demand: Re-loading after saving configuration failed: \(error)")
+                        completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                    } else {
+                        completionHandler(nil)
+                    }
+                }
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
+
     func numberOfTunnels() -> Int {
         return tunnels.count
     }
