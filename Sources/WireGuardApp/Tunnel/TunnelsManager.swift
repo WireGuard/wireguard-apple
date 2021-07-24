@@ -498,6 +498,7 @@ class TunnelContainer: NSObject {
     @objc dynamic var status: TunnelStatus
 
     @objc dynamic var isActivateOnDemandEnabled: Bool
+    @objc dynamic var hasOnDemandRules: Bool
 
     var isAttemptingActivation = false {
         didSet {
@@ -524,7 +525,12 @@ class TunnelContainer: NSObject {
     var activationTimer: Timer?
     var deactivationTimer: Timer?
 
-    fileprivate var tunnelProvider: NETunnelProviderManager
+    fileprivate var tunnelProvider: NETunnelProviderManager {
+        didSet {
+            isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
+            hasOnDemandRules = !(tunnelProvider.onDemandRules ?? []).isEmpty
+        }
+    }
 
     var tunnelConfiguration: TunnelConfiguration? {
         return tunnelProvider.tunnelConfiguration
@@ -545,6 +551,7 @@ class TunnelContainer: NSObject {
         let status = TunnelStatus(from: tunnel.connection.status)
         self.status = status
         isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
+        hasOnDemandRules = !(tunnel.onDemandRules ?? []).isEmpty
         tunnelProvider = tunnel
         super.init()
     }
@@ -571,7 +578,6 @@ class TunnelContainer: NSObject {
             return
         }
         status = TunnelStatus(from: tunnelProvider.connection.status)
-        isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
     }
 
     fileprivate func startActivation(recursionCount: UInt = 0, lastError: Error? = nil, activationDelegate: TunnelsManagerActivationDelegate?) {
