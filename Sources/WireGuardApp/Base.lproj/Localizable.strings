@@ -17,6 +17,7 @@
 "tunnelsListSelectAllButtonTitle" = "Select All";
 "tunnelsListDeleteButtonTitle" = "Delete";
 "tunnelsListSelectedTitle (%d)" = "%d selected";
+"tunnelListCaptionOnDemand" = "On Demand";
 
 // Tunnels list menu
 

@@ -317,10 +317,18 @@ extension TunnelsListTableViewController: UITableViewDataSource {
             cell.tunnel = tunnel
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self, let tunnelsManager = self.tunnelsManager else { return }
-                if isOn {
-                    tunnelsManager.startActivation(of: tunnel)
+                if tunnel.hasOnDemandRules {
+                    tunnelsManager.setOnDemandEnabled(isOn, on: tunnel) { error in
+                        if error == nil && !isOn {
+                            tunnelsManager.startDeactivation(of: tunnel)
+                        }
+                    }
                 } else {
-                    tunnelsManager.startDeactivation(of: tunnel)
+                    if isOn {
+                        tunnelsManager.startActivation(of: tunnel)
+                    } else {
+                        tunnelsManager.startDeactivation(of: tunnel)
+                    }
                 }
             }
         }

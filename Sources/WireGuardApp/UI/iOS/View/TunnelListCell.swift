@@ -12,9 +12,16 @@ class TunnelListCell: UITableViewCell {
                 self?.nameLabel.text = tunnel.name
             }
             // Bind to the tunnel's status
-            update(from: tunnel?.status, animated: false)
+            update(from: tunnel, animated: false)
             statusObservationToken = tunnel?.observe(\.status) { [weak self] tunnel, _ in
-                self?.update(from: tunnel.status, animated: true)
+                self?.update(from: tunnel, animated: true)
+            }
+            // Bind to tunnel's on-demand settings
+            isOnDemandEnabledObservationToken = tunnel?.observe(\.isActivateOnDemandEnabled) { [weak self] tunnel, _ in
+                self?.update(from: tunnel, animated: true)
+            }
+            hasOnDemandRulesObservationToken = tunnel?.observe(\.hasOnDemandRules) { [weak self] tunnel, _ in
+                self?.update(from: tunnel, animated: true)
             }
         }
     }
@@ -41,8 +48,10 @@ class TunnelListCell: UITableViewCell {
 
     let statusSwitch = UISwitch()
 
-    private var statusObservationToken: NSKeyValueObservation?
     private var nameObservationToken: NSKeyValueObservation?
+    private var statusObservationToken: NSKeyValueObservation?
+    private var isOnDemandEnabledObservationToken: NSKeyValueObservation?
+    private var hasOnDemandRulesObservationToken: NSKeyValueObservation?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -94,13 +103,29 @@ class TunnelListCell: UITableViewCell {
         onSwitchToggled?(statusSwitch.isOn)
     }
 
-    private func update(from status: TunnelStatus?, animated: Bool) {
-        guard let status = status else {
+    private func update(from tunnel: TunnelContainer?, animated: Bool) {
+        guard let tunnel = tunnel else {
             reset(animated: animated)
             return
         }
-        statusSwitch.setOn(!(status == .deactivating || status == .inactive), animated: animated)
-        statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+        let status = tunnel.status
+        let isOnDemandEngaged = tunnel.isActivateOnDemandEnabled
+
+        let isSwitchOn = (status == .activating || status == .active || isOnDemandEngaged)
+        statusSwitch.setOn(isSwitchOn, animated: true)
+
+        if isOnDemandEngaged && !(status == .activating || status == .active) {
+            statusSwitch.onTintColor = UIColor.systemYellow
+        } else {
+            statusSwitch.onTintColor = UIColor.systemGreen
+        }
+
+        if tunnel.hasOnDemandRules {
+            statusSwitch.isUserInteractionEnabled = true
+        } else {
+            statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
+        }
+
         if status == .inactive || status == .active {
             busyIndicator.stopAnimating()
         } else {
