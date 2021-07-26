@@ -26,7 +26,9 @@ class SwitchCell: UITableViewCell {
 
     var onSwitchToggled: ((Bool) -> Void)?
 
-    var observationToken: AnyObject?
+    var statusObservationToken: AnyObject?
+    var isOnDemandEnabledObservationToken: AnyObject?
+    var hasOnDemandRulesObservationToken: AnyObject?
 
     let switchView = UISwitch()
 
@@ -51,6 +53,8 @@ class SwitchCell: UITableViewCell {
         isEnabled = true
         message = ""
         isOn = false
-        observationToken = nil
+        statusObservationToken = nil
+        isOnDemandEnabledObservationToken = nil
+        hasOnDemandRulesObservationToken = nil
     }
 }

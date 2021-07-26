@@ -324,8 +324,22 @@ extension TunnelDetailTableViewController {
     private func statusCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
 
-        let statusUpdate: (SwitchCell, TunnelStatus) -> Void = { cell, status in
-            let text: String
+        func update(cell: SwitchCell?, with tunnel: TunnelContainer) {
+            guard let cell = cell else { return }
+
+            let status = tunnel.status
+            let isOnDemandEngaged = tunnel.isActivateOnDemandEnabled
+
+            let isSwitchOn = (status == .activating || status == .active || isOnDemandEngaged)
+            cell.switchView.setOn(isSwitchOn, animated: true)
+
+            if isOnDemandEngaged && !(status == .activating || status == .active) {
+                cell.switchView.onTintColor = UIColor.systemYellow
+            } else {
+                cell.switchView.onTintColor = UIColor.systemGreen
+            }
+
+            var text: String
             switch status {
             case .inactive:
                 text = tr("tunnelStatusInactive")
@@ -342,24 +356,44 @@ extension TunnelDetailTableViewController {
             case .waiting:
                 text = tr("tunnelStatusWaiting")
             }
+
+            if tunnel.hasOnDemandRules {
+                text += isOnDemandEngaged ? tr("tunnelStatusAddendumOnDemand") : ""
+                cell.switchView.isUserInteractionEnabled = true
+                cell.isEnabled = true
+            } else {
+                cell.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
+                cell.isEnabled = (status == .inactive || status == .active)
+            }
             cell.textLabel?.text = text
-            cell.switchView.isOn = !(status == .deactivating || status == .inactive)
-            cell.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
-            cell.isEnabled = status == .active || status == .inactive
         }
 
-        statusUpdate(cell, tunnel.status)
-        cell.observationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
-            guard let cell = cell else { return }
-            statusUpdate(cell, tunnel.status)
+        update(cell: cell, with: tunnel)
+        cell.statusObservationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+            update(cell: cell, with: tunnel)
+        }
+        cell.isOnDemandEnabledObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak cell] tunnel, _ in
+            update(cell: cell, with: tunnel)
+        }
+        cell.hasOnDemandRulesObservationToken = tunnel.observe(\.hasOnDemandRules) { [weak cell] tunnel, _ in
+            update(cell: cell, with: tunnel)
         }
 
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
-            if isOn {
-                self.tunnelsManager.startActivation(of: self.tunnel)
+
+            if self.tunnel.hasOnDemandRules {
+                self.tunnelsManager.setOnDemandEnabled(isOn, on: self.tunnel) { error in
+                    if error == nil && !isOn {
+                        self.tunnelsManager.startDeactivation(of: self.tunnel)
+                    }
+                }
             } else {
-                self.tunnelsManager.startDeactivation(of: self.tunnel)
+                if isOn {
+                    self.tunnelsManager.startActivation(of: self.tunnel)
+                } else {
+                    self.tunnelsManager.startDeactivation(of: self.tunnel)
+                }
             }
         }
         return cell
