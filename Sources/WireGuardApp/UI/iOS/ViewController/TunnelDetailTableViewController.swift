@@ -365,6 +365,11 @@ extension TunnelDetailTableViewController {
                 cell.switchView.isUserInteractionEnabled = (status == .inactive || status == .active)
                 cell.isEnabled = (status == .inactive || status == .active)
             }
+
+            if tunnel.hasOnDemandRules && !isOnDemandEngaged && status == .inactive {
+                text = tr("tunnelStatusOnDemandDisabled")
+            }
+
             cell.textLabel?.text = text
         }
 
