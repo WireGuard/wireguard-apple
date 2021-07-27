@@ -614,7 +614,7 @@ class TunnelContainer: NSObject {
     }
 
     func refreshStatus() {
-        if status == .restarting {
+        if (status == .restarting) || (status == .waiting && tunnelProvider.connection.status == .disconnected) {
             return
         }
         status = TunnelStatus(from: tunnelProvider.connection.status)
