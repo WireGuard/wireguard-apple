@@ -46,7 +46,7 @@ extension ActivateOnDemandOption {
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {
-        if tunnelProviderManager.isOnDemandEnabled, let onDemandRules = tunnelProviderManager.onDemandRules {
+        if let onDemandRules = tunnelProviderManager.onDemandRules {
             self = ActivateOnDemandOption.create(from: onDemandRules)
         } else {
             self = .off

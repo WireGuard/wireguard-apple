@@ -51,20 +51,18 @@ class ActivateOnDemandViewModel {
 extension ActivateOnDemandViewModel {
     convenience init(tunnel: TunnelContainer) {
         self.init()
-        if tunnel.isActivateOnDemandEnabled {
-            switch tunnel.onDemandOption {
-            case .off:
-                break
-            case .wiFiInterfaceOnly(let onDemandSSIDOption):
-                isWiFiInterfaceEnabled = true
-                (ssidOption, selectedSSIDs) = ssidViewModel(from: onDemandSSIDOption)
-            case .nonWiFiInterfaceOnly:
-                isNonWiFiInterfaceEnabled = true
-            case .anyInterface(let onDemandSSIDOption):
-                isWiFiInterfaceEnabled = true
-                isNonWiFiInterfaceEnabled = true
-                (ssidOption, selectedSSIDs) = ssidViewModel(from: onDemandSSIDOption)
-            }
+        switch tunnel.onDemandOption {
+        case .off:
+            break
+        case .wiFiInterfaceOnly(let onDemandSSIDOption):
+            isWiFiInterfaceEnabled = true
+            (ssidOption, selectedSSIDs) = ssidViewModel(from: onDemandSSIDOption)
+        case .nonWiFiInterfaceOnly:
+            isNonWiFiInterfaceEnabled = true
+        case .anyInterface(let onDemandSSIDOption):
+            isWiFiInterfaceEnabled = true
+            isNonWiFiInterfaceEnabled = true
+            (ssidOption, selectedSSIDs) = ssidViewModel(from: onDemandSSIDOption)
         }
     }
 
