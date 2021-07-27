@@ -419,7 +419,17 @@ class TunnelsManager {
             tunnel.status = .waiting
             activateWaitingTunnelOnDeactivation(of: tunnelInOperation)
             if tunnelInOperation.status != .deactivating {
-                startDeactivation(of: tunnelInOperation)
+                if tunnelInOperation.isActivateOnDemandEnabled {
+                    setOnDemandEnabled(false, on: tunnelInOperation) { [weak self] error in
+                        guard error == nil else {
+                            wg_log(.error, message: "Unable to activate tunnel '\(tunnel.name)' because on-demand could not be disabled on active tunnel '\(tunnel.name)'")
+                            return
+                        }
+                        self?.startDeactivation(of: tunnelInOperation)
+                    }
+                } else {
+                    startDeactivation(of: tunnelInOperation)
+                }
             }
             return
         }
