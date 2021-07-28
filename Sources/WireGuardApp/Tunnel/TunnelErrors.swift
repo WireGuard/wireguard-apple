@@ -56,10 +56,10 @@ enum TunnelsManagerActivationError: WireGuardAppError {
 
     var alertText: AlertText {
         switch self {
-        case .activationFailed(let wasOnDemandEnabled):
-            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage") + (wasOnDemandEnabled ? tr("alertTunnelActivationFailureOnDemandAddendum") : ""))
-        case .activationFailedWithExtensionError(let title, let message, let wasOnDemandEnabled):
-            return (title, message + (wasOnDemandEnabled ? tr("alertTunnelActivationFailureOnDemandAddendum") : ""))
+        case .activationFailed:
+            return (tr("alertTunnelActivationFailureTitle"), tr("alertTunnelActivationFailureMessage"))
+        case .activationFailedWithExtensionError(let title, let message, _):
+            return (title, message)
         }
     }
 }
