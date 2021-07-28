@@ -357,11 +357,27 @@ class TunnelsManager {
                 return
             }
             if isActivatingOnDemand {
+                // If we're enabling on-demand, we want to make sure the tunnel is enabled.
+                // If not enabled, the OS will not turn the tunnel on/off based on our rules.
                 tunnelProviderManager.loadFromPreferences { error in
+                    // isActivateOnDemandEnabled will get changed in reload(), but no harm in setting it here too
                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
                     if let error = error {
                         wg_log(.error, message: "Modify On-Demand: Re-loading after saving configuration failed: \(error)")
                         completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                        return
+                    }
+                    if !tunnelProviderManager.isEnabled {
+                        // In case the tunnel has gotten disabled, re-enable and save it.
+                        wg_log(.debug, staticMessage: "Modify On-Demand: Tunnel is disabled. Re-enabling and saving")
+                        tunnelProviderManager.isEnabled = true
+                        tunnelProviderManager.saveToPreferences { error in
+                            if let error = error {
+                                wg_log(.error, message: "Modify On-Demand: Error saving tunnel after re-enabling: \(error)")
+                                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
+                                return
+                            }
+                        }
                     } else {
                         completionHandler(nil)
                     }
