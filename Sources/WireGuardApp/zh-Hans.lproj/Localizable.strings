@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "无法确定 TUN 设备文件描述符。";
 "alertTunnelActivationSetNetworkSettingsMessage" = "无法将网络设置应用到隧道对象。";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " 此隧道已启用按需启动，所以此隧道可能会被操作系统自动重新启动。 您可以在此应用中通过编辑隧道配置来关闭按需启动。";
-
 "alertTunnelDNSFailureTitle" = "DBS解析失败";
 "alertTunnelDNSFailureMessage" = "一个或多个端点的域名无法解析";
 

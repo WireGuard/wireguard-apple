@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Nu se poate determina descriptorul fișierului dispozitivului TUN.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Nu se pot aplica setările de rețea la elementul de tunel.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Pentru acest tunel este activată funcția Activare la cerere, astfel că este posibil ca tunelul să fie reactivat automat de sistemul de operare. Poți dezactiva funcția Activare la cerere în această aplicație prin editarea configurației tunelului.";
-
 "alertTunnelDNSFailureTitle" = "Eroare de rezolvare DNS";
 "alertTunnelDNSFailureMessage" = "Unul sau mai multe puncte finale nu au putut fi rezolvate.";
 

@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Impossibile determinare il descrittore file del dispositivo TUN.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Impossibile applicare le impostazioni di rete all'oggetto del tunnel.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Questo tunnel è stato attivato su richiesta, per cui potrebbe essere riattivato automaticamente dal sistema operativo. Puoi disabilitare Attiva su richiesta in questa applicazione modificando la configurazione del tunnel.";
-
 "alertTunnelDNSFailureTitle" = "Risoluzione DNS non riuscita";
 "alertTunnelDNSFailureMessage" = "Uno o più domini di endpoint non può essere risolto.";
 

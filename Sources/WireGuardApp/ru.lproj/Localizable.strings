@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Не удалось определить дескриптор файла TUN устройства.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Невозможно применить сетевые настройки к объекту туннеля.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Включено автоподключение этого туннеля, поэтому этот туннель может быть автоматически переподключен операционной системой. Вы можете отключить автоподключение в этом приложении, отредактировав конфигурацию туннеля.";
-
 "alertTunnelDNSFailureTitle" = "Ошибка при разрешении DNS";
 "alertTunnelDNSFailureMessage" = "Один или несколько IP-адресов серверов не могут быть разрешены.";
 

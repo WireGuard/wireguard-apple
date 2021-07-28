@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "TUN Dateideskriptor kann nicht ermittelt werden.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Netzwerkeinstellungen können nicht auf Tunnelobjekt angewendet werden.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Dieser Tunnel hat 'Activate on Demand' aktiviert, so dass dieser Tunnel vom Betriebssystem automatisch aktiviert werden kann. Du kannst 'Activate on Demand' in dieser App deaktivieren, indem du die Tunnelkonfiguration änderst.";
-
 "alertTunnelDNSFailureTitle" = "DNS-Auflösungsfehler";
 "alertTunnelDNSFailureMessage" = "Eine oder mehrere Endpunkt-Domains konnten nicht aufgelöst werden.";
 

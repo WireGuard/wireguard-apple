@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Deskriptorja datoteke naprave TUN ni mogoče določiti.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Objektu tunela ni mogoče nastaviti omrežnih nastavitev.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Ta tunel ima omogočeno aktivacijo na zahtevo, tako, da ga operacijski sistem lahko aktivira samodejno. To lahko onemogočite v tej aplikaciji z urejanjem konfiguracije tunela.";
-
 "alertTunnelDNSFailureTitle" = "Napaka pri razrešitvi DNS";
 "alertTunnelDNSFailureMessage" = "Eno ali več domen končnih točk ni bilo mogoče razrešiti.";
 

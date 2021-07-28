@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "TUN デバイスのファイルディスクリプタを特定できません";
 "alertTunnelActivationSetNetworkSettingsMessage" = "トンネルオブジェクトにネットワーク設定を適用できません";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " このトンネルは「オンデマンド有効化」が有効なため、OSによって自動的に有効化が行われます。このアプリのトンネル設定から「オンデマンド有効化」をオフにできます。";
-
 "alertTunnelDNSFailureTitle" = "DNSによる名前解決失敗";
 "alertTunnelDNSFailureMessage" = "エンドポイントのドメイン名が解決できませんでした";
 

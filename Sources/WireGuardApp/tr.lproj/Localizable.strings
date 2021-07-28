@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "TUN cihaz dosyası tanımlayıcısı belirlenemiyor.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Tünel nesnesine ağ ayarları uygulanamıyor.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Bu tünelde İsteğe Bağlı Etkinleştirme özelliği etkinleştirilmiştir, bu nedenle bu tünel işletim sistemi tarafından otomatik olarak yeniden etkinleştirilebilir. Tünel yapılandırmasını düzenleyerek bu uygulamada İsteğe Bağlı Etkinleştir’i kapatabilirsiniz.";
-
 "alertTunnelDNSFailureTitle" = "DNS çözümleme hatası";
 "alertTunnelDNSFailureMessage" = "Bir veya daha fazla uç nokta alanı çözülemedi.";
 

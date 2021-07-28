@@ -368,7 +368,6 @@
 "macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ and ‘MTU’.";
 "alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
 "alertUnableToWriteLogMessage" = "Unable to write logs to file";
-"alertTunnelActivationFailureOnDemandAddendum" = " This tunnel has Activate On Demand enabled, so this tunnel might be re-activated automatically by the OS. You may turn off Activate On Demand in this app by editing the tunnel configuration.";
 "settingsExportZipButtonTitle" = "Export zip archive";
 "macViewPrivateData" = "view tunnel private keys";
 "macAppExitingWithActiveTunnelInfo" = "The tunnel will remain active after exiting. You may disable it by reopening this application or through the Network panel in System Preferences.";

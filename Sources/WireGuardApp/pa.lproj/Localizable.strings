@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "TUN ਡਿਵਾਈਸ ਫ਼ਾਇਲ ਵਰਣਨ ਪਤਾ ਲਗਾਉਣ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
 "alertTunnelActivationSetNetworkSettingsMessage" = "ਨੈੱਟਵਰਕ ਸੈਟਿੰਗਾਂ ਟਨਲ ਆਬਜੈਕਟ ਉੱਤੇ ਲਾਗੂ ਕਰਨ ਲਈ ਅਸਮਰੱਥ ਹੈ।";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " ਇਹ ਟਨਲ ਲਈ ਲੋੜ ਮਤੁਾਬਕ ਸਰਗਰਮ ਕਰਨ ਲਈ ਸਮਰੱਥ ਕੀਤਾ ਹੈ, ਇਸਕਰਕੇ ਇਹ ਟਨਲ ਨੂੰ ਓਪਰੇਟਿੰਗ ਸਿਸਟਮ ਵਲੋਂ ਆਪਣੇ-ਆਪ ਹੀ ਮੁੜ-ਸਰਗਰਮ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ। ਤੁਸੀਂ ਟਨਲ ਸੰਰਚਨਾ ਨੂੰ ਸੋਧ ਕੇ ਇਸ ਐਪ ਵਿੱਚ ਲੋੜ ਮੁਤਾਬਕ ਸਰਗਰਮ ਨੂੰ ਬੰਦ ਕਰ ਸਕਦੇ ਹੋ।";
-
 "alertTunnelDNSFailureTitle" = "DNS ਹੱਲ ਕਰਨ ਲਈ ਅਸਫ਼ਲ ਹੈ";
 "alertTunnelDNSFailureMessage" = "ਇੱਕ ਜਾਂ ਵੱਧ ਐਂਡ-ਪੁਆਇੰਟ ਡੋਮੇਨ ਹੱਲ ਨਹੀਂ ਕੀਤੀਆਂ ਜਾ ਸਕੀਆਂ।";
 

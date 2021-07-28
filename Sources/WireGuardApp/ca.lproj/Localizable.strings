@@ -148,7 +148,6 @@
 "alertInvalidInterfaceTitle" = "Invalid interface";
 "tunnelSectionTitleStatus" = "Status";
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "Delete";
-"alertTunnelActivationFailureOnDemandAddendum" = " This tunnel has Activate On Demand enabled, so this tunnel might be re-activated automatically by the OS. You may turn off Activate On Demand in this app by editing the tunnel configuration.";
 "alertTunnelActivationFailureTitle" = "Activation failure";
 "macLogButtonTitleClose" = "Close";
 "tunnelOnDemandSSIDViewTitle" = "SSIDs";

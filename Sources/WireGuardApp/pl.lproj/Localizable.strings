@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Nie można określić opisu urządzenia TUN.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Nie można zastosować ustawień sieci do tunelu.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = "Ten tunel ma włączoną aktywację na żądanie, więc ten tunel może być ponownie aktywowany automatycznie przez system operacyjny. Możesz wyłączyć aktywację na żądanie poprzez edycję konfiguracji tunelu.";
-
 "alertTunnelDNSFailureTitle" = "Nieudane rozpoznanie DNS";
 "alertTunnelDNSFailureMessage" = "Jedna lub więcej domen nie może zostać odnalezionych.";
 

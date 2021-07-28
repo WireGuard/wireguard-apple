@@ -255,8 +255,6 @@
 "alertTunnelActivationFileDescriptorFailureMessage" = "Impossible de déterminer le descripteur de fichier TUN.";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Impossible d'appliquer les paramètres réseau à l'objet tunnel.";
 
-"alertTunnelActivationFailureOnDemandAddendum" = " Ce tunnel a été activé à la demande, donc ce tunnel pourrait être réactivé automatiquement par l'OS. Vous pouvez désactiver l'activation à la demande dans cette application en modifiant la configuration du tunnel.";
-
 "alertTunnelDNSFailureTitle" = "Échec de la résolution DNS";
 "alertTunnelDNSFailureMessage" = "Un ou plusieurs domaines de terminaison n'ont pas pu être résolus.";
 
