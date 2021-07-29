@@ -49,7 +49,9 @@ class EditableKeyValueRow: NSView {
         set(value) { valueImageView?.image = value }
     }
 
-    var observationToken: AnyObject?
+    var statusObservationToken: AnyObject?
+    var isOnDemandEnabledObservationToken: AnyObject?
+    var hasOnDemandRulesObservationToken: AnyObject?
 
     override var intrinsicContentSize: NSSize {
         let height = max(keyLabel.intrinsicContentSize.height, valueLabel.intrinsicContentSize.height)
@@ -108,7 +110,9 @@ class EditableKeyValueRow: NSView {
         key = ""
         value = ""
         isKeyInBold = false
-        observationToken = nil
+        statusObservationToken = nil
+        isOnDemandEnabledObservationToken = nil
+        hasOnDemandRulesObservationToken = nil
     }
 }
 

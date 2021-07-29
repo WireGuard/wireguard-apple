@@ -58,6 +58,8 @@
 
 "tunnelStatusAddendumOnDemand" = " (On Demand)";
 "tunnelStatusOnDemandDisabled" = "On Demand Disabled";
+"tunnelStatusAddendumOnDemandEnabled" = ", On Demand Enabled";
+"tunnelStatusAddendumOnDemandDisabled" = ", On Demand Disabled";
 
 "macToggleStatusButtonActivate" = "Activate";
 "macToggleStatusButtonActivating" = "Activating…";

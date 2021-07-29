@@ -422,13 +422,16 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
     func statusCell() -> NSView {
         let cell: KeyValueImageRow = tableView.dequeueReusableCell()
         cell.key = tr(format: "macFieldKey (%@)", tr("tunnelInterfaceStatus"))
-        cell.value = TunnelDetailTableViewController.localizedStatusDescription(forStatus: tunnel.status)
-        cell.valueImage = TunnelDetailTableViewController.image(forStatus: tunnel.status)
-        cell.observationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+        cell.value = TunnelDetailTableViewController.localizedStatusDescription(for: tunnel)
+        cell.valueImage = TunnelDetailTableViewController.image(for: tunnel)
+        let changeHandler: (TunnelContainer, Any) -> Void = { [weak cell] tunnel, _ in
             guard let cell = cell else { return }
-            cell.value = TunnelDetailTableViewController.localizedStatusDescription(forStatus: tunnel.status)
-            cell.valueImage = TunnelDetailTableViewController.image(forStatus: tunnel.status)
+            cell.value = TunnelDetailTableViewController.localizedStatusDescription(for: tunnel)
+            cell.valueImage = TunnelDetailTableViewController.image(for: tunnel)
         }
+        cell.statusObservationToken = tunnel.observe(\.status, changeHandler: changeHandler)
+        cell.isOnDemandEnabledObservationToken = tunnel.observe(\.isActivateOnDemandEnabled, changeHandler: changeHandler)
+        cell.hasOnDemandRulesObservationToken = tunnel.observe(\.hasOnDemandRules, changeHandler: changeHandler)
         return cell
     }
 
@@ -448,34 +451,49 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         return cell
     }
 
-    private static func localizedStatusDescription(forStatus status: TunnelStatus) -> String {
+    private static func localizedStatusDescription(for tunnel: TunnelContainer) -> String {
+        let status = tunnel.status
+        let isOnDemandEngaged = tunnel.isActivateOnDemandEnabled
+
+        var text: String
         switch status {
         case .inactive:
-            return tr("tunnelStatusInactive")
+            text = tr("tunnelStatusInactive")
         case .activating:
-            return tr("tunnelStatusActivating")
+            text = tr("tunnelStatusActivating")
         case .active:
-            return tr("tunnelStatusActive")
+            text = tr("tunnelStatusActive")
         case .deactivating:
-            return tr("tunnelStatusDeactivating")
+            text = tr("tunnelStatusDeactivating")
         case .reasserting:
-            return tr("tunnelStatusReasserting")
+            text = tr("tunnelStatusReasserting")
         case .restarting:
-            return tr("tunnelStatusRestarting")
+            text = tr("tunnelStatusRestarting")
         case .waiting:
-            return tr("tunnelStatusWaiting")
+            text = tr("tunnelStatusWaiting")
         }
+
+        if tunnel.hasOnDemandRules {
+            text += isOnDemandEngaged ?
+                tr("tunnelStatusAddendumOnDemandEnabled") : tr("tunnelStatusAddendumOnDemandDisabled")
+        }
+
+        return text
     }
 
-    private static func image(forStatus status: TunnelStatus?) -> NSImage? {
-        guard let status = status else { return nil }
-        switch status {
+    private static func image(for tunnel: TunnelContainer?) -> NSImage? {
+        guard let tunnel = tunnel else { return nil }
+        switch tunnel.status {
         case .active, .restarting, .reasserting:
             return NSImage(named: NSImage.statusAvailableName)
         case .activating, .waiting, .deactivating:
             return NSImage(named: NSImage.statusPartiallyAvailableName)
         case .inactive:
-            return NSImage(named: NSImage.statusNoneName)
+            if tunnel.isActivateOnDemandEnabled {
+                return NSImage(named: NSImage.Name.statusOnDemandEnabled)
+            } else {
+                return NSImage(named: NSImage.statusNoneName)
+            }
         }
     }
 
