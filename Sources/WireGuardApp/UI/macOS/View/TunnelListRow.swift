@@ -12,9 +12,12 @@ class TunnelListRow: NSView {
                 self?.nameLabel.stringValue = tunnel.name
             }
             // Bind to the tunnel's status
-            statusImageView.image = TunnelListRow.image(for: tunnel?.status)
+            statusImageView.image = TunnelListRow.image(for: tunnel)
             statusObservationToken = tunnel?.observe(\TunnelContainer.status) { [weak self] tunnel, _ in
-                self?.statusImageView.image = TunnelListRow.image(for: tunnel.status)
+                self?.statusImageView.image = TunnelListRow.image(for: tunnel)
+            }
+            isOnDemandEnabledObservationToken = tunnel?.observe(\TunnelContainer.isActivateOnDemandEnabled) { [weak self] tunnel, _ in
+                self?.statusImageView.image = TunnelListRow.image(for: tunnel)
             }
         }
     }
@@ -33,6 +36,7 @@ class TunnelListRow: NSView {
 
     private var statusObservationToken: AnyObject?
     private var nameObservationToken: AnyObject?
+    private var isOnDemandEnabledObservationToken: AnyObject?
 
     init() {
         super.init(frame: CGRect.zero)
@@ -56,15 +60,19 @@ class TunnelListRow: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    static func image(for status: TunnelStatus?) -> NSImage? {
-        guard let status = status else { return nil }
-        switch status {
+    static func image(for tunnel: TunnelContainer?) -> NSImage? {
+        guard let tunnel = tunnel else { return nil }
+        switch tunnel.status {
         case .active, .restarting, .reasserting:
             return NSImage(named: NSImage.statusAvailableName)
         case .activating, .waiting, .deactivating:
             return NSImage(named: NSImage.statusPartiallyAvailableName)
         case .inactive:
-            return NSImage(named: NSImage.statusNoneName)
+            if tunnel.isActivateOnDemandEnabled {
+                return NSImage(named: NSImage.Name.statusOnDemandEnabled)
+            } else {
+                return NSImage(named: NSImage.statusNoneName)
+            }
         }
     }
 
@@ -72,4 +80,8 @@ class TunnelListRow: NSView {
         nameLabel.stringValue = ""
         statusImageView.image = nil
     }
+}
+
+extension NSImage.Name {
+    static let statusOnDemandEnabled = NSImage.Name("StatusCircleYellow")
 }
