@@ -144,10 +144,20 @@ class StatusMenu: NSMenu {
 
     @objc func tunnelClicked(sender: AnyObject) {
         guard let tunnelMenuItem = sender as? TunnelMenuItem else { return }
-        if tunnelMenuItem.state == .off {
-            tunnelsManager.startActivation(of: tunnelMenuItem.tunnel)
+        let tunnel = tunnelMenuItem.tunnel
+        if tunnel.hasOnDemandRules {
+            let turnOn = !tunnel.isActivateOnDemandEnabled
+            tunnelsManager.setOnDemandEnabled(turnOn, on: tunnel) { error in
+                if error == nil && !turnOn {
+                    self.tunnelsManager.startDeactivation(of: tunnel)
+                }
+            }
         } else {
-            tunnelsManager.startDeactivation(of: tunnelMenuItem.tunnel)
+            if tunnel.status == .inactive {
+                tunnelsManager.startActivation(of: tunnel)
+            } else if tunnel.status == .active {
+                tunnelsManager.startDeactivation(of: tunnel)
+            }
         }
     }
 
@@ -291,6 +301,7 @@ class TunnelMenuItem: NSMenuItem {
 
     private var statusObservationToken: AnyObject?
     private var nameObservationToken: AnyObject?
+    private var isOnDemandEnabledObservationToken: AnyObject?
 
     init(tunnel: TunnelContainer, action selector: Selector?) {
         self.tunnel = tunnel
@@ -303,7 +314,12 @@ class TunnelMenuItem: NSMenuItem {
         let nameObservationToken = tunnel.observe(\TunnelContainer.name) { [weak self] _, _ in
             self?.updateTitle()
         }
+        let isOnDemandEnabledObservationToken = tunnel.observe(\.isActivateOnDemandEnabled) { [weak self] _, _ in
+            self?.updateTitle()
+            self?.updateStatus()
+        }
         self.statusObservationToken = statusObservationToken
+        self.isOnDemandEnabledObservationToken = isOnDemandEnabledObservationToken
         self.nameObservationToken = nameObservationToken
     }
 
@@ -312,12 +328,19 @@ class TunnelMenuItem: NSMenuItem {
     }
 
     func updateTitle() {
-        title = tunnel.name
+        if tunnel.isActivateOnDemandEnabled {
+            title = tunnel.name + " (On-Demand)"
+        } else {
+            title = tunnel.name
+        }
     }
 
     func updateStatus() {
-        let shouldShowCheckmark = (tunnel.status != .inactive && tunnel.status != .deactivating)
-        state = shouldShowCheckmark ? .on : .off
+        if tunnel.isActivateOnDemandEnabled {
+            state = (tunnel.status == .inactive || tunnel.status == .deactivating) ? .mixed : .on
+        } else {
+            state = (tunnel.status == .inactive || tunnel.status == .deactivating) ? .off : .on
+        }
     }
 }
 
