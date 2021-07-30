@@ -68,6 +68,9 @@
 "macToggleStatusButtonReasserting" = "Reactivating…";
 "macToggleStatusButtonRestarting" = "Restarting…";
 "macToggleStatusButtonWaiting" = "Waiting…";
+"macToggleStatusButtonEnableOnDemand" = "Enable On-Demand";
+"macToggleStatusButtonDisableOnDemand" = "Disable On-Demand";
+"macToggleStatusButtonDisableOnDemandDeactivate" = "Disable On-Demand and Deactivate";
 
 "tunnelSectionTitleInterface" = "Interface";
 

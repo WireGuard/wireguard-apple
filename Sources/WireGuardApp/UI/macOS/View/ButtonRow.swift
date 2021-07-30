@@ -28,7 +28,9 @@ class ButtonRow: NSView {
     }
 
     var onButtonClicked: (() -> Void)?
-    var observationToken: AnyObject?
+    var statusObservationToken: AnyObject?
+    var isOnDemandEnabledObservationToken: AnyObject?
+    var hasOnDemandRulesObservationToken: AnyObject?
 
     override var intrinsicContentSize: NSSize {
         return NSSize(width: NSView.noIntrinsicMetric, height: button.intrinsicContentSize.height)
@@ -62,6 +64,8 @@ class ButtonRow: NSView {
         buttonTitle = ""
         buttonToolTip = ""
         onButtonClicked = nil
-        observationToken = nil
+        statusObservationToken = nil
+        isOnDemandEnabledObservationToken = nil
+        hasOnDemandRulesObservationToken = nil
     }
 }

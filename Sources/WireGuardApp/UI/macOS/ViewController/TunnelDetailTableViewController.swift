@@ -216,10 +216,19 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     @objc func handleToggleActiveStatusAction() {
-        if tunnel.status == .inactive {
-            tunnelsManager.startActivation(of: tunnel)
-        } else if tunnel.status == .active {
-            tunnelsManager.startDeactivation(of: tunnel)
+        if self.tunnel.hasOnDemandRules {
+            let turnOn = !self.tunnel.isActivateOnDemandEnabled
+            self.tunnelsManager.setOnDemandEnabled(turnOn, on: self.tunnel) { error in
+                if error == nil && !turnOn {
+                    self.tunnelsManager.startDeactivation(of: self.tunnel)
+                }
+            }
+        } else {
+            if tunnel.status == .inactive {
+                tunnelsManager.startActivation(of: tunnel)
+            } else if tunnel.status == .active {
+                tunnelsManager.startDeactivation(of: tunnel)
+            }
         }
     }
 
@@ -437,17 +446,20 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
 
     func toggleStatusCell() -> NSView {
         let cell: ButtonRow = tableView.dequeueReusableCell()
-        cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(forStatus: tunnel.status)
-        cell.isButtonEnabled = (tunnel.status == .active || tunnel.status == .inactive)
+        cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(for: tunnel)
+        cell.isButtonEnabled = (tunnel.hasOnDemandRules || tunnel.status == .active || tunnel.status == .inactive)
         cell.buttonToolTip = tr("macToolTipToggleStatus")
         cell.onButtonClicked = { [weak self] in
             self?.handleToggleActiveStatusAction()
         }
-        cell.observationToken = tunnel.observe(\.status) { [weak cell] tunnel, _ in
+        let changeHandler: (TunnelContainer, Any) -> Void = { [weak cell] tunnel, _ in
             guard let cell = cell else { return }
-            cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(forStatus: tunnel.status)
-            cell.isButtonEnabled = (tunnel.status == .active || tunnel.status == .inactive)
+            cell.buttonTitle = TunnelDetailTableViewController.localizedToggleStatusActionText(for: tunnel)
+            cell.isButtonEnabled = (tunnel.hasOnDemandRules || tunnel.status == .active || tunnel.status == .inactive)
         }
+        cell.statusObservationToken = tunnel.observe(\.status, changeHandler: changeHandler)
+        cell.isOnDemandEnabledObservationToken = tunnel.observe(\.isActivateOnDemandEnabled, changeHandler: changeHandler)
+        cell.hasOnDemandRulesObservationToken = tunnel.observe(\.hasOnDemandRules, changeHandler: changeHandler)
         return cell
     }
 
@@ -497,22 +509,35 @@ extension TunnelDetailTableViewController: NSTableViewDelegate {
         }
     }
 
-    private static func localizedToggleStatusActionText(forStatus status: TunnelStatus) -> String {
-        switch status {
-        case .waiting:
-            return tr("macToggleStatusButtonWaiting")
-        case .inactive:
-            return tr("macToggleStatusButtonActivate")
-        case .activating:
-            return tr("macToggleStatusButtonActivating")
-        case .active:
-            return tr("macToggleStatusButtonDeactivate")
-        case .deactivating:
-            return tr("macToggleStatusButtonDeactivating")
-        case .reasserting:
-            return tr("macToggleStatusButtonReasserting")
-        case .restarting:
-            return tr("macToggleStatusButtonRestarting")
+    private static func localizedToggleStatusActionText(for tunnel: TunnelContainer) -> String {
+        if tunnel.hasOnDemandRules {
+            let turnOn = !tunnel.isActivateOnDemandEnabled
+            if turnOn {
+                return tr("macToggleStatusButtonEnableOnDemand")
+            } else {
+                if tunnel.status == .active {
+                    return tr("macToggleStatusButtonDisableOnDemandDeactivate")
+                } else {
+                    return tr("macToggleStatusButtonDisableOnDemand")
+                }
+            }
+        } else {
+            switch tunnel.status {
+            case .waiting:
+                return tr("macToggleStatusButtonWaiting")
+            case .inactive:
+                return tr("macToggleStatusButtonActivate")
+            case .activating:
+                return tr("macToggleStatusButtonActivating")
+            case .active:
+                return tr("macToggleStatusButtonDeactivate")
+            case .deactivating:
+                return tr("macToggleStatusButtonDeactivating")
+            case .reasserting:
+                return tr("macToggleStatusButtonReasserting")
+            case .restarting:
+                return tr("macToggleStatusButtonRestarting")
+            }
         }
     }
 }
