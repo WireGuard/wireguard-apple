@@ -42,7 +42,7 @@ extension ActivateOnDemandOption {
             }
         }
         tunnelProviderManager.onDemandRules = rules
-        tunnelProviderManager.isOnDemandEnabled = self != .off
+        tunnelProviderManager.isOnDemandEnabled = false
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {
