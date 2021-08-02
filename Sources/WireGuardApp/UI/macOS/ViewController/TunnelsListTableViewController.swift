@@ -3,7 +3,7 @@
 
 import Cocoa
 
-protocol TunnelsListTableViewControllerDelegate: class {
+protocol TunnelsListTableViewControllerDelegate: AnyObject {
     func tunnelsSelected(tunnelIndices: [Int])
     func tunnelsListEmpty()
 }

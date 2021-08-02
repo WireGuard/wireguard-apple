@@ -3,7 +3,7 @@
 
 import Cocoa
 
-protocol TunnelEditViewControllerDelegate: class {
+protocol TunnelEditViewControllerDelegate: AnyObject {
     func tunnelSaved(tunnel: TunnelContainer)
     func tunnelEditingCancelled()
 }

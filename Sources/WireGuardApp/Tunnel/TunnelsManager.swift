@@ -5,14 +5,14 @@ import Foundation
 import NetworkExtension
 import os.log
 
-protocol TunnelsManagerListDelegate: class {
+protocol TunnelsManagerListDelegate: AnyObject {
     func tunnelAdded(at index: Int)
     func tunnelModified(at index: Int)
     func tunnelMoved(from oldIndex: Int, to newIndex: Int)
     func tunnelRemoved(at index: Int, tunnel: TunnelContainer)
 }
 
-protocol TunnelsManagerActivationDelegate: class {
+protocol TunnelsManagerActivationDelegate: AnyObject {
     func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) // startTunnel wasn't called or failed
     func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) // startTunnel succeeded
     func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) // status didn't change to connected

@@ -3,7 +3,7 @@
 
 import Cocoa
 
-protocol StatusMenuWindowDelegate: class {
+protocol StatusMenuWindowDelegate: AnyObject {
     func showManageTunnelsWindow(completion: ((NSWindow?) -> Void)?)
 }
 

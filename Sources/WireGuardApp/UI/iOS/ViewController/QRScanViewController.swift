@@ -4,7 +4,7 @@
 import AVFoundation
 import UIKit
 
-protocol QRScanViewControllerDelegate: class {
+protocol QRScanViewControllerDelegate: AnyObject {
     func addScannedQRCode(tunnelConfiguration: TunnelConfiguration, qrScanViewController: QRScanViewController, completionHandler: (() -> Void)?)
 }
 
