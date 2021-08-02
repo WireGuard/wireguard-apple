@@ -15,7 +15,7 @@ extension UITableView {
     }
 
     func dequeueReusableCell<T: UITableViewCell>(for indexPath: IndexPath) -> T {
-        //swiftlint:disable:next force_cast
+        // swiftlint:disable:next force_cast
         return dequeueReusableCell(withIdentifier: T.reuseIdentifier, for: indexPath) as! T
     }
 }

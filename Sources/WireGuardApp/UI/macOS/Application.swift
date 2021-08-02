@@ -5,7 +5,7 @@ import Cocoa
 
 class Application: NSApplication {
 
-    private var appDelegate: AppDelegate? //swiftlint:disable:this weak_delegate
+    private var appDelegate: AppDelegate? // swiftlint:disable:this weak_delegate
 
     override init() {
         super.init()

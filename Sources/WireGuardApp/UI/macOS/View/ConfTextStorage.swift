@@ -16,7 +16,7 @@ class ConfTextStorage: NSTextStorage {
     private(set) var hasError = false
     private(set) var privateKeyString: String?
 
-    private(set) var hasOnePeer: Bool = false
+    private(set) var hasOnePeer = false
     private(set) var lastOnePeerAllowedIPs = [String]()
     private(set) var lastOnePeerDNSServers = [String]()
     private(set) var lastOnePeerHasPublicKey = false

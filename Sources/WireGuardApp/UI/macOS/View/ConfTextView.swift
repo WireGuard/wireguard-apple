@@ -7,7 +7,7 @@ class ConfTextView: NSTextView {
 
     private let confTextStorage = ConfTextStorage()
 
-    @objc dynamic var hasError: Bool = false
+    @objc dynamic var hasError = false
     @objc dynamic var privateKeyString: String?
     @objc dynamic var singlePeerAllowedIPs: [String]?
 

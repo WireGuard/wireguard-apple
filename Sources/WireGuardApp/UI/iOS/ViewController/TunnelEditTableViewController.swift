@@ -318,7 +318,7 @@ extension TunnelEditTableViewController {
                 let removedSectionIndices = self.deletePeer(peer: peerData)
                 let shouldShowExcludePrivateIPs = (self.tunnelViewModel.peersData.count == 1 && self.tunnelViewModel.peersData[0].shouldAllowExcludePrivateIPsControl)
 
-                //swiftlint:disable:next trailing_closure
+                // swiftlint:disable:next trailing_closure
                 tableView.performBatchUpdates({
                     self.tableView.deleteSections(removedSectionIndices, with: .fade)
                     if shouldShowExcludePrivateIPs {

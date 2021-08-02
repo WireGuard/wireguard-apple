@@ -236,7 +236,7 @@ class TunnelsManager {
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             if let error = error {
-                //TODO: the passwordReference for the old one has already been removed at this point and we can't easily roll back!
+                // TODO: the passwordReference for the old one has already been removed at this point and we can't easily roll back!
                 wg_log(.error, message: "Modify: Saving configuration failed: \(error)")
                 completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
                 return
