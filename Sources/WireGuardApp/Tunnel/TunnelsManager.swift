@@ -344,7 +344,8 @@ class TunnelsManager {
 
     func setOnDemandEnabled(_ isOnDemandEnabled: Bool, on tunnel: TunnelContainer, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelProviderManager = tunnel.tunnelProvider
-        guard tunnelProviderManager.isOnDemandEnabled != isOnDemandEnabled else {
+        let isCurrentlyEnabled = (tunnelProviderManager.isOnDemandEnabled && tunnelProviderManager.isEnabled)
+        guard isCurrentlyEnabled != isOnDemandEnabled else {
             completionHandler(nil)
             return
         }
@@ -571,7 +572,7 @@ class TunnelContainer: NSObject {
 
     fileprivate var tunnelProvider: NETunnelProviderManager {
         didSet {
-            isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled
+            isActivateOnDemandEnabled = tunnelProvider.isOnDemandEnabled && tunnelProvider.isEnabled
             hasOnDemandRules = !(tunnelProvider.onDemandRules ?? []).isEmpty
         }
     }
@@ -594,7 +595,7 @@ class TunnelContainer: NSObject {
         name = tunnel.localizedDescription ?? "Unnamed"
         let status = TunnelStatus(from: tunnel.connection.status)
         self.status = status
-        isActivateOnDemandEnabled = tunnel.isOnDemandEnabled
+        isActivateOnDemandEnabled = tunnel.isOnDemandEnabled && tunnel.isEnabled
         hasOnDemandRules = !(tunnel.onDemandRules ?? []).isEmpty
         tunnelProvider = tunnel
         super.init()
