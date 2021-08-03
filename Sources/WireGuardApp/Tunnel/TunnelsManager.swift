@@ -350,6 +350,7 @@ class TunnelsManager {
         }
         let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && isOnDemandEnabled
         tunnelProviderManager.isOnDemandEnabled = isOnDemandEnabled
+        tunnelProviderManager.isEnabled = true
         tunnelProviderManager.saveToPreferences { error in
             if let error = error {
                 wg_log(.error, message: "Modify On-Demand: Saving configuration failed: \(error)")
@@ -367,20 +368,7 @@ class TunnelsManager {
                         completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
                         return
                     }
-                    if !tunnelProviderManager.isEnabled {
-                        // In case the tunnel has gotten disabled, re-enable and save it.
-                        wg_log(.debug, staticMessage: "Modify On-Demand: Tunnel is disabled. Re-enabling and saving")
-                        tunnelProviderManager.isEnabled = true
-                        tunnelProviderManager.saveToPreferences { error in
-                            if let error = error {
-                                wg_log(.error, message: "Modify On-Demand: Error saving tunnel after re-enabling: \(error)")
-                                completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
-                                return
-                            }
-                        }
-                    } else {
-                        completionHandler(nil)
-                    }
+                    completionHandler(nil)
                 }
             } else {
                 completionHandler(nil)
