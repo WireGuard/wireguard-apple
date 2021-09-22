@@ -344,6 +344,7 @@ extension TunnelsListTableViewController: UITableViewDelegate {
         }
         guard let tunnelsManager = tunnelsManager else { return }
         let tunnel = tunnelsManager.tunnel(at: indexPath.row)
+        guard tunnel.tunnelConfiguration != nil else { return }
         showTunnelDetail(for: tunnel, animated: true)
     }
 
