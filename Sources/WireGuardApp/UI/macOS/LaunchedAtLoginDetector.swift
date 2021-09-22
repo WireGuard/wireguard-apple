@@ -4,25 +4,16 @@
 import Cocoa
 
 class LaunchedAtLoginDetector {
-    static let launchCode = "LaunchedByWireGuardLoginItemHelper"
-
     static func isLaunchedAtLogin(openAppleEvent: NSAppleEventDescriptor) -> Bool {
-        guard isOpenEvent(openAppleEvent) else { return false }
-        guard let propData = openAppleEvent.paramDescriptor(forKeyword: keyAEPropData) else { return false }
-        return propData.stringValue == launchCode
+        let now = clock_gettime_nsec_np(CLOCK_UPTIME_RAW)
+        guard openAppleEvent.eventClass == kCoreEventClass && openAppleEvent.eventID == kAEOpenApplication else { return false }
+        guard let url = FileManager.loginHelperTimestampURL else { return false }
+        guard let data = try? Data(contentsOf: url) else { return false }
+        _ = FileManager.deleteFile(at: url)
+        guard data.count == 8 else { return false }
+        let then = data.withUnsafeBytes { ptr in
+            ptr.load(as: UInt64.self)
+        }
+        return now - then <= 5000000000
     }
-
-    static func isReopenedByLoginItemHelper(reopenAppleEvent: NSAppleEventDescriptor) -> Bool {
-        guard isReopenEvent(reopenAppleEvent) else { return false }
-        guard let propData = reopenAppleEvent.paramDescriptor(forKeyword: keyAEPropData) else { return false }
-        return propData.stringValue == launchCode
-    }
-}
-
-private func isOpenEvent(_ event: NSAppleEventDescriptor) -> Bool {
-    return event.eventClass == kCoreEventClass && event.eventID == kAEOpenApplication
-}
-
-private func isReopenEvent(_ event: NSAppleEventDescriptor) -> Bool {
-    return event.eventClass == kCoreEventClass && event.eventID == kAEReopenApplication
 }

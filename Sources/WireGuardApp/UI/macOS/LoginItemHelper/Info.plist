@@ -32,5 +32,7 @@
 	<true/>
 	<key>com.wireguard.macos.app_id</key>
 	<string>$(APP_ID_MACOS)</string>
+	<key>com.wireguard.macos.app_group_id</key>
+	<string>$(DEVELOPMENT_TEAM).group.$(APP_ID_MACOS)</string>
 </dict>
 </plist>
