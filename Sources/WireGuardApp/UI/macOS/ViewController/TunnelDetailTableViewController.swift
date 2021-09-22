@@ -216,9 +216,9 @@ class TunnelDetailTableViewController: NSViewController {
     }
 
     @objc func handleToggleActiveStatusAction() {
-        if self.tunnel.hasOnDemandRules {
-            let turnOn = !self.tunnel.isActivateOnDemandEnabled
-            self.tunnelsManager.setOnDemandEnabled(turnOn, on: self.tunnel) { error in
+        if tunnel.hasOnDemandRules {
+            let turnOn = !tunnel.isActivateOnDemandEnabled
+            tunnelsManager.setOnDemandEnabled(turnOn, on: tunnel) { error in
                 if error == nil && !turnOn {
                     self.tunnelsManager.startDeactivation(of: self.tunnel)
                 }

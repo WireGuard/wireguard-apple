@@ -232,10 +232,19 @@ class TunnelsListTableViewController: NSViewController {
         let tunnelIndex = tableView.clickedRow
         guard tunnelIndex >= 0 && tunnelIndex < tunnelsManager.numberOfTunnels() else { return }
         let tunnel = tunnelsManager.tunnel(at: tunnelIndex)
-        if tunnel.status == .inactive {
-            tunnelsManager.startActivation(of: tunnel)
-        } else if tunnel.status == .active {
-            tunnelsManager.startDeactivation(of: tunnel)
+        if tunnel.hasOnDemandRules {
+            let turnOn = !tunnel.isActivateOnDemandEnabled
+            tunnelsManager.setOnDemandEnabled(turnOn, on: tunnel) { error in
+                if error == nil && !turnOn {
+                    self.tunnelsManager.startDeactivation(of: tunnel)
+                }
+            }
+        } else {
+            if tunnel.status == .inactive {
+                tunnelsManager.startActivation(of: tunnel)
+            } else if tunnel.status == .active {
+                tunnelsManager.startDeactivation(of: tunnel)
+            }
         }
     }
 
