@@ -17,7 +17,7 @@
 "tunnelsListSelectAllButtonTitle" = "Select All";
 "tunnelsListDeleteButtonTitle" = "Delete";
 "tunnelsListSelectedTitle (%d)" = "%d selected";
-"tunnelListCaptionOnDemand" = "On Demand";
+"tunnelListCaptionOnDemand" = "On-Demand";
 
 // Tunnels list menu
 
@@ -56,10 +56,10 @@
 "tunnelStatusRestarting" = "Restarting";
 "tunnelStatusWaiting" = "Waiting";
 
-"tunnelStatusAddendumOnDemand" = " (On Demand)";
-"tunnelStatusOnDemandDisabled" = "On Demand Disabled";
-"tunnelStatusAddendumOnDemandEnabled" = ", On Demand Enabled";
-"tunnelStatusAddendumOnDemandDisabled" = ", On Demand Disabled";
+"tunnelStatusAddendumOnDemand" = " (On-Demand)";
+"tunnelStatusOnDemandDisabled" = "On-Demand Disabled";
+"tunnelStatusAddendumOnDemandEnabled" = ", On-Demand Enabled";
+"tunnelStatusAddendumOnDemandDisabled" = ", On-Demand Disabled";
 
 "macToggleStatusButtonActivate" = "Activate";
 "macToggleStatusButtonActivating" = "Activating…";
@@ -120,7 +120,7 @@
 "tunnelOnDemandAddMessageAddNewSSID" = "Add new";
 "tunnelOnDemandSSIDTextFieldPlaceholder" = "SSID";
 
-"tunnelOnDemandKey" = "On demand";
+"tunnelOnDemandKey" = "On-demand";
 "tunnelOnDemandOptionOff" = "Off";
 "tunnelOnDemandOptionWiFiOnly" = "Wi-Fi only";
 "tunnelOnDemandOptionWiFiOrCellular" = "Wi-Fi or cellular";
