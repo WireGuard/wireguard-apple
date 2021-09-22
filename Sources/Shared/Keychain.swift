@@ -7,8 +7,7 @@ import Security
 class Keychain {
     static func openReference(called ref: Data) -> String? {
         var result: CFTypeRef?
-        let ret = SecItemCopyMatching([kSecClass: kSecClassGenericPassword,
-                                        kSecValuePersistentRef: ref,
+        let ret = SecItemCopyMatching([kSecValuePersistentRef: ref,
                                         kSecReturnData: true] as CFDictionary,
                                        &result)
         if ret != errSecSuccess || result == nil {
@@ -109,8 +108,7 @@ class Keychain {
     }
 
     static func verifyReference(called ref: Data) -> Bool {
-        return SecItemCopyMatching([kSecClass: kSecClassGenericPassword,
-                                    kSecValuePersistentRef: ref] as CFDictionary,
+        return SecItemCopyMatching([kSecValuePersistentRef: ref] as CFDictionary,
                                    nil) != errSecItemNotFound
     }
 }
