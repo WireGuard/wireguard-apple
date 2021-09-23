@@ -72,7 +72,7 @@ extension NETunnelProviderProtocol {
             #error("Unimplemented")
             #endif
             guard passwordReference == nil else { return true }
-            wg_log(.debug, message: "Migrating tunnel configuration '\(name)'")
+            wg_log(.info, message: "Migrating tunnel configuration '\(name)'")
             passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
             return true
         }
@@ -80,6 +80,27 @@ extension NETunnelProviderProtocol {
         if passwordReference != nil && providerConfiguration?["UID"] == nil && verifyConfigurationReference() {
             providerConfiguration = ["UID": getuid()]
             return true
+        }
+        #elseif os(iOS)
+        if #available(iOS 15, *) {
+            /* Update the stored reference from the old iOS 14 one to the canonical iOS 15 one.
+             * The iOS 14 ones are 96 bits, while the iOS 15 ones are 160 bits. We do this so
+             * that we can have fast set exclusion in deleteReferences safely. */
+            if passwordReference != nil && passwordReference!.count == 12 {
+                var result: CFTypeRef?
+                let ret = SecItemCopyMatching([kSecValuePersistentRef: passwordReference!,
+                                               kSecReturnPersistentRef: true] as CFDictionary,
+                                               &result)
+                if ret != errSecSuccess || result == nil {
+                    return false
+                }
+                guard let newReference = result as? Data else { return false }
+                if !newReference.elementsEqual(passwordReference!) {
+                    wg_log(.info, message: "Migrating iOS 14-style keychain reference to iOS 15-style keychain reference for '\(name)'")
+                    passwordReference = newReference
+                    return true
+                }
+            }
         }
         #endif
         return false
