@@ -159,10 +159,6 @@ class TunnelListCell: UITableViewCell {
             statusSwitch.isUserInteractionEnabled = (status == .inactive || status == .active)
         }
 
-        if tunnel.tunnelConfiguration == nil {
-            statusSwitch.isUserInteractionEnabled = false
-            backgroundColor = .systemPink
-        }
     }
 
     private func reset(animated: Bool) {
