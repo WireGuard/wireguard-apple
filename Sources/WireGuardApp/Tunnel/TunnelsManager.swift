@@ -56,19 +56,21 @@ class TunnelsManager {
                     tunnelManager.saveToPreferences { _ in }
                 }
                 #if os(iOS)
-                let verify = true
+                let passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
                 #elseif os(macOS)
-                let verify = proto.providerConfiguration?["UID"] as? uid_t == getuid()
+                let passwordRef: Data?
+                if proto.providerConfiguration?["UID"] as? uid_t == getuid() {
+                    passwordRef = proto.verifyConfigurationReference() ? proto.passwordReference : nil
+                } else {
+                    passwordRef = proto.passwordReference // To handle multiple users in macOS, we skip verifying
+                }
                 #else
                 #error("Unimplemented")
                 #endif
-                if verify && !proto.verifyConfigurationReference() {
-                    wg_log(.error, message: "Unable to verify keychain entry of tunnel: \(tunnelManager.localizedDescription ?? "<unknown>")")
-                }
-                if let ref = proto.passwordReference {
+                if let ref = passwordRef {
                     refs.insert(ref)
                 } else {
-                    wg_log(.error, message: "Removing orphaned tunnel with missing keychain entry: \(tunnelManager.localizedDescription ?? "<unknown>")")
+                    wg_log(.info, message: "Removing orphaned tunnel with non-verifying keychain entry: \(tunnelManager.localizedDescription ?? "<unknown>")")
                     tunnelManager.removeFromPreferences { _ in }
                     tunnelManagers.remove(at: index)
                 }
