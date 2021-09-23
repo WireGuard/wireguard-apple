@@ -14,6 +14,6 @@ class LaunchedAtLoginDetector {
         let then = data.withUnsafeBytes { ptr in
             ptr.load(as: UInt64.self)
         }
-        return now - then <= 5000000000
+        return now - then <= 20000000000
     }
 }
