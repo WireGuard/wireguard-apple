@@ -42,9 +42,7 @@ extension ActivateOnDemandOption {
             }
         }
         tunnelProviderManager.onDemandRules = rules
-        let status = tunnelProviderManager.connection.status
-        let isActive = status == .connected || status == .connecting
-        tunnelProviderManager.isOnDemandEnabled = (rules != nil) && (tunnelProviderManager.isOnDemandEnabled || isActive)
+        tunnelProviderManager.isOnDemandEnabled = (rules != nil) && tunnelProviderManager.isOnDemandEnabled
     }
 
     init(from tunnelProviderManager: NETunnelProviderManager) {

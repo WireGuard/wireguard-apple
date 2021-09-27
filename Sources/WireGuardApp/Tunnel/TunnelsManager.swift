@@ -206,7 +206,10 @@ class TunnelsManager {
         }
     }
 
-    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption, completionHandler: @escaping (TunnelsManagerError?) -> Void) {
+    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
+                onDemandOption: ActivateOnDemandOption,
+                shouldEnsureOnDemandEnabled: Bool = false,
+                completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(TunnelsManagerError.tunnelNameEmpty)
@@ -214,6 +217,20 @@ class TunnelsManager {
         }
 
         let tunnelProviderManager = tunnel.tunnelProvider
+
+        let isIntroducingOnDemandRules = (tunnelProviderManager.onDemandRules ?? []).isEmpty && onDemandOption != .off
+        if isIntroducingOnDemandRules && tunnel.status != .inactive && tunnel.status != .deactivating {
+            tunnel.onDeactivated = { [weak self] in
+                self?.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration,
+                             onDemandOption: onDemandOption, shouldEnsureOnDemandEnabled: true,
+                             completionHandler: completionHandler)
+            }
+            self.startDeactivation(of: tunnel)
+            return
+        } else {
+            tunnel.onDeactivated = nil
+        }
+
         let oldName = tunnelProviderManager.localizedDescription ?? ""
         let isNameChanged = tunnelName != oldName
         if isNameChanged {
@@ -231,10 +248,11 @@ class TunnelsManager {
         }
         tunnelProviderManager.isEnabled = true
 
-        let wasOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-        let isIntroducingOnDemandRules = (tunnelProviderManager.onDemandRules ?? []).isEmpty && onDemandOption != .off
+        let isActivatingOnDemand = !tunnelProviderManager.isOnDemandEnabled && shouldEnsureOnDemandEnabled
         onDemandOption.apply(on: tunnelProviderManager)
-        let isActivatingOnDemand = !wasOnDemandEnabled && tunnelProviderManager.isOnDemandEnabled
+        if shouldEnsureOnDemandEnabled {
+            tunnelProviderManager.isOnDemandEnabled = true
+        }
 
         tunnelProviderManager.saveToPreferences { [weak self] error in
             if let error = error {
@@ -266,11 +284,8 @@ class TunnelsManager {
             if isActivatingOnDemand {
                 // Reload tunnel after saving.
                 // Without this, the tunnel stopes getting updates on the tunnel status from iOS.
-                tunnelProviderManager.loadFromPreferences { [weak self] error in
+                tunnelProviderManager.loadFromPreferences { error in
                     tunnel.isActivateOnDemandEnabled = tunnelProviderManager.isOnDemandEnabled
-                    if isIntroducingOnDemandRules {
-                        self?.startDeactivation(of: tunnel)
-                    }
                     if let error = error {
                         wg_log(.error, message: "Modify: Re-loading after saving configuration failed: \(error)")
                         completionHandler(TunnelsManagerError.systemErrorOnModifyTunnel(systemError: error))
@@ -279,9 +294,6 @@ class TunnelsManager {
                     }
                 }
             } else {
-                if isIntroducingOnDemandRules {
-                    self.startDeactivation(of: tunnel)
-                }
                 completionHandler(nil)
             }
         }
@@ -507,6 +519,11 @@ class TunnelsManager {
                 }
             }
 
+            if session.status == .disconnected {
+                tunnel.onDeactivated?()
+                tunnel.onDeactivated = nil
+            }
+
             if tunnel.status == .restarting && session.status == .disconnected {
                 tunnel.startActivation(activationDelegate: self.activationDelegate)
                 return
@@ -577,6 +594,7 @@ class TunnelContainer: NSObject {
     var activationAttemptId: String?
     var activationTimer: Timer?
     var deactivationTimer: Timer?
+    var onDeactivated: (() -> Void)?
 
     fileprivate var tunnelProvider: NETunnelProviderManager {
         didSet {
