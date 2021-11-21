@@ -1,2 +1,4 @@
 #include "Version.xcconfig"
 #include "Developer.xcconfig"
+
+PATH = ${PATH}:/opt/homebrew/bin
