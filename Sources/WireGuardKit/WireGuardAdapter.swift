@@ -253,35 +253,58 @@ public class WireGuardAdapter {
                 self.packetTunnelProvider?.reasserting = false
             }
 
+            let settingsGenerator: PacketTunnelSettingsGenerator
             do {
-                let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
-                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
-
-                switch self.state {
-                case .started(let handle, _):
-                    let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
-                    self.logEndpointResolutionResults(resolutionResults)
-
-                    wgSetConfig(handle, wgConfig)
-                    #if os(iOS)
-                    wgDisableSomeRoamingForBrokenMobileSemantics(handle)
-                    #endif
-
-                    self.state = .started(handle, settingsGenerator)
-
-                case .temporaryShutdown:
-                    self.state = .temporaryShutdown(settingsGenerator)
-
-                case .stopped:
-                    fatalError()
-                }
-
-                completionHandler(nil)
+                settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
             } catch let error as WireGuardAdapterError {
                 completionHandler(error)
+                return
             } catch {
                 fatalError()
             }
+
+            switch self.state {
+            case .started(let handle, _):
+                do {
+                    try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+                } catch let error as WireGuardAdapterError {
+                    completionHandler(error)
+                    return
+                } catch {
+                    fatalError()
+                }
+
+                let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
+                self.logEndpointResolutionResults(resolutionResults)
+
+                wgSetConfig(handle, wgConfig)
+                #if os(iOS)
+                wgDisableSomeRoamingForBrokenMobileSemantics(handle)
+                #endif
+
+                self.state = .started(handle, settingsGenerator)
+
+            case .temporaryShutdown:
+                // On iOS 15.1 or newer, updating network settings may fail when in airplane mode.
+                // Network path monitor will retry updating settings later when connectivity is
+                // back online.
+                do {
+                    try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+                } catch let error as WireGuardAdapterError {
+                    if case .setNetworkSettings(let systemError) = error {
+                        self.logHandler(.verbose, "Failed to set network settings while offline. Will retry when connectivity is back online. Error: \(systemError.localizedDescription)")
+                    }
+                } catch {
+                    fatalError()
+                }
+
+                self.state = .temporaryShutdown(settingsGenerator)
+
+            case .stopped:
+                fatalError()
+            }
+
+            completionHandler(nil)
         }
     }
 
