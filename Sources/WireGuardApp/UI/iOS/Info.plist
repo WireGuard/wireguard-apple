@@ -2,10 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -64,8 +64,6 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
@@ -74,17 +72,20 @@
 	<string>$(VERSION_NAME)</string>
 	<key>CFBundleVersion</key>
 	<string>$(VERSION_ID)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>Localized</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Localized</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-	</array>
+	<array/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -123,8 +124,6 @@
 			</dict>
 		</dict>
 	</array>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Localized</string>
 	<key>com.wireguard.ios.app_group_id</key>
 	<string>group.$(APP_ID_IOS)</string>
 </dict>
