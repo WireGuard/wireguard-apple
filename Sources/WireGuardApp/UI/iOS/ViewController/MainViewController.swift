@@ -5,7 +5,9 @@ import UIKit
 
 class MainViewController: UISplitViewController {
 
-    var tunnelsManager: TunnelsManager?
+    var tunnelsManager: TunnelsManager? {
+        return (UIApplication.shared.delegate as? AppDelegate)?.tunnelsManager
+    }
     var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
     var tunnelsListVC: TunnelsListTableViewController?
 
@@ -42,28 +44,23 @@ class MainViewController: UISplitViewController {
         // On iPad, always show both masterVC and detailVC, even in portrait mode, like the Settings app
         preferredDisplayMode = .allVisible
 
-        // Create the tunnels manager, and when it's ready, inform tunnelsListVC
-        TunnelsManager.create { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .failure(let error):
-                ErrorPresenter.showErrorAlert(error: error, from: self)
-            case .success(let tunnelsManager):
-                self.tunnelsManager = tunnelsManager
-                self.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
-
-                tunnelsManager.activationDelegate = self
-
-                self.onTunnelsManagerReady?(tunnelsManager)
-                self.onTunnelsManagerReady = nil
-            }
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(handleTunnelsManagerReady(_:)),
+                                               name: AppDelegate.tunnelsManagerReadyNotificationName, object: nil)
     }
 
     func allTunnelNames() -> [String]? {
         guard let tunnelsManager = self.tunnelsManager else { return nil }
         return tunnelsManager.mapTunnels { $0.name }
+    }
+
+    @objc
+    func handleTunnelsManagerReady(_ notification: Notification) {
+        guard let tunnelsManager = self.tunnelsManager else { return }
+
+        self.onTunnelsManagerReady?(tunnelsManager)
+        self.onTunnelsManagerReady = nil
+
+        NotificationCenter.default.removeObserver(self, name: AppDelegate.tunnelsManagerReadyNotificationName, object: nil)
     }
 }
 
