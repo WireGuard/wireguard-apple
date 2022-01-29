@@ -205,6 +205,33 @@
 		6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
 		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
+		A64A79DC27A5411700F15B34 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526E21C23FA10008484E /* Logger.swift */; };
+		A64A79DD27A5411E00F15B34 /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526C21C23F960008484E /* ringlogger.c */; };
+		A64A79DE27A541F500F15B34 /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
+		A64A79E027A5422E00F15B34 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58233BCE2591F842002060A8 /* NotificationToken.swift */; };
+		A64A79E127A5426C00F15B34 /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
+		A64A79E227A5428C00F15B34 /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104F2577E293004F691E /* PrivateKey.swift */; };
+		A64A79E327A5429100F15B34 /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10472577E293004F691E /* PeerConfiguration.swift */; };
+		A64A79E427A542A700F15B34 /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10512577E293004F691E /* IPAddressRange.swift */; };
+		A64A79E527A542C000F15B34 /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
+		A64A79E627A542C700F15B34 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10522577E293004F691E /* Endpoint.swift */; };
+		A64A79E727A542CA00F15B34 /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10482577E293004F691E /* DNSServer.swift */; };
+		A64A79E827A542F800F15B34 /* key.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10572577E293004F691E /* key.c */; };
+		A64A79E927A542FC00F15B34 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10562577E293004F691E /* x25519.c */; };
+		A64A79EA27A5439900F15B34 /* TunnelErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7F7E5E21C7D74B00527607 /* TunnelErrors.swift */; };
+		A64A79EB27A543D400F15B34 /* WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1E821B932F700483816 /* WireGuardAppError.swift */; };
+		A64A79EC27A543ED00F15B34 /* LocalizationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE1765921C90E87002690EA /* LocalizationHelper.swift */; };
+		A64A79ED27A5440E00F15B34 /* TunnelStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541A821C451D100994C13 /* TunnelStatus.swift */; };
+		A64A79EE27A5442000F15B34 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5C5E26220A48D30024272E /* Keychain.swift */; };
+		A64A79EF27A5444600F15B34 /* FileManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5A2B4421AFDE020081EDD8 /* FileManager+Extension.swift */; };
+		A64A79F027A5445F00F15B34 /* RecentTunnelsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F29A9422278518D00DC6A6B /* RecentTunnelsTracker.swift */; };
+		A64A79F127A5447000F15B34 /* NETunnelProviderProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D942194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift */; };
+		A64A79F227A5449300F15B34 /* TunnelConfiguration+WgQuickConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F9696AF21CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift */; };
+		A64A79F327A544A500F15B34 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4541B121CBFAEE00994C13 /* String+ArrayConversion.swift */; };
+		A64A79F427A544BC00F15B34 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
+		A64A79F527A544E800F15B34 /* TunnelConfiguration+UapiConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B707D8321F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift */; };
+		A64A79F627A5450000F15B34 /* WireGuardResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1EA21B937EF00483816 /* WireGuardResult.swift */; };
+		A64A79FE27A58F1800F15B34 /* MockTunnels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1017821C57DE600766195 /* MockTunnels.swift */; };
 		A6B8051C27A44F770088E750 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B8051B27A44F770088E750 /* Intents.framework */; };
 		A6B8051F27A44F770088E750 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B8051E27A44F770088E750 /* IntentHandler.swift */; };
 		A6B8052327A44F770088E750 /* WireGuardIntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A6B8051A27A44F770088E750 /* WireGuardIntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1539,6 +1566,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6B8051F27A44F770088E750 /* IntentHandler.swift in Sources */,
+				A64A79FE27A58F1800F15B34 /* MockTunnels.swift in Sources */,
+				A64A79EF27A5444600F15B34 /* FileManager+Extension.swift in Sources */,
+				A64A79E027A5422E00F15B34 /* NotificationToken.swift in Sources */,
+				A64A79DC27A5411700F15B34 /* Logger.swift in Sources */,
+				A64A79DD27A5411E00F15B34 /* ringlogger.c in Sources */,
+				A64A79F527A544E800F15B34 /* TunnelConfiguration+UapiConfig.swift in Sources */,
+				A64A79E827A542F800F15B34 /* key.c in Sources */,
+				A64A79E127A5426C00F15B34 /* TunnelConfiguration.swift in Sources */,
+				A64A79DE27A541F500F15B34 /* TunnelsManager.swift in Sources */,
+				A64A79ED27A5440E00F15B34 /* TunnelStatus.swift in Sources */,
+				A64A79EB27A543D400F15B34 /* WireGuardAppError.swift in Sources */,
+				A64A79E527A542C000F15B34 /* InterfaceConfiguration.swift in Sources */,
+				A64A79F127A5447000F15B34 /* NETunnelProviderProtocol+Extension.swift in Sources */,
+				A64A79E327A5429100F15B34 /* PeerConfiguration.swift in Sources */,
+				A64A79EE27A5442000F15B34 /* Keychain.swift in Sources */,
+				A64A79F327A544A500F15B34 /* String+ArrayConversion.swift in Sources */,
+				A64A79E227A5428C00F15B34 /* PrivateKey.swift in Sources */,
+				A64A79F427A544BC00F15B34 /* ActivateOnDemandOption.swift in Sources */,
+				A64A79E627A542C700F15B34 /* Endpoint.swift in Sources */,
+				A64A79E927A542FC00F15B34 /* x25519.c in Sources */,
+				A64A79E727A542CA00F15B34 /* DNSServer.swift in Sources */,
+				A64A79E427A542A700F15B34 /* IPAddressRange.swift in Sources */,
+				A64A79EA27A5439900F15B34 /* TunnelErrors.swift in Sources */,
+				A64A79F627A5450000F15B34 /* WireGuardResult.swift in Sources */,
+				A64A79F227A5449300F15B34 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
+				A64A79F027A5445F00F15B34 /* RecentTunnelsTracker.swift in Sources */,
+				A64A79EC27A543ED00F15B34 /* LocalizationHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
