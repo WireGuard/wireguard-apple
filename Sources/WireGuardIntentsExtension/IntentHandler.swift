@@ -5,11 +5,17 @@ import Intents
 
 class IntentHandler: INExtension {
 
-    override func handler(for intent: INIntent) -> Any {
-        // This is the default implementation.  If you want different objects to handle different intents,
-        // you can override this and return the handler you want for that particular intent.
+    override init() {
+        super.init()
+        Logger.configureGlobal(tagged: "INTENTS", withFilePath: FileManager.logFileURL?.path)
+    }
 
-        return self
+    override func handler(for intent: INIntent) -> Any {
+        guard intent is GetPeersIntent else {
+            fatalError("Unhandled intent type: \(intent)")
+        }
+
+        return IntentHandling()
     }
 
 }
