@@ -11,7 +11,7 @@ class IntentHandler: INExtension {
     }
 
     override func handler(for intent: INIntent) -> Any {
-        guard intent is GetPeersIntent else {
+        guard intent is GetPeersIntent || intent is UpdateConfigurationIntent else {
             fatalError("Unhandled intent type: \(intent)")
         }
 

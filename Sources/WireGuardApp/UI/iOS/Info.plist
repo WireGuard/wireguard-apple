@@ -82,6 +82,10 @@
 	<string>Localized</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Localized</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>UpdateConfigurationIntent</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

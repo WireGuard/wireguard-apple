@@ -33,6 +33,7 @@
 			<key>IntentsSupported</key>
 			<array>
 				<string>GetPeersIntent</string>
+				<string>UpdateConfigurationIntent</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>
