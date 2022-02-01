@@ -15,6 +15,8 @@ class IntentHandling: NSObject {
 
     var onTunnelsManagerReady: ((TunnelsManager) -> Void)?
 
+    var onTunnelStatusActivationReturn: ((Bool) -> Void)?
+
     override init() {
         super.init()
 
@@ -26,6 +28,8 @@ class IntentHandling: NSObject {
                 wg_log(.error, message: error.localizedDescription)
             case .success(let tunnelsManager):
                 self.tunnelsManager = tunnelsManager
+
+                self.tunnelsManager?.activationDelegate = self
 
                 self.onTunnelsManagerReady?(tunnelsManager)
                 self.onTunnelsManagerReady = nil
@@ -167,6 +171,132 @@ extension IntentHandling: UpdateConfigurationIntentHandling {
         }
 
         completion(UpdateConfigurationIntentResponse(code: .continueInApp, userActivity: activity))
+    }
+
+}
+
+extension IntentHandling: SetTunnelStatusIntentHandling {
+
+    @available(iOSApplicationExtension 14.0, *)
+    func provideTunnelOptionsCollection(for intent: SetTunnelStatusIntent, with completion: @escaping (INObjectCollection<NSString>?, Error?) -> Void) {
+
+        self.allTunnelNames { tunnelsNames in
+            let tunnelsNamesObjects = (tunnelsNames ?? []).map { NSString(string: $0) }
+
+            let objectCollection = INObjectCollection(items: tunnelsNamesObjects)
+            completion(objectCollection, nil)
+        }
+    }
+
+    func handle(intent: SetTunnelStatusIntent, completion: @escaping (SetTunnelStatusIntentResponse) -> Void) {
+        guard let tunnelName = intent.tunnel else {
+            return completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+        }
+
+        let setTunnelStatusResultBlock: (Bool) -> Void = { result in
+            if result {
+                completion(SetTunnelStatusIntentResponse(code: .success, userActivity: nil))
+            } else {
+                completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+            }
+        }
+
+        let updateStatusBlock: (TunnelsManager) -> Void = { tunnelsManager in
+            guard let tunnel = tunnelsManager.tunnel(named: tunnelName) else {
+                completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+                return
+            }
+
+            let operation = intent.operation
+            let isOn: Bool
+
+            if operation == .toggle {
+                switch tunnel.status {
+                case .inactive:
+                    isOn = true
+                case .active:
+                    isOn = false
+                default:
+                    wg_log(.error, message: "SetTunnelStatusIntent action cannot be executed due to the current state of \(tunnelName) tunnel: \(tunnel.status)")
+                    completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+                    return
+                }
+
+            } else if operation == .turn {
+                if (tunnel.status == .inactive) || (tunnel.status == .active) {
+                    isOn = (intent.state == .on)
+
+                    if (isOn && tunnel.status == .active) || (!isOn && tunnel.status == .inactive) {
+                        wg_log(.debug, message: "Tunnel \(tunnelName) is already \(isOn ? "active" : "inactive")")
+                        completion(SetTunnelStatusIntentResponse(code: .success, userActivity: nil))
+                        return
+                    }
+                } else {
+                    wg_log(.error, message: "SetTunnelStatusIntent action cannot be executed due to the current state of \(tunnelName) tunnel: \(tunnel.status)")
+                    completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+                    return
+                }
+
+            } else {
+                wg_log(.error, message: "Invalid 'operation' option in action")
+                completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+                return
+            }
+
+            if tunnel.hasOnDemandRules {
+                tunnelsManager.setOnDemandEnabled(isOn, on: tunnel) { error in
+                    guard error == nil else {
+                        wg_log(.error, message: "Error setting OnDemand status: \(error!.localizedDescription).")
+                        completion(SetTunnelStatusIntentResponse(code: .failure, userActivity: nil))
+                        return
+                    }
+
+                    if !isOn {
+                        tunnelsManager.startDeactivation(of: tunnel)
+                    }
+
+                    completion(SetTunnelStatusIntentResponse(code: .success, userActivity: nil))
+                }
+            } else {
+                if isOn {
+                    self.onTunnelStatusActivationReturn = setTunnelStatusResultBlock
+                    tunnelsManager.startActivation(of: tunnel)
+                } else {
+                    tunnelsManager.startDeactivation(of: tunnel)
+                    completion(SetTunnelStatusIntentResponse(code: .success, userActivity: nil))
+                }
+            }
+        }
+
+        if let tunnelsManager = tunnelsManager {
+            updateStatusBlock(tunnelsManager)
+        } else {
+            if onTunnelsManagerReady != nil {
+                wg_log(.error, message: "Overriding onTunnelsManagerReady action in allTunnelPeers function. This should not happen.")
+            }
+            onTunnelsManagerReady = updateStatusBlock
+        }
+    }
+
+}
+
+extension IntentHandling: TunnelsManagerActivationDelegate {
+    func tunnelActivationAttemptFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationAttemptError) {
+        wg_log(.error, message: "Tunnel Activation Attempt Failed with error: \(error.localizedDescription)")
+        self.onTunnelStatusActivationReturn?(false)
+    }
+
+    func tunnelActivationAttemptSucceeded(tunnel: TunnelContainer) {
+        // Nothing to do, we wait tunnelActivationSucceeded to be sure all activation logic has been executed
+    }
+
+    func tunnelActivationFailed(tunnel: TunnelContainer, error: TunnelsManagerActivationError) {
+        wg_log(.error, message: "Tunnel Activation Failed with error: \(error.localizedDescription)")
+        self.onTunnelStatusActivationReturn?(false)
+    }
+
+    func tunnelActivationSucceeded(tunnel: TunnelContainer) {
+        self.onTunnelStatusActivationReturn?(true)
     }
 
 }
