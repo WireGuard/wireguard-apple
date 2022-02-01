@@ -4,6 +4,7 @@
 import UIKit
 import MobileCoreServices
 import UserNotifications
+import Intents
 
 class TunnelsListTableViewController: UIViewController {
 
@@ -317,6 +318,19 @@ extension TunnelsListTableViewController: UITableViewDataSource {
             cell.tunnel = tunnel
             cell.onSwitchToggled = { [weak self] isOn in
                 guard let self = self, let tunnelsManager = self.tunnelsManager else { return }
+
+                let intent = SetTunnelStatusIntent()
+                intent.tunnel = tunnel.name
+                intent.operation = .turn
+                intent.state = isOn ? .on : .off
+                let interaction = INInteraction(intent: intent, response: nil)
+                interaction.groupIdentifier = "com.wireguard.intents.tunnel.\(tunnel.name)"
+                interaction.donate { error in
+                    if let  error = error {
+                        wg_log(.error, message: "Error donating interaction for SetTunnelStatusIntent: \(error.localizedDescription)")
+                    }
+                }
+
                 if tunnel.hasOnDemandRules {
                     tunnelsManager.setOnDemandEnabled(isOn, on: tunnel) { error in
                         if error == nil && !isOn {
