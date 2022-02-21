@@ -56,6 +56,10 @@ public class WireGuardAdapter {
     /// Adapter state.
     private var state: State = .stopped
 
+    /// Whether adapter should automatically raise the `reasserting` flag when updating
+    /// tunnel configuration.
+    private let shouldHandleReasserting: Bool
+
     /// Tunnel device file descriptor.
     private var tunnelFileDescriptor: Int32? {
         var ctlInfo = ctl_info()
@@ -128,9 +132,12 @@ public class WireGuardAdapter {
     /// Designated initializer.
     /// - Parameter packetTunnelProvider: an instance of `NEPacketTunnelProvider`. Internally stored
     ///   as a weak reference.
+    /// - Parameter shouldHandleReasserting: whether adapter should automatically raise the
+    ///   `reasserting` flag when updating tunnel configuration.
     /// - Parameter logHandler: a log handler closure.
-    public init(with packetTunnelProvider: NEPacketTunnelProvider, logHandler: @escaping LogHandler) {
+    public init(with packetTunnelProvider: NEPacketTunnelProvider, shouldHandleReasserting: Bool = true, logHandler: @escaping LogHandler) {
         self.packetTunnelProvider = packetTunnelProvider
+        self.shouldHandleReasserting = shouldHandleReasserting
         self.logHandler = logHandler
 
         setupLogHandler()
@@ -248,9 +255,14 @@ public class WireGuardAdapter {
             // Tell the system that the tunnel is going to reconnect using new WireGuard
             // configuration.
             // This will broadcast the `NEVPNStatusDidChange` notification to the GUI process.
-            self.packetTunnelProvider?.reasserting = true
+            if self.shouldHandleReasserting {
+                self.packetTunnelProvider?.reasserting = true
+            }
+
             defer {
-                self.packetTunnelProvider?.reasserting = false
+                if self.shouldHandleReasserting {
+                    self.packetTunnelProvider?.reasserting = false
+                }
             }
 
             let settingsGenerator: PacketTunnelSettingsGenerator
