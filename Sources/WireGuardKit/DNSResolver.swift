@@ -4,6 +4,10 @@
 import Network
 import Foundation
 
+#if SWIFT_PACKAGE
+import WireGuardKitTypes
+#endif
+
 enum DNSResolver {}
 
 extension DNSResolver {

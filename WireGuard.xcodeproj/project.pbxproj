@@ -7,24 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5807481627DB7DC00020ECBF /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */; };
+		5807481727DB7DC00020ECBF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481027DB7DC00020ECBF /* IPAddressRange.swift */; };
+		5807481927DB7DC00020ECBF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */; };
+		5807481A27DB7DC00020ECBF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481327DB7DC00020ECBF /* Endpoint.swift */; };
+		5807481B27DB7DC00020ECBF /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */; };
+		5807481C27DB7DC00020ECBF /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481527DB7DC00020ECBF /* PrivateKey.swift */; };
+		5807481D27DB7DCF0020ECBF /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481127DB7DC00020ECBF /* DNSServer.swift */; };
+		5807481E27DB7DD20020ECBF /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481127DB7DC00020ECBF /* DNSServer.swift */; };
+		5807482027DB7DEA0020ECBF /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481127DB7DC00020ECBF /* DNSServer.swift */; };
+		5807482127DB7DEA0020ECBF /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */; };
+		5807482227DB7DEA0020ECBF /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */; };
+		5807482327DB7DEA0020ECBF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481327DB7DC00020ECBF /* Endpoint.swift */; };
+		5807482427DB7DEA0020ECBF /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481527DB7DC00020ECBF /* PrivateKey.swift */; };
+		5807482527DB7DEA0020ECBF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481027DB7DC00020ECBF /* IPAddressRange.swift */; };
+		5807482627DB7DEA0020ECBF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */; };
+		5807482727DB7DEB0020ECBF /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */; };
+		5807482827DB7DEB0020ECBF /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */; };
+		5807482927DB7DEB0020ECBF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481327DB7DC00020ECBF /* Endpoint.swift */; };
+		5807482A27DB7DEB0020ECBF /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481527DB7DC00020ECBF /* PrivateKey.swift */; };
+		5807482B27DB7DEB0020ECBF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481027DB7DC00020ECBF /* IPAddressRange.swift */; };
+		5807482C27DB7DEB0020ECBF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */; };
+		5807482D27DB7DEC0020ECBF /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */; };
+		5807482E27DB7DEC0020ECBF /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481127DB7DC00020ECBF /* DNSServer.swift */; };
+		5807482F27DB7DEC0020ECBF /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */; };
+		5807483027DB7DEC0020ECBF /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481327DB7DC00020ECBF /* Endpoint.swift */; };
+		5807483127DB7DEC0020ECBF /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481527DB7DC00020ECBF /* PrivateKey.swift */; };
+		5807483227DB7DEC0020ECBF /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481027DB7DC00020ECBF /* IPAddressRange.swift */; };
+		5807483327DB7DEC0020ECBF /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */; };
 		58233BCF2591F842002060A8 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58233BCE2591F842002060A8 /* NotificationToken.swift */; };
 		58233BD02591F842002060A8 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58233BCE2591F842002060A8 /* NotificationToken.swift */; };
-		585B105A2577E293004F691E /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
-		585B105B2577E293004F691E /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
-		585B105C2577E293004F691E /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
-		585B105D2577E293004F691E /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
-		585B105E2577E293004F691E /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10472577E293004F691E /* PeerConfiguration.swift */; };
-		585B105F2577E293004F691E /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10472577E293004F691E /* PeerConfiguration.swift */; };
-		585B10602577E293004F691E /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10472577E293004F691E /* PeerConfiguration.swift */; };
-		585B10612577E293004F691E /* PeerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10472577E293004F691E /* PeerConfiguration.swift */; };
-		585B10622577E293004F691E /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10482577E293004F691E /* DNSServer.swift */; };
-		585B10632577E293004F691E /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10482577E293004F691E /* DNSServer.swift */; };
-		585B10642577E294004F691E /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10482577E293004F691E /* DNSServer.swift */; };
-		585B10652577E294004F691E /* DNSServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10482577E293004F691E /* DNSServer.swift */; };
-		585B10662577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
-		585B10672577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
-		585B10682577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
-		585B10692577E294004F691E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10492577E293004F691E /* TunnelConfiguration.swift */; };
 		585B106F2577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10712577E294004F691E /* WireGuardAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104B2577E293004F691E /* WireGuardAdapter.swift */; };
 		585B10732577E294004F691E /* Array+ConcurrentMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104C2577E293004F691E /* Array+ConcurrentMap.swift */; };
@@ -33,20 +45,8 @@
 		585B10792577E294004F691E /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104D2577E293004F691E /* DNSResolver.swift */; };
 		585B107B2577E294004F691E /* IPAddress+AddrInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104E2577E293004F691E /* IPAddress+AddrInfo.swift */; };
 		585B107D2577E294004F691E /* IPAddress+AddrInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104E2577E293004F691E /* IPAddress+AddrInfo.swift */; };
-		585B107E2577E294004F691E /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104F2577E293004F691E /* PrivateKey.swift */; };
-		585B107F2577E294004F691E /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104F2577E293004F691E /* PrivateKey.swift */; };
-		585B10802577E294004F691E /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104F2577E293004F691E /* PrivateKey.swift */; };
-		585B10812577E294004F691E /* PrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B104F2577E293004F691E /* PrivateKey.swift */; };
 		585B10832577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10502577E293004F691E /* PacketTunnelSettingsGenerator.swift */; };
 		585B10852577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10502577E293004F691E /* PacketTunnelSettingsGenerator.swift */; };
-		585B10862577E294004F691E /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10512577E293004F691E /* IPAddressRange.swift */; };
-		585B10872577E294004F691E /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10512577E293004F691E /* IPAddressRange.swift */; };
-		585B10882577E294004F691E /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10512577E293004F691E /* IPAddressRange.swift */; };
-		585B10892577E294004F691E /* IPAddressRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10512577E293004F691E /* IPAddressRange.swift */; };
-		585B108A2577E294004F691E /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10522577E293004F691E /* Endpoint.swift */; };
-		585B108B2577E294004F691E /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10522577E293004F691E /* Endpoint.swift */; };
-		585B108C2577E294004F691E /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10522577E293004F691E /* Endpoint.swift */; };
-		585B108D2577E294004F691E /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10522577E293004F691E /* Endpoint.swift */; };
 		585B108E2577E294004F691E /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10562577E293004F691E /* x25519.c */; };
 		585B108F2577E294004F691E /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10562577E293004F691E /* x25519.c */; };
 		585B10902577E294004F691E /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 585B10562577E293004F691E /* x25519.c */; };
@@ -282,19 +282,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeerConfiguration.swift; path = Sources/WireGuardKitTypes/PeerConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		5807481027DB7DC00020ECBF /* IPAddressRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IPAddressRange.swift; path = Sources/WireGuardKitTypes/IPAddressRange.swift; sourceTree = SOURCE_ROOT; };
+		5807481127DB7DC00020ECBF /* DNSServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DNSServer.swift; path = Sources/WireGuardKitTypes/DNSServer.swift; sourceTree = SOURCE_ROOT; };
+		5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TunnelConfiguration.swift; path = Sources/WireGuardKitTypes/TunnelConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		5807481327DB7DC00020ECBF /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Endpoint.swift; path = Sources/WireGuardKitTypes/Endpoint.swift; sourceTree = SOURCE_ROOT; };
+		5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InterfaceConfiguration.swift; path = Sources/WireGuardKitTypes/InterfaceConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		5807481527DB7DC00020ECBF /* PrivateKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivateKey.swift; path = Sources/WireGuardKitTypes/PrivateKey.swift; sourceTree = SOURCE_ROOT; };
 		58233BCE2591F842002060A8 /* NotificationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationToken.swift; sourceTree = "<group>"; };
-		585B10462577E293004F691E /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceConfiguration.swift; sourceTree = "<group>"; };
-		585B10472577E293004F691E /* PeerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
-		585B10482577E293004F691E /* DNSServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSServer.swift; sourceTree = "<group>"; };
-		585B10492577E293004F691E /* TunnelConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TunnelConfiguration.swift; sourceTree = "<group>"; };
 		585B104B2577E293004F691E /* WireGuardAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WireGuardAdapter.swift; sourceTree = "<group>"; };
 		585B104C2577E293004F691E /* Array+ConcurrentMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+ConcurrentMap.swift"; sourceTree = "<group>"; };
 		585B104D2577E293004F691E /* DNSResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		585B104E2577E293004F691E /* IPAddress+AddrInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IPAddress+AddrInfo.swift"; sourceTree = "<group>"; };
-		585B104F2577E293004F691E /* PrivateKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivateKey.swift; sourceTree = "<group>"; };
 		585B10502577E293004F691E /* PacketTunnelSettingsGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PacketTunnelSettingsGenerator.swift; sourceTree = "<group>"; };
-		585B10512577E293004F691E /* IPAddressRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IPAddressRange.swift; sourceTree = "<group>"; };
-		585B10522577E293004F691E /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		585B10542577E293004F691E /* WireGuardKitC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WireGuardKitC.h; sourceTree = "<group>"; };
 		585B10552577E293004F691E /* key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = key.h; sourceTree = "<group>"; };
 		585B10562577E293004F691E /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
@@ -480,20 +480,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5807480E27DB7D930020ECBF /* WireGuardKitTypes */ = {
+			isa = PBXGroup;
+			children = (
+				5807481127DB7DC00020ECBF /* DNSServer.swift */,
+				5807481327DB7DC00020ECBF /* Endpoint.swift */,
+				5807481427DB7DC00020ECBF /* InterfaceConfiguration.swift */,
+				5807481027DB7DC00020ECBF /* IPAddressRange.swift */,
+				5807480F27DB7DC00020ECBF /* PeerConfiguration.swift */,
+				5807481527DB7DC00020ECBF /* PrivateKey.swift */,
+				5807481227DB7DC00020ECBF /* TunnelConfiguration.swift */,
+			);
+			path = WireGuardKitTypes;
+			sourceTree = "<group>";
+		};
 		585B10452577E293004F691E /* WireGuardKit */ = {
 			isa = PBXGroup;
 			children = (
 				585B104C2577E293004F691E /* Array+ConcurrentMap.swift */,
 				585B104D2577E293004F691E /* DNSResolver.swift */,
-				585B10482577E293004F691E /* DNSServer.swift */,
-				585B10522577E293004F691E /* Endpoint.swift */,
-				585B10462577E293004F691E /* InterfaceConfiguration.swift */,
 				585B104E2577E293004F691E /* IPAddress+AddrInfo.swift */,
-				585B10512577E293004F691E /* IPAddressRange.swift */,
 				585B10502577E293004F691E /* PacketTunnelSettingsGenerator.swift */,
-				585B10472577E293004F691E /* PeerConfiguration.swift */,
-				585B104F2577E293004F691E /* PrivateKey.swift */,
-				585B10492577E293004F691E /* TunnelConfiguration.swift */,
 				585B104B2577E293004F691E /* WireGuardAdapter.swift */,
 			);
 			name = WireGuardKit;
@@ -768,6 +775,7 @@
 				6FF4AC16211EC46F002C96EB /* WireGuardApp */,
 				6F5D0C1B218352EF000F85AD /* WireGuardNetworkExtension */,
 				585B10452577E293004F691E /* WireGuardKit */,
+				5807480E27DB7D930020ECBF /* WireGuardKitTypes */,
 				585B10532577E293004F691E /* WireGuardKitC */,
 				6FF4AC15211EC46F002C96EB /* Products */,
 				6FF4AC452120B9E0002C96EB /* Frameworks */,
@@ -1259,27 +1267,27 @@
 			files = (
 				6FF3527021C240160008484E /* ringlogger.c in Sources */,
 				585B106F2577E294004F691E /* WireGuardAdapter.swift in Sources */,
+				5807482127DB7DEA0020ECBF /* InterfaceConfiguration.swift in Sources */,
 				6FF3527121C240160008484E /* Logger.swift in Sources */,
 				6F5A2B4621AFDED40081EDD8 /* FileManager+Extension.swift in Sources */,
 				585B10772577E294004F691E /* DNSResolver.swift in Sources */,
-				585B10872577E294004F691E /* IPAddressRange.swift in Sources */,
+				5807482627DB7DEA0020ECBF /* TunnelConfiguration.swift in Sources */,
 				6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */,
+				5807482527DB7DEA0020ECBF /* IPAddressRange.swift in Sources */,
+				5807482227DB7DEA0020ECBF /* PeerConfiguration.swift in Sources */,
 				5F9696B121CD7128008063FE /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				585B10832577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */,
-				585B105F2577E293004F691E /* PeerConfiguration.swift in Sources */,
-				585B107F2577E294004F691E /* PrivateKey.swift in Sources */,
-				585B10672577E294004F691E /* TunnelConfiguration.swift in Sources */,
 				585B108F2577E294004F691E /* x25519.c in Sources */,
 				6B5C5E28220A48D30024272E /* Keychain.swift in Sources */,
 				585B10932577E294004F691E /* key.c in Sources */,
-				585B105B2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				585B107B2577E294004F691E /* IPAddress+AddrInfo.swift in Sources */,
+				5807482327DB7DEA0020ECBF /* Endpoint.swift in Sources */,
 				6FFA5D96219446380001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				5F9696AE21CD6F72008063FE /* String+ArrayConversion.swift in Sources */,
-				585B10632577E293004F691E /* DNSServer.swift in Sources */,
 				5892BFA025558288000E678D /* PacketTunnelProvider.swift in Sources */,
-				585B108B2577E294004F691E /* Endpoint.swift in Sources */,
+				5807481D27DB7DCF0020ECBF /* DNSServer.swift in Sources */,
 				585B10732577E294004F691E /* Array+ConcurrentMap.swift in Sources */,
+				5807482427DB7DEA0020ECBF /* PrivateKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1298,14 +1306,14 @@
 				58233BD02591F842002060A8 /* NotificationToken.swift in Sources */,
 				6FBA101521D613F90051C35F /* Application.swift in Sources */,
 				6FB1BDCC21D50F5300A991BF /* TunnelsManager.swift in Sources */,
+				5807483227DB7DEC0020ECBF /* IPAddressRange.swift in Sources */,
 				6F8F0D7222258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */,
 				6FB1BDCD21D50F5300A991BF /* ActivateOnDemandOption.swift in Sources */,
 				6FB1BDCE21D50F5300A991BF /* TunnelStatus.swift in Sources */,
+				5807482E27DB7DEC0020ECBF /* DNSServer.swift in Sources */,
 				6FB1BDD021D50F5300A991BF /* TunnelErrors.swift in Sources */,
 				6FB1BDD121D50F5300A991BF /* ZipImporter.swift in Sources */,
 				6FB1BDD221D50F5300A991BF /* ZipExporter.swift in Sources */,
-				585B10642577E294004F691E /* DNSServer.swift in Sources */,
-				585B108C2577E294004F691E /* Endpoint.swift in Sources */,
 				6FBA104621D7EBFA0051C35F /* TunnelsListTableViewController.swift in Sources */,
 				6FB1BDD321D50F5300A991BF /* ZipArchive.swift in Sources */,
 				6FB1BDD421D50F5300A991BF /* ioapi.c in Sources */,
@@ -1316,6 +1324,7 @@
 				6FB1BDD521D50F5300A991BF /* unzip.c in Sources */,
 				6FB1BDD621D50F5300A991BF /* zip.c in Sources */,
 				6FDB3C3B21DCF47400A0C0BF /* TunnelDetailTableViewController.swift in Sources */,
+				5807482F27DB7DEC0020ECBF /* PeerConfiguration.swift in Sources */,
 				6FB1BDD721D50F5300A991BF /* WireGuardAppError.swift in Sources */,
 				5F52D0BD21E3785C00283CEA /* ConfTextStorage.swift in Sources */,
 				5F52D0C221E378C000283CEA /* highlighter.c in Sources */,
@@ -1323,15 +1332,14 @@
 				6F4DD16C21DA558F00690EAE /* NSTableView+Reuse.swift in Sources */,
 				6FB1BDD821D50F5300A991BF /* WireGuardResult.swift in Sources */,
 				585B10902577E294004F691E /* x25519.c in Sources */,
+				5807483127DB7DEC0020ECBF /* PrivateKey.swift in Sources */,
 				6B707D8621F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */,
 				6FB1BDD921D50F5300A991BF /* LocalizationHelper.swift in Sources */,
-				585B10602577E293004F691E /* PeerConfiguration.swift in Sources */,
 				6F89E17C21F090CC00C97BB9 /* TunnelsTracker.swift in Sources */,
 				6B62E460220A6FA900EF34A6 /* PrivateDataConfirmation.swift in Sources */,
 				6FCD99B121E0EDA900BA4C82 /* TunnelEditViewController.swift in Sources */,
 				6FB17946222FD5960018AE71 /* OnDemandWiFiControls.swift in Sources */,
 				6FB1BDBB21D50F0200A991BF /* Localizable.strings in Sources */,
-				585B10882577E294004F691E /* IPAddressRange.swift in Sources */,
 				6FB1BDBC21D50F0200A991BF /* ringlogger.c in Sources */,
 				6FB1BDBD21D50F0200A991BF /* ringlogger.h in Sources */,
 				6FBA103F21D6B6FF0051C35F /* TunnelImporter.swift in Sources */,
@@ -1346,23 +1354,23 @@
 				6F6483E7229293300075BA15 /* LaunchedAtLoginDetector.swift in Sources */,
 				6FB1BDBF21D50F0200A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				6FADE96C2254B8C300B838A4 /* UnusableTunnelDetailViewController.swift in Sources */,
+				5807482D27DB7DEC0020ECBF /* InterfaceConfiguration.swift in Sources */,
+				5807483327DB7DEC0020ECBF /* TunnelConfiguration.swift in Sources */,
 				6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */,
 				6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6F1075642258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift in Sources */,
 				6FBA101821D656000051C35F /* StatusMenu.swift in Sources */,
 				6F613D9B21DE33B8004B217A /* KeyValueRow.swift in Sources */,
-				585B10802577E294004F691E /* PrivateKey.swift in Sources */,
 				6FB1BDC121D50F0200A991BF /* String+ArrayConversion.swift in Sources */,
 				5F52D0BB21E3781B00283CEA /* ConfTextView.swift in Sources */,
 				6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */,
 				6FCD99AA21E0E14700BA4C82 /* ButtonedDetailViewController.swift in Sources */,
 				6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */,
 				6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */,
-				585B105C2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				6F907C9D224663A2003CED21 /* LogViewHelper.swift in Sources */,
 				6FB1BDC921D50F0300A991BF /* FileManager+Extension.swift in Sources */,
 				585B10942577E294004F691E /* key.c in Sources */,
-				585B10682577E294004F691E /* TunnelConfiguration.swift in Sources */,
+				5807483027DB7DEC0020ECBF /* Endpoint.swift in Sources */,
 				6FB1BD6021D2607A00A991BF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1373,27 +1381,27 @@
 			files = (
 				6FB1BDB321D4F55700A991BF /* ErrorNotifier.swift in Sources */,
 				585B10712577E294004F691E /* WireGuardAdapter.swift in Sources */,
+				5807482727DB7DEB0020ECBF /* InterfaceConfiguration.swift in Sources */,
 				6FB1BDA221D4F53300A991BF /* ringlogger.c in Sources */,
 				6B5C5E2A220A48D30024272E /* Keychain.swift in Sources */,
 				585B10792577E294004F691E /* DNSResolver.swift in Sources */,
-				585B10892577E294004F691E /* IPAddressRange.swift in Sources */,
+				5807482C27DB7DEB0020ECBF /* TunnelConfiguration.swift in Sources */,
 				6FB1BDA421D4F53300A991BF /* Logger.swift in Sources */,
+				5807482B27DB7DEB0020ECBF /* IPAddressRange.swift in Sources */,
+				5807482827DB7DEB0020ECBF /* PeerConfiguration.swift in Sources */,
 				6FB1BDA521D4F53300A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				585B10852577E294004F691E /* PacketTunnelSettingsGenerator.swift in Sources */,
-				585B10612577E293004F691E /* PeerConfiguration.swift in Sources */,
-				585B10812577E294004F691E /* PrivateKey.swift in Sources */,
-				585B10692577E294004F691E /* TunnelConfiguration.swift in Sources */,
 				585B10912577E294004F691E /* x25519.c in Sources */,
 				6FB1BDA621D4F53300A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				585B10952577E294004F691E /* key.c in Sources */,
-				585B105D2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				585B107D2577E294004F691E /* IPAddress+AddrInfo.swift in Sources */,
+				5807482927DB7DEB0020ECBF /* Endpoint.swift in Sources */,
 				6FB1BDA721D4F53300A991BF /* String+ArrayConversion.swift in Sources */,
 				5892BFA125558288000E678D /* PacketTunnelProvider.swift in Sources */,
-				585B10652577E294004F691E /* DNSServer.swift in Sources */,
 				6FB1BDAF21D4F53300A991BF /* FileManager+Extension.swift in Sources */,
-				585B108D2577E294004F691E /* Endpoint.swift in Sources */,
+				5807481E27DB7DD20020ECBF /* DNSServer.swift in Sources */,
 				585B10752577E294004F691E /* Array+ConcurrentMap.swift in Sources */,
+				5807482A27DB7DEB0020ECBF /* PrivateKey.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1403,10 +1411,8 @@
 			files = (
 				6FE1765A21C90E87002690EA /* LocalizationHelper.swift in Sources */,
 				6F29A94722787B1600DC6A6B /* QuickActionItem.swift in Sources */,
-				585B105A2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				6FF3527221C2616C0008484E /* ringlogger.c in Sources */,
 				6F0F44CB222D55FD00B0FF04 /* EditableTextCell.swift in Sources */,
-				585B105E2577E293004F691E /* PeerConfiguration.swift in Sources */,
 				6FF3527321C2616C0008484E /* Logger.swift in Sources */,
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				585B108E2577E294004F691E /* x25519.c in Sources */,
@@ -1414,22 +1420,25 @@
 				5F45417D21C1B23600994C13 /* UITableViewCell+Reuse.swift in Sources */,
 				5F45419221C2D55800994C13 /* CheckmarkCell.swift in Sources */,
 				6FE254FF219C60290028284D /* ZipExporter.swift in Sources */,
+				5807481A27DB7DC00020ECBF /* Endpoint.swift in Sources */,
 				6F8F0D7122258153000E8335 /* ActivateOnDemandViewModel.swift in Sources */,
 				6F8F0D7722267C57000E8335 /* SSIDOptionEditTableViewController.swift in Sources */,
-				585B10622577E293004F691E /* DNSServer.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
 				6FDB6D18224CC05A00EE4BC3 /* LogViewController.swift in Sources */,
 				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */,
 				6F8F0D7422267AD2000E8335 /* ChevronCell.swift in Sources */,
 				6F61F1E921B932F700483816 /* WireGuardAppError.swift in Sources */,
+				5807481727DB7DC00020ECBF /* IPAddressRange.swift in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
+				5807481B27DB7DC00020ECBF /* InterfaceConfiguration.swift in Sources */,
 				6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */,
 				6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */,
 				6FDEF7FC21863B6100D8FBF6 /* zip.c in Sources */,
 				6B5C5E27220A48D30024272E /* Keychain.swift in Sources */,
 				6F628C3D217F09E9003482A3 /* TunnelViewModel.swift in Sources */,
 				5F4541A621C4449E00994C13 /* ButtonCell.swift in Sources */,
+				5807481627DB7DC00020ECBF /* PeerConfiguration.swift in Sources */,
 				5F45419821C2D60500994C13 /* KeyValueCell.swift in Sources */,
 				6FBA103E21D6B6D70051C35F /* TunnelImporter.swift in Sources */,
 				6F9B8A8E223398610041B9C4 /* SSIDOptionDetailTableViewController.swift in Sources */,
@@ -1439,8 +1448,8 @@
 				6F5A2B4821AFF49A0081EDD8 /* FileManager+Extension.swift in Sources */,
 				5F45418C21C2D48200994C13 /* TunnelEditKeyValueCell.swift in Sources */,
 				6FE254FB219C10800028284D /* ZipImporter.swift in Sources */,
-				585B107E2577E294004F691E /* PrivateKey.swift in Sources */,
 				6FDEF7FB21863B6100D8FBF6 /* unzip.c in Sources */,
+				5807481C27DB7DC00020ECBF /* PrivateKey.swift in Sources */,
 				6F29A9432278518D00DC6A6B /* RecentTunnelsTracker.swift in Sources */,
 				6F0F44C9222D55BB00B0FF04 /* TextCell.swift in Sources */,
 				5F4541A021C2D6B700994C13 /* TunnelListCell.swift in Sources */,
@@ -1448,9 +1457,10 @@
 				6F628C41217F47DB003482A3 /* TunnelDetailTableViewController.swift in Sources */,
 				6F61F1EB21B937EF00483816 /* WireGuardResult.swift in Sources */,
 				6F7774F321774263006A79B3 /* TunnelEditTableViewController.swift in Sources */,
+				5807481927DB7DC00020ECBF /* TunnelConfiguration.swift in Sources */,
+				5807482027DB7DEA0020ECBF /* DNSServer.swift in Sources */,
 				6FBA103B21D6B4290051C35F /* ErrorPresenterProtocol.swift in Sources */,
 				58233BCF2591F842002060A8 /* NotificationToken.swift in Sources */,
-				585B10862577E294004F691E /* IPAddressRange.swift in Sources */,
 				6FDEF802218646BA00D8FBF6 /* ZipArchive.swift in Sources */,
 				585B10922577E294004F691E /* key.c in Sources */,
 				5F45419021C2D53800994C13 /* SwitchCell.swift in Sources */,
@@ -1458,11 +1468,9 @@
 				6B707D8421F918D4000A8F73 /* TunnelConfiguration+UapiConfig.swift in Sources */,
 				6FDEF806218725D200D8FBF6 /* SettingsTableViewController.swift in Sources */,
 				5F4541A221C2D6DF00994C13 /* BorderedTextButton.swift in Sources */,
-				585B10662577E294004F691E /* TunnelConfiguration.swift in Sources */,
 				6F7774E1217181B1006A79B3 /* MainViewController.swift in Sources */,
 				6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */,
 				5F4541B221CBFAEE00994C13 /* String+ArrayConversion.swift in Sources */,
-				585B108A2577E294004F691E /* Endpoint.swift in Sources */,
 				6F907C9C224663A2003CED21 /* LogViewHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
