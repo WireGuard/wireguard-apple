@@ -9,18 +9,23 @@ SDKROOT ?= $(shell xcrun --sdk $(PLATFORM_NAME) --show-sdk-path)
 CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
 CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
 
+IS_CATALYST ?= $(shell if [[ "$(EFFECTIVE_PLATFORM_NAME)" == *"maccatalyst"* ]]; then echo 1; fi)
+
 export PATH := $(PATH):/usr/local/bin:/opt/homebrew/bin
 export CC ?= clang
 LIPO ?= lipo
 DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
 BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
 
-CFLAGS_PREFIX := $(if $(DEPLOYMENT_TARGET_CLANG_FLAG_NAME),-$(DEPLOYMENT_TARGET_CLANG_FLAG_NAME)=$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)),) -isysroot $(SDKROOT) -arch
+#CFLAGS_PREFIX := $(if $(DEPLOYMENT_TARGET_CLANG_FLAG_NAME),-$(DEPLOYMENT_TARGET_CLANG_FLAG_NAME)=$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)),) -isysroot $(SDKROOT) -arch
+CFLAGS_PREFIX := -isysroot $(SDKROOT) -arch
 GOARCH_arm64 := arm64
 GOARCH_x86_64 := amd64
-GOOS_macosx := darwin
+GOOS_macosx := $(if $(IS_CATALYST),ios,darwin)
 GOOS_iphoneos := ios
 GOOS_iphonesimulator := ios
+
+TARGET ?= $(if $(IS_CATALYST),-target arm64-apple-ios14.0-macabi,)
 
 build: $(DESTDIR)/libwg-go.a
 version-header: $(DESTDIR)/wireguard-go-version.h
@@ -36,8 +41,8 @@ $(GOROOT)/.prepared:
 
 define libwg-go-a
 $(BUILDDIR)/libwg-go-$(1).a: export CGO_ENABLED := 1
-$(BUILDDIR)/libwg-go-$(1).a: export CGO_CFLAGS := $(CFLAGS_PREFIX) $(ARCH)
-$(BUILDDIR)/libwg-go-$(1).a: export CGO_LDFLAGS := $(CFLAGS_PREFIX) $(ARCH)
+$(BUILDDIR)/libwg-go-$(1).a: export CGO_CFLAGS := $(CFLAGS_PREFIX) $(ARCH) $(TARGET)
+$(BUILDDIR)/libwg-go-$(1).a: export CGO_LDFLAGS := $(CFLAGS_PREFIX) $(ARCH) $(TARGET)
 $(BUILDDIR)/libwg-go-$(1).a: export GOOS := $(GOOS_$(PLATFORM_NAME))
 $(BUILDDIR)/libwg-go-$(1).a: export GOARCH := $(GOARCH_$(1))
 $(BUILDDIR)/libwg-go-$(1).a: $(GOROOT)/.prepared go.mod
