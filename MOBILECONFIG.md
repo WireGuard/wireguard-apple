@@ -86,6 +86,10 @@ keys:
 
     - `AuthenticationMethod` (string): Should be `Password`
 
+    - `OnDemandEnabled` (integer): Optional, set to `1` to enable on-demand activation.
+
+    - `OnDemandRules` (array): Optional, an array with on-demand rules. See [this gist](https://gist.github.com/deg0nz/bec056213aef57d84b05b21bb046a16c) for an example.
+
 Here's an example WireGuard configuration payload dictionary:
 
 ```xml
