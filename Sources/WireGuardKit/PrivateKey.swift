@@ -8,7 +8,7 @@ import WireGuardKitC
 #endif
 
 /// Umbrella protocol for all kinds of keys.
-public protocol WireGuardKey: RawRepresentable, Hashable where RawValue == Data {}
+public protocol WireGuardKey: RawRepresentable, Hashable, Codable where RawValue == Data {}
 
 /// Class describing a private key used by WireGuard.
 public final class PrivateKey: WireGuardKey {
@@ -123,6 +123,28 @@ extension WireGuardKey {
         } else {
             return nil
         }
+    }
+
+    // MARK: - Codable
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let data = try container.decode(Data.self)
+
+        if let instance = Self.init(rawValue: data) {
+            self = instance
+        } else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Corrupt key data."
+            )
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+
+        try container.encode(rawValue)
     }
 
     // MARK: - Equatable
