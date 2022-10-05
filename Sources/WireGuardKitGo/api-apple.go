@@ -112,6 +112,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 	err = dev.IpcSet(C.GoString(settings))
 	if err != nil {
 		logger.Errorf("Unable to set IPC settings: %v", err)
+		dev.Close();
 		unix.Close(dupTunFd)
 		return -1
 	}
@@ -126,6 +127,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		}
 	}
 	if i == math.MaxInt32 {
+		dev.Close();
 		unix.Close(dupTunFd)
 		return -1
 	}
