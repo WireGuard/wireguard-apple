@@ -15,15 +15,9 @@ class LogViewController: UIViewController {
     }()
 
     let busyIndicator: UIActivityIndicatorView = {
-        if #available(iOS 13.0, *) {
-            let busyIndicator = UIActivityIndicatorView(style: .medium)
-            busyIndicator.hidesWhenStopped = true
-            return busyIndicator
-        } else {
-            let busyIndicator = UIActivityIndicatorView(style: .gray)
-            busyIndicator.hidesWhenStopped = true
-            return busyIndicator
-        }
+        let busyIndicator = UIActivityIndicatorView(style: .medium)
+        busyIndicator.hidesWhenStopped = true
+        return busyIndicator
     }()
 
     let paragraphStyle: NSParagraphStyle = {
@@ -41,12 +35,7 @@ class LogViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
-
+        view.backgroundColor = .systemBackground
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -92,15 +81,8 @@ class LogViewController: UIViewController {
             let bodyFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.body)
             let captionFont = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.caption1)
             for logEntry in fetchedLogEntries {
-                var bgColor: UIColor
-                var fgColor: UIColor
-                if #available(iOS 13.0, *) {
-                    bgColor = self.isNextLineHighlighted ? .systemGray3 : .systemBackground
-                    fgColor = .label
-                } else {
-                    bgColor = self.isNextLineHighlighted ? UIColor(white: 0.88, alpha: 1.0) : UIColor.white
-                    fgColor = .black
-                }
+                let bgColor: UIColor = self.isNextLineHighlighted ? .systemGray3 : .systemBackground
+                let fgColor: UIColor = .label
                 let timestampText = NSAttributedString(string: logEntry.timestamp + "\n", attributes: [.font: captionFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
                 let messageText = NSAttributedString(string: logEntry.message + "\n", attributes: [.font: bodyFont, .backgroundColor: bgColor, .foregroundColor: fgColor, .paragraphStyle: self.paragraphStyle])
                 richText.append(timestampText)

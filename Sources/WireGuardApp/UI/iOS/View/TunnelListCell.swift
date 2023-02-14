@@ -41,21 +41,13 @@ class TunnelListCell: UITableViewCell {
         label.font = UIFont.preferredFont(forTextStyle: .caption2)
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 1
-        if #available(iOS 13.0, *) {
-            label.textColor = .secondaryLabel
-        } else {
-            label.textColor = .gray
-        }
+        label.textColor = .secondaryLabel
         return label
     }()
 
     let busyIndicator: UIActivityIndicatorView = {
         let busyIndicator: UIActivityIndicatorView
-        if #available(iOS 13.0, *) {
-            busyIndicator = UIActivityIndicatorView(style: .medium)
-        } else {
-            busyIndicator = UIActivityIndicatorView(style: .gray)
-        }
+        busyIndicator = UIActivityIndicatorView(style: .medium)
         busyIndicator.hidesWhenStopped = true
         return busyIndicator
     }()

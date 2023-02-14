@@ -33,11 +33,7 @@ class TunnelsListTableViewController: UIViewController {
 
     let busyIndicator: UIActivityIndicatorView = {
         let busyIndicator: UIActivityIndicatorView
-        if #available(iOS 13.0, *) {
-            busyIndicator = UIActivityIndicatorView(style: .medium)
-        } else {
-            busyIndicator = UIActivityIndicatorView(style: .gray)
-        }
+        busyIndicator = UIActivityIndicatorView(style: .medium)
         busyIndicator.hidesWhenStopped = true
         return busyIndicator
     }()
@@ -51,11 +47,7 @@ class TunnelsListTableViewController: UIViewController {
 
     override func loadView() {
         view = UIView()
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        } else {
-            view.backgroundColor = .white
-        }
+        view.backgroundColor = .systemBackground
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -406,11 +398,7 @@ extension TunnelsListTableViewController: TunnelsManagerListDelegate {
                 (splitViewController.viewControllers[0] as? UINavigationController)?.popToRootViewController(animated: false)
             } else {
                 let detailVC = UIViewController()
-                if #available(iOS 13.0, *) {
-                    detailVC.view.backgroundColor = .systemBackground
-                } else {
-                    detailVC.view.backgroundColor = .white
-                }
+                detailVC.view.backgroundColor = .systemBackground
                 let detailNC = UINavigationController(rootViewController: detailVC)
                 splitViewController.showDetailViewController(detailNC, sender: self)
             }
