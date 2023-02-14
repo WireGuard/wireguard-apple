@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT
  *
- * Copyright (C) 2018-2021 WireGuard LLC. All Rights Reserved.
+ * Copyright (C) 2018-2023 WireGuard LLC. All Rights Reserved.
  */
 
 #ifndef WIREGUARD_H

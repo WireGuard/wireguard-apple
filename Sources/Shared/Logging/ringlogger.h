@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: MIT
  *
- * Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
+ * Copyright © 2018-2023 WireGuard LLC. All Rights Reserved.
  */
 
 #ifndef RINGLOGGER_H
