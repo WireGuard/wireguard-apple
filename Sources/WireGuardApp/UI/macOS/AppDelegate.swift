@@ -151,6 +151,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
+    func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
+        self?.showManageTunnelsWindow(completion: nil)
+        return true
+    }
+
     private func setDockIconAndMainMenuVisibility(isVisible: Bool, completion: (() -> Void)? = nil) {
         let currentActivationPolicy = NSApp.activationPolicy()
         let newActivationPolicy: NSApplication.ActivationPolicy = isVisible ? .regular : .accessory
