@@ -34,7 +34,7 @@ class TunnelEditTableViewController: UITableViewController {
     let interfaceFieldsBySection: [[TunnelViewModel.InterfaceField]] = [
         [.name],
         [.privateKey, .publicKey, .generateKeyPair],
-        [.addresses, .listenPort, .mtu, .dns]
+        [.addresses, .listenPort, .mtu, .dns, .dnsMatchDomains]
     ]
 
     let peerFields: [TunnelViewModel.PeerField] = [
@@ -245,6 +245,9 @@ extension TunnelEditTableViewController {
             cell.keyboardType = .numbersAndPunctuation
         case .dns:
             cell.placeholderText = tunnelViewModel.peersData.contains(where: { $0.shouldStronglyRecommendDNS }) ? tr("tunnelEditPlaceholderTextStronglyRecommended") : tr("tunnelEditPlaceholderTextOptional")
+            cell.keyboardType = .numbersAndPunctuation
+        case .dnsMatchDomains:
+            cell.placeholderText = tr("tunnelEditPlaceholderTextOptional")
             cell.keyboardType = .numbersAndPunctuation
         case .listenPort, .mtu:
             cell.placeholderText = tr("tunnelEditPlaceholderTextAutomatic")

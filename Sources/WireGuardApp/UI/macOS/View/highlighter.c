@@ -343,6 +343,7 @@ enum field {
 	ListenPort,
 	Address,
 	DNS,
+    DNSMatchDomains,
 	MTU,
 #ifndef MOBILE_WGQUICK_SUBSET
 	FwMark,
@@ -377,6 +378,7 @@ static enum field get_field(string_span_t s)
 	check_enum(ListenPort);
 	check_enum(Address);
 	check_enum(DNS);
+    check_enum(DNSMatchDomains);
 	check_enum(MTU);
 	check_enum(PublicKey);
 	check_enum(PresharedKey);
@@ -453,6 +455,12 @@ static void highlight_multivalue_value(struct highlight_span_array *ret, const s
 		else
 			append_highlight_span(ret, parent.s, s, HighlightError);
 		break;
+    case DNSMatchDomains:
+        if (is_valid_hostname(s))
+            append_highlight_span(ret, parent.s, s, HighlightHost);
+        else
+            append_highlight_span(ret, parent.s, s, HighlightError);
+        break;
 	case Address:
 	case AllowedIPs: {
 		size_t slash;
@@ -563,6 +571,7 @@ static void highlight_value(struct highlight_span_array *ret, const string_span_
 	}
 	case Address:
 	case DNS:
+    case DNSMatchDomains:
 	case AllowedIPs:
 		highlight_multivalue(ret, parent, s, section);
 		break;
