@@ -107,7 +107,7 @@ class StatusMenu: NSMenu {
             networksMenuItem.title = ""
             networksMenuItem.isHidden = true
         } else {
-            let allowedIPs = tunnel.tunnelConfiguration?.peers.flatMap { $0.allowedIPs }.map { $0.stringRepresentation }.joined(separator: ", ") ?? ""
+            let allowedIPs = tunnel.tunnelConfiguration?.peers.flatMap { $0.allowedIPs }.map { $0.stringRepresentation }.prefix(3).joined(separator: ", ") ?? ""
             if !allowedIPs.isEmpty {
                 networksMenuItem.title = tr(format: "macMenuNetworks (%@)", allowedIPs)
             } else {
