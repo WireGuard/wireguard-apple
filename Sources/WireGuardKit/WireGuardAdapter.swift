@@ -47,6 +47,12 @@ public class WireGuardAdapter {
     /// Packet tunnel provider.
     private weak var packetTunnelProvider: NEPacketTunnelProvider?
 
+    /// KVO observer for `NEProvider.defaultPath`.
+    private var defaultPathObserver: NSKeyValueObservation?
+
+    /// Last known default path.
+    private var currentDefaultPath: NetworkExtension.NWPath?
+
     /// Log handler closure.
     private let logHandler: LogHandler
 
@@ -181,11 +187,7 @@ public class WireGuardAdapter {
                 return
             }
 
-            let networkMonitor = NWPathMonitor()
-            networkMonitor.pathUpdateHandler = { [weak self] path in
-                self?.didReceivePathUpdate(path: path)
-            }
-            networkMonitor.start(queue: self.workQueue)
+            self.addDefaultPathObserver()
 
             do {
                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
@@ -198,10 +200,10 @@ public class WireGuardAdapter {
                     try self.startWireGuardBackend(wgConfig: wgConfig),
                     settingsGenerator
                 )
-                self.networkMonitor = networkMonitor
+
                 completionHandler(nil)
             } catch let error as WireGuardAdapterError {
-                networkMonitor.cancel()
+                self.removeDefaultPathObserver()
                 completionHandler(error)
             } catch {
                 fatalError()
@@ -225,8 +227,7 @@ public class WireGuardAdapter {
                 return
             }
 
-            self.networkMonitor?.cancel()
-            self.networkMonitor = nil
+            self.removeDefaultPathObserver()
 
             self.state = .stopped
 
@@ -411,19 +412,48 @@ public class WireGuardAdapter {
         }
     }
 
-    /// Helper method used by network path monitor.
+    private func addDefaultPathObserver() {
+        guard let packetTunnelProvider = packetTunnelProvider else { return }
+
+        defaultPathObserver?.invalidate()
+        defaultPathObserver = packetTunnelProvider.observe(\.defaultPath, options: [.new]) { [weak self] _, change in
+            guard let self = self, let defaultPath = change.newValue?.flatMap({ $0 }) else { return }
+
+            self.workQueue.async {
+                self.didReceivePathUpdate(path: defaultPath)
+            }
+        }
+
+        currentDefaultPath = packetTunnelProvider.defaultPath
+    }
+
+    private func removeDefaultPathObserver() {
+        defaultPathObserver?.invalidate()
+        defaultPathObserver = nil
+        currentDefaultPath = nil
+    }
+
+    /// Method invoked by KVO observer when new network path is received.
     /// - Parameter path: new network path
-    private func didReceivePathUpdate(path: Network.NWPath) {
-        self.logHandler(.verbose, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
+    private func didReceivePathUpdate(path: NetworkExtension.NWPath) {
+        let isSamePath = currentDefaultPath?.isEqual(to: path) ?? false
+
+        currentDefaultPath = path
+
+        self.logHandler(.verbose, "Network change detected with \(path.status)")
 
         #if os(macOS)
-        if case .started(let handle, _) = self.state {
+        if case .started(let handle, _) = self.state, !isSamePath {
             wgBumpSockets(handle)
         }
         #elseif os(iOS)
+        let isSatisfiable = path.status == .satisfied || path.status == .satisfiable
+
         switch self.state {
         case .started(let handle, let settingsGenerator):
-            if path.status.isSatisfiable {
+            if isSatisfiable {
+                guard !isSamePath else { return }
+
                 let (wgConfig, resolutionResults) = settingsGenerator.endpointUapiConfiguration()
                 self.logEndpointResolutionResults(resolutionResults)
 
@@ -438,7 +468,7 @@ public class WireGuardAdapter {
             }
 
         case .temporaryShutdown(let settingsGenerator):
-            guard path.status.isSatisfiable else { return }
+            guard isSatisfiable else { return }
 
             self.logHandler(.verbose, "Connectivity online, resuming backend.")
 
@@ -472,16 +502,19 @@ public enum WireGuardLogLevel: Int32 {
     case error = 1
 }
 
-private extension Network.NWPath.Status {
-    /// Returns `true` if the path is potentially satisfiable.
-    var isSatisfiable: Bool {
+extension NetworkExtension.NWPathStatus: CustomDebugStringConvertible {
+    public var debugDescription: String {
         switch self {
-        case .requiresConnection, .satisfied:
-            return true
         case .unsatisfied:
-            return false
+            return "unsatisfied"
+        case .satisfied:
+            return "satisfied"
+        case .satisfiable:
+            return "satisfiable"
+        case .invalid:
+            return "invalid"
         @unknown default:
-            return true
+            return "unknown (rawValue = \(rawValue))"
         }
     }
 }
