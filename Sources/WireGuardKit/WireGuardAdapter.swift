@@ -314,26 +314,29 @@ public class WireGuardAdapter {
     /// - Returns: `PacketTunnelSettingsGenerator`.
     private func setNetworkSettings(_ networkSettings: NEPacketTunnelNetworkSettings) throws {
         var systemError: Error?
-        let condition = NSCondition()
 
-        // Activate the condition
-        condition.lock()
-        defer { condition.unlock() }
+        let dispatchGroup = DispatchGroup()
+
+        dispatchGroup.enter()
 
         self.packetTunnelProvider?.setTunnelNetworkSettings(networkSettings) { error in
             systemError = error
-            condition.signal()
+            dispatchGroup.leave()
         }
 
         // Packet tunnel's `setTunnelNetworkSettings` times out in certain
         // scenarios & never calls the given callback.
-        let setTunnelNetworkSettingsTimeout: TimeInterval = 5 // seconds
+        let setTunnelNetworkSettingsTimeout: Int = 5 // seconds
 
-        if condition.wait(until: Date().addingTimeInterval(setTunnelNetworkSettingsTimeout)) {
+        let waitResult = dispatchGroup.wait(wallTimeout: .now() + .seconds(setTunnelNetworkSettingsTimeout))
+
+        switch waitResult {
+        case .success:
             if let systemError = systemError {
                 throw WireGuardAdapterError.setNetworkSettings(systemError)
             }
-        } else {
+
+        case .timedOut:
             self.logHandler(.error, "setTunnelNetworkSettings timed out after 5 seconds; proceeding anyway")
         }
     }
