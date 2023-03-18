@@ -85,11 +85,25 @@ class PacketTunnelSettingsGenerator {
 
         if !tunnelConfiguration.interface.dnsSearch.isEmpty || !tunnelConfiguration.interface.dns.isEmpty {
             let dnsServerStrings = tunnelConfiguration.interface.dns.map { $0.stringRepresentation }
-            let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
+
+            let dnsSettings: NEDNSSettings
+            if let dnsHTTPSURL = tunnelConfiguration.interface.dnsHTTPSURL {
+                let dohSettings = NEDNSOverHTTPSSettings(servers: dnsServerStrings)
+                dohSettings.serverURL = dnsHTTPSURL
+                dnsSettings = dohSettings
+            } else if let dnsTLSServerName = tunnelConfiguration.interface.dnsTLSServerName {
+                let dotSettings = NEDNSOverTLSSettings(servers: dnsServerStrings)
+                dotSettings.serverName = dnsTLSServerName
+                dnsSettings = dotSettings
+            } else {
+                dnsSettings = NEDNSSettings(servers: dnsServerStrings)
+            }
+
             dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
             if !tunnelConfiguration.interface.dns.isEmpty {
                 dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
             }
+
             networkSettings.dnsSettings = dnsSettings
         }
 
