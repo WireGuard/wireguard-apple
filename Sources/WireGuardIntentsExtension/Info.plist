@@ -33,7 +33,6 @@
 			<key>IntentsSupported</key>
 			<array>
 				<string>GetPeersIntent</string>
-				<string>SetTunnelStatusIntent</string>
 				<string>UpdateConfigurationIntent</string>
 			</array>
 		</dict>
