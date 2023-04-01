@@ -2,7 +2,6 @@
 // Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
 
 import UIKit
-import Intents
 
 class MainViewController: UISplitViewController {
 
@@ -97,25 +96,10 @@ extension MainViewController {
             if let tunnel = tunnelsManager.tunnel(named: tunnelName) {
                 tunnelsListVC.showTunnelDetail(for: tunnel, animated: false)
                 if shouldToggleStatus {
-
-                    let intent = SetTunnelStatusIntent()
-                    intent.tunnel = tunnel.name
-                    intent.operation = .turn
-
                     if tunnel.status == .inactive {
                         tunnelsManager.startActivation(of: tunnel)
-                        intent.state = .on
                     } else if tunnel.status == .active {
                         tunnelsManager.startDeactivation(of: tunnel)
-                        intent.state = .off
-                    }
-
-                    let interaction = INInteraction(intent: intent, response: nil)
-                    interaction.groupIdentifier = "com.wireguard.intents.tunnel.\(tunnel.name)"
-                    interaction.donate { error in
-                        if let  error = error {
-                            wg_log(.error, message: "Error donating interaction for SetTunnelStatusIntent: \(error.localizedDescription)")
-                        }
                     }
                 }
             }

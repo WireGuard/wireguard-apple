@@ -5,10 +5,6 @@ import Foundation
 import NetworkExtension
 import os.log
 
-#if os(iOS)
-import Intents
-#endif
-
 protocol TunnelsManagerListDelegate: AnyObject {
     func tunnelAdded(at index: Int)
     func tunnelModified(at index: Int)
@@ -311,12 +307,6 @@ class TunnelsManager {
         }
         #elseif os(iOS)
         (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.destroyConfigurationReference()
-
-        INInteraction.delete(with: "com.wireguard.intents.tunnel.\(tunnel.name)") { error in
-            if let error = error {
-                wg_log(.error, message: "Error deleting donated interactions for tunnel \(tunnel.name): \(error.localizedDescription)")
-            }
-        }
         #else
         #error("Unimplemented")
         #endif

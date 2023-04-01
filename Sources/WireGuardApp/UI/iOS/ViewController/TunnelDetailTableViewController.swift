@@ -388,18 +388,6 @@ extension TunnelDetailTableViewController {
         cell.onSwitchToggled = { [weak self] isOn in
             guard let self = self else { return }
 
-            let intent = SetTunnelStatusIntent()
-            intent.tunnel = self.tunnel.name
-            intent.operation = .turn
-            intent.state = isOn ? .on : .off
-            let interaction = INInteraction(intent: intent, response: nil)
-            interaction.groupIdentifier = "com.wireguard.intents.tunnel.\(self.tunnel.name)"
-            interaction.donate { error in
-                if let  error = error {
-                    wg_log(.error, message: "Error donating interaction for SetTunnelStatusIntent: \(error.localizedDescription)")
-                }
-            }
-
             if self.tunnel.hasOnDemandRules {
                 self.tunnelsManager.setOnDemandEnabled(isOn, on: self.tunnel) { error in
                     if error == nil && !isOn {
