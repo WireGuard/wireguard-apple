@@ -234,7 +234,6 @@
 		A64A79F627A5450000F15B34 /* WireGuardResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F61F1EA21B937EF00483816 /* WireGuardResult.swift */; };
 		A64A79F927A5462900F15B34 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A64A79F827A5462900F15B34 /* Intents.intentdefinition */; };
 		A64A79FA27A5462900F15B34 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = A64A79F827A5462900F15B34 /* Intents.intentdefinition */; };
-		A64A79FC27A548A000F15B34 /* IntentHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = A64A79FB27A548A000F15B34 /* IntentHandling.swift */; };
 		A64A79FD27A54AA500F15B34 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FF4AC462120B9E0002C96EB /* NetworkExtension.framework */; };
 		A64A79FE27A58F1800F15B34 /* MockTunnels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB1017821C57DE600766195 /* MockTunnels.swift */; };
 		A6B8051C27A44F770088E750 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B8051B27A44F770088E750 /* Intents.framework */; };
@@ -487,7 +486,6 @@
 		A64A79D727A462FC00F15B34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A64A79D827A48A8E00F15B34 /* WireGuardIntentsExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardIntentsExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		A64A79F827A5462900F15B34 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
-		A64A79FB27A548A000F15B34 /* IntentHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandling.swift; sourceTree = "<group>"; };
 		A6B8051A27A44F770088E750 /* WireGuardIntentsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardIntentsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6B8051B27A44F770088E750 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		A6B8051E27A44F770088E750 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
@@ -899,7 +897,6 @@
 				A6B8052727A454150088E750 /* WireGuardIntentsExtension_iOS.entitlements */,
 				A64A79D827A48A8E00F15B34 /* WireGuardIntentsExtension-Bridging-Header.h */,
 				A6B8051E27A44F770088E750 /* IntentHandler.swift */,
-				A64A79FB27A548A000F15B34 /* IntentHandling.swift */,
 			);
 			name = WireGuardIntentsExtension;
 			path = Sources/WireGuardIntentsExtension;
@@ -1606,7 +1603,6 @@
 				A64A79E827A542F800F15B34 /* key.c in Sources */,
 				A64A79E127A5426C00F15B34 /* TunnelConfiguration.swift in Sources */,
 				A64A79DE27A541F500F15B34 /* TunnelsManager.swift in Sources */,
-				A64A79FC27A548A000F15B34 /* IntentHandling.swift in Sources */,
 				A64A79ED27A5440E00F15B34 /* TunnelStatus.swift in Sources */,
 				A64A79EB27A543D400F15B34 /* WireGuardAppError.swift in Sources */,
 				A64A79E527A542C000F15B34 /* InterfaceConfiguration.swift in Sources */,
