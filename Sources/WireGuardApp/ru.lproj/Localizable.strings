@@ -57,7 +57,7 @@
 
 "macToggleStatusButtonActivate" = "Подключен";
 "macToggleStatusButtonActivating" = "Подключение…";
-"macToggleStatusButtonDeactivate" = "Отключен";
+"macToggleStatusButtonDeactivate" = "Отключить";
 "macToggleStatusButtonDeactivating" = "Отключение…";
 "macToggleStatusButtonReasserting" = "Переподключение…";
 "macToggleStatusButtonRestarting" = "Перезапуск…";
