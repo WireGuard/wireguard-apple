@@ -205,6 +205,11 @@
 		6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
 		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
+		A25DF37029E60E870094E89B /* BuildPeerConfigurationUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FB29D9AEEA00FFF234 /* BuildPeerConfigurationUpdate.swift */; };
+		A25DF37129E60E8C0094E89B /* UpdateTunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361F929D9821100FFF234 /* UpdateTunnelConfiguration.swift */; };
+		A25DF37229E60E8F0094E89B /* GetPeers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F05029C4C627005EF23D /* GetPeers.swift */; };
+		A25DF37329E60E930094E89B /* AppIntents.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E361F729D8758500FFF234 /* AppIntents.strings */; };
+		A25DF37429E60E960094E89B /* TunnelsOptionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */; };
 		A625F05529C4C627005EF23D /* GetPeers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F05029C4C627005EF23D /* GetPeers.swift */; };
 		A6E361F829D8758500FFF234 /* AppIntents.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E361F729D8758500FFF234 /* AppIntents.strings */; };
 		A6E361FA29D9821200FFF234 /* UpdateTunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361F929D9821100FFF234 /* UpdateTunnelConfiguration.swift */; };
@@ -1100,6 +1105,7 @@
 			files = (
 				6FB1BD6221D2607E00A991BF /* Assets.xcassets in Resources */,
 				6F70E20F221058E1008BDFB4 /* InfoPlist.strings in Resources */,
+				A25DF37329E60E930094E89B /* AppIntents.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1328,6 +1334,7 @@
 				6FB1BDD121D50F5300A991BF /* ZipImporter.swift in Sources */,
 				6FB1BDD221D50F5300A991BF /* ZipExporter.swift in Sources */,
 				585B10642577E294004F691E /* DNSServer.swift in Sources */,
+				A25DF37129E60E8C0094E89B /* UpdateTunnelConfiguration.swift in Sources */,
 				585B108C2577E294004F691E /* Endpoint.swift in Sources */,
 				6FBA104621D7EBFA0051C35F /* TunnelsListTableViewController.swift in Sources */,
 				6FB1BDD321D50F5300A991BF /* ZipArchive.swift in Sources */,
@@ -1365,11 +1372,13 @@
 				6FE3661D21F64F6B00F78C7D /* ConfTextColorTheme.swift in Sources */,
 				6F3E02E9228000F6001FE7E3 /* MainMenu.swift in Sources */,
 				5F52D0BF21E3788900283CEA /* NSColor+Hex.swift in Sources */,
+				A25DF37229E60E8F0094E89B /* GetPeers.swift in Sources */,
 				6FB1BDBE21D50F0200A991BF /* Logger.swift in Sources */,
 				6F6483E7229293300075BA15 /* LaunchedAtLoginDetector.swift in Sources */,
 				6FB1BDBF21D50F0200A991BF /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				6FADE96C2254B8C300B838A4 /* UnusableTunnelDetailViewController.swift in Sources */,
 				6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */,
+				A25DF37029E60E870094E89B /* BuildPeerConfigurationUpdate.swift in Sources */,
 				6FB1BDC021D50F0200A991BF /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				6F1075642258AE9800D78929 /* DeleteTunnelsConfirmationAlert.swift in Sources */,
 				6FBA101821D656000051C35F /* StatusMenu.swift in Sources */,
@@ -1380,6 +1389,7 @@
 				6FBA104021D6B7040051C35F /* ErrorPresenterProtocol.swift in Sources */,
 				6FCD99AA21E0E14700BA4C82 /* ButtonedDetailViewController.swift in Sources */,
 				6FBA104321D6BC250051C35F /* ErrorPresenter.swift in Sources */,
+				A25DF37429E60E960094E89B /* TunnelsOptionsProvider.swift in Sources */,
 				6F2449E8226587B90047B9E9 /* MacAppStoreUpdateDetector.swift in Sources */,
 				585B105C2577E293004F691E /* InterfaceConfiguration.swift in Sources */,
 				6F907C9D224663A2003CED21 /* LogViewHelper.swift in Sources */,
