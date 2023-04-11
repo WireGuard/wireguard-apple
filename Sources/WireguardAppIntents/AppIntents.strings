@@ -10,3 +10,15 @@
 "getPeersIntentDescription" = "Get list of public keys of peers in the selected configuration";
 "getPeersIntentTunnelParameterTitle" = "Tunnel";
 "getPeersIntentSummary ${tunnelName}" = "Get peers of ${tunnelName}";
+
+// Build Peer Configuration
+"buildPeerConfigurationUpdateIntentName" = "Build Peer Configuration";
+"buildPeerConfigurationUpdateIntentDescription" = "";
+"buildPeerConfigurationUpdateIntentSummary ${publicKey}" = "Build configuration for peer ${publicKey}";
+"buildPeerConfigurationUpdateIntentPublicKeyParameterTitle" = "Peer Public Key";
+"buildPeerConfigurationUpdateIntentEndpointParameterTitle" = "Endpoint";
+
+// Peer Configuration Update Entity
+"peerConfigurationUpdateEntityName" = "Configuration Update - Peer";
+"peerConfigurationUpdateEntityPropertyPublicKeyTitle" = "Public Key";
+"peerConfigurationUpdateEntityPropertyEndpointTitle" = "Endpoint";
