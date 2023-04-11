@@ -205,6 +205,7 @@
 		6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
 		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
+		A625F05329C4C627005EF23D /* UpdateConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F04E29C4C627005EF23D /* UpdateConfiguration.swift */; };
 		A625F05529C4C627005EF23D /* GetPeers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F05029C4C627005EF23D /* GetPeers.swift */; };
 		A6E361F829D8758500FFF234 /* AppIntents.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E361F729D8758500FFF234 /* AppIntents.strings */; };
 		A6E361FE29D9B18C00FFF234 /* TunnelsOptionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */; };
@@ -441,6 +442,7 @@
 		6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
 		6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandOption.swift; sourceTree = "<group>"; };
 		6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParseError+WireGuardAppError.swift"; sourceTree = "<group>"; };
+		A625F04E29C4C627005EF23D /* UpdateConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateConfiguration.swift; sourceTree = "<group>"; };
 		A625F05029C4C627005EF23D /* GetPeers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPeers.swift; sourceTree = "<group>"; };
 		A6E361F729D8758500FFF234 /* AppIntents.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = AppIntents.strings; sourceTree = "<group>"; };
 		A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsOptionsProvider.swift; sourceTree = "<group>"; };
@@ -821,6 +823,7 @@
 		A625F04C29C4C627005EF23D /* WireguardAppIntents */ = {
 			isa = PBXGroup;
 			children = (
+				A625F04E29C4C627005EF23D /* UpdateConfiguration.swift */,
 				A625F05029C4C627005EF23D /* GetPeers.swift */,
 				A6E361F729D8758500FFF234 /* AppIntents.strings */,
 				A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */,
@@ -1435,6 +1438,7 @@
 				6F8F0D7722267C57000E8335 /* SSIDOptionEditTableViewController.swift in Sources */,
 				585B10622577E293004F691E /* DNSServer.swift in Sources */,
 				6FDEF7E62185EFB200D8FBF6 /* QRScanViewController.swift in Sources */,
+				A625F05329C4C627005EF23D /* UpdateConfiguration.swift in Sources */,
 				6FDB6D18224CC05A00EE4BC3 /* LogViewController.swift in Sources */,
 				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */,
