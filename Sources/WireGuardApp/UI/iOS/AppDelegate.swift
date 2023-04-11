@@ -3,7 +3,6 @@
 
 import UIKit
 import os.log
-import Intents
 import AppIntents
 
 @UIApplicationMain
@@ -109,12 +108,5 @@ extension AppDelegate {
             }
         }
         return nil
-    }
-}
-
-extension AppDelegate {
-
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        return false
     }
 }
