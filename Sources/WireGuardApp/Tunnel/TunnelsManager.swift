@@ -206,6 +206,7 @@ class TunnelsManager {
         }
     }
 
+    @available(*, renamed: "modify(tunnel:tunnelConfiguration:onDemandOption:shouldEnsureOnDemandEnabled:)")
     func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
                 onDemandOption: ActivateOnDemandOption,
                 shouldEnsureOnDemandEnabled: Bool = false,
@@ -295,6 +296,22 @@ class TunnelsManager {
                 }
             } else {
                 completionHandler(nil)
+            }
+        }
+    }
+
+    @available(iOS 13.0, macOS 10.15.0, *)
+    func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
+                onDemandOption: ActivateOnDemandOption,
+                shouldEnsureOnDemandEnabled: Bool = false) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption, shouldEnsureOnDemandEnabled: shouldEnsureOnDemandEnabled) { error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                continuation.resume(returning: ())
             }
         }
     }
