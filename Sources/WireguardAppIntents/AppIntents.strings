@@ -10,21 +10,3 @@
 "getPeersIntentDescription" = "Get list of public keys of peers in the selected configuration";
 "getPeersIntentTunnelParameterTitle" = "Tunnel";
 "getPeersIntentSummary ${tunnelName}" = "Get peers of ${tunnelName}";
-
-// Update configuration [Dictionary]
-"updateConfigurationIntentName" = "Update Tunnel Configuration [Dictionary]";
-"updateConfigurationIntentDescription" = "Update peers configuration. Configuration must be provided as a JSON object that has the peers public keys as dictionary's keys and a nested dictionary with with the fields to update a as velue, like the following example. The fields you can update are: \"Endpoint\".
-The fields and the peers you omit will not be modified.
-
-Example
-{ \"Peer1_Public_Key_(Base64)\": { \"Endpoint\": \"1.2.3.4:4321\" },
-  \"Peer1_Public_Key_(Base64)\": { \"Endpoint\": \"10.11.12.13:6789\"} }
-
-In the Shortcuts app, you can pass directly a Dictionary object.";
-"updateConfigurationIntentTunnelParameterTitle" = "Tunnel";
-"updateConfigurationIntentConfigurationParameterTitle" = "Configuration";
-"updateConfigurationIntentSummary ${tunnelName}" = "Update ${tunnelName} configuration";
-
-"updateConfigurationIntentInvalidConfigurationError" = "The configuration update provided is not in the right format. Make sure you pass configuration as described in Action description.";
-"updateConfigurationIntentJsonDecodingError" = "The configuration update provided is not a valid JSON object. Make sure you pass configuration as described in Action description.";
-"updateConfigurationIntentMalformedPublicKeyError %@" = "The key \"%1$@\" is not a valid Public Key encoded in Base64 format.";
