@@ -4,6 +4,7 @@
 import UIKit
 import os.log
 import Intents
+import AppIntents
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -46,6 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.mainVC?.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
 
                 tunnelsManager.activationDelegate = self.mainVC
+
+                if #available(iOS 16.0, *) {
+                    AppDependencyManager.shared.add(dependency: tunnelsManager)
+                }
 
                 NotificationCenter.default.post(name: AppDelegate.tunnelsManagerReadyNotificationName,
                                                 object: self,

@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
+
+// App Intents Common
+"wireguardAppIntentsWrongTunnelError %@" = "Cannot find a tunnel with the name \"%1$@\"";
+"wireguardAppIntentsMissingConfigurationError" = "The selected tunnel has no configuration.";
+
+// Get peers Intent
+"getPeersIntentName" = "Get Peers";
+"getPeersIntentDescription" = "Get list of public keys of peers in the selected configuration";
+"getPeersIntentTunnelParameterTitle" = "Tunnel";
+"getPeersIntentSummary ${tunnelName}" = "Get peers of ${tunnelName}";

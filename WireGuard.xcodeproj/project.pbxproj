@@ -205,6 +205,7 @@
 		6FFA5DA021958ECC0001E2F7 /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */; };
 		6FFA5DA42197085D0001E2F7 /* ActivateOnDemandOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */; };
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
+		A625F05529C4C627005EF23D /* GetPeers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F05029C4C627005EF23D /* GetPeers.swift */; };
 		A64A79DC27A5411700F15B34 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526E21C23FA10008484E /* Logger.swift */; };
 		A64A79DD27A5411E00F15B34 /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF3526C21C23F960008484E /* ringlogger.c */; };
 		A64A79DE27A541F500F15B34 /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7774EE21722D97006A79B3 /* TunnelsManager.swift */; };
@@ -239,6 +240,8 @@
 		A6B8051C27A44F770088E750 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6B8051B27A44F770088E750 /* Intents.framework */; };
 		A6B8051F27A44F770088E750 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B8051E27A44F770088E750 /* IntentHandler.swift */; };
 		A6B8052327A44F770088E750 /* WireGuardIntentsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A6B8051A27A44F770088E750 /* WireGuardIntentsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A6E361F829D8758500FFF234 /* AppIntents.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E361F729D8758500FFF234 /* AppIntents.strings */; };
+		A6E361FE29D9B18C00FFF234 /* TunnelsOptionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -480,6 +483,7 @@
 		6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
 		6FFA5DA32197085D0001E2F7 /* ActivateOnDemandOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivateOnDemandOption.swift; sourceTree = "<group>"; };
 		6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParseError+WireGuardAppError.swift"; sourceTree = "<group>"; };
+		A625F05029C4C627005EF23D /* GetPeers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPeers.swift; sourceTree = "<group>"; };
 		A64A79D727A462FC00F15B34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A64A79D827A48A8E00F15B34 /* WireGuardIntentsExtension-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WireGuardIntentsExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		A64A79F827A5462900F15B34 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
@@ -488,6 +492,8 @@
 		A6B8051B27A44F770088E750 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		A6B8051E27A44F770088E750 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		A6B8052727A454150088E750 /* WireGuardIntentsExtension_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardIntentsExtension_iOS.entitlements; sourceTree = "<group>"; };
+		A6E361F729D8758500FFF234 /* AppIntents.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = AppIntents.strings; sourceTree = "<group>"; };
+		A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsOptionsProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -820,6 +826,7 @@
 		6FF4AC0B211EC46F002C96EB = {
 			isa = PBXGroup;
 			children = (
+				A625F04C29C4C627005EF23D /* WireguardAppIntents */,
 				6F70E20C221058DF008BDFB4 /* InfoPlist.strings */,
 				6FE1765421C90BBE002690EA /* Localizable.strings */,
 				6F5D0C432183B4A4000F85AD /* Shared */,
@@ -872,6 +879,17 @@
 				A6B8051B27A44F770088E750 /* Intents.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A625F04C29C4C627005EF23D /* WireguardAppIntents */ = {
+			isa = PBXGroup;
+			children = (
+				A625F05029C4C627005EF23D /* GetPeers.swift */,
+				A6E361F729D8758500FFF234 /* AppIntents.strings */,
+				A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */,
+			);
+			name = WireguardAppIntents;
+			path = Sources/WireguardAppIntents;
 			sourceTree = "<group>";
 		};
 		A6B8051D27A44F770088E750 /* WireGuardIntentsExtension */ = {
@@ -1193,6 +1211,7 @@
 				6FE1765621C90BBE002690EA /* Localizable.strings in Resources */,
 				6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */,
 				6F919EDA218C65C50023B400 /* wireguard_doc_logo_44x58.png in Resources */,
+				A6E361F829D8758500FFF234 /* AppIntents.strings in Resources */,
 				6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */,
 				6F919EDB218C65C50023B400 /* wireguard_doc_logo_64x64.png in Resources */,
 				6F919EDC218C65C50023B400 /* wireguard_doc_logo_320x320.png in Resources */,
@@ -1524,8 +1543,10 @@
 				6FDB6D18224CC05A00EE4BC3 /* LogViewController.swift in Sources */,
 				6FFA5D952194454A0001E2F7 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				5F4541A921C451D100994C13 /* TunnelStatus.swift in Sources */,
+				A625F05529C4C627005EF23D /* GetPeers.swift in Sources */,
 				6F8F0D7422267AD2000E8335 /* ChevronCell.swift in Sources */,
 				6F61F1E921B932F700483816 /* WireGuardAppError.swift in Sources */,
+				A6E361FE29D9B18C00FFF234 /* TunnelsOptionsProvider.swift in Sources */,
 				6F7774E2217181B1006A79B3 /* AppDelegate.swift in Sources */,
 				6FDEF80021863C0100D8FBF6 /* ioapi.c in Sources */,
 				6F7F7E5F21C7D74B00527607 /* TunnelErrors.swift in Sources */,
