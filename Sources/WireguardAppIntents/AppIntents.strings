@@ -11,6 +11,18 @@
 "getPeersIntentTunnelParameterTitle" = "Tunnel";
 "getPeersIntentSummary ${tunnelName}" = "Get peers of ${tunnelName}";
 
+// Tunnel Configuration Update
+"updateTunnelConfigurationIntentName" = "Update Tunnel Configuration";
+"updateTunnelConfigurationDescription" = "Update peers configuration of the selected tunnel.";
+"updateTunnelConfigurationIntentTunnelParameterTitle" = "Tunnel";
+"updateTunnelConfigurationIntentPeersParameterTitle" = "Peers";
+"updateTunnelConfigurationIntentMergeParameterTitle" = "Merge configuration";
+"updateTunnelConfigurationIntentSummary ${tunnelName}" = "Update ${tunnelName} configuration";
+
+"updateTunnelConfigurationIntentPeerOptionsUnavailableError" = "Use the output of \"Build Peer Configuration\" action to update tunnel configuration.";
+"updateTunnelConfigurationIntentMissingPeerParameterError" = "Peer parameter value is missing";
+"updateTunnelConfigurationIntentMalformedPublicKeyError %@" = "The key \"%1$@\" is not a valid Public Key encoded in Base64 format.";
+
 // Build Peer Configuration
 "buildPeerConfigurationUpdateIntentName" = "Build Peer Configuration";
 "buildPeerConfigurationUpdateIntentDescription" = "";

@@ -207,6 +207,7 @@
 		6FFACD2021E4D8D500E9A2A5 /* ParseError+WireGuardAppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */; };
 		A625F05529C4C627005EF23D /* GetPeers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625F05029C4C627005EF23D /* GetPeers.swift */; };
 		A6E361F829D8758500FFF234 /* AppIntents.strings in Resources */ = {isa = PBXBuildFile; fileRef = A6E361F729D8758500FFF234 /* AppIntents.strings */; };
+		A6E361FA29D9821200FFF234 /* UpdateTunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361F929D9821100FFF234 /* UpdateTunnelConfiguration.swift */; };
 		A6E361FC29D9AEEA00FFF234 /* BuildPeerConfigurationUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FB29D9AEEA00FFF234 /* BuildPeerConfigurationUpdate.swift */; };
 		A6E361FE29D9B18C00FFF234 /* TunnelsOptionsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */; };
 /* End PBXBuildFile section */
@@ -444,6 +445,7 @@
 		6FFACD1E21E4D89600E9A2A5 /* ParseError+WireGuardAppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ParseError+WireGuardAppError.swift"; sourceTree = "<group>"; };
 		A625F05029C4C627005EF23D /* GetPeers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPeers.swift; sourceTree = "<group>"; };
 		A6E361F729D8758500FFF234 /* AppIntents.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = AppIntents.strings; sourceTree = "<group>"; };
+		A6E361F929D9821100FFF234 /* UpdateTunnelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTunnelConfiguration.swift; sourceTree = "<group>"; };
 		A6E361FB29D9AEEA00FFF234 /* BuildPeerConfigurationUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildPeerConfigurationUpdate.swift; sourceTree = "<group>"; };
 		A6E361FD29D9B18C00FFF234 /* TunnelsOptionsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsOptionsProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -823,6 +825,7 @@
 		A625F04C29C4C627005EF23D /* WireguardAppIntents */ = {
 			isa = PBXGroup;
 			children = (
+				A6E361F929D9821100FFF234 /* UpdateTunnelConfiguration.swift */,
 				A6E361FB29D9AEEA00FFF234 /* BuildPeerConfigurationUpdate.swift */,
 				A625F05029C4C627005EF23D /* GetPeers.swift */,
 				A6E361F729D8758500FFF234 /* AppIntents.strings */,
@@ -1427,6 +1430,7 @@
 				6FF3527221C2616C0008484E /* ringlogger.c in Sources */,
 				6F0F44CB222D55FD00B0FF04 /* EditableTextCell.swift in Sources */,
 				585B105E2577E293004F691E /* PeerConfiguration.swift in Sources */,
+				A6E361FA29D9821200FFF234 /* UpdateTunnelConfiguration.swift in Sources */,
 				6FF3527321C2616C0008484E /* Logger.swift in Sources */,
 				6F7774E421718281006A79B3 /* TunnelsListTableViewController.swift in Sources */,
 				585B108E2577E294004F691E /* x25519.c in Sources */,
