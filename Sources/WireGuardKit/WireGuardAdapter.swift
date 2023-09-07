@@ -56,6 +56,9 @@ public class WireGuardAdapter {
     /// Adapter state.
     private var state: State = .stopped
 
+    /// File that will contain the real interface name (called <name-of-tunnel>.name)
+    private var wgTunNameFile: URL? = nil
+
     /// Tunnel device file descriptor.
     private var tunnelFileDescriptor: Int32? {
         var ctlInfo = ctl_info()
@@ -146,6 +149,9 @@ public class WireGuardAdapter {
 
         // Shutdown the tunnel
         if case .started(let handle, _) = self.state {
+            if let wgTunNameFile = self.wgTunNameFile {
+                _ = FileManager.deleteFile(at: wgTunNameFile)
+            }
             wgTurnOff(handle)
         }
     }
@@ -187,6 +193,18 @@ public class WireGuardAdapter {
             }
             networkMonitor.start(queue: self.workQueue)
 
+            if let tunnelName = tunnelConfiguration.name, let ifaceName = self.interfaceName {
+                let wgTunNameFile = NSHomeDirectory() + "/" + tunnelName + ".name"
+                self.wgTunNameFile = URL(fileURLWithPath: wgTunNameFile, isDirectory: false)
+
+                let ifaceNameData = "\(ifaceName)\n".data(using: .utf8)
+                if !FileManager.default.createFile(atPath: wgTunNameFile,
+                                                   contents: ifaceNameData,
+                                                   attributes: [.posixPermissions: 0o400]) {
+                    self.logHandler(.error, "Failed to write wg tun name file")
+                }
+            }
+
             do {
                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
                 try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
@@ -215,6 +233,9 @@ public class WireGuardAdapter {
         workQueue.async {
             switch self.state {
             case .started(let handle, _):
+                if let wgTunNameFile = self.wgTunNameFile {
+                    _ = FileManager.deleteFile(at: wgTunNameFile)
+                }
                 wgTurnOff(handle)
 
             case .temporaryShutdown:
