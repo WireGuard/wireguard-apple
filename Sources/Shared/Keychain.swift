@@ -18,6 +18,22 @@ class Keychain {
         return String(data: data, encoding: String.Encoding.utf8)
     }
 
+    static func getReferenceName(called ref: Data) -> String? {
+        var result: CFTypeRef?
+        let ret = SecItemCopyMatching([kSecValuePersistentRef: ref,
+                                        kSecReturnAttributes: true] as CFDictionary,
+                                       &result)
+        if ret != errSecSuccess || result == nil {
+            wg_log(.error, message: "Unable to get config attributes from keychain: \(ret)")
+            return nil
+        }
+        guard let attrs = result as? [CFString: AnyObject] else { return nil }
+
+        guard let secAttrAccount = attrs[kSecAttrAccount] as? String else { return nil }
+        let name = secAttrAccount.split(separator: ":", maxSplits: 1)[0]
+        return String(name)
+    }
+
     static func makeReference(containing value: String, called name: String, previouslyReferencedBy oldRef: Data? = nil) -> Data? {
         var ret: OSStatus
         guard var bundleIdentifier = Bundle.main.bundleIdentifier else {

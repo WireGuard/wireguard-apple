@@ -16,6 +16,7 @@ import "C"
 import (
 	"fmt"
 	"math"
+	"net"
 	"os"
 	"os/signal"
 	"runtime"
@@ -27,6 +28,7 @@ import (
 	"golang.org/x/sys/unix"
 	"golang.zx2c4.com/wireguard/conn"
 	"golang.zx2c4.com/wireguard/device"
+	"golang.zx2c4.com/wireguard/ipc"
 	"golang.zx2c4.com/wireguard/tun"
 )
 
@@ -54,6 +56,7 @@ func (l CLogger) Printf(format string, args ...interface{}) {
 type tunnelHandle struct {
 	*device.Device
 	*device.Logger
+	uapi net.Listener
 }
 
 var tunnelHandles = make(map[int32]tunnelHandle)
@@ -100,6 +103,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		unix.Close(dupTunFd)
 		return -1
 	}
+
 	tun, err := tun.CreateTUNFromFile(os.NewFile(uintptr(dupTunFd), "/dev/tun"), 0)
 	if err != nil {
 		logger.Errorf("Unable to create new tun device from fd: %v", err)
@@ -116,6 +120,21 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		return -1
 	}
 
+	var uapi net.Listener
+	if runtime.GOOS != "ios" {
+		ifaceName, err := tun.Name()
+		if err != nil {
+			logger.Errorf("Unable to get interface name: %v", err)
+			return -1
+		}
+
+		uapi, err = openUapiSocket(logger, ifaceName, dev)
+		if err != nil {
+			logger.Errorf("Unable to listen on UAPI socket: %v", err)
+			return -1
+		}
+	}
+
 	dev.Up()
 	logger.Verbosef("Device started")
 
@@ -129,18 +148,58 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 		unix.Close(dupTunFd)
 		return -1
 	}
-	tunnelHandles[i] = tunnelHandle{dev, logger}
+
+	tunnelHandles[i] = tunnelHandle{dev, logger, uapi}
+
 	return i
+}
+
+func openUapiSocket(logger *device.Logger, ifaceName string, device *device.Device) (net.Listener, error) {
+	fileUAPI, err := ipc.UAPIOpen(ifaceName)
+	if err != nil {
+		return nil, err
+	}
+	uapi, err := ipc.UAPIListen(ifaceName, fileUAPI)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		for {
+			conn, err := uapi.Accept()
+			if err != nil {
+				logger.Errorf("UAPI error: %v", err)
+				return
+			}
+			go device.IpcHandle(conn)
+		}
+	}()
+
+	logger.Verbosef("UAPI listener started")
+
+	return uapi, nil
 }
 
 //export wgTurnOff
 func wgTurnOff(tunnelHandle int32) {
+	logger := &device.Logger{
+		Verbosef: CLogger(0).Printf,
+		Errorf:   CLogger(1).Printf,
+	}
+
 	dev, ok := tunnelHandles[tunnelHandle]
 	if !ok {
 		return
 	}
 	delete(tunnelHandles, tunnelHandle)
 	dev.Close()
+
+	if dev.uapi != nil {
+		err := dev.uapi.Close()
+		if err != nil {
+			logger.Errorf("Unable to close UAPI socket: %v", err)
+		}
+	}
 }
 
 //export wgSetConfig
