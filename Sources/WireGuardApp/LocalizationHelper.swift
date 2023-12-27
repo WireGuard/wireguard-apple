@@ -3,7 +3,7 @@
 
 import Foundation
 
-/// Gets the English string from the Base.lproj bundle, which can be used as a fallback when the translation for a certain language is missing.
+/// Gets the English string from Base.lproj as a fallback for missing translations.
 func tr_base(_ key: String) -> String {
 	let baseBundlePath: String? = Bundle.main.path(forResource: "Base", ofType: "lproj")
 	let baseBundle: Bundle? = Bundle(path: baseBundlePath ?? "") ?? nil
