@@ -25,9 +25,9 @@ import (
 	"unsafe"
 
 	"golang.org/x/sys/unix"
-	"github.com/amnezia-vpn/amnezia-wg/conn"
-	"github.com/amnezia-vpn/amnezia-wg/device"
-	"github.com/amnezia-vpn/amnezia-wg/tun"
+	"github.com/amnezia-vpn/amneziawg-go/conn"
+	"github.com/amnezia-vpn/amneziawg-go/device"
+	"github.com/amnezia-vpn/amneziawg-go/tun"
 )
 
 var loggerFunc unsafe.Pointer
@@ -209,7 +209,7 @@ func wgVersion() *C.char {
 		return C.CString("unknown")
 	}
 	for _, dep := range info.Deps {
-		if dep.Path == "github.com/amnezia-vpn/amnezia-wg" {
+		if dep.Path == "github.com/amnezia-vpn/amneziawg-go" {
 			parts := strings.Split(dep.Version, "-")
 			if len(parts) == 3 && len(parts[2]) == 12 {
 				return C.CString(parts[2][:7])

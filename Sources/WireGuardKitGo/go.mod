@@ -1,10 +1,10 @@
-module github.com/amnezia-vpn/awg-apple-fork
+module github.com/amnezia-vpn/amneziawg-apple
 
 go 1.17
 
 require (
 	golang.org/x/sys v0.5.1-0.20230222185716-a3b23cc77e89
-	github.com/amnezia-vpn/amnezia-wg v0.1.8
+	github.com/amnezia-vpn/amneziawg-go v0.1.8
 )
 
 require (
