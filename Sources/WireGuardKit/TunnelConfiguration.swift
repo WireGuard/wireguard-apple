@@ -6,7 +6,7 @@ import Foundation
 public final class TunnelConfiguration {
     public var name: String?
     public var interface: InterfaceConfiguration
-    public let peers: [PeerConfiguration]
+    public var peers: [PeerConfiguration]
 
     public init(name: String?, interface: InterfaceConfiguration, peers: [PeerConfiguration]) {
         self.interface = interface

@@ -7,6 +7,7 @@ public struct PeerConfiguration {
     public var publicKey: PublicKey
     public var preSharedKey: PreSharedKey?
     public var allowedIPs = [IPAddressRange]()
+    public var excludeIPs = [IPAddressRange]()
     public var endpoint: Endpoint?
     public var persistentKeepAlive: UInt16?
     public var rxBytes: UInt64?
