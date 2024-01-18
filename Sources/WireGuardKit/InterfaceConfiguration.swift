@@ -7,6 +7,15 @@ import Network
 public struct InterfaceConfiguration {
     public var privateKey: PrivateKey
     public var addresses = [IPAddressRange]()
+    public var Jc: UInt16?
+    public var Jmin: UInt16?
+    public var Jmax: UInt16?
+    public var S1: UInt16?
+    public var S2: UInt16?
+    public var H1: UInt32?
+    public var H2: UInt32?
+    public var H3: UInt32?
+    public var H4: UInt32?
     public var listenPort: UInt16?
     public var mtu: UInt16?
     public var dns = [DNSServer]()

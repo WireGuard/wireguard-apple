@@ -22,6 +22,7 @@ extension TunnelConfiguration {
         case interfaceHasInvalidDNS(String)
         case interfaceHasInvalidMTU(String)
         case interfaceHasUnrecognizedKey(String)
+        case interfaceHasInvalidCustomParam(String)
         case peerHasNoPublicKey
         case peerHasInvalidPublicKey(String)
         case peerHasInvalidPreSharedKey(String)
@@ -71,7 +72,7 @@ extension TunnelConfiguration {
                     } else {
                         attributes[key] = value
                     }
-                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
+                    let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu", "jc", "jmin", "jmax", "s1", "s2", "h1", "h2", "h3", "h4"]
                     let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
                     if parserState == .inInterfaceSection {
                         guard interfaceSectionKeys.contains(key) else {
@@ -128,6 +129,33 @@ extension TunnelConfiguration {
         output.append("PrivateKey = \(interface.privateKey.base64Key)\n")
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
+        }
+        if let Jc = interface.Jc {
+            output.append("Jc = \(Jc)\n")
+        }
+        if let Jmin = interface.Jmin {
+            output.append("Jmin = \(Jmin)\n")
+        }
+        if let Jmax = interface.Jmax {
+            output.append("Jmax = \(Jmax)\n")
+        }
+        if let S1 = interface.S1 {
+            output.append("S1 = \(S1)\n")
+        }
+        if let S2 = interface.S2 {
+            output.append("S2 = \(S2)\n")
+        }
+        if let H1 = interface.H1 {
+            output.append("H1 = \(H1)\n")
+        }
+        if let H2 = interface.H2 {
+            output.append("H2 = \(H2)\n")
+        }
+        if let H3 = interface.H3 {
+            output.append("H3 = \(H3)\n")
+        }
+        if let H4 = interface.H4 {
+            output.append("H4 = \(H4)\n")
         }
         if !interface.addresses.isEmpty {
             let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
@@ -206,6 +234,60 @@ extension TunnelConfiguration {
                 throw ParseError.interfaceHasInvalidMTU(mtuString)
             }
             interface.mtu = mtu
+        }
+        if let JcString = attributes["jc"] {
+            guard let jc = UInt16(JcString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(JcString)
+            }
+            interface.Jc = jc
+        }
+        if let JminString = attributes["jmin"] {
+            guard let jmin = UInt16(JminString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(JminString)
+            }
+            interface.Jmin = jmin
+        }
+        if let JmaxString = attributes["jmax"] {
+            guard let jmax = UInt16(JmaxString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(JmaxString)
+            }
+            interface.Jmax = jmax
+        }
+        if let S1String = attributes["s1"] {
+            guard let s1 = UInt16(S1String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(S1String)
+            }
+            interface.S1 = s1
+        }
+        if let S2String = attributes["s2"] {
+            guard let s2 = UInt16(S2String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(S2String)
+            }
+            interface.S2 = s2
+        }
+        if let H1String = attributes["h1"] {
+            guard let h1 = UInt32(H1String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(H1String)
+            }
+            interface.H1 = h1
+        }
+        if let H2String = attributes["h2"] {
+            guard let h2 = UInt32(H2String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(H2String)
+            }
+            interface.H2 = h2
+        }
+        if let H3String = attributes["h3"] {
+            guard let h3 = UInt32(H3String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(H3String)
+            }
+            interface.H3 = h3
+        }
+        if let H4String = attributes["h4"] {
+            guard let h4 = UInt32(H4String) else {
+                throw ParseError.interfaceHasInvalidCustomParam(H4String)
+            }
+            interface.H4 = h4
         }
         return interface
     }

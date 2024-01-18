@@ -47,6 +47,33 @@ class PacketTunnelSettingsGenerator {
         if let listenPort = tunnelConfiguration.interface.listenPort {
             wgSettings.append("listen_port=\(listenPort)\n")
         }
+        if let Jc = tunnelConfiguration.interface.Jc {
+            wgSettings.append("jc=\(Jc)\n")
+        }
+        if let Jmin = tunnelConfiguration.interface.Jmin {
+            wgSettings.append("jmin=\(Jmin)\n")
+        }
+        if let Jmax = tunnelConfiguration.interface.Jmax {
+            wgSettings.append("jmax=\(Jmax)\n")
+        }
+        if let S1 = tunnelConfiguration.interface.S1 {
+            wgSettings.append("s1=\(S1)\n")
+        }
+        if let S2 = tunnelConfiguration.interface.S2 {
+            wgSettings.append("s1=\(S2)\n")
+        }
+        if let H1 = tunnelConfiguration.interface.H1 {
+            wgSettings.append("h1=\(H1)\n")
+        }
+        if let H2 = tunnelConfiguration.interface.H2 {
+            wgSettings.append("h2=\(H2)\n")
+        }
+        if let H3 = tunnelConfiguration.interface.H3 {
+            wgSettings.append("h3=\(H3)\n")
+        }
+        if let H4 = tunnelConfiguration.interface.H4 {
+            wgSettings.append("h4=\(H4)\n")
+        }
         if !tunnelConfiguration.peers.isEmpty {
             wgSettings.append("replace_peers=true\n")
         }
