@@ -21,7 +21,7 @@ struct GetPeers: AppIntent {
     @Dependency
     var tunnelsManager: TunnelsManager
 
-    func perform() async throws -> some ReturnsValue {
+    func perform() async throws -> some IntentResult & ReturnsValue<[String]> {
         guard let tunnelContainer = tunnelsManager.tunnel(named: tunnelName) else {
             throw GetPeersIntentError.wrongTunnel(name: tunnelName)
         }

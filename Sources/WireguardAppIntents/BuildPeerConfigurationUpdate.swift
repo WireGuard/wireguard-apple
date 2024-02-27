@@ -23,7 +23,7 @@ struct BuildPeerConfigurationUpdate: AppIntent {
     )
     var endpoint: String
 
-    func perform() async throws -> some IntentResult {
+    func perform() async throws -> some IntentResult & ReturnsValue<AppIntentsPeer> {
         let peerConfigurationUpdate = AppIntentsPeer()
         peerConfigurationUpdate.publicKey = publicKey
         peerConfigurationUpdate.endpoint = endpoint
