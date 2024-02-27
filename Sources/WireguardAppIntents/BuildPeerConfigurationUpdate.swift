@@ -3,8 +3,6 @@
 
 import AppIntents
 
-let kEndpointConfigurationUpdateDictionaryKey = "Endpoint"
-
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct BuildPeerConfigurationUpdate: AppIntent {
 
@@ -40,6 +38,8 @@ struct BuildPeerConfigurationUpdate: AppIntent {
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct AppIntentsPeer: TransientAppEntity {
+    
+    static let kEndpointConfigUpdateDictionaryKey = "Endpoint"
 
     static var typeDisplayRepresentation = TypeDisplayRepresentation(
         name: LocalizedStringResource("peerConfigurationUpdateEntityName", table: "AppIntents")
@@ -60,7 +60,7 @@ struct AppIntentsPeer: TransientAppEntity {
         dictionary[publicKey] = [:]
 
         if let endpoint {
-            dictionary[publicKey]?.updateValue(endpoint, forKey: kEndpointConfigurationUpdateDictionaryKey)
+            dictionary[publicKey]?.updateValue(endpoint, forKey: Self.kEndpointConfigUpdateDictionaryKey)
         }
 
         let jsonData: Data
