@@ -33,7 +33,7 @@ struct UpdateTunnelConfiguration: AppIntent {
     var tunnelsManager: TunnelsManager
 
     func perform() async throws -> some IntentResult {
-        guard let peers else { throw AppIntentConfigurationUpdateError.missingPeerParameter }
+        let peers = peers ?? []
 
         guard let tunnelContainer = tunnelsManager.tunnel(named: tunnelName) else {
             throw AppIntentConfigurationUpdateError.wrongTunnel(name: tunnelName)
@@ -114,7 +114,6 @@ enum AppIntentConfigurationUpdateError: Swift.Error, CustomLocalizedStringResour
     case wrongTunnel(name: String)
     case missingConfiguration
     case peerOptionsUnavailable
-    case missingPeerParameter
     case malformedPublicKey(key: String)
 
     var localizedStringResource: LocalizedStringResource {
@@ -125,8 +124,6 @@ enum AppIntentConfigurationUpdateError: Swift.Error, CustomLocalizedStringResour
             return LocalizedStringResource("wireguardAppIntentsMissingConfigurationError", table: "AppIntents")
         case .peerOptionsUnavailable:
             return LocalizedStringResource("updateTunnelConfigurationIntentPeerOptionsUnavailableError", table: "AppIntents")
-        case .missingPeerParameter:
-            return LocalizedStringResource("updateTunnelConfigurationIntentMissingPeerParameterError", table: "AppIntents")
         case .malformedPublicKey(let malformedKey):
             return LocalizedStringResource("updateTunnelConfigurationIntentMalformedPublicKeyError \(malformedKey)", table: "AppIntents")
         }
