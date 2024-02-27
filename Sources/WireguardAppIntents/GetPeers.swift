@@ -5,7 +5,9 @@ import Foundation
 import AppIntents
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
-struct GetPeers: AppIntent {
+struct GetPeers: AppIntent, CustomIntentMigratedAppIntent {
+
+    static var intentClassName: String = "GetPeersIntent"
 
     static var title = LocalizedStringResource("getPeersIntentName", table: "AppIntents")
     static var description = IntentDescription(
