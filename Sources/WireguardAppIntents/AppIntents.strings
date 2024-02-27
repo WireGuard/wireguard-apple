@@ -19,12 +19,12 @@
 "updateTunnelConfigurationIntentMergeParameterTitle" = "Merge configuration";
 "updateTunnelConfigurationIntentSummary ${tunnelName}" = "Update ${tunnelName} configuration";
 
-"updateTunnelConfigurationIntentPeerOptionsUnavailableError" = "Use the output of \"Build Peer Configuration\" action to update tunnel configuration.";
+"updateTunnelConfigurationIntentPeerOptionsUnavailableError" = "Use the output of \"Build Peer Configuration\" action to update tunnel configuration. To update multiple peers at once, you can use the \"Add to Variable\" action and pass the resulting Variable in this field.";
 "updateTunnelConfigurationIntentMalformedPublicKeyError %@" = "The key \"%1$@\" is not a valid Public Key encoded in Base64 format.";
 
 // Build Peer Configuration
 "buildPeerConfigurationUpdateIntentName" = "Build Peer Configuration";
-"buildPeerConfigurationUpdateIntentDescription" = "";
+"buildPeerConfigurationUpdateIntentDescription" = "Build an item that contains the informations needed to update an peer's configuration.";
 "buildPeerConfigurationUpdateIntentSummary ${publicKey}" = "Build configuration for peer ${publicKey}";
 "buildPeerConfigurationUpdateIntentPublicKeyParameterTitle" = "Peer Public Key";
 "buildPeerConfigurationUpdateIntentEndpointParameterTitle" = "Endpoint";
