@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: MIT
+// Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
+
+// App Intents Common
+"wireguardAppIntentsWrongTunnelError %@" = "Cannot find a tunnel with the name \"%1$@\"";
+"wireguardAppIntentsMissingConfigurationError" = "The selected tunnel has no configuration.";
+
+// Get peers Intent
+"getPeersIntentName" = "Get Peers";
+"getPeersIntentDescription" = "Get list of public keys of peers in the selected configuration";
+"getPeersIntentTunnelParameterTitle" = "Tunnel";
+"getPeersIntentSummary ${tunnelName}" = "Get peers of ${tunnelName}";
+
+// Tunnel Configuration Update
+"updateTunnelConfigurationIntentName" = "Update Tunnel Configuration";
+"updateTunnelConfigurationDescription" = "Update peers configuration of the selected tunnel.";
+"updateTunnelConfigurationIntentTunnelParameterTitle" = "Tunnel";
+"updateTunnelConfigurationIntentPeersParameterTitle" = "Peers";
+"updateTunnelConfigurationIntentMergeParameterTitle" = "Merge configuration";
+"updateTunnelConfigurationIntentSummary ${tunnelName}" = "Update ${tunnelName} configuration";
+
+"updateTunnelConfigurationIntentPeerOptionsUnavailableError" = "Use the output of \"Build Peer Configuration\" action to update tunnel configuration. To update multiple peers at once, you can use the \"Add to Variable\" action and pass the resulting Variable in this field.";
+"updateTunnelConfigurationIntentMalformedPublicKeyError %@" = "The key \"%1$@\" is not a valid Public Key encoded in Base64 format.";
+
+// Build Peer Configuration
+"buildPeerConfigurationUpdateIntentName" = "Build Peer Configuration";
+"buildPeerConfigurationUpdateIntentDescription" = "Build an item that contains the informations needed to update an peer's configuration.";
+"buildPeerConfigurationUpdateIntentSummary ${publicKey}" = "Build configuration for peer ${publicKey}";
+"buildPeerConfigurationUpdateIntentPublicKeyParameterTitle" = "Peer Public Key";
+"buildPeerConfigurationUpdateIntentEndpointParameterTitle" = "Endpoint";
+
+// Peer Configuration Update Entity
+"peerConfigurationUpdateEntityName" = "Configuration Update - Peer";
+"peerConfigurationUpdateEntityPropertyPublicKeyTitle" = "Public Key";
+"peerConfigurationUpdateEntityPropertyEndpointTitle" = "Endpoint";

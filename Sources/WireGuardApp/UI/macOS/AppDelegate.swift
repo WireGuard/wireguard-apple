@@ -3,6 +3,7 @@
 
 import Cocoa
 import ServiceManagement
+import AppIntents
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -57,6 +58,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.tunnelsManager = tunnelsManager
                 self.tunnelsTracker = tunnelsTracker
                 self.statusItemController = statusItemController
+
+                if #available(macOS 13.0, *) {
+                    AppDependencyManager.shared.add(dependency: tunnelsManager)
+                }
 
                 if !isLaunchedAtLogin {
                     self.showManageTunnelsWindow(completion: nil)

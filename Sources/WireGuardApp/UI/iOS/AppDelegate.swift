@@ -3,6 +3,7 @@
 
 import UIKit
 import os.log
+import AppIntents
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -10,6 +11,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var mainVC: MainViewController?
     var isLaunchedForSpecificAction = false
+
+    var tunnelsManager: TunnelsManager?
+
+    static let tunnelsManagerReadyNotificationName: Notification.Name = Notification.Name(rawValue: "com.wireguard.ios.tunnelsManagerReadyNotification")
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Logger.configureGlobal(tagged: "APP", withFilePath: FileManager.logFileURL?.path)
@@ -28,6 +33,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.makeKeyAndVisible()
 
         self.mainVC = mainVC
+
+        // Create the tunnels manager, and when it's ready, inform tunnelsListVC
+        TunnelsManager.create { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .failure(let error):
+                ErrorPresenter.showErrorAlert(error: error, from: self.mainVC)
+            case .success(let tunnelsManager):
+                self.tunnelsManager = tunnelsManager
+                self.mainVC?.tunnelsListVC?.setTunnelsManager(tunnelsManager: tunnelsManager)
+
+                tunnelsManager.activationDelegate = self.mainVC
+
+                if #available(iOS 16.0, *) {
+                    AppDependencyManager.shared.add(dependency: tunnelsManager)
+                }
+
+                NotificationCenter.default.post(name: AppDelegate.tunnelsManagerReadyNotificationName,
+                                                object: self,
+                                                userInfo: nil)
+            }
+        }
 
         return true
     }
