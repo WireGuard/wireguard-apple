@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
+// Copyright © 2018-2023 WireGuard LLC. All Rights Reserved.
 
 import UIKit
 
@@ -16,11 +16,7 @@ class SwitchCell: UITableViewCell {
         get { return switchView.isEnabled }
         set(value) {
             switchView.isEnabled = value
-            if #available(iOS 13.0, *) {
-                textLabel?.textColor = value ? .label : .secondaryLabel
-            } else {
-                textLabel?.textColor = value ? .black : .gray
-            }
+            textLabel?.textColor = value ? .label : .secondaryLabel
         }
     }
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright © 2018-2021 WireGuard LLC. All Rights Reserved.
+// Copyright © 2018-2023 WireGuard LLC. All Rights Reserved.
 
 import UIKit
 
@@ -28,11 +28,7 @@ class TextCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         message = ""
-        if #available(iOS 13.0, *) {
-            setTextColor(.label)
-        } else {
-            setTextColor(.black)
-        }
+        setTextColor(.label)
         setTextAlignment(.left)
     }
 }
