@@ -402,6 +402,8 @@
 
 "macAlertMultipleEntriesForKey (%@)" = "There should be only one entry per section for key ‘%@’";
 
+"macAlertInterfaceHasInvalidCustomParam (%@)" = "Interface has invalid custom param ‘%@’";
+
 // Mac about dialog
 
 "macAppVersion (%@)" = "App version: %@";

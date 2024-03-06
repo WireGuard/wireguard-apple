@@ -47,32 +47,33 @@ class PacketTunnelSettingsGenerator {
         if let listenPort = tunnelConfiguration.interface.listenPort {
             wgSettings.append("listen_port=\(listenPort)\n")
         }
-        if let Jc = tunnelConfiguration.interface.Jc {
-            wgSettings.append("jc=\(Jc)\n")
+
+        if let junkPacketCount = tunnelConfiguration.interface.junkPacketCount {
+            wgSettings.append("jc=\(junkPacketCount)\n")
         }
-        if let Jmin = tunnelConfiguration.interface.Jmin {
-            wgSettings.append("jmin=\(Jmin)\n")
+        if let junkPacketMinSize = tunnelConfiguration.interface.junkPacketMinSize {
+            wgSettings.append("jmin=\(junkPacketMinSize)\n")
         }
-        if let Jmax = tunnelConfiguration.interface.Jmax {
-            wgSettings.append("jmax=\(Jmax)\n")
+        if let junkPacketMaxSize = tunnelConfiguration.interface.junkPacketMaxSize {
+            wgSettings.append("jmax=\(junkPacketMaxSize)\n")
         }
-        if let S1 = tunnelConfiguration.interface.S1 {
-            wgSettings.append("s1=\(S1)\n")
+        if let initPacketJunkSize = tunnelConfiguration.interface.initPacketJunkSize {
+            wgSettings.append("s1=\(initPacketJunkSize)\n")
         }
-        if let S2 = tunnelConfiguration.interface.S2 {
-            wgSettings.append("s2=\(S2)\n")
+        if let responsePacketJunkSize = tunnelConfiguration.interface.responsePacketJunkSize {
+            wgSettings.append("s2=\(responsePacketJunkSize)\n")
         }
-        if let H1 = tunnelConfiguration.interface.H1 {
-            wgSettings.append("h1=\(H1)\n")
+        if let initPacketMagicHeader = tunnelConfiguration.interface.initPacketMagicHeader {
+            wgSettings.append("h1=\(initPacketMagicHeader)\n")
         }
-        if let H2 = tunnelConfiguration.interface.H2 {
-            wgSettings.append("h2=\(H2)\n")
+        if let responsePacketMagicHeader = tunnelConfiguration.interface.responsePacketMagicHeader {
+            wgSettings.append("h2=\(responsePacketMagicHeader)\n")
         }
-        if let H3 = tunnelConfiguration.interface.H3 {
-            wgSettings.append("h3=\(H3)\n")
+        if let underloadPacketMagicHeader = tunnelConfiguration.interface.underloadPacketMagicHeader {
+            wgSettings.append("h3=\(underloadPacketMagicHeader)\n")
         }
-        if let H4 = tunnelConfiguration.interface.H4 {
-            wgSettings.append("h4=\(H4)\n")
+        if let transportPacketMagicHeader = tunnelConfiguration.interface.transportPacketMagicHeader {
+            wgSettings.append("h4=\(transportPacketMagicHeader)\n")
         }
         if !tunnelConfiguration.peers.isEmpty {
             wgSettings.append("replace_peers=true\n")
@@ -143,7 +144,7 @@ class PacketTunnelSettingsGenerator {
         let (ipv4Addresses, ipv6Addresses) = addresses()
         let (ipv4IncludedRoutes, ipv6IncludedRoutes) = includedRoutes()
         let (ipv4ExcludedRoutes, ipv6ExcludedRoutes) = excludedRoutes()
-        
+
         let ipv4Settings = NEIPv4Settings(addresses: ipv4Addresses.map { $0.destinationAddress }, subnetMasks: ipv4Addresses.map { $0.destinationSubnetMask })
         ipv4Settings.includedRoutes = ipv4IncludedRoutes
         ipv4Settings.excludedRoutes = ipv4ExcludedRoutes
@@ -202,7 +203,7 @@ class PacketTunnelSettingsGenerator {
         }
         return (ipv4IncludedRoutes, ipv6IncludedRoutes)
     }
-  
+
     private func excludedRoutes() -> ([NEIPv4Route], [NEIPv6Route]) {
         var ipv4ExcludedRoutes = [NEIPv4Route]()
         var ipv6ExcludedRoutes = [NEIPv6Route]()

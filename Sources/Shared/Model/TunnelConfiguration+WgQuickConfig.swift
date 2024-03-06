@@ -130,32 +130,33 @@ extension TunnelConfiguration {
         if let listenPort = interface.listenPort {
             output.append("ListenPort = \(listenPort)\n")
         }
-        if let Jc = interface.Jc {
-            output.append("Jc = \(Jc)\n")
+
+        if let junkPacketCount = interface.junkPacketCount {
+            output.append("Jc = \(junkPacketCount)\n")
         }
-        if let Jmin = interface.Jmin {
-            output.append("Jmin = \(Jmin)\n")
+        if let junkPacketMinSize = interface.junkPacketMinSize {
+            output.append("Jmin = \(junkPacketMinSize)\n")
         }
-        if let Jmax = interface.Jmax {
-            output.append("Jmax = \(Jmax)\n")
+        if let junkPacketMaxSize = interface.junkPacketMaxSize {
+            output.append("Jmax = \(junkPacketMaxSize)\n")
         }
-        if let S1 = interface.S1 {
-            output.append("S1 = \(S1)\n")
+        if let initPacketJunkSize = interface.initPacketJunkSize {
+            output.append("S1 = \(initPacketJunkSize)\n")
         }
-        if let S2 = interface.S2 {
-            output.append("S2 = \(S2)\n")
+        if let responsePacketJunkSize = interface.responsePacketJunkSize {
+            output.append("S2 = \(responsePacketJunkSize)\n")
         }
-        if let H1 = interface.H1 {
-            output.append("H1 = \(H1)\n")
+        if let initPacketMagicHeader = interface.initPacketMagicHeader {
+            output.append("H1 = \(initPacketMagicHeader)\n")
         }
-        if let H2 = interface.H2 {
-            output.append("H2 = \(H2)\n")
+        if let responsePacketMagicHeader = interface.responsePacketMagicHeader {
+            output.append("H2 = \(responsePacketMagicHeader)\n")
         }
-        if let H3 = interface.H3 {
-            output.append("H3 = \(H3)\n")
+        if let underloadPacketMagicHeader = interface.underloadPacketMagicHeader {
+            output.append("H3 = \(underloadPacketMagicHeader)\n")
         }
-        if let H4 = interface.H4 {
-            output.append("H4 = \(H4)\n")
+        if let transportPacketMagicHeader = interface.transportPacketMagicHeader {
+            output.append("H4 = \(transportPacketMagicHeader)\n")
         }
         if !interface.addresses.isEmpty {
             let addressString = interface.addresses.map { $0.stringRepresentation }.joined(separator: ", ")
@@ -235,59 +236,59 @@ extension TunnelConfiguration {
             }
             interface.mtu = mtu
         }
-        if let JcString = attributes["jc"] {
-            guard let jc = UInt16(JcString) else {
-                throw ParseError.interfaceHasInvalidCustomParam(JcString)
+        if let junkPacketCountString = attributes["jc"] {
+            guard let junkPacketCount = UInt16(junkPacketCountString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketCountString)
             }
-            interface.Jc = jc
+            interface.junkPacketCount = junkPacketCount
         }
-        if let JminString = attributes["jmin"] {
-            guard let jmin = UInt16(JminString) else {
-                throw ParseError.interfaceHasInvalidCustomParam(JminString)
+        if let junkPacketMinSizeString = attributes["jmin"] {
+            guard let junkPacketMinSize = UInt16(junkPacketMinSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketMinSizeString)
             }
-            interface.Jmin = jmin
+            interface.junkPacketMinSize = junkPacketMinSize
         }
-        if let JmaxString = attributes["jmax"] {
-            guard let jmax = UInt16(JmaxString) else {
-                throw ParseError.interfaceHasInvalidCustomParam(JmaxString)
+        if let junkPacketMaxSizeString = attributes["jmax"] {
+            guard let junkPacketMaxSize = UInt16(junkPacketMaxSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(junkPacketMaxSizeString)
             }
-            interface.Jmax = jmax
+            interface.junkPacketMaxSize = junkPacketMaxSize
         }
-        if let S1String = attributes["s1"] {
-            guard let s1 = UInt16(S1String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(S1String)
+        if let initPacketJunkSizeString = attributes["s1"] {
+            guard let initPacketJunkSize = UInt16(initPacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(initPacketJunkSizeString)
             }
-            interface.S1 = s1
+            interface.initPacketJunkSize = initPacketJunkSize
         }
-        if let S2String = attributes["s2"] {
-            guard let s2 = UInt16(S2String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(S2String)
+        if let responsePacketJunkSizeString = attributes["s2"] {
+            guard let responsePacketJunkSize = UInt16(responsePacketJunkSizeString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(responsePacketJunkSizeString)
             }
-            interface.S2 = s2
+            interface.responsePacketJunkSize = responsePacketJunkSize
         }
-        if let H1String = attributes["h1"] {
-            guard let h1 = UInt32(H1String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(H1String)
+        if let initPacketMagicHeaderString = attributes["h1"] {
+            guard let initPacketMagicHeader = UInt32(initPacketMagicHeaderString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(initPacketMagicHeaderString)
             }
-            interface.H1 = h1
+            interface.initPacketMagicHeader = initPacketMagicHeader
         }
-        if let H2String = attributes["h2"] {
-            guard let h2 = UInt32(H2String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(H2String)
+        if let responsePacketMagicHeaderString = attributes["h2"] {
+            guard let responsePacketMagicHeader = UInt32(responsePacketMagicHeaderString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(responsePacketMagicHeaderString)
             }
-            interface.H2 = h2
+            interface.responsePacketMagicHeader = responsePacketMagicHeader
         }
-        if let H3String = attributes["h3"] {
-            guard let h3 = UInt32(H3String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(H3String)
+        if let underloadPacketMagicHeaderString = attributes["h3"] {
+            guard let underloadPacketMagicHeader = UInt32(underloadPacketMagicHeaderString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(underloadPacketMagicHeaderString)
             }
-            interface.H3 = h3
+            interface.underloadPacketMagicHeader = underloadPacketMagicHeader
         }
-        if let H4String = attributes["h4"] {
-            guard let h4 = UInt32(H4String) else {
-                throw ParseError.interfaceHasInvalidCustomParam(H4String)
+        if let transportPacketMagicHeaderString = attributes["h4"] {
+            guard let transportPacketMagicHeader = UInt32(transportPacketMagicHeaderString) else {
+                throw ParseError.interfaceHasInvalidCustomParam(transportPacketMagicHeaderString)
             }
-            interface.H4 = h4
+            interface.transportPacketMagicHeader = transportPacketMagicHeader
         }
         return interface
     }
