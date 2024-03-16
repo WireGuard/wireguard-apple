@@ -113,7 +113,7 @@ class LogViewController: UIViewController {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
         let timeStampString = dateFormatter.string(from: Date())
-        let destinationURL = destinationDir.appendingPathComponent("wireguard-log-\(timeStampString).txt")
+        let destinationURL = destinationDir.appendingPathComponent("amneziawg-log-\(timeStampString).txt")
 
         DispatchQueue.global(qos: .userInitiated).async {
 

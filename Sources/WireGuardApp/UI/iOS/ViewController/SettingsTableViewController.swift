@@ -91,7 +91,7 @@ class SettingsTableViewController: UITableViewController {
             guard let tunnelsManager = self.tunnelsManager else { return }
             guard let destinationDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
 
-            let destinationURL = destinationDir.appendingPathComponent("wireguard-export.zip")
+            let destinationURL = destinationDir.appendingPathComponent("amneziawg-export.zip")
             _ = FileManager.deleteFile(at: destinationURL)
 
             let count = tunnelsManager.numberOfTunnels()

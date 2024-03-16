@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "Preferencias";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Agregar un túnel";
 "tunnelsListSwipeDeleteButtonTitle" = "Eliminar";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "Añadir un nuevo túnel WireGuard";
+"addTunnelMenuHeader" = "Añadir un nuevo túnel AmneziaWG";
 "addTunnelMenuImportFile" = "Crear desde archivo";
 "addTunnelMenuQRCode" = "Crear desde código QR";
 "addTunnelMenuFromScratch" = "Crear desde cero";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "Creado %1$d de %2$d túneles a partir del archivo zip";
 
 "alertBadConfigImportTitle" = "No se puede importar túnel";
-"alertBadConfigImportMessage (%@)" = "El archivo ‘%@’ no contiene una configuración válida de WireGuard";
+"alertBadConfigImportMessage (%@)" = "El archivo ‘%@’ no contiene una configuración válida de AmneziaWG";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Eliminar";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "¿Eliminar túnel %d?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "Este dispositivo no es capaz de escanear códigos QR";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "Código QR inválido";
-"alertScanQRCodeInvalidQRCodeMessage" = "El código QR escaneado no es una configuración válida de WireGuard";
+"alertScanQRCodeInvalidQRCodeMessage" = "El código QR escaneado no es una configuración válida de AmneziaWG";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "Código inválido";
 "alertScanQRCodeUnreadableQRCodeMessage" = "El código escaneado no pudo ser leído";
@@ -203,7 +203,7 @@
 "settingsViewTitle" = "Configuración";
 
 "settingsSectionTitleAbout" = "Acerca de";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard para iOS";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG para iOS";
 
 "settingsSectionTitleExportConfigurations" = "Exportar configuraciones";
 "settingsExportZipButtonTitle" = "Exportar archivo zip";
@@ -261,14 +261,14 @@
 "alertSystemErrorMessageTunnelConnectionFailed" = "La conexión ha fallado.";
 "alertSystemErrorMessageTunnelConfigurationUnknown" = "Error desconocido de sistema.";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "Gestionar túneles";
 "macMenuImportTunnels" = "Importar túnel(es) desde archivo";
 "macMenuViewLog" = "Ver registro";
-"macMenuAbout" = "Acerca de WireGuard";
-"macMenuQuit" = "Salir de WireGuard";
+"macMenuAbout" = "Acerca de AmneziaWG";
+"macMenuQuit" = "Salir de AmneziaWG";
 
-"macMenuHideApp" = "Ocultar WireGuard";
+"macMenuHideApp" = "Ocultar AmneziaWG";
 "macMenuShowAllApps" = "Mostrar todo";
 
 "macMenuFile" = "Archivo";
@@ -290,7 +290,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "Gestionar Túneles WireGuard";
+"macWindowTitleManageTunnels" = "Gestionar Túneles AmneziaWG";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "¿Estás seguro que deseas eliminar \"%@\"?";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "¿Está seguro que desea eliminar %d túneles?";
@@ -329,7 +329,7 @@
 "macAlertEndpointInvalid (%@)" = "Endpoint ‘%@’ no es válido";
 "macAlertPersistentKeepliveInvalid (%@)" = "El valor keepalive persistente '%@' no es válido";
 "macAlertInfoUnrecognizedPeerKey" = "Las claves válidas son: ‘PublicKey’, ‘PresharedKey’, ‘AllowedIPs’, ‘Endpoint’ y ‘PersistentKeepalive’";
-"macConfirmAndQuitAlertQuitWireGuard" = "Salir de WireGuard";
+"macConfirmAndQuitAlertQuitWireGuard" = "Salir de AmneziaWG";
 "macConfirmAndQuitAlertCloseWindow" = "Cerrar Gestor de túneles";
 
 // Mac tooltip
@@ -351,19 +351,19 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store desea actualizar WireGuard";
+"macAppStoreUpdatingAlertMessage" = "App Store desea actualizar AmneziaWG";
 
 // Donation
 
-"donateLink" = "♥ Donar al Proyecto WireGuard";
+"donateLink" = "♥ Donar al Proyecto AmneziaWG";
 "macAlertNoInterface" = "Configuration must have an ‘Interface’ section.";
-"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
+"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, AmneziaWG will continue to be available from the menu bar icon.";
 "macUnusableTunnelInfo" = "In case this tunnel was created by another user, only that user can view, edit, or activate this tunnel.";
 "alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "The tunnel is already active or in the process of being activated";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Unable to apply network settings to tunnel object.";
 "macMenuExportTunnels" = "Export Tunnels to Zip…";
 "alertCantOpenInputConfFileTitle" = "Unable to import from file";
-"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
+"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit AmneziaWG entirely?";
 "macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ and ‘MTU’.";
 "alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
 "alertTunnelNameEmptyTitle" = "No name provided";
@@ -375,7 +375,7 @@
 "macAlertPrivateKeyInvalid" = "Private key is invalid.";
 "macMenuNetworksNone" = "Networks: None";
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
-"macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG is exiting with an active tunnel";
 "alertSystemErrorMessageTunnelConfigurationStale" = "The configuration is stale.";
 "alertTunnelDNSFailureMessage" = "One or more endpoint domains could not be resolved.";
 "alertSystemErrorOnListingTunnelsTitle" = "Unable to list tunnels";
@@ -388,7 +388,7 @@
 "alertTunnelAlreadyExistsWithThatNameMessage" = "A tunnel with that name already exists";
 "iosExportPrivateData" = "Authenticate to export tunnel private keys.";
 "alertTunnelActivationBackendFailureMessage" = "Unable to turn on Go backend library.";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 "alertNoTunnelsInImportedZipArchiveMessage" = "No .conf tunnel files were found inside the zip archive.";
 "alertTunnelActivationFileDescriptorFailureMessage" = "Unable to determine TUN device file descriptor.";
 "macAlertNameIsEmpty" = "Name is required";

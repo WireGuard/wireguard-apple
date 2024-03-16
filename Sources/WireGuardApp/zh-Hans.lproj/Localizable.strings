@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "设置";
 "tunnelsListCenteredAddTunnelButtonTitle" = "添加隧道";
 "tunnelsListSwipeDeleteButtonTitle" = "删除";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "新建 WireGuard 隧道";
+"addTunnelMenuHeader" = "新建 AmneziaWG 隧道";
 "addTunnelMenuImportFile" = "导入配置或压缩包";
 "addTunnelMenuQRCode" = "扫描二维码";
 "addTunnelMenuFromScratch" = "手动创建";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "通过压缩包导入了 %2$d 项中的 %1$d 项";
 
 "alertBadConfigImportTitle" = "无法导入隧道";
-"alertBadConfigImportMessage (%@)" = "在文件 ‘%@’ 中未发现有效的 WireGuard 配置";
+"alertBadConfigImportMessage (%@)" = "在文件 ‘%@’ 中未发现有效的 AmneziaWG 配置";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "删除";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "删除 %d 隧道?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "此设备不能扫描二维码";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "二维码无效";
-"alertScanQRCodeInvalidQRCodeMessage" = "扫描的二维码不是有效的 WireGuard 配置";
+"alertScanQRCodeInvalidQRCodeMessage" = "扫描的二维码不是有效的 AmneziaWG 配置";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "代码无效";
 "alertScanQRCodeUnreadableQRCodeMessage" = "扫描的二维码无法读取";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "设置";
 
 "settingsSectionTitleAbout" = "关于";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard for iOS";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG for iOS";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 
 "settingsSectionTitleExportConfigurations" = "导出配置";
 "settingsExportZipButtonTitle" = "导出zip档案";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "网络：%@";
 "macMenuNetworksNone" = "网络：无";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "管理隧道";
 "macMenuImportTunnels" = "从文件导入隧道…";
 "macMenuAddEmptyTunnel" = "添加空隧道…";
 "macMenuViewLog" = "查看日志";
 "macMenuExportTunnels" = "导出隧道为Zip…";
-"macMenuAbout" = "关于 WireGuard";
-"macMenuQuit" = "退出 WireGuard";
+"macMenuAbout" = "关于 AmneziaWG";
+"macMenuQuit" = "退出 AmneziaWG";
 
-"macMenuHideApp" = "隐藏 WireGuard";
+"macMenuHideApp" = "隐藏 AmneziaWG";
 "macMenuHideOtherApps" = "隐藏其它";
 "macMenuShowAllApps" = "显示全部";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "管理 WireGuard 隧道";
+"macWindowTitleManageTunnels" = "管理 AmneziaWG 隧道";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "您确定要删除 \"%@\" 吗？";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "您确定要删除 %d 个隧道吗？";
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "您想要关闭隧道管理器还是完全退出 WireGuard？";
-"macConfirmAndQuitAlertInfo" = "如果您关闭了隧道管理器，可继续从菜单栏图标使用 WireGuard 。";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "如果您关闭了隧道管理器，可继续从菜单栏图标使用 WireGuard 。\n\n请注意，如果您完全退出 WireGuard ，当前活动的隧道('%@')将仍然有效，直到您从此应用程序或通过系统偏好设置中的网络面板停用。";
-"macConfirmAndQuitAlertQuitWireGuard" = "退出 WireGuard";
+"macConfirmAndQuitAlertMessage" = "您想要关闭隧道管理器还是完全退出 AmneziaWG？";
+"macConfirmAndQuitAlertInfo" = "如果您关闭了隧道管理器，可继续从菜单栏图标使用 AmneziaWG 。";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "如果您关闭了隧道管理器，可继续从菜单栏图标使用 AmneziaWG 。\n\n请注意，如果您完全退出 AmneziaWG ，当前活动的隧道('%@')将仍然有效，直到您从此应用程序或通过系统偏好设置中的网络面板停用。";
+"macConfirmAndQuitAlertQuitWireGuard" = "退出 AmneziaWG";
 "macConfirmAndQuitAlertCloseWindow" = "关闭隧道管理器";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard 正在退出，且还有一个激活的隧道。";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG 正在退出，且还有一个激活的隧道。";
 "macAppExitingWithActiveTunnelInfo" = "退出后隧道将保持激活。您可以通过重新打开此应用程序或系统偏好设置中的网络面板来禁用它。";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store 想要更新 WireGuard";
+"macAppStoreUpdatingAlertMessage" = "App Store 想要更新 AmneziaWG";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "请禁用隧道 ”%@“ 的按需使用，停用它，然后继续在 App Store 中更新。";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "请禁用隧道 ”%@“ ，然后继续在 App Store 中更新。";
 
 // Donation
 
-"donateLink" = "♥ 为 WireGuard 捐赠";
+"donateLink" = "♥ 为 AmneziaWG 捐赠";
 "macTunnelsMenuTitle" = "Tunnels";

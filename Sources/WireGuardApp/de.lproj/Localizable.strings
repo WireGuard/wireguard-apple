@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "Einstellungen";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Tunnel hinzufügen";
 "tunnelsListSwipeDeleteButtonTitle" = "Entfernen";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "WireGuard-Tunnel hinzufügen";
+"addTunnelMenuHeader" = "AmneziaWG-Tunnel hinzufügen";
 "addTunnelMenuImportFile" = "Aus Datei oder Archiv erstellen";
 "addTunnelMenuQRCode" = "Aus QR-Code erstellen";
 "addTunnelMenuFromScratch" = "Selbst erstellen";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "%1$d von %2$d Tunnel aus Zip-Archiv erstellt";
 
 "alertBadConfigImportTitle" = "Tunnel konnte nicht importiert werden";
-"alertBadConfigImportMessage (%@)" = "Die Datei ‘%@’ enthält keine gültige WireGuard-Konfiguration";
+"alertBadConfigImportMessage (%@)" = "Die Datei ‘%@’ enthält keine gültige AmneziaWG-Konfiguration";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Entfernen";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d Tunnel löschen?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "Dieses Gerät kann QR-Codes nicht scannen";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "Ungültiger QR-Code";
-"alertScanQRCodeInvalidQRCodeMessage" = "Der gescannte QR-Code ist keine gültige WireGuard-Konfiguration";
+"alertScanQRCodeInvalidQRCodeMessage" = "Der gescannte QR-Code ist keine gültige AmneziaWG-Konfiguration";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "Ungültiger Code";
 "alertScanQRCodeUnreadableQRCodeMessage" = "Der gescannte Code konnte nicht gelesen werden";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "Einstellungen";
 
 "settingsSectionTitleAbout" = "Über";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard für iOS";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG für iOS";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 
 "settingsSectionTitleExportConfigurations" = "Konfigurationen exportieren";
 "settingsExportZipButtonTitle" = "Zip-Archiv exportieren";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "Netzwerke:%@";
 "macMenuNetworksNone" = "Keine Netzwerke.";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "Tunnel verwalten";
 "macMenuImportTunnels" = "Tunnel aus Datei importieren…";
 "macMenuAddEmptyTunnel" = "Leeren Tunnel hinzufügen…";
 "macMenuViewLog" = "Protokoll anzeigen";
 "macMenuExportTunnels" = "Tunnel als Zip exportieren…";
-"macMenuAbout" = "Über WireGuard";
-"macMenuQuit" = "WireGuard beenden";
+"macMenuAbout" = "Über AmneziaWG";
+"macMenuQuit" = "AmneziaWG beenden";
 
-"macMenuHideApp" = "WireGuard ausblenden";
+"macMenuHideApp" = "AmneziaWG ausblenden";
 "macMenuHideOtherApps" = "Andere ausblenden";
 "macMenuShowAllApps" = "Alle anzeigen";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "WireGuard-Tunnel verwalten";
+"macWindowTitleManageTunnels" = "AmneziaWG-Tunnel verwalten";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "Möchten Sie ’%@’ wirklich löschen?";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Möchten Sie diese %d Tunnel wirklich löschen?";
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "Möchten Sie den Tunnelmanager schließen oder WireGuard ganz beenden?";
-"macConfirmAndQuitAlertInfo" = "Wenn Sie den Tunnelmanager schließen, wird WireGuard weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Wenn Sie den Tunnelmanager schließen, wird WireGuard weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.\n\nBeachten Sie, dass der derzeit aktive Tunnel ('%@') weiterhin aktiv bleibt (auch wenn Sie WireGuard ganz beenden), bis Sie ihn von dieser Anwendung oder über das Netzwerk-Panel in den Systemeinstellungen deaktivieren.";
-"macConfirmAndQuitAlertQuitWireGuard" = "WireGuard beenden";
+"macConfirmAndQuitAlertMessage" = "Möchten Sie den Tunnelmanager schließen oder AmneziaWG ganz beenden?";
+"macConfirmAndQuitAlertInfo" = "Wenn Sie den Tunnelmanager schließen, wird AmneziaWG weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Wenn Sie den Tunnelmanager schließen, wird AmneziaWG weiterhin über das Symbol in der Menüleiste zur Verfügung stehen.\n\nBeachten Sie, dass der derzeit aktive Tunnel ('%@') weiterhin aktiv bleibt (auch wenn Sie AmneziaWG ganz beenden), bis Sie ihn von dieser Anwendung oder über das Netzwerk-Panel in den Systemeinstellungen deaktivieren.";
+"macConfirmAndQuitAlertQuitWireGuard" = "AmneziaWG beenden";
 "macConfirmAndQuitAlertCloseWindow" = "Tunnelverwaltung schließen";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard wird beendet, mit einem aktiven Tunnel";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG wird beendet, mit einem aktiven Tunnel";
 "macAppExitingWithActiveTunnelInfo" = "Der Tunnel bleibt nach dem Beenden aktiv. Sie können ihn deaktivieren, indem Sie diese Anwendung erneut öffnen oder in den Systemeinstellungen unter \"Netzwerk\" aktivieren.";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store möchte WireGuard aktualisieren";
+"macAppStoreUpdatingAlertMessage" = "App Store möchte AmneziaWG aktualisieren";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Bitte deaktivieren Sie \"on-demand\" für den Tunnel ‘%@', deaktivieren Sie ihn und fahren Sie dann mit der Aktualisierung im App Store fort.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Bitte deaktivieren Sie den Tunnel ‘%@’ und fahren Sie dann mit der Aktualisierung im App Store fort.";
 
 // Donation
 
-"donateLink" = "♥ Spende an das WireGuard Projekt";
+"donateLink" = "♥ Spende an das AmneziaWG Projekt";
 "macTunnelsMenuTitle" = "Tunnels";

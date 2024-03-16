@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "Nastavitve";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Dodaj tunel";
 "tunnelsListSwipeDeleteButtonTitle" = "Izbriši";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "Dodaj nov tunel WireGuard";
+"addTunnelMenuHeader" = "Dodaj nov tunel AmneziaWG";
 "addTunnelMenuImportFile" = "Uvozi iz datoteke ali arhiva";
 "addTunnelMenuQRCode" = "Skeniraj kodo QR";
 "addTunnelMenuFromScratch" = "Ustvari na novo";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "Ustvarjenih tunelov iz arhiva zip: %1$d od %2$d";
 
 "alertBadConfigImportTitle" = "Tunela ni mogoče uvoziti";
-"alertBadConfigImportMessage (%@)" = "Datoteka \"%@\" ne vsebuje veljavne konfiguracije WireGuard";
+"alertBadConfigImportMessage (%@)" = "Datoteka \"%@\" ne vsebuje veljavne konfiguracije AmneziaWG";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Izbriši";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "Izbrišem %d tunel?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "Ta naprava ne more skenirati kod QR";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "Neveljavna koda QR";
-"alertScanQRCodeInvalidQRCodeMessage" = "Skenirana koda QR ni veljavna konfiguracija WireGuard";
+"alertScanQRCodeInvalidQRCodeMessage" = "Skenirana koda QR ni veljavna konfiguracija AmneziaWG";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "Neveljavna koda";
 "alertScanQRCodeUnreadableQRCodeMessage" = "Skenirane kode ni bilo mogoče prebrati";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "Nastavitve";
 
 "settingsSectionTitleAbout" = "O programu";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard za iOS";
-"settingsVersionKeyWireGuardGoBackend" = "Verzija wireguard-go";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG za iOS";
+"settingsVersionKeyWireGuardGoBackend" = "Verzija amneziawg-go";
 
 "settingsSectionTitleExportConfigurations" = "Izvozi konfiguracije";
 "settingsExportZipButtonTitle" = "Izvoz arhiva zip";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "Omrežja: %@";
 "macMenuNetworksNone" = "Ni omrežij";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "Upravljaj tunele";
 "macMenuImportTunnels" = "Uvozi tunele iz datoteke …";
 "macMenuAddEmptyTunnel" = "Dodaj prazen tunel …";
 "macMenuViewLog" = "Pokaži dnevnik";
 "macMenuExportTunnels" = "Izvozi tunele v datoteko zip …";
-"macMenuAbout" = "O aplikaciji WireGuard";
-"macMenuQuit" = "Končaj WireGuard";
+"macMenuAbout" = "O aplikaciji AmneziaWG";
+"macMenuQuit" = "Končaj AmneziaWG";
 
-"macMenuHideApp" = "Skrij WireGuard";
+"macMenuHideApp" = "Skrij AmneziaWG";
 "macMenuHideOtherApps" = "Skrij druge";
 "macMenuShowAllApps" = "Prikaži vse";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "Upravljaj tunele WireGuard";
+"macWindowTitleManageTunnels" = "Upravljaj tunele AmneziaWG";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "Ali ste prepričani, da želite izbrisati \"%@\"?";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Ali ste prepričani, da želite izbrisati izbrane tunele?";
@@ -394,7 +394,7 @@
 // Mac about dialog
 
 "macAppVersion (%@)" = "Verzija aplikacije: %@";
-"macGoBackendVersion (%@)" = "Verzija wireguard-go: %@";
+"macGoBackendVersion (%@)" = "Verzija amneziawg-go: %@";
 
 // Privacy
 
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "Ali želite zapreti upravljalca tunelov ali končati WireGuard v celoti?";
-"macConfirmAndQuitAlertInfo" = "Če zaprete upravljalca tunelov, bo WireGuard še naprej na voljo preko ikone v meniju.";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Če zaprete upravljalca tunelov, bo WireGuard še naprej na voljo preko ikone v meniju.\n\nPomnite: če zaprete WireGuard bo trenutni aktiven tunel (\"%@\") ostal aktiven dokler ga ne deaktivirate preko te aplikacije ali preko omrežne plošče v sistemskih nastavitvah.";
-"macConfirmAndQuitAlertQuitWireGuard" = "Končaj WireGuard";
+"macConfirmAndQuitAlertMessage" = "Ali želite zapreti upravljalca tunelov ali končati AmneziaWG v celoti?";
+"macConfirmAndQuitAlertInfo" = "Če zaprete upravljalca tunelov, bo AmneziaWG še naprej na voljo preko ikone v meniju.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Če zaprete upravljalca tunelov, bo AmneziaWG še naprej na voljo preko ikone v meniju.\n\nPomnite: če zaprete AmneziaWG bo trenutni aktiven tunel (\"%@\") ostal aktiven dokler ga ne deaktivirate preko te aplikacije ali preko omrežne plošče v sistemskih nastavitvah.";
+"macConfirmAndQuitAlertQuitWireGuard" = "Končaj AmneziaWG";
 "macConfirmAndQuitAlertCloseWindow" = "Zapri upravljalca tunelov";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard se končuje z aktivnim tunelom";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG se končuje z aktivnim tunelom";
 "macAppExitingWithActiveTunnelInfo" = "Tunel bo ostal aktiven po izhodu. Lahko ga onemogočite po ponovnem odprtju aplikacije ali preko omrežne plošče v sistemskih nastavitvah.";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store bi rad posodobil WireGuard";
+"macAppStoreUpdatingAlertMessage" = "App Store bi rad posodobil AmneziaWG";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Onemogočite aktivacijo na zahtevo za tunel \"%@\", ga deaktivirajte in nadaljujte posodobitev iz trgovine App Store.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Prosimo deaktivirajte tunel \"%@\" in nadaljuje posodobitev v trgovini App Store.";
 
 // Donation
 
-"donateLink" = "♥ Donirajte projektu WireGuard";
+"donateLink" = "♥ Donirajte projektu AmneziaWG";
 "macTunnelsMenuTitle" = "Tunnels";

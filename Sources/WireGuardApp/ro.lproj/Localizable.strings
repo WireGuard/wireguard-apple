@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "Setări";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Adaugă un tunel";
 "tunnelsListSwipeDeleteButtonTitle" = "Ștergere";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "Adaugă un nou tunel WireGuard";
+"addTunnelMenuHeader" = "Adaugă un nou tunel AmneziaWG";
 "addTunnelMenuImportFile" = "Creare din fișier sau arhivă";
 "addTunnelMenuQRCode" = "Creare din cod QR";
 "addTunnelMenuFromScratch" = "Creare de la zero";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "S-au creat %1$d din %2$d tuneluri din arhiva zip";
 
 "alertBadConfigImportTitle" = "Tunelul nu poate fi importat";
-"alertBadConfigImportMessage (%@)" = "Fișierul „%@” nu conține o configurație WireGuard validă";
+"alertBadConfigImportMessage (%@)" = "Fișierul „%@” nu conține o configurație AmneziaWG validă";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Ștergere";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "Ștergi %d tunel?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "Acest dispozitiv nu poate scana coduri QR";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "Cod QR invalid";
-"alertScanQRCodeInvalidQRCodeMessage" = "Codul QR scanat nu este o configurație WireGuard validă";
+"alertScanQRCodeInvalidQRCodeMessage" = "Codul QR scanat nu este o configurație AmneziaWG validă";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "Cod invalid";
 "alertScanQRCodeUnreadableQRCodeMessage" = "Codul scanat nu a putut fi citit";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "Setări";
 
 "settingsSectionTitleAbout" = "Despre";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard pentru iOS";
-"settingsVersionKeyWireGuardGoBackend" = "Bibliotecă Go WireGuard";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG pentru iOS";
+"settingsVersionKeyWireGuardGoBackend" = "Bibliotecă Go AmneziaWG";
 
 "settingsSectionTitleExportConfigurations" = "Exportare configurații";
 "settingsExportZipButtonTitle" = "Exportare arhivă zip";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "Rețele: %@";
 "macMenuNetworksNone" = "Rețele: niciuna";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "Gestionare tuneluri";
 "macMenuImportTunnels" = "Importare tunel(uri) din fișier…";
 "macMenuAddEmptyTunnel" = "Adăugare tunel gol…";
 "macMenuViewLog" = "Vizualizare jurnal";
 "macMenuExportTunnels" = "Exportare tuneluri în zip…";
-"macMenuAbout" = "Despre WireGuard";
-"macMenuQuit" = "Ieși din WireGuard";
+"macMenuAbout" = "Despre AmneziaWG";
+"macMenuQuit" = "Ieși din AmneziaWG";
 
-"macMenuHideApp" = "Ascunde WireGuard";
+"macMenuHideApp" = "Ascunde AmneziaWG";
 "macMenuHideOtherApps" = "Ascunde restul";
 "macMenuShowAllApps" = "Afișare toate";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "Gestionare tuneluri WireGuard";
+"macWindowTitleManageTunnels" = "Gestionare tuneluri AmneziaWG";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "Ești sigur că dorești să ștergi „%@”?";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "Ești sigur că dorești să ștergi %d tuneluri?";
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "Dorești să închizi managerul de tuneluri sau să ieși complet din WireGuard?";
-"macConfirmAndQuitAlertInfo" = "Dacă închizi managerul de tuneluri, WireGuard va fi în continuare disponibil din pictograma barei de meniu.";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Dacă închizi managerul de tuneluri, WireGuard va fi în continuare disponibil din pictograma barei de meniu.\n\nReține că dacă ieși complet din WireGuard, tunelul activ în prezent („%@”) va rămâne activ până îl dezactivezi din această aplicație sau prin intermediul panoului Rețea din preferințele de sistem.";
-"macConfirmAndQuitAlertQuitWireGuard" = "Ieși din WireGuard";
+"macConfirmAndQuitAlertMessage" = "Dorești să închizi managerul de tuneluri sau să ieși complet din AmneziaWG?";
+"macConfirmAndQuitAlertInfo" = "Dacă închizi managerul de tuneluri, AmneziaWG va fi în continuare disponibil din pictograma barei de meniu.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Dacă închizi managerul de tuneluri, AmneziaWG va fi în continuare disponibil din pictograma barei de meniu.\n\nReține că dacă ieși complet din AmneziaWG, tunelul activ în prezent („%@”) va rămâne activ până îl dezactivezi din această aplicație sau prin intermediul panoului Rețea din preferințele de sistem.";
+"macConfirmAndQuitAlertQuitWireGuard" = "Ieși din AmneziaWG";
 "macConfirmAndQuitAlertCloseWindow" = "Închide managerul de tuneluri";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard iese cu un tunel activ";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG iese cu un tunel activ";
 "macAppExitingWithActiveTunnelInfo" = "Tunelul va rămâne activ după ieșire. Îl poți dezactiva prin redeschiderea acestei aplicații sau prin intermediul panoului Rețea din preferințele de sistem.";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store dorește să actualizeze WireGuard";
+"macAppStoreUpdatingAlertMessage" = "App Store dorește să actualizeze AmneziaWG";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Oprește opțiunea „la cerere” pentru tunelul „%@”. Dezactiveaz-o, apoi continuă cu actualizarea în App Store.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Dezactivează tunelul „%@”, iar apoi continuă cu actualizarea în App Store.";
 
 // Donation
 
-"donateLink" = "♥ Donează pentru proiectul WireGuard";
+"donateLink" = "♥ Donează pentru proiectul AmneziaWG";
 "macTunnelsMenuTitle" = "Tunnels";

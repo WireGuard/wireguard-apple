@@ -213,7 +213,7 @@ class LogViewController: NSViewController {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFullDate, .withTime, .withTimeZone] // Avoid ':' in the filename
         let timeStampString = dateFormatter.string(from: Date())
-        savePanel.nameFieldStringValue = "wireguard-log-\(timeStampString).txt"
+        savePanel.nameFieldStringValue = "amneziawg-log-\(timeStampString).txt"
 
         savePanel.beginSheetModal(for: self.view.window!) { [weak self] response in
             guard response == .OK else { return }

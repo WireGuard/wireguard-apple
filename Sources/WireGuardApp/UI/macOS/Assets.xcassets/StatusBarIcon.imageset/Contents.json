@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "StatusBarIcon@1x.png",
+      "filename" : "black 22.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "StatusBarIcon@2x.png",
+      "filename" : "black 44.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "StatusBarIcon@3x.png",
+      "filename" : "black 66.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

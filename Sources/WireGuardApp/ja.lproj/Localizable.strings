@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "設定";
 "tunnelsListCenteredAddTunnelButtonTitle" = "トンネルの追加";
 "tunnelsListSwipeDeleteButtonTitle" = "削除";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "WireGuardトンネルの追加";
+"addTunnelMenuHeader" = "AmneziaWGトンネルの追加";
 "addTunnelMenuImportFile" = "ファイル、アーカイブから作成";
 "addTunnelMenuQRCode" = "QRコードから作成";
 "addTunnelMenuFromScratch" = "空の状態から作成";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "ZIP アーカイブの %2$d 件中の %1$d トンネルを作成しました";
 
 "alertBadConfigImportTitle" = "トンネルをインポートできません";
-"alertBadConfigImportMessage (%@)" = "ファイル ‘%@’ には有効な WireGuard の設定がありません";
+"alertBadConfigImportMessage (%@)" = "ファイル ‘%@’ には有効な AmneziaWG の設定がありません";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "削除";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d トンネルを削除しますか?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "この機器ではQRコードをスキャンできません";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "無効なQRコード";
-"alertScanQRCodeInvalidQRCodeMessage" = "スキャンしたQRコードは有効なWireGuardの設定ではありません";
+"alertScanQRCodeInvalidQRCodeMessage" = "スキャンしたQRコードは有効なAmneziaWGの設定ではありません";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "無効なコード";
 "alertScanQRCodeUnreadableQRCodeMessage" = "スキャンしたコードが解読できません";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "設定";
 
 "settingsSectionTitleAbout" = "このプログラムについて";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard for iOS";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG for iOS";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 
 "settingsSectionTitleExportConfigurations" = "設定のエクスポート";
 "settingsExportZipButtonTitle" = "ZIPアーカイブとしてエクスポート";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "ネットワーク: %@";
 "macMenuNetworksNone" = "ネットワーク: なし";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "トンネルの管理";
 "macMenuImportTunnels" = "ファイルからトンネルをインポート…";
 "macMenuAddEmptyTunnel" = "設定が空のトンネルを追加…";
 "macMenuViewLog" = "ログの参照";
 "macMenuExportTunnels" = "トンネル設定をZIPにエクスポート…";
-"macMenuAbout" = "WireGuard について";
-"macMenuQuit" = "WireGuardを終了";
+"macMenuAbout" = "AmneziaWG について";
+"macMenuQuit" = "AmneziaWGを終了";
 
-"macMenuHideApp" = "WireGuard を隠す";
+"macMenuHideApp" = "AmneziaWG を隠す";
 "macMenuHideOtherApps" = "ほかを隠す";
 "macMenuShowAllApps" = "すべてを表示";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "WireGuardトンネルの管理";
+"macWindowTitleManageTunnels" = "AmneziaWGトンネルの管理";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "本当に ‘%@’ を削除しますか？";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "本当に %d トンネルを削除しますか？";
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "トンネル管理画面を閉じますか？それともWireGuard自体を終了しますか？";
-"macConfirmAndQuitAlertInfo" = "トンネル管理画面を閉じても、メニューバーアイコンからWireGuardを操作できます。";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "トンネル管理画面を閉じても、メニューバーアイコンからWireGuardを操作できます。\n\n注意：WireGuard自体を終了しても、現在有効化済みのトンネル ('%@') はこのアプリケーションかシステム環境設定のネットワークパネルから無効化するまでは有効なままです。";
-"macConfirmAndQuitAlertQuitWireGuard" = "WireGuardを終了";
+"macConfirmAndQuitAlertMessage" = "トンネル管理画面を閉じますか？それともAmneziaWG自体を終了しますか？";
+"macConfirmAndQuitAlertInfo" = "トンネル管理画面を閉じても、メニューバーアイコンからAmneziaWGを操作できます。";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "トンネル管理画面を閉じても、メニューバーアイコンからAmneziaWGを操作できます。\n\n注意：AmneziaWG自体を終了しても、現在有効化済みのトンネル ('%@') はこのアプリケーションかシステム環境設定のネットワークパネルから無効化するまでは有効なままです。";
+"macConfirmAndQuitAlertQuitWireGuard" = "AmneziaWGを終了";
 "macConfirmAndQuitAlertCloseWindow" = "トンネル管理画面を閉じる";
 
-"macAppExitingWithActiveTunnelMessage" = "有効化中のトンネルが残ったまま WireGuard を終了しようとしています";
+"macAppExitingWithActiveTunnelMessage" = "有効化中のトンネルが残ったまま AmneziaWG を終了しようとしています";
 "macAppExitingWithActiveTunnelInfo" = "終了後もトンネルは有効なままです。無効化はこのアプリケーションを再度起動して行うか、システム環境設定のネットワークパネルから行います。";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store に WireGuard の更新版があります";
+"macAppStoreUpdatingAlertMessage" = "App Store に AmneziaWG の更新版があります";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "トンネル '%@' のオンデマンド有効化を解除し、トンネルを無効にしてから App Store での更新を行ってください。";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "トンネル ‘%@’ を無効にしてから App Store での更新を行ってください。";
 
 // Donation
 
-"donateLink" = "♥ WireGuard プロジェクトに寄付する";
+"donateLink" = "♥ AmneziaWG プロジェクトに寄付する";
 "macTunnelsMenuTitle" = "Tunnels";

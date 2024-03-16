@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "ਵਾਇਰਗਾਰਡ";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "ਸੈਟਿੰਗਾਂ";
 "tunnelsListCenteredAddTunnelButtonTitle" = "ਟਨਲ ਜੋੜੋ";
 "tunnelsListSwipeDeleteButtonTitle" = "ਹਟਾਓ";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "ਨਵੀਂ ਵਾਇਰਗਾਰਡ ਟਨਲ ਬਣਾਓ";
+"addTunnelMenuHeader" = "ਨਵੀਂ AmneziaWG ਟਨਲ ਬਣਾਓ";
 "addTunnelMenuImportFile" = "ਫ਼ਾਇਲ ਜਾਂ ਅਕਾਇਵ ਤੋਂ ਬਣਾਓ";
 "addTunnelMenuQRCode" = "QR ਕੋਡ ਤੋਂ ਬਣਾਓ";
 "addTunnelMenuFromScratch" = "ਮੁੱਢ ਤੋਂ ਬਣਾਓ";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਤੋਂ %2$d ਟਨਲਾਂ ਵਿੱਚੋਂ %1$d ਬਣਾਈਆਂ";
 
 "alertBadConfigImportTitle" = "ਟਨਲ ਇੰਪੋਰਟ ਕਰਨ ਲਈ ਅਸਮਰੱਥ";
-"alertBadConfigImportMessage (%@)" = "ਫ਼ਾਇਲ ‘%@’ ਵਿੱਚ ਵਾਜਬ WireGuard ਸੰਰਚਨਾ ਨਹੀਂ ਰੱਖਦੀ ਹੈ";
+"alertBadConfigImportMessage (%@)" = "ਫ਼ਾਇਲ ‘%@’ ਵਿੱਚ ਵਾਜਬ AmneziaWG ਸੰਰਚਨਾ ਨਹੀਂ ਰੱਖਦੀ ਹੈ";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "ਹਟਾਓ";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d ਟਨਲ ਹਟਾਉਣੀ ਹੈ?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "ਇਹ ਡਿਵਾਈਸ QR ਕੋਡ ਸਕੈਨ ਨਹੀਂ ਕਰਨ ਸਕਦਾ ਹੈ";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "ਅਯੋਗ QR ਕੋਡ";
-"alertScanQRCodeInvalidQRCodeMessage" = "ਸਕੈਨ ਕੀਤਾ QR ਕੋਡ ਵਾਜਬ ਵਾਇਰਗਾਰਡ ਸੰਰਚਨਾ ਨਹੀਂ ਹੈ";
+"alertScanQRCodeInvalidQRCodeMessage" = "ਸਕੈਨ ਕੀਤਾ QR ਕੋਡ ਵਾਜਬ AmneziaWG ਸੰਰਚਨਾ ਨਹੀਂ ਹੈ";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "ਅਯੋਗ ਕੋਡ";
 "alertScanQRCodeUnreadableQRCodeMessage" = "ਸਕੈਨ ਕੀਤਾ ਕੋਡ ਪੜ੍ਹਿਆ ਨਹੀਂ ਜਾ ਸਕਿਆ";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "ਸੈਟਿੰਗਾਂ";
 
 "settingsSectionTitleAbout" = "ਇਸ ਬਾਰੇ";
-"settingsVersionKeyWireGuardForIOS" = "iOS ਲਈ ਵਾਇਰਗਾਰਡ";
-"settingsVersionKeyWireGuardGoBackend" = "ਵਾਇਰਗਾਰਡ ਗੋ ਬੈਕਐਂਡ";
+"settingsVersionKeyWireGuardForIOS" = "iOS ਲਈ AmneziaWG";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG ਗੋ ਬੈਕਐਂਡ";
 
 "settingsSectionTitleExportConfigurations" = "ਸੰਰਚਨਾ ਬਰਾਮਦ ਕਰੋ";
 "settingsExportZipButtonTitle" = "ਜ਼ਿੱਪ ਅਕਾਇਵ ਬਰਾਮਦ ਕਰੋ";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "ਨੈੱਟਵਰਕ: %@";
 "macMenuNetworksNone" = "ਨੈੱਟਵਰਕ: ਕੋਈ ਨਹੀਂ";
 
-"macMenuTitle" = "ਵਾਇਰਗਾਰਡ";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "ਟਨਲ ਦਾ ਇੰਤਜ਼ਾਮ ਕਰੋ";
 "macMenuImportTunnels" = "ਫ਼ਾਇਲ ਤੋਂ ਟਨਲ ਦਰਾਮਦ ਕਰੋ…";
 "macMenuAddEmptyTunnel" = "…ਖਾਲੀ ਟਨਲ ਜੋੜੋ";
 "macMenuViewLog" = "ਲਾਗ ਵੇਖੋ";
 "macMenuExportTunnels" = "ਟਨਲ ਨੂੰ ਜ਼ਿੱਪ ਵਜੋਂ ਬਰਾਮਦ ਕਰੋ…";
-"macMenuAbout" = "ਵਾਇਰਗਾਰਡ ਬਾਰੇ";
-"macMenuQuit" = "ਵਾਇਰਗਾਰਡ ਚੋਂ ਬਾਹਰ ਜਾਓ";
+"macMenuAbout" = "AmneziaWG ਬਾਰੇ";
+"macMenuQuit" = "AmneziaWG ਚੋਂ ਬਾਹਰ ਜਾਓ";
 
-"macMenuHideApp" = "ਵਾਇਰਗਾਰਡ ਲੁਕਾਓ";
+"macMenuHideApp" = "AmneziaWG ਲੁਕਾਓ";
 "macMenuHideOtherApps" = "ਹੋਰ ਲੁਕਾਓ";
 "macMenuShowAllApps" = "ਸਭ ਵੇਖਾਓ";
 
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "ਕੀ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਨੂੰ ਬੰਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਜਾਂ ਪੂਰੇ ਵਾਇਰਗਾਰਡ ਤੋਂ ਬਾਹਰ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ?";
-"macConfirmAndQuitAlertInfo" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਵਾਇਰਗਾਰਡ ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਵਾਇਰਗਾਰਡ ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।\n\nਯਾਦ ਰੱਕੋ ਕਿ ਜੇ ਤੁਸੀਂ ਪੂਰੇ ਵਾਇਰਗਾਰਡ ਨੂੰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਪੂਰੀ ਸਰਗਰਮ ਟਨਲ ('%@') ਫੇਰ ਵੀ ਸਰਗਰਮ ਰਹੇਗਾ, ਜਦੋਂ ਤੱਕ ਕਿ ਤੁਸੀਂ ਇਸ ਨੂੰ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਜਾਂ ਸਿਸਟਮ ਪਸੰਦਾਂ (System Preferences) ਵਿੱਚ ਨੈੱਟਵਰਕ (Network) ਪੈਨਲ ਰਾਹੀਂ ਨਾ-ਸਰਗਰਮ ਕਰ ਦਿੰਦੇ ਹੋ।";
-"macConfirmAndQuitAlertQuitWireGuard" = "ਵਾਇਰਗਾਰਡ ਚੋਂ ਬਾਹਰ ਜਾਓ";
+"macConfirmAndQuitAlertMessage" = "ਕੀ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਨੂੰ ਬੰਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ ਜਾਂ ਪੂਰੇ AmneziaWG ਤੋਂ ਬਾਹਰ ਜਾਣਾ ਚਾਹੁੰਦੇ ਹੋ?";
+"macConfirmAndQuitAlertInfo" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ AmneziaWG ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "ਜੇ ਤੁਸੀਂ ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ AmneziaWG ਮੇਨੂ ਪੱਟੀ ਆਈਕਾਨ ਵਿੱਚ ਉਪਲੱਬਧ ਰਹੇਗਾ।\n\nਯਾਦ ਰੱਕੋ ਕਿ ਜੇ ਤੁਸੀਂ ਪੂਰੇ AmneziaWG ਨੂੰ ਬੰਦ ਕਰਦੇ ਹੋ ਤਾਂ ਪੂਰੀ ਸਰਗਰਮ ਟਨਲ ('%@') ਫੇਰ ਵੀ ਸਰਗਰਮ ਰਹੇਗਾ, ਜਦੋਂ ਤੱਕ ਕਿ ਤੁਸੀਂ ਇਸ ਨੂੰ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਜਾਂ ਸਿਸਟਮ ਪਸੰਦਾਂ (System Preferences) ਵਿੱਚ ਨੈੱਟਵਰਕ (Network) ਪੈਨਲ ਰਾਹੀਂ ਨਾ-ਸਰਗਰਮ ਕਰ ਦਿੰਦੇ ਹੋ।";
+"macConfirmAndQuitAlertQuitWireGuard" = "AmneziaWG ਚੋਂ ਬਾਹਰ ਜਾਓ";
 "macConfirmAndQuitAlertCloseWindow" = "ਟਨਲ ਮੈਨੇਜਰ ਬੰਦ ਕਰੋ";
 
-"macAppExitingWithActiveTunnelMessage" = "ਵਾਇਰਗਾਰਡ ਸਰਗਰਮ ਟਨਲ ਨਾਲ ਮੌਜੂਦ ਹੈ";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG ਸਰਗਰਮ ਟਨਲ ਨਾਲ ਮੌਜੂਦ ਹੈ";
 "macAppExitingWithActiveTunnelInfo" = "ਟਨਲ ਬੰਦ ਕਰਨ ਦੇ ਬਾਅਦ ਵੀ ਸਰਗਰਮ ਰਹੇਗੀ। ਤੁਸੀਂ ਇਸ ਐਪਲੀਕੇਸ਼ਨ ਨੂੰ ਮੁੜ ਖੋਲ੍ਹ ਕੇ ਜਾਂ ਸਿਸਟਮ ਪਸੰਦਾਂ (System Preferences) ਵਿੱਚੋਂ ਨੈੱਟਵਰਕ ਪੈਨਲ (Network) ਰਾਹੀਂ ਇਹਨੂੰ ਅਸਮਰੱਥ ਕਰ ਸਕਦੇ ਹੋ।";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store ਵਾਇਰਗਾਰਡ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨਾ ਚਾਹੁੰਦਾ ਹੈ";
+"macAppStoreUpdatingAlertMessage" = "App Store AmneziaWG ਨੂੰ ਅੱਪਡੇਟ ਕਰਨਾ ਚਾਹੁੰਦਾ ਹੈ";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "ਟਨਲ ‘%@’ ਲਈ ਲੋੜ ਮੁਤਾਬਕ ਅਸਮਰੱਥ ਕਰੋ, ਇਸ ਨੂੰ ਨਾ-ਸਰਗਰਮ ਕਰੋ ਅਤੇ ਤਦ App Store ਰਾਹੀਂ ਅੱਪਡੇਟ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ।";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "ਟਨਲ ‘%@’ ਨੂੰ ਨਾ-ਸਰਗਰਮ ਕਰੋ ਅਤੇ ਤਦ App Store ਰਾਹੀਂ ਅੱਪਡੇਟ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ।";
 
 // Donation
 
-"donateLink" = "♥ ਵਾਇਰਗਾਰਡ ਪਰੋਜੈਕਟ ਨੂੰ ਦਾਨ ਦਿਓ";
+"donateLink" = "♥ AmneziaWG ਪਰੋਜੈਕਟ ਨੂੰ ਦਾਨ ਦਿਓ";
 "macTunnelsMenuTitle" = "Tunnels";

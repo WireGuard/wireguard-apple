@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "تنظیمات";
 "tunnelsListCenteredAddTunnelButtonTitle" = "اضافه کردن تونل";
 "tunnelsListSwipeDeleteButtonTitle" = "حذف";
@@ -179,7 +179,7 @@
 "settingsViewTitle" = "تنظیمات";
 
 "settingsSectionTitleAbout" = "درباره ما";
-"settingsVersionKeyWireGuardForIOS" = "WireGuard برای iOS";
+"settingsVersionKeyWireGuardForIOS" = "AmneziaWG برای iOS";
 "settingsExportZipButtonTitle" = "برون‌بری بایگانی زیپ";
 
 "settingsSectionTitleTunnelLog" = "گزارش رویداد";
@@ -238,16 +238,16 @@
 "macMenuNetworks (%@)" = "شبکه‌ها: %@";
 "macMenuNetworksNone" = "شبکه‌ها: هیچی";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "مدیریت تونل‌ها";
 "macMenuImportTunnels" = "وارد کردن تونل(ها) از پرونده…";
 "macMenuAddEmptyTunnel" = "افزودن تونل خالی…";
 "macMenuViewLog" = "مشاهده گزارش رویداد";
 "macMenuExportTunnels" = "برون‌بری تونل‌ها در پرونده زیپ…";
-"macMenuAbout" = "درباره WireGuard";
-"macMenuQuit" = "خروج از WireGuard";
+"macMenuAbout" = "درباره AmneziaWG";
+"macMenuQuit" = "خروج از AmneziaWG";
 
-"macMenuHideApp" = "WireGuard را پنهان کن";
+"macMenuHideApp" = "AmneziaWG را پنهان کن";
 "macMenuHideOtherApps" = "پنهان کردن دیگران";
 "macMenuShowAllApps" = "نمایش همه";
 
@@ -270,7 +270,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "مدیریت تونل‌های WireGuard";
+"macWindowTitleManageTunnels" = "مدیریت تونل‌های AmneziaWG";
 "macDeleteTunnelConfirmationAlertInfo" = "شما نمی‌توانید این عمل را خنثی کنید.";
 "macDeleteTunnelConfirmationAlertButtonTitleDelete" = "حذف";
 "macDeleteTunnelConfirmationAlertButtonTitleCancel" = "لغو";
@@ -329,7 +329,7 @@
 
 "macExportPrivateData" = "برو‌ن‌بری کلید‌های خصوصی تونل";
 "macViewPrivateData" = "مشاهده کلید‌های خصوصی تونل";
-"macConfirmAndQuitAlertQuitWireGuard" = "خروج از WireGuard";
+"macConfirmAndQuitAlertQuitWireGuard" = "خروج از AmneziaWG";
 "macConfirmAndQuitAlertCloseWindow" = "بستن مدیر تونل‌ها";
 
 // Mac tooltip
@@ -346,18 +346,18 @@
 
 // Donation
 
-"donateLink" = "♥ کمک مالی به پروژه WireGuard";
+"donateLink" = "♥ کمک مالی به پروژه AmneziaWG";
 "alertInvalidInterfaceMessageListenPortInvalid" = "Interface’s listen port must be between 0 and 65535, or unspecified";
 "tunnelHandshakeTimestampSystemClockBackward" = "(System clock wound backwards)";
 "macAlertNoInterface" = "Configuration must have an ‘Interface’ section.";
 "alertScanQRCodeCameraUnsupportedMessage" = "This device is not able to scan QR codes";
-"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
+"macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, AmneziaWG will continue to be available from the menu bar icon.";
 "macUnusableTunnelInfo" = "In case this tunnel was created by another user, only that user can view, edit, or activate this tunnel.";
 "alertTunnelActivationErrorTunnelIsNotInactiveMessage" = "The tunnel is already active or in the process of being activated";
 "alertTunnelActivationSetNetworkSettingsMessage" = "Unable to apply network settings to tunnel object.";
 "alertCantOpenInputConfFileTitle" = "Unable to import from file";
-"alertScanQRCodeInvalidQRCodeMessage" = "The scanned QR code is not a valid WireGuard configuration";
-"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
+"alertScanQRCodeInvalidQRCodeMessage" = "The scanned QR code is not a valid AmneziaWG configuration";
+"macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit AmneziaWG entirely?";
 "alertTunnelActivationSavedConfigFailureMessage" = "Unable to retrieve tunnel information from the saved configuration.";
 "macAlertInfoUnrecognizedInterfaceKey" = "Valid keys are: ‘PrivateKey’, ‘ListenPort’, ‘Address’, ‘DNS’ and ‘MTU’.";
 "alertTunnelNameEmptyMessage" = "Cannot create tunnel with an empty name";
@@ -376,7 +376,7 @@
 "alertCantOpenOutputZipFileForWritingMessage" = "Could not open zip file for writing.";
 "alertInvalidPeerMessagePublicKeyInvalid" = "Peer’s public key must be a 32-byte key in base64 encoding";
 "alertSystemErrorMessageTunnelConfigurationReadWriteFailed" = "Reading or writing the configuration failed.";
-"macAppExitingWithActiveTunnelMessage" = "WireGuard is exiting with an active tunnel";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG is exiting with an active tunnel";
 "alertTunnelDNSFailureMessage" = "One or more endpoint domains could not be resolved.";
 "alertInvalidInterfaceMessageAddressInvalid" = "Interface addresses must be a list of comma-separated IP addresses, optionally in CIDR notation";
 "alertTunnelDNSFailureTitle" = "DNS resolution failure";
@@ -384,7 +384,7 @@
 "alertCantOpenInputZipFileTitle" = "Unable to read zip archive";
 "alertScanQRCodeUnreadableQRCodeMessage" = "The scanned code could not be read";
 "macAlertMultipleInterfaces" = "Configuration must have only one ‘Interface’ section.";
-"macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
+"macAppStoreUpdatingAlertMessage" = "App Store would like to update AmneziaWG";
 "macUnusableTunnelMessage" = "The configuration for this tunnel cannot be found in the keychain.";
 "iosViewPrivateData" = "Authenticate to view tunnel private keys.";
 "macToolTipToggleStatus" = "Toggle status (⌘T)";
@@ -398,7 +398,7 @@
 "alertUnableToRemovePreviousLogMessage" = "The pre-existing log could not be cleared";
 "alertTunnelActivationBackendFailureMessage" = "Unable to turn on Go backend library.";
 "settingsSectionTitleExportConfigurations" = "Export configurations";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 "alertCantOpenOutputZipFileForWritingTitle" = "Unable to create zip archive";
 "alertNoTunnelsInImportedZipArchiveMessage" = "No .conf tunnel files were found inside the zip archive.";
 "alertTunnelActivationFileDescriptorFailureMessage" = "Unable to determine TUN device file descriptor.";

@@ -9,7 +9,7 @@
 
 // Tunnels list UI
 
-"tunnelsListTitle" = "WireGuard";
+"tunnelsListTitle" = "AmneziaWG";
 "tunnelsListSettingsButtonTitle" = "Ayarlar";
 "tunnelsListCenteredAddTunnelButtonTitle" = "Tünel ekle";
 "tunnelsListSwipeDeleteButtonTitle" = "Sil";
@@ -20,7 +20,7 @@
 
 // Tunnels list menu
 
-"addTunnelMenuHeader" = "Yeni bir WireGuard tüneli ekle";
+"addTunnelMenuHeader" = "Yeni bir AmneziaWG tüneli ekle";
 "addTunnelMenuImportFile" = "Dosya veya arşivden ekle";
 "addTunnelMenuQRCode" = "QR kodundan ekle";
 "addTunnelMenuFromScratch" = "Sıfırdan oluştur";
@@ -34,7 +34,7 @@
 "alertImportedFromZipMessage (%1$d of %2$d)" = "Zip arşivinden %1$d/%2$d tünel oluşturuldu";
 
 "alertBadConfigImportTitle" = "Tünel içeri aktarılamıyor";
-"alertBadConfigImportMessage (%@)" = "‘%@’ dosyası geçerli bir WireGuard konfigürasyonu içermiyor";
+"alertBadConfigImportMessage (%@)" = "‘%@’ dosyası geçerli bir AmneziaWG konfigürasyonu içermiyor";
 
 "deleteTunnelsConfirmationAlertButtonTitle" = "Sil";
 "deleteTunnelConfirmationAlertButtonMessage (%d)" = "%d tüneli silinsin mi?";
@@ -191,7 +191,7 @@
 "alertScanQRCodeCameraUnsupportedMessage" = "Bu cihaz QR kodlarını tarayamaz";
 
 "alertScanQRCodeInvalidQRCodeTitle" = "Geçersiz QR Kodu";
-"alertScanQRCodeInvalidQRCodeMessage" = "Taranan QR kodu geçerli bir WireGuard yapılandırması değil";
+"alertScanQRCodeInvalidQRCodeMessage" = "Taranan QR kodu geçerli bir AmneziaWG yapılandırması değil";
 
 "alertScanQRCodeUnreadableQRCodeTitle" = "Geçersiz Kod";
 "alertScanQRCodeUnreadableQRCodeMessage" = "Taranan kod okunamadı";
@@ -203,8 +203,8 @@
 "settingsViewTitle" = "Ayarlar";
 
 "settingsSectionTitleAbout" = "Hakkında";
-"settingsVersionKeyWireGuardForIOS" = "iOS için WireGuard";
-"settingsVersionKeyWireGuardGoBackend" = "WireGuard Go Backend";
+"settingsVersionKeyWireGuardForIOS" = "iOS için AmneziaWG";
+"settingsVersionKeyWireGuardGoBackend" = "AmneziaWG Go Backend";
 
 "settingsSectionTitleExportConfigurations" = "Yapılandırmaları dışa aktar";
 "settingsExportZipButtonTitle" = "Zip arşivini dışa aktar";
@@ -294,16 +294,16 @@
 "macMenuNetworks (%@)" = "Ağlar: %@";
 "macMenuNetworksNone" = "Ağlar: Yok";
 
-"macMenuTitle" = "WireGuard";
+"macMenuTitle" = "AmneziaWG";
 "macMenuManageTunnels" = "Tünelleri Yönet";
 "macMenuImportTunnels" = "Tünelleri Dosyadan İçe Aktar…";
 "macMenuAddEmptyTunnel" = "Boş Tünel Ekle…";
 "macMenuViewLog" = "Günlüğü Görüntüle";
 "macMenuExportTunnels" = "Tünelleri Zip'e Aktar…";
-"macMenuAbout" = "WireGuard Hakkında";
-"macMenuQuit" = "WireGuard’dan Çık";
+"macMenuAbout" = "AmneziaWG Hakkında";
+"macMenuQuit" = "AmneziaWG’dan Çık";
 
-"macMenuHideApp" = "WireGuard’ı Gizle";
+"macMenuHideApp" = "AmneziaWG’ı Gizle";
 "macMenuHideOtherApps" = "Diğerlerini Gizle";
 "macMenuShowAllApps" = "Tümünü Göster";
 
@@ -327,7 +327,7 @@
 
 // Mac manage tunnels window
 
-"macWindowTitleManageTunnels" = "WireGuard Tünellerini Yönet";
+"macWindowTitleManageTunnels" = "AmneziaWG Tünellerini Yönet";
 
 "macDeleteTunnelConfirmationAlertMessage (%@)" = "‘%@’ silmek istediğinizden emin misiniz?";
 "macDeleteMultipleTunnelsConfirmationAlertMessage (%d)" = "%d tünellerini silmek istediğinizden emin misiniz?";
@@ -405,13 +405,13 @@
 
 // Mac alert
 
-"macConfirmAndQuitAlertMessage" = "Tünel yöneticisini kapatmak mı yoksa WireGuard’dan tamamen çıkmak mı istiyorsunuz?";
-"macConfirmAndQuitAlertInfo" = "Tünel yöneticisini kapatırsanız, WireGuard menü çubuğu simgesinden kullanılmaya devam edecektir.";
-"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Tünel yöneticisini kapatırsanız, WireGuard menü çubuğu simgesinden kullanılmaya devam edecektir.\n\nWireGuard’dan tamamen çıkarsanız, o anda aktif olan tünelin ('%@') siz bu uygulamadan veya Sistem Tercihlerindeki Ağ paneli aracılığıyla devre dışı bırakana kadar hâlâ etkin kalacağını unutmayın.";
-"macConfirmAndQuitAlertQuitWireGuard" = "WireGuard’dan Çık";
+"macConfirmAndQuitAlertMessage" = "Tünel yöneticisini kapatmak mı yoksa AmneziaWG’dan tamamen çıkmak mı istiyorsunuz?";
+"macConfirmAndQuitAlertInfo" = "Tünel yöneticisini kapatırsanız, AmneziaWG menü çubuğu simgesinden kullanılmaya devam edecektir.";
+"macConfirmAndQuitInfoWithActiveTunnel (%@)" = "Tünel yöneticisini kapatırsanız, AmneziaWG menü çubuğu simgesinden kullanılmaya devam edecektir.\n\nAmneziaWG’dan tamamen çıkarsanız, o anda aktif olan tünelin ('%@') siz bu uygulamadan veya Sistem Tercihlerindeki Ağ paneli aracılığıyla devre dışı bırakana kadar hâlâ etkin kalacağını unutmayın.";
+"macConfirmAndQuitAlertQuitWireGuard" = "AmneziaWG’dan Çık";
 "macConfirmAndQuitAlertCloseWindow" = "Tünel Yöneticisini Kapat";
 
-"macAppExitingWithActiveTunnelMessage" = "WireGuard aktif bir tünelle çıkıyor";
+"macAppExitingWithActiveTunnelMessage" = "AmneziaWG aktif bir tünelle çıkıyor";
 "macAppExitingWithActiveTunnelInfo" = "Tünel, çıktıktan sonra aktif kalacaktır. Bu uygulamayı yeniden açarak veya Sistem Tercihlerindeki Ağ panelinden devre dışı bırakabilirsiniz.";
 
 // Mac tooltip
@@ -434,11 +434,11 @@
 
 // Mac App Store updating alert
 
-"macAppStoreUpdatingAlertMessage" = "App Store, WireGuard’ı güncellemek istiyor";
+"macAppStoreUpdatingAlertMessage" = "App Store, AmneziaWG güncellemek istiyor";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Lütfen ‘%@’ tüneli için isteğe bağlı’yı kapatın, devre dışı bırakın ve ardından App Store’da güncellemeye devam edin.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Lütfen ‘%@’ tünelini devre dışı bırakın ve ardından App Store’da güncellemeye devam edin.";
 
 // Donation
 
-"donateLink" = "♥ WireGuard Projesine Bağış Yapın";
+"donateLink" = "♥ AmneziaWG Projesine Bağış Yapın";
 "macTunnelsMenuTitle" = "Tunnels";
