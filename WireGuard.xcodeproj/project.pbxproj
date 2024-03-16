@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E5C5B942BA6367F00082DED /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4E5C5B932BA6367F00082DED /* PrivacyInfo.xcprivacy */; };
+		4E5C5B962BA636B300082DED /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4E5C5B952BA636B300082DED /* PrivacyInfo.xcprivacy */; };
 		58233BCF2591F842002060A8 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58233BCE2591F842002060A8 /* NotificationToken.swift */; };
 		58233BD02591F842002060A8 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58233BCE2591F842002060A8 /* NotificationToken.swift */; };
 		585B105A2577E293004F691E /* InterfaceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585B10462577E293004F691E /* InterfaceConfiguration.swift */; };
@@ -282,6 +284,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4E5C5B932BA6367F00082DED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Sources/WireGuardApp/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
+		4E5C5B952BA636B300082DED /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		58233BCE2591F842002060A8 /* NotificationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationToken.swift; sourceTree = "<group>"; };
 		585B10462577E293004F691E /* InterfaceConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterfaceConfiguration.swift; sourceTree = "<group>"; };
 		585B10472577E293004F691E /* PeerConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerConfiguration.swift; sourceTree = "<group>"; };
@@ -571,6 +575,7 @@
 				6F5D0C3421839E37000F85AD /* WireGuardNetworkExtension-Bridging-Header.h */,
 				6FFA5D9F21958ECC0001E2F7 /* ErrorNotifier.swift */,
 				5892BF9F25558288000E678D /* PacketTunnelProvider.swift */,
+				4E5C5B952BA636B300082DED /* PrivacyInfo.xcprivacy */,
 			);
 			name = WireGuardNetworkExtension;
 			path = Sources/WireGuardNetworkExtension;
@@ -659,6 +664,7 @@
 		6F919ED3218C65C50023B400 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4E5C5B932BA6367F00082DED /* PrivacyInfo.xcprivacy */,
 				6F919ED4218C65C50023B400 /* DocumentIcons */,
 			);
 			path = Resources;
@@ -1067,6 +1073,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E5C5B962BA636B300082DED /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1093,6 +1100,7 @@
 				6F919ED9218C65C50023B400 /* wireguard_doc_logo_22x29.png in Resources */,
 				6F70E20E221058E1008BDFB4 /* InfoPlist.strings in Resources */,
 				6FE1765621C90BBE002690EA /* Localizable.strings in Resources */,
+				4E5C5B942BA6367F00082DED /* PrivacyInfo.xcprivacy in Resources */,
 				6FF4AC22211EC472002C96EB /* LaunchScreen.storyboard in Resources */,
 				6F919EDA218C65C50023B400 /* wireguard_doc_logo_44x58.png in Resources */,
 				6FF4AC1F211EC472002C96EB /* Assets.xcassets in Resources */,
