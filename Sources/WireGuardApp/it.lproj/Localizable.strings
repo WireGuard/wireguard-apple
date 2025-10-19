@@ -17,6 +17,7 @@
 "tunnelsListSelectAllButtonTitle" = "Seleziona tutto";
 "tunnelsListDeleteButtonTitle" = "Elimina";
 "tunnelsListSelectedTitle (%d)" = "%d selezionati";
+"tunnelListCaptionOnDemand" = "Su richiesta";
 
 // Tunnels list menu
 
@@ -55,6 +56,11 @@
 "tunnelStatusRestarting" = "Riavvio";
 "tunnelStatusWaiting" = "In attesa";
 
+"tunnelStatusAddendumOnDemand" = " (Su richiesta)";
+"tunnelStatusOnDemandDisabled" = "Su richiesta Disabilitato";
+"tunnelStatusAddendumOnDemandEnabled" = ", Su richiesta Abilitato";
+"tunnelStatusAddendumOnDemandDisabled" = ", Su richiesta Disabilitato";
+
 "macToggleStatusButtonActivate" = "Attivato";
 "macToggleStatusButtonActivating" = "Attivazione…";
 "macToggleStatusButtonDeactivate" = "Disattiva";
@@ -62,6 +68,9 @@
 "macToggleStatusButtonReasserting" = "Riattivazione…";
 "macToggleStatusButtonRestarting" = "Riavvio…";
 "macToggleStatusButtonWaiting" = "In attesa…";
+"macToggleStatusButtonEnableOnDemand" = "Abilita Su richiesta";
+"macToggleStatusButtonDisableOnDemand" = "Disabilita Su richiesta";
+"macToggleStatusButtonDisableOnDemandDeactivate" = "Disabilita e Disattiva Su richiesta";
 
 "tunnelSectionTitleInterface" = "Interfaccia";
 
@@ -109,6 +118,7 @@
 "tunnelOnDemandSectionTitleAddSSIDs" = "Aggiungi SSID";
 "tunnelOnDemandAddMessageAddConnectedSSID (%@)" = "Aggiungi connessione: %@";
 "tunnelOnDemandAddMessageAddNewSSID" = "Aggiungi nuovo";
+"tunnelOnDemandSSIDTextFieldPlaceholder" = "SSID";
 
 "tunnelOnDemandKey" = "Su richiesta";
 "tunnelOnDemandOptionOff" = "Off";
@@ -295,6 +305,7 @@
 "macMenuNetworksNone" = "Reti: nessuna";
 
 "macMenuTitle" = "WireGuard";
+"macTunnelsMenuTitle" = "Tunnels";
 "macMenuManageTunnels" = "Gestisci i tunnel";
 "macMenuImportTunnels" = "Importa tunnel da file…";
 "macMenuAddEmptyTunnel" = "Aggiungi tunnel vuoto…";
@@ -441,4 +452,3 @@
 // Donation
 
 "donateLink" = "♥ Fai una donazione al progetto WireGuard";
-"macTunnelsMenuTitle" = "Tunnels";
