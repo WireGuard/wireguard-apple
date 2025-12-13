@@ -1,0 +1,4 @@
+module WireGuardGoFoundation {
+	umbrella header "wireguard.h"
+	export *
+}

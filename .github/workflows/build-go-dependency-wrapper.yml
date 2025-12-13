@@ -1,0 +1,128 @@
+# Builds and publishes the wg-go binaries to this repo when run as a GitHub Workflow.
+# The binaries in this repo are compiled without modification from upstream (official WireGuard) sources
+# However, if you have security requirements beyond my assertion of "trust me bruh", the code/configs/scripts in this
+# repo are 100% auditable and you are welcome to fork it and run it yourself to guarantee and grant yourself
+# that wonderfully fluttery feeling of diy, security, and privacy. All the scripts should work automagically
+# in their own github workflow context, or with a little effort, you can run it yourself offline.
+
+name: Go Dependency Wrapper
+
+on:
+  workflow_dispatch:
+    inputs:
+      update_go_deps:
+        description: 'Update go dependencies with `go get -u ./...'
+        required: false
+        type: boolean
+        default: false
+      go_update_patch_only:
+        description: '(only used if `update_go_deps` is `true`) When updating, only update the patch version.'
+        required: false
+        type: boolean
+        default: true
+      tag:
+        description: 'Releases can only be created from tags, so a unique tag is required. This will probably get updated to a versioning syntax in the future.'
+        required: true
+
+
+jobs:
+  wg-build:
+    name: Wireguard Build and Release
+    runs-on: macos-15
+
+    concurrency:
+      # Only allow a single run of this workflow on each branch, automatically cancelling older runs.
+      group: wg-${{ github.head_ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine Tag
+        id: tag
+        run: |
+          set -x
+
+          RAW_TAG="${{ github.event.inputs.tag }}"
+          TAG=$(echo "$RAW_TAG" | sed 's/[^a-zA-Z0-9._-]/-/g' | sed 's/[-]+/-/g' )
+
+          echo "RAW_TAG=${RAW_TAG}" >> "$GITHUB_OUTPUT"
+          echo "TAG=${TAG}" >> "$GITHUB_OUTPUT"
+        env:
+          RAW_TAG: ${{ github.event.inputs.tag }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_BASE_BRANCH: ${{ github.base_ref }}
+          GITHUB_REF: ${{ github.ref }}
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode_16.4.app
+
+      - name: Install Dependencies
+        run: |
+          brew install go
+
+      - name: Handle Inputs
+        run: |
+          set -xoe
+
+          pushd WireGuardGoFoundationSource
+
+          if [[ "$RUN_UPDATES" == "true" ]]; then
+            UPDATE_COMMAND=("go")
+            UPDATE_COMMAND+=("get")
+
+            if [[ "$PATCH_ONLY_UPDATES" == "true" ]]; then
+              UPDATE_COMMAND+=("-u=patch")
+            else
+              UPDATE_COMMAND+=("-u")
+            fi
+
+            UPDATE_COMMAND+=("./...")
+          fi
+
+          "${UPDATE_COMMAND[@]}"
+
+          popd
+
+          git add WireGuardGoFoundationSource/.
+        env:
+          RUN_UPDATES: ${{ github.event.inputs.update_go_deps }}
+          PATCH_ONLY_UPDATES: ${{ github.event.inputs.go_update_patch_only }}
+
+      - name: Build XCFramework
+        run: |
+          set -xoe
+
+          pushd WireGuardGoFoundationSource
+          make build-xcframework
+
+          zip -ry WireGuardGoFoundation.xcframework.zip WireGuardGoFoundation.xcframework
+          popd
+          mv WireGuardGoFoundationSource/WireGuardGoFoundation.xcframework.zip .
+
+      - name: Update Package
+        run: |
+          set -xoe
+
+          CHECKSUM=$(swift package compute-checksum WireGuardGoFoundation.xcframework.zip)
+          NEW_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/WireGuardGoFoundation.xcframework.zip"
+
+          sed -i "" "s|let url = \".*\"|let url = \"$NEW_URL\"|" Package.swift
+          sed -i "" "s|let checksum = \".*\"|let checksum = \"$CHECKSUM\"|" Package.swift
+
+          git add Package.swift
+          git commit -m "Release ${TAG}"
+          git push origin HEAD:master
+          git tag ${TAG}
+          git push origin ${TAG}
+        env:
+          TAG: ${{ steps.tag.outputs.TAG }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: WireGuardGoFoundation.xcframework.zip
+          make_latest: true
+          tag_name: ${{ steps.tag.outputs.TAG }}

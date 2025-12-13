@@ -1,99 +1,167 @@
-# [WireGuard](https://www.wireguard.com/) for iOS and macOS
+# WireGuardKit - Swift Package for iOS and macOS
 
-This project contains an application for iOS and for macOS, as well as many components shared between the two of them. You may toggle between the two platforms by selecting the target from within Xcode.
+A Swift Package Manager library providing [WireGuard](https://www.wireguard.com/) VPN functionality for iOS and macOS applications. This package wraps the official WireGuard-Go implementation in an easy-to-use Swift interface with prebuilt XCFramework binaries.
 
-## Building
+## Overview
 
-- Clone this repo:
+This project consists of two main components:
 
+1. **Go Foundation Layer** (`WireGuardGoFoundationSource/`) - A thin Go shim around the official WireGuard implementation, compiled into native XCFramework binaries for iOS, iOS Simulator, and macOS
+2. **Swift Package** - Swift wrapper providing a clean API for WireGuard functionality
+
+The package uses **prebuilt binaries** distributed via GitHub Releases, so consumers don't need Go installed or need to compile anything themselves.
+
+## Platform Support
+
+- **iOS**: 16.0+
+- **macOS**: 13.0+
+- **iOS Simulator**: arm64, x86_64
+
+## Installation
+
+### Swift Package Manager
+
+Add this package to your Xcode project or `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/ridgelineinternational/wireguard-apple-xcframework.git", from: "0.0.5")
+]
 ```
-$ git clone https://git.zx2c4.com/wireguard-apple
-$ cd wireguard-apple
+
+Then add `WireGuardKit` as a dependency to your target:
+
+```swift
+.target(
+    name: "YourTarget",
+    dependencies: ["WireGuardKit"]
+)
 ```
 
-- Rename and populate developer team ID file:
+## Project Structure
 
-```
-$ cp Sources/WireGuardApp/Config/Developer.xcconfig.template Sources/WireGuardApp/Config/Developer.xcconfig
-$ vim Sources/WireGuardApp/Config/Developer.xcconfig
-```
+### Library Components (Active)
 
-- Install swiftlint and go 1.19:
+- **`Sources/WireGuardKit/`** - Swift library code providing the main WireGuardKit API (this is what you import in your projects)
+- **`Sources/WireGuardKitC/`** - C bridge layer connecting Swift to Go
+- **`Sources/Shared/`** - Shared utilities (logging, models, keychain helpers)
+- **`WireGuardGoFoundationSource/`** - Go shim + build system for the native XCFramework
 
-```
-$ brew install swiftlint go
-```
+### Build Infrastructure
 
-- Open project in Xcode:
+- **`Package.swift`** - Swift Package Manager manifest
+- **`.github/workflows/`** - GitHub Actions for building and releasing
+- **`WireGuardGoFoundationSource/Makefile`** - Build system for compiling Go code into XCFramework
 
-```
-$ open WireGuard.xcodeproj
-```
+### Legacy Code
 
-- Flip switches, press buttons, and make whirling noises until Xcode builds it.
+- **`Legacy Example Code/`** - Contains the original WireGuard iOS/macOS applications, network extension implementations, and related tooling. Preserved for reference but not used by the library.
 
-## WireGuardKit integration
+## Building the XCFramework
 
-1. Open your Xcode project and add the Swift package with the following URL:
-   
+> **Note**: Most users don't need to build anything - just add the package as a dependency and Swift Package Manager will download the prebuilt XCFramework.
+
+If you need to build from source (for security auditing or contributing):
+
+### Via GitHub Actions (Recommended)
+
+This is the easiest way to create a trusted build:
+
+1. Fork this repository
+2. Go to **Actions** in your fork
+3. Select the **"Go Dependency Wrapper"** workflow
+4. Click **"Run workflow"** on the right side
+5. Configure the build:
+   - **Update go dependencies**: Check this to update to the latest WireGuard-Go version
+   - **Patch only**: Check this to only update patch versions (safer)
+   - **Tag**: Provide a version tag (e.g., `0.0.6`)
+6. Click **"Run Workflow"**
+
+The workflow will:
+- Build the XCFramework for all platforms
+- Create a GitHub release with your tag
+- Upload the built XCFramework
+- Automatically update `Package.swift` with the new URL and checksum
+
+Your fork will now have a release you can reference in your projects.
+
+### Building Locally
+
+For local development or if you want to inspect every step:
+
+1. **Prerequisites**:
+   ```bash
+   brew install go
    ```
-   https://git.zx2c4.com/wireguard-apple
+
+2. **Clone and navigate**:
+   ```bash
+   git clone https://github.com/ridgelineinternational/wireguard-apple-xcframework.git
+   cd wireguard-apple-xcframework/WireGuardGoFoundationSource
    ```
-   
-2. `WireGuardKit` links against `wireguard-go-bridge` library, but it cannot build it automatically
-   due to Swift package manager limitations. So it needs a little help from a developer. 
-   Please follow the instructions below to create a build target(s) for `wireguard-go-bridge`.
-   
-   - In Xcode, click File -> New -> Target. Switch to "Other" tab and choose "External Build 
-     System".
-   - Type in `WireGuardGoBridge<PLATFORM>` under the "Product name", replacing the `<PLATFORM>` 
-     placeholder with the name of the platform. For example, when targeting macOS use `macOS`, or 
-     when targeting iOS use `iOS`.
-     Make sure the build tool is set to: `/usr/bin/make` (default).
-   - In the appeared "Info" tab of a newly created target, type in the "Directory" path under 
-     the "External Build Tool Configuration":
-     
-     ```
-     ${BUILD_DIR%Build/*}SourcePackages/checkouts/wireguard-apple/Sources/WireGuardKitGo
-     ```
-     
-   - Switch to "Build Settings" and find `SDKROOT`.
-     Type in `macosx` if you target macOS, or type in `iphoneos` if you target iOS.
-   
-3. Go to Xcode project settings and locate your network extension target and switch to 
-   "Build Phases" tab.
-   
-   - Locate "Dependencies" section and hit "+" to add `WireGuardGoBridge<PLATFORM>` replacing 
-     the `<PLATFORM>` placeholder with the name of platform matching the network extension 
-     deployment target (i.e macOS or iOS).
-     
-   - Locate the "Link with binary libraries" section and hit "+" to add `WireGuardKit`.
-   
-4. In Xcode project settings, locate your main bundle app and switch to "Build Phases" tab. 
-   Locate the "Link with binary libraries" section and hit "+" to add `WireGuardKit`.
-   
-5. iOS only: Locate Bitcode settings under your application target, Build settings -> Enable Bitcode, 
-   change the corresponding value to "No".
-   
-Note that if you ship your app for both iOS and macOS, make sure to repeat the steps 2-4 twice, 
-once per platform.
 
-## MIT License
+3. **Build the XCFramework**:
+   ```bash
+   make clean
+   make build-xcframework
+   ```
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
+4. **Create release zip**:
+   ```bash
+   zip -ry WireGuardGoFoundation.xcframework.zip WireGuardGoFoundation.xcframework
+   ```
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+For detailed steps, see `.github/workflows/build-go-dependency-wrapper.yml`.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## Updating WireGuard Dependencies
+
+The core WireGuard functionality comes from the official `golang.zx2c4.com/wireguard` Go package. To update to the latest version:
+
+1. Navigate to the Go source directory:
+   ```bash
+   cd WireGuardGoFoundationSource
+   ```
+
+2. Update dependencies:
+   ```bash
+   # Update all dependencies to latest versions
+   go get -u ./...
+   
+   # OR update only patch versions (safer)
+   go get -u=patch ./...
+   ```
+
+3. Clean up:
+   ```bash
+   go mod tidy
+   ```
+
+4. Test the build:
+   ```bash
+   make clean
+   make build-xcframework
+   ```
+
+5. Create a new release (via GitHub Actions or manually)
+
+**Note**: The GitHub Actions workflow includes an option to automatically run `go get -u` during the build process.
+
+## Security Note
+
+This repository distributes **prebuilt binaries** via GitHub Releases. If you have security requirements that prevent using third-party binaries:
+
+1. Fork this repository
+2. Audit the code (everything is transparent and auditable)
+3. Run the GitHub Actions workflow in your fork to create your own trusted build
+4. Reference your fork's releases in your projects
+
+The entire build process is reproducible and automated via GitHub Actions.
+
+## License
+
+See [LICENSE.md](LICENSE.md) and [COPYING](COPYING) for details.
+
+## Related Projects
+
+- [Official WireGuard Go Implementation](https://git.zx2c4.com/wireguard-go/)
+- [Original WireGuard Apple Apps](https://git.zx2c4.com/wireguard-apple/)

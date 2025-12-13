@@ -49,3 +49,4 @@ Sources/WireGuardApp/Config/Developer.xcconfig
 
 # Vim
 .*.sw*
+*.profraw
