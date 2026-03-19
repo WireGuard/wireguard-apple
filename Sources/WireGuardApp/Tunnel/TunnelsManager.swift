@@ -85,8 +85,12 @@ class TunnelsManager {
     }
 
     func reload() {
-        NETunnelProviderManager.loadAllFromPreferences { [weak self] managers, _ in
+        NETunnelProviderManager.loadAllFromPreferences { [weak self] managers, error in
             guard let self = self else { return }
+            if let error = error {
+                wg_log(.error, message: "Failed to reload tunnel provider managers: \(error)")
+                return
+            }
 
             let loadedTunnelProviders = managers ?? []
 
@@ -745,6 +749,6 @@ extension NETunnelProviderManager {
     }
 
     func isEquivalentTo(_ tunnel: TunnelContainer) -> Bool {
-        return localizedDescription == tunnel.name && tunnelConfiguration == tunnel.tunnelConfiguration
+        return localizedDescription == tunnel.name
     }
 }
