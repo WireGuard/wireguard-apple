@@ -19,8 +19,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         Logger.configureGlobal(tagged: "NET", withFilePath: FileManager.logFileURL?.path)
 
-        if ProcessInfo.processInfo.environment["WG_TUN_DEBUG"] == "1" {
-            wg_log(.info, message: "WG_TUN_DEBUG=1: tun_darwin fallback path prints to stderr; enable Debug/Verbose in Console for Go tun: lines")
+        // tun_darwin: WG_TUN_DEBUG=1 logs unframed reads + prefix hex to stderr; =2|verbose|all also logs each successful read path (noisy).
+        if let d = ProcessInfo.processInfo.environment["WG_TUN_DEBUG"], !d.isEmpty {
+            wg_log(.info, message: "WG_TUN_DEBUG=\(d): tun_darwin diagnostics on stderr (level 1=drops, 2=per-packet success); capture extension stderr in Console")
         }
 
         wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))

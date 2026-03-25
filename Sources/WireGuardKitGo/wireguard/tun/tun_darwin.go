@@ -22,6 +22,37 @@ import (
 
 const utunControlName = "com.apple.net.utun_control"
 
+// tunDebugLevel: 0=off, 1=drop/unframed + context, 2=also log each successful framing path (very noisy).
+func tunDebugLevel() int {
+	switch os.Getenv("WG_TUN_DEBUG") {
+	case "2", "verbose", "all":
+		return 2
+	case "1":
+		return 1
+	default:
+		return 0
+	}
+}
+
+func tunDebugLogSuccess(format string, args ...interface{}) {
+	if tunDebugLevel() >= 2 {
+		_, _ = fmt.Fprintf(os.Stderr, "wireguard tun_darwin: "+format, args...)
+	}
+}
+
+func tunDebugLogDrop(format string, args ...interface{}) {
+	if tunDebugLevel() >= 1 {
+		_, _ = fmt.Fprintf(os.Stderr, "wireguard tun_darwin: "+format, args...)
+	}
+}
+
+func getBuffOrZero(buff []byte, i int) byte {
+	if i < len(buff) {
+		return buff[i]
+	}
+	return 0
+}
+
 func isIPv4OrIPv6FirstByte(b byte) bool {
 	v := b >> 4
 	return v == ipv4.Version || v == ipv6.Version
@@ -81,33 +112,33 @@ func validatedIPv6PacketLen(buff []byte, n, i int) (int, bool) {
 }
 
 // scanAndAlignIPToBuff4 finds the first validated IPv4 or IPv6 datagram in buff[:n], copies it to
-// buff[4:], and returns its length. Used when utun delivers PI + variable padding before the IP.
-func scanAndAlignIPToBuff4(buff []byte, n int) (int, bool) {
+// buff[4:], and returns its length and start offset. Used when utun delivers PI + variable padding before the IP.
+func scanAndAlignIPToBuff4(buff []byte, n int) (ipLen int, ipStart int, ok bool) {
 	end := maxUtunPrefixScan
 	if n < end {
 		end = n
 	}
 	for i := 4; i < end; i++ {
-		if totalLen, ok := validatedIPv4PacketLen(buff, n, i); ok {
+		if totalLen, valid := validatedIPv4PacketLen(buff, n, i); valid {
 			if 4+totalLen > len(buff) {
-				return 0, false
+				return 0, -1, false
 			}
 			for j := 0; j < totalLen; j++ {
 				buff[4+j] = buff[i+j]
 			}
-			return totalLen, true
+			return totalLen, i, true
 		}
-		if totalLen, ok := validatedIPv6PacketLen(buff, n, i); ok {
+		if totalLen, valid := validatedIPv6PacketLen(buff, n, i); valid {
 			if 4+totalLen > len(buff) {
-				return 0, false
+				return 0, -1, false
 			}
 			for j := 0; j < totalLen; j++ {
 				buff[4+j] = buff[i+j]
 			}
-			return totalLen, true
+			return totalLen, i, true
 		}
 	}
-	return 0, false
+	return 0, -1, false
 }
 
 type NativeTun struct {
@@ -330,14 +361,18 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 		if isDarwinUtunPI4(buff[0], buff[1], buff[2], buff[3]) {
 			// Never use isIPv4OrIPv6FirstByte(buff[4]) && return n-4: 0x45 in padding or junk can
 			// false-match; padding-only at buff[4] must not strip 4 bytes (gives ip_len=n-4, nibble 0).
-			if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
+			if ipLen, ipStart, ok := scanAndAlignIPToBuff4(buff, n); ok {
+				tunDebugLogSuccess("read path=pi_scan readN=%d ip_len=%d ip_start=%d wg_offset=%d pi=%02x%02x%02x%02x b4=%02x\n",
+					readN, ipLen, ipStart, offset, buff[0], buff[1], buff[2], buff[3], buff[4])
 				return ipLen, err
 			}
 			// PI + IP immediately at buff[4] (no leading padding): use header length, not n-4 (kernel may pad past IP).
 			if tl, ok := validatedIPv4PacketLen(buff, n, 4); ok {
+				tunDebugLogSuccess("read path=pi_ipv4@4 readN=%d ip_len=%d wg_offset=%d\n", readN, tl, offset)
 				return tl, err
 			}
 			if tl, ok := validatedIPv6PacketLen(buff, n, 4); ok {
+				tunDebugLogSuccess("read path=pi_ipv6@4 readN=%d ip_len=%d wg_offset=%d\n", readN, tl, offset)
 				return tl, err
 			}
 		}
@@ -349,28 +384,36 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 			for i := n - 1; i >= 0; i-- {
 				buff[4+i] = buff[i]
 			}
+			tunDebugLogSuccess("read path=raw_ip0 readN=%d out_len=%d wg_offset=%d\n", readN, n, offset)
 			return n, err
 		}
 		// 3) Unknown 4-byte prefix but IP at buff[4]: strip PI using declared IP length only.
 		if n >= 8 {
 			if tl, ok := validatedIPv4PacketLen(buff, n, 4); ok {
+				tunDebugLogSuccess("read path=prefixed_ipv4@4 readN=%d ip_len=%d wg_offset=%d\n", readN, tl, offset)
 				return tl, err
 			}
 			if tl, ok := validatedIPv6PacketLen(buff, n, 4); ok {
+				tunDebugLogSuccess("read path=prefixed_ipv6@4 readN=%d ip_len=%d wg_offset=%d\n", readN, tl, offset)
 				return tl, err
 			}
 		}
 		// 4) PI not recognized at buff[0:4]; scan for a validated IP header (padding / odd offsets).
-		if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
+		if ipLen, ipStart, ok := scanAndAlignIPToBuff4(buff, n); ok {
+			tunDebugLogSuccess("read path=scan_no_pi readN=%d ip_len=%d ip_start=%d wg_offset=%d\n", readN, ipLen, ipStart, offset)
 			return ipLen, err
 		}
-		if os.Getenv("WG_TUN_DEBUG") == "1" {
-			pl := readN
-			if pl > 48 {
-				pl = 48
-			}
-			_, _ = fmt.Fprintf(os.Stderr, "wireguard tun_darwin: could not frame IP read_len=%d first_bytes=%x\n", readN, buff[:pl])
+		pl := readN
+		if pl > 96 {
+			pl = 96
 		}
+		tunDebugLogDrop("could not frame IP: readN=%d wg_offset=%d pi4=%v first4=%02x%02x%02x%02x b4_b7=%02x%02x%02x%02x b20_23=%02x%02x%02x%02x prefix_hex=%x\n",
+			readN, offset,
+			isDarwinUtunPI4(buff[0], buff[1], buff[2], buff[3]),
+			buff[0], buff[1], buff[2], buff[3],
+			buff[4], buff[5], buff[6], buff[7],
+			getBuffOrZero(buff, 20), getBuffOrZero(buff, 21), getBuffOrZero(buff, 22), getBuffOrZero(buff, 23),
+			buff[:pl])
 		return 0, nil
 	}
 }
