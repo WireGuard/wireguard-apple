@@ -281,6 +281,18 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 			}
 			return ipLen, err
 		}
+		// 4b) iOS may prepend additional zero padding after PI. Your logs show:
+		// 00000002 + 16 bytes of zeros + 45..., meaning the IPv4 header starts at buff[20].
+		if n >= 24 && isIPv4OrIPv6FirstByte(buff[20]) {
+			ipLen := n - 20
+			if ipLen+4 > len(buff) {
+				return 0, err
+			}
+			for i := 0; i < ipLen; i++ {
+				buff[4+i] = buff[20+i]
+			}
+			return ipLen, err
+		}
 		// 5) Legacy fallback (4-byte PI) — last resort.
 		if os.Getenv("WG_TUN_DEBUG") == "1" {
 			pl := readN
