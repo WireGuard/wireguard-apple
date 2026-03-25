@@ -119,7 +119,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 	dev.Up()
 	logger.Verbosef("Device started")
 	// If you still see "Received packet with unknown IP version", the app is not linking this
-	// tree’s libwg-go.a (SPM does not compile Go). Rebuild: make -C Sources/WireGuardKitGo
+	// linked -lwg-go bridge (SPM does not compile Go). Rebuild: make -C Sources/WireGuardKitGo
 	_, _ = fmt.Fprintf(os.Stderr, "[WireGuardKitGo] utun-framing-patch-2025-03 lib loaded\n")
 	logger.Verbosef("WireGuardKitGo: utun-framing-patch-2025-03 (rebuild WireGuardKitGo if old unknown-IP-version logs persist)")
 
@@ -208,7 +208,7 @@ func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
 
 //export wgKitGoBuildMarker
 func wgKitGoBuildMarker() *C.char {
-	// Must match WireGuardAdapter.kitGoBuildMarkerToken; proves linked libwg-go.a is from this fork.
+	// Must match WireGuardAdapter.kitGoBuildMarkerToken; proves linked -lwg-go is from this fork.
 	return C.CString("tun-read-v4")
 }
 

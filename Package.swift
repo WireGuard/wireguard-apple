@@ -23,7 +23,7 @@ let package = Package(
             dependencies: [],
             publicHeadersPath: "."
         ),
-        // Links libwg-go (-lwg-go). SwiftPM does not compile Go — see Documentation/WireGuardKit-SPM.md
+        // Links -lwg-go (make produces libwg-go.a). SwiftPM does not compile Go — see Documentation/WireGuardKit-SPM.md
         // and README.md § WireGuardKit integration (External Build System target + extension dependency).
         .target(
             name: "WireGuardKitGo",

@@ -98,8 +98,8 @@ public class WireGuardAdapter {
         return str
     }
 
-    /// Must match `wgKitGoBuildMarker()` in libwg-go.a. If your app still logs "Received packet with unknown IP version",
-    /// `kitGoBuildMarker` will not equal this — you are linking a stale `libwg-go.a` (rebuild `Sources/WireGuardKitGo`).
+    /// Must match `wgKitGoBuildMarker()` in the linked **`-lwg-go`** bridge. If your app still logs "Received packet with unknown IP version",
+    /// `kitGoBuildMarker` will not equal this — the Go bridge is stale (rebuild with `make` in `Sources/WireGuardKitGo`, or refresh your prebuilt artifact).
     public static let kitGoBuildMarkerToken = "tun-read-v4"
 
     /// String from the linked Go bridge; compare to `kitGoBuildMarkerToken`.
@@ -203,7 +203,7 @@ public class WireGuardAdapter {
             do {
                 let marker = Self.kitGoBuildMarker
                 if marker != Self.kitGoBuildMarkerToken {
-                    self.logHandler(.error, "WireGuardKitGo library mismatch: marker=\(marker) expected=\(Self.kitGoBuildMarkerToken). Rebuild libwg-go.a (make in Sources/WireGuardKitGo). Old binary causes unknown-IP-version logs and broken AllowedIPs routing.")
+                    self.logHandler(.error, "WireGuardKitGo library mismatch: marker=\(marker) expected=\(Self.kitGoBuildMarkerToken). Rebuild the -lwg-go bridge (make in Sources/WireGuardKitGo) or refresh your packaged library. Old binary causes unknown-IP-version logs and broken AllowedIPs routing.")
                 } else {
                     self.logHandler(.verbose, "WireGuardKitGo build marker OK: \(marker)")
                 }

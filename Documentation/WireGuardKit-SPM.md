@@ -1,8 +1,8 @@
 # WireGuardKit and Swift Package Manager
 
-`WireGuardKit` is delivered as a Swift package, but **SwiftPM does not compile Go**. The tunnel still needs the static library produced from `Sources/WireGuardKitGo` (`libwg-go.a`, linked as `-lwg-go`).
+`WireGuardKit` is delivered as a Swift package, but **SwiftPM does not compile Go**. The tunnel must still link **`-lwg-go`**. Running `make` in `Sources/WireGuardKitGo` produces **`libwg-go.a`** (that is what satisfies `-lwg-go` in most setups). Your Xcode project does **not** have to reference a file named `libwg-go.a` — only the **linker** must resolve `wg-go` (e.g. via `LIBRARY_SEARCH_PATHS`, an XCFramework, or the External Build output directory).
 
-So “SPM only” for the **dependency** is normal; “no `libwg-go` step at all” is not supported for this codebase.
+So “SPM only” for the **dependency** is normal; “no Go bridge / no `-lwg-go` at all” is not supported for this codebase.
 
 ## Option A — Recommended (matches upstream wireguard-apple)
 
@@ -35,7 +35,7 @@ Maintaining that binary is on you; this fork does not ship a downloadable XCFram
 ## Checking that the right library is linked
 
 - After integrating, the extension should log **`WireGuardKitGo build marker OK: tun-read-v4`** (see `WireGuardAdapter`).  
-- If you still see **`Received packet with unknown IP version`**, the linked `libwg-go.a` is **not** from this fork’s patched Go sources — rebuild the bridge and ensure the extension does not pick up an older `.a` from another path.
+- If you still see **`Received packet with unknown IP version`**, the linked **`-lwg-go`** binary is **not** from this fork’s patched Go sources — rebuild the bridge (`make` or refresh your packaged artifact) and ensure the extension does not pick up an older library from another search path.
 
 ## Verify from the command line (this repo)
 
@@ -44,4 +44,4 @@ cd Sources/WireGuardKitGo
 make clean && make verify-no-legacy-tun-log verify-build-marker-present
 ```
 
-Use the produced `out/libwg-go.a` only if your extension’s linker is configured to find it (Option A or B above).
+Use the produced `out/libwg-go.a` when you point the extension’s **library search path** at `out/` (or wrap it in an XCFramework). The filename on disk is implementation detail; **`-lwg-go` must resolve** to this build.

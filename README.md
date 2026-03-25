@@ -36,7 +36,7 @@ $ open WireGuard.xcodeproj
 
 Use this when you embed **WireGuardKit** in **your own** iOS or macOS app (not when building the WireGuard app from this repo).
 
-**Overview:** Add the package in Xcode, then wire up the **Go bridge** (`libwg-go.a`). SwiftPM does **not** compile Go; you must run `make` via an **External Build System** target (or supply a prebuilt library — see [Documentation/WireGuardKit-SPM.md](Documentation/WireGuardKit-SPM.md)).
+**Overview:** Add the package in Xcode, then ensure the **Go bridge** is linked. `WireGuardKit` asks the linker for **`-lwg-go`** (SwiftPM does **not** compile Go). The usual way is to run `make` in `WireGuardKitGo` via an **External Build System** target; the product is typically **`libwg-go.a`**, but your app does **not** need a file literally named that in the project — any setup where **`-lwg-go` resolves** (search paths, XCFramework, CI artifact, etc.) is fine. Details: [Documentation/WireGuardKit-SPM.md](Documentation/WireGuardKit-SPM.md).
 
 **Prerequisites on the machine that builds the extension:** [Go](https://go.dev/dl/) (1.19+ recommended) and Xcode with the correct command-line tools.
 
@@ -62,7 +62,7 @@ In your app project: **File → Add Package Dependencies…** and add either:
 
 ### 2. Build the `wireguard-go-bridge` (`WireGuardKitGo`)
 
-`WireGuardKit` links `-lwg-go` (`libwg-go.a`). Create an **External Build System** target so `make` runs before the Network Extension links.
+`WireGuardKit` links **`-lwg-go`**. The Makefile produces **`libwg-go.a`** into the build products directory; Xcode does not require you to drag that filename into the project if the linker already finds `libwg-go` elsewhere. The common approach is an **External Build System** target so `make` runs before the Network Extension links.
 
 - **File → New → Target → Other → External Build System.**
 - **Product name:** e.g. `WireGuardGoBridgeiOS` or `WireGuardGoBridgeMac`, matching the platform you build for.
