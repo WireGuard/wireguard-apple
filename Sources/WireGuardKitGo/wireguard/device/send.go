@@ -245,34 +245,36 @@ func (device *Device) RoutineReadFromTUN() {
 
 		elem.packet = elem.buffer[offset : offset+size]
 
-		// Apple utun: a stale NativeTun.Read may return kernelRead-4 so elem.packet starts on
-		// padding (ip_version_nibble=0) even when buffer still holds the full frame. Re-apply
-		// the same PI/scan framing using size+4 bytes (tun.DarwinFixMisframedIngress).
-		darwinFixTried := false
-		darwinFixOK := false
+		// Apple utun: packet slice may start on padding (nibble 0) with IPv4 later (e.g. PI+16B pad+IPv4).
+		// Try slice-only reframe first (matches common iOS layout), then PI-region DarwinFixMisframedIngress.
+		reframeOK := false
+		piPathOK := false
 		if len(elem.packet) > 0 {
 			v := elem.packet[0] >> 4
 			if v != ipv4.Version && v != ipv6.Version {
-				darwinFixTried = true
-				device.log.Infof(
-					"tun: ingress not IPv4/IPv6 (ip_version_nibble=%d read_size=%d wg_offset=%d first_byte=0x%02x); trying DarwinFixMisframedIngress",
+				device.log.Verbosef(
+					"tun: ingress misaligned first_nibble=%d read_size=%d wg_offset=%d first_byte=0x%02x — trying DarwinReframePacketContent then DarwinFixMisframedIngress",
 					v, size, offset, elem.packet[0],
 				)
-				if ns, fixed := tun.DarwinFixMisframedIngress(elem.buffer[:], offset, size); fixed {
-					darwinFixOK = true
-					device.log.Infof("tun: ingress DarwinFixMisframedIngress ok read_size=%d new_size=%d wg_offset=%d", size, ns, offset)
+				if ns, fixed := tun.DarwinReframePacketContent(elem.buffer[:], offset, size); fixed {
+					reframeOK = true
+					device.log.Infof(
+						"tun: ingress DarwinReframePacketContent ok read_size=%d new_size=%d wg_offset=%d [marker=tun-read-v10]",
+						size, ns, offset,
+					)
 					size = ns
 					elem.packet = elem.buffer[offset : offset+size]
-				} else if ns, fixed := tun.DarwinReframePacketContent(elem.buffer[:], offset, size); fixed {
-					// PI + 16-byte padding + IPv4: packet slice often starts at padding (nibble 0) with IPv4 at pkt[16].
-					// PI-path fix can fail if Read/stale bridge did not preserve buffer[offset-4:] consistently.
-					darwinFixOK = true
-					device.log.Infof("tun: ingress DarwinReframePacketContent ok read_size=%d new_size=%d wg_offset=%d", size, ns, offset)
+				} else if ns, fixed := tun.DarwinFixMisframedIngress(elem.buffer[:], offset, size); fixed {
+					piPathOK = true
+					device.log.Infof(
+						"tun: ingress DarwinFixMisframedIngress ok read_size=%d new_size=%d wg_offset=%d [marker=tun-read-v10]",
+						size, ns, offset,
+					)
 					size = ns
 					elem.packet = elem.buffer[offset : offset+size]
 				} else {
 					device.log.Infof(
-						"tun: ingress DarwinFixMisframedIngress could not reframe (read_size=%d wg_offset=%d first_byte=0x%02x)",
+						"tun: ingress both reframes failed read_size=%d wg_offset=%d first_byte=0x%02x [marker=tun-read-v10]",
 						size, offset, elem.packet[0],
 					)
 				}
@@ -308,18 +310,19 @@ func (device *Device) RoutineReadFromTUN() {
 				hi = len(elem.buffer)
 			}
 			if len(elem.packet) == 0 {
-				device.log.Infof(
-					"tun: dropped frame with empty ip slice read_size=%d wg_offset=%d darwin_fix_tried=%v darwin_fix_ok=%v",
-					size, offset, darwinFixTried, darwinFixOK,
+				// Errorf (level 1) so Console / log filters show the line even when Info (2) is hidden.
+				device.log.Errorf(
+					"tun: dropped empty ip slice [marker=tun-read-v10] read_size=%d wg_offset=%d reframe_ok=%v pi_path_ok=%v — rebuild libwg-go if marker is old",
+					size, offset, reframeOK, piPathOK,
 				)
 			} else {
 				prefix := elem.buffer[lo:hi]
 				if len(prefix) > 128 {
 					prefix = prefix[:128]
 				}
-				device.log.Infof(
-					"tun: dropped non-IPv4/IPv6 frame ip_version_nibble=%d ip_payload_len=%d read_size=%d wg_offset=%d darwin_fix_tried=%v darwin_fix_ok=%v raw_prefix_hex=%x",
-					elem.packet[0]>>4, len(elem.packet), size, offset, darwinFixTried, darwinFixOK, prefix,
+				device.log.Errorf(
+					"tun: dropped non-IPv4/IPv6 [marker=tun-read-v10] ip_version_nibble=%d ip_payload_len=%d read_size=%d wg_offset=%d reframe_ok=%v pi_path_ok=%v raw_prefix_hex=%x — if log line has ip_len= (not ip_payload_len=) you are on OLD libwg-go; clean rebuild WireGuardKitGo",
+					elem.packet[0]>>4, len(elem.packet), size, offset, reframeOK, piPathOK, prefix,
 				)
 			}
 		}
