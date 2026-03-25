@@ -17,6 +17,8 @@ import (
 	"golang.org/x/crypto/chacha20poly1305"
 	"golang.org/x/net/ipv4"
 	"golang.org/x/net/ipv6"
+
+	"golang.zx2c4.com/wireguard/tun"
 )
 
 /* Outbound flow
@@ -243,6 +245,33 @@ func (device *Device) RoutineReadFromTUN() {
 
 		elem.packet = elem.buffer[offset : offset+size]
 
+		// Apple utun: a stale NativeTun.Read may return kernelRead-4 so elem.packet starts on
+		// padding (ip_version_nibble=0) even when buffer still holds the full frame. Re-apply
+		// the same PI/scan framing using size+4 bytes (tun.DarwinFixMisframedIngress).
+		darwinFixTried := false
+		darwinFixOK := false
+		if len(elem.packet) > 0 {
+			v := elem.packet[0] >> 4
+			if v != ipv4.Version && v != ipv6.Version {
+				darwinFixTried = true
+				device.log.Infof(
+					"tun: ingress not IPv4/IPv6 (ip_version_nibble=%d read_size=%d wg_offset=%d first_byte=0x%02x); trying DarwinFixMisframedIngress",
+					v, size, offset, elem.packet[0],
+				)
+				if ns, fixed := tun.DarwinFixMisframedIngress(elem.buffer[:], offset, size); fixed {
+					darwinFixOK = true
+					device.log.Infof("tun: ingress DarwinFixMisframedIngress ok read_size=%d new_size=%d wg_offset=%d", size, ns, offset)
+					size = ns
+					elem.packet = elem.buffer[offset : offset+size]
+				} else {
+					device.log.Infof(
+						"tun: ingress DarwinFixMisframedIngress could not reframe (read_size=%d wg_offset=%d first_byte=0x%02x)",
+						size, offset, elem.packet[0],
+					)
+				}
+			}
+		}
+
 		// lookup peer
 
 		var peer *Peer
@@ -262,7 +291,7 @@ func (device *Device) RoutineReadFromTUN() {
 			peer = device.allowedips.Lookup(dst)
 
 		default:
-			// Non-IP or mis-framed TUN read. Verbose log shows bytes from PI slot through payload (offset-4 .. offset+size).
+			// Non-IP or mis-framed TUN read. Log bytes from PI slot through payload (offset-4 .. offset+size).
 			lo := offset - 4
 			if lo < 0 {
 				lo = 0
@@ -272,15 +301,18 @@ func (device *Device) RoutineReadFromTUN() {
 				hi = len(elem.buffer)
 			}
 			if len(elem.packet) == 0 {
-				device.log.Verbosef("tun: dropped frame with empty ip slice (size=%d)", size)
+				device.log.Infof(
+					"tun: dropped frame with empty ip slice read_size=%d wg_offset=%d darwin_fix_tried=%v darwin_fix_ok=%v",
+					size, offset, darwinFixTried, darwinFixOK,
+				)
 			} else {
 				prefix := elem.buffer[lo:hi]
-				if len(prefix) > 96 {
-					prefix = prefix[:96]
+				if len(prefix) > 128 {
+					prefix = prefix[:128]
 				}
-				device.log.Verbosef(
-					"tun: dropped non-IPv4/IPv6 frame ip_version_nibble=%d ip_len=%d raw_prefix_hex=%x",
-					elem.packet[0]>>4, len(elem.packet), prefix,
+				device.log.Infof(
+					"tun: dropped non-IPv4/IPv6 frame ip_version_nibble=%d ip_payload_len=%d read_size=%d wg_offset=%d darwin_fix_tried=%v darwin_fix_ok=%v raw_prefix_hex=%x",
+					elem.packet[0]>>4, len(elem.packet), size, offset, darwinFixTried, darwinFixOK, prefix,
 				)
 			}
 		}

@@ -87,6 +87,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 	logger := &device.Logger{
 		Verbosef: CLogger(0).Printf,
 		Errorf:   CLogger(1).Printf,
+		Infof:    CLogger(2).Printf,
 	}
 	dupTunFd, err := unix.Dup(int(tunFd))
 	if err != nil {
@@ -118,10 +119,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 
 	dev.Up()
 	logger.Verbosef("Device started")
-	// If you still see "Received packet with unknown IP version", the app is not linking this
-	// linked -lwg-go bridge (SPM does not compile Go). Rebuild: make -C Sources/WireGuardKitGo
-	_, _ = fmt.Fprintf(os.Stderr, "[WireGuardKitGo] utun-framing-patch-2025-03 lib loaded\n")
-	logger.Verbosef("WireGuardKitGo: utun-framing-patch-2025-03 (rebuild WireGuardKitGo if old unknown-IP-version logs persist)")
+	logger.Infof("WireGuardKitGo: tun-read-v8 utun ingress logging (rebuild libwg-go if stale or logs mismatch)")
 
 	var i int32
 	for i = 0; i < math.MaxInt32; i++ {
@@ -209,7 +207,7 @@ func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
 //export wgKitGoBuildMarker
 func wgKitGoBuildMarker() *C.char {
 	// Must match WireGuardAdapter.kitGoBuildMarkerToken; proves linked -lwg-go is from this fork.
-	return C.CString("tun-read-v7")
+	return C.CString("tun-read-v8")
 }
 
 //export wgVersion

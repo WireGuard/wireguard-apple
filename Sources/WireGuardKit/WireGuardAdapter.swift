@@ -100,7 +100,7 @@ public class WireGuardAdapter {
 
     /// Must match `wgKitGoBuildMarker()` in the linked **`-lwg-go`** bridge. If your app still logs "Received packet with unknown IP version",
     /// `kitGoBuildMarker` will not equal this — the Go bridge is stale (rebuild with `make` in `Sources/WireGuardKitGo`, or refresh your prebuilt artifact).
-    public static let kitGoBuildMarkerToken = "tun-read-v7"
+    public static let kitGoBuildMarkerToken = "tun-read-v8"
 
     /// String from the linked Go bridge; compare to `kitGoBuildMarkerToken`.
     public class var kitGoBuildMarker: String {
@@ -528,17 +528,20 @@ public class WireGuardAdapter {
 public enum WireGuardLogLevel: Int32 {
     case verbose = 0
     case error = 1
+    /// Go bridge `Logger.Infof` (tunnel diagnostics, e.g. utun ingress framing).
+    case info = 2
 }
 
 public extension WireGuardLogLevel {
-    /// Maps Go “verbose” (level 0) to `OSLogType.info` so messages show in default Console / Xcode
-    /// output. Using `.debug` hides most tunnel diagnostics unless Debug logs are enabled.
+    /// Maps Go levels to `OSLogType` so tunnel diagnostics appear in default Console / Xcode output.
     var osLogLevel: OSLogType {
         switch self {
         case .verbose:
             return .info
         case .error:
             return .error
+        case .info:
+            return .info
         }
     }
 }
