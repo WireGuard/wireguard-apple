@@ -206,6 +206,12 @@ func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
 	dev.DisableSomeRoamingForBrokenMobileSemantics()
 }
 
+//export wgKitGoBuildMarker
+func wgKitGoBuildMarker() *C.char {
+	// Must match WireGuardAdapter.kitGoBuildMarkerToken; proves linked libwg-go.a is from this fork.
+	return C.CString("tun-read-v3")
+}
+
 //export wgVersion
 func wgVersion() *C.char {
 	info, ok := debug.ReadBuildInfo()

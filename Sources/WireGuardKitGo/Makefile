@@ -60,9 +60,16 @@ verify-no-legacy-tun-log: $(DESTDIR)/libwg-go.a
 	fi
 	@echo "OK: libwg-go.a does not contain the legacy tun log string."
 
+verify-build-marker-present: $(DESTDIR)/libwg-go.a
+	@if ! strings "$(DESTDIR)/libwg-go.a" | grep -Fq "tun-read-v3"; then \
+		echo "ERROR: libwg-go.a missing build marker tun-read-v3 — rebuild from this tree."; \
+		exit 1; \
+	fi
+	@echo "OK: libwg-go.a contains tun-read-v3 marker."
+
 clean:
 	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
 
 install: build
 
-.PHONY: clean build version-header install verify-no-legacy-tun-log
+.PHONY: clean build version-header install verify-no-legacy-tun-log verify-build-marker-present

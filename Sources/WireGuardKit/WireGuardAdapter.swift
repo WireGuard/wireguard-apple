@@ -98,6 +98,18 @@ public class WireGuardAdapter {
         return str
     }
 
+    /// Must match `wgKitGoBuildMarker()` in libwg-go.a. If your app still logs "Received packet with unknown IP version",
+    /// `kitGoBuildMarker` will not equal this — you are linking a stale `libwg-go.a` (rebuild `Sources/WireGuardKitGo`).
+    public static let kitGoBuildMarkerToken = "tun-read-v3"
+
+    /// String from the linked Go bridge; compare to `kitGoBuildMarkerToken`.
+    public class var kitGoBuildMarker: String {
+        guard let ptr = wgKitGoBuildMarker() else { return "nil" }
+        let s = String(cString: ptr)
+        free(UnsafeMutableRawPointer(mutating: ptr))
+        return s
+    }
+
     /// Returns the tunnel device interface name, or nil on error.
     /// - Returns: String.
     public var interfaceName: String? {
@@ -189,6 +201,13 @@ public class WireGuardAdapter {
             networkMonitor.start(queue: self.workQueue)
 
             do {
+                let marker = Self.kitGoBuildMarker
+                if marker != Self.kitGoBuildMarkerToken {
+                    self.logHandler(.error, "WireGuardKitGo library mismatch: marker=\(marker) expected=\(Self.kitGoBuildMarkerToken). Rebuild libwg-go.a (make in Sources/WireGuardKitGo). Old binary causes unknown-IP-version logs and broken AllowedIPs routing.")
+                } else {
+                    self.logHandler(.verbose, "WireGuardKitGo build marker OK: \(marker)")
+                }
+
                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
                 let networkSettings = settingsGenerator.generateNetworkSettings()
                 try self.setNetworkSettings(networkSettings)
