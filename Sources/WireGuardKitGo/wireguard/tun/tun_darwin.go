@@ -39,6 +39,77 @@ func isDarwinUtunPI4(b0, b1, b2, b3 byte) bool {
 	return false
 }
 
+// maxUtunPrefixScan is how far we search for an IPv4/IPv6 header after a utun PI or padding.
+const maxUtunPrefixScan = 128
+
+// validatedIPv4PacketLen returns the IPv4 total length field if [i, n) contains a plausible IPv4 packet.
+func validatedIPv4PacketLen(buff []byte, n, i int) (int, bool) {
+	if i+20 > n {
+		return 0, false
+	}
+	if buff[i]>>4 != ipv4.Version {
+		return 0, false
+	}
+	ihl := int(buff[i]&0x0f) * 4
+	if ihl < ipv4.HeaderLen || ihl > 60 {
+		return 0, false
+	}
+	if i+ihl > n {
+		return 0, false
+	}
+	totalLen := int(uint16(buff[i+2])<<8 | uint16(buff[i+3]))
+	if totalLen < ihl || i+totalLen > n {
+		return 0, false
+	}
+	return totalLen, true
+}
+
+// validatedIPv6PacketLen returns the IPv6 payload + 40 if [i, n) contains a plausible IPv6 packet.
+func validatedIPv6PacketLen(buff []byte, n, i int) (int, bool) {
+	if i+ipv6.HeaderLen > n {
+		return 0, false
+	}
+	if buff[i]>>4 != ipv6.Version {
+		return 0, false
+	}
+	plen := int(uint16(buff[i+4])<<8 | uint16(buff[i+5]))
+	total := ipv6.HeaderLen + plen
+	if total < ipv6.HeaderLen || i+total > n {
+		return 0, false
+	}
+	return total, true
+}
+
+// scanAndAlignIPToBuff4 finds the first validated IPv4 or IPv6 datagram in buff[:n], copies it to
+// buff[4:], and returns its length. Used when utun delivers PI + variable padding before the IP.
+func scanAndAlignIPToBuff4(buff []byte, n int) (int, bool) {
+	end := maxUtunPrefixScan
+	if n < end {
+		end = n
+	}
+	for i := 4; i < end; i++ {
+		if totalLen, ok := validatedIPv4PacketLen(buff, n, i); ok {
+			if 4+totalLen > len(buff) {
+				return 0, false
+			}
+			for j := 0; j < totalLen; j++ {
+				buff[4+j] = buff[i+j]
+			}
+			return totalLen, true
+		}
+		if totalLen, ok := validatedIPv6PacketLen(buff, n, i); ok {
+			if 4+totalLen > len(buff) {
+				return 0, false
+			}
+			for j := 0; j < totalLen; j++ {
+				buff[4+j] = buff[i+j]
+			}
+			return totalLen, true
+		}
+	}
+	return 0, false
+}
+
 type NativeTun struct {
 	name        string
 	tunFile     *os.File
@@ -253,13 +324,17 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 		// like a bogus "IP version" and triggers "Received packet with unknown IP version".
 
 		// 1) Known 4-byte PI (e.g. 00 00 00 02 = AF_INET BE). IP normally follows at buff[4].
-		// On some iOS paths the kernel still inserts padding after the PI; buff[4] is then not
-		// an IP version byte — do not strip only 4 bytes (that produced ip_version_nibble=0).
+		// On some iOS paths the kernel inserts padding after the PI; buff[4] is then not an IP
+		// version byte — never use "strip 4 bytes" alone (that yields ip_version_nibble=0 and
+		// ip_len=readN-4, e.g. 76 for an 80-byte frame).
 		if isDarwinUtunPI4(buff[0], buff[1], buff[2], buff[3]) {
 			if n >= 8 && isIPv4OrIPv6FirstByte(buff[4]) {
 				return n - 4, err
 			}
-			// padded / extended framing — fall through
+			if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
+				return ipLen, err
+			}
+			// Do not fall through to blind n-4 — that reproduces the bug above.
 		}
 		// 2) Raw IP at buff[0] (no PI): align payload to buff[4] for the device layer.
 		if isIPv4OrIPv6FirstByte(buff[0]) {
@@ -275,38 +350,18 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 		if n >= 8 && isIPv4OrIPv6FirstByte(buff[4]) {
 			return n - 4, err
 		}
-		// 4) Longer PI (e.g. 8 bytes): IP starts at buff[8].
-		if n >= 12 && isIPv4OrIPv6FirstByte(buff[8]) {
-			ipLen := n - 8
-			if ipLen+4 > len(buff) {
-				return 0, err
-			}
-			for i := 0; i < ipLen; i++ {
-				buff[4+i] = buff[8+i]
-			}
+		// 4) PI not recognized at buff[0:4]; scan for a validated IP header (padding / odd offsets).
+		if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
 			return ipLen, err
 		}
-		// 4b) iOS may prepend additional zero padding after PI. Your logs show:
-		// 00000002 + 16 bytes of zeros + 45..., meaning the IPv4 header starts at buff[20].
-		if n >= 24 && isIPv4OrIPv6FirstByte(buff[20]) {
-			ipLen := n - 20
-			if ipLen+4 > len(buff) {
-				return 0, err
-			}
-			for i := 0; i < ipLen; i++ {
-				buff[4+i] = buff[20+i]
-			}
-			return ipLen, err
-		}
-		// 5) Legacy fallback (4-byte PI) — last resort.
 		if os.Getenv("WG_TUN_DEBUG") == "1" {
 			pl := readN
 			if pl > 48 {
 				pl = 48
 			}
-			_, _ = fmt.Fprintf(os.Stderr, "wireguard tun_darwin: fallback 4-byte PI strip read_len=%d first_bytes=%x\n", readN, buff[:pl])
+			_, _ = fmt.Fprintf(os.Stderr, "wireguard tun_darwin: could not frame IP read_len=%d first_bytes=%x\n", readN, buff[:pl])
 		}
-		return readN - 4, err
+		return 0, nil
 	}
 }
 

@@ -34,7 +34,7 @@ Maintaining that binary is on you; this fork does not ship a downloadable XCFram
 
 ## Checking that the right library is linked
 
-- After integrating, the extension should log **`WireGuardKitGo build marker OK: tun-read-v4`** (see `WireGuardAdapter`).  
+- After integrating, the extension should log **`WireGuardKitGo build marker OK: tun-read-v6`** (see `WireGuardAdapter`).  
 - If you still see **`Received packet with unknown IP version`**, the linked **`-lwg-go`** binary is **not** from this fork’s patched Go sources — rebuild the bridge (`make` or refresh your packaged artifact) and ensure the extension does not pick up an older library from another search path.
 
 ## Verify from the command line (this repo)
