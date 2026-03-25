@@ -318,12 +318,14 @@ public class WireGuardAdapter {
             parts.append("mtu=auto")
         }
         if let v4 = settings.ipv4Settings {
-            parts.append("ipv4_addrs=\(v4.addresses.count) ipv4_included_routes=\(v4.includedRoutes.count)")
+            let v4Routes = v4.includedRoutes?.count ?? 0
+            parts.append("ipv4_addrs=\(v4.addresses.count) ipv4_included_routes=\(v4Routes)")
         } else {
             parts.append("ipv4=nil")
         }
         if let v6 = settings.ipv6Settings {
-            parts.append("ipv6_addrs=\(v6.addresses.count) ipv6_included_routes=\(v6.includedRoutes.count)")
+            let v6Routes = v6.includedRoutes?.count ?? 0
+            parts.append("ipv6_addrs=\(v6.addresses.count) ipv6_included_routes=\(v6Routes)")
         } else {
             parts.append("ipv6=nil")
         }
