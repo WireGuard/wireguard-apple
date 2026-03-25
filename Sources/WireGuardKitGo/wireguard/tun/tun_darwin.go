@@ -328,13 +328,18 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 		// version byte — never use "strip 4 bytes" alone (that yields ip_version_nibble=0 and
 		// ip_len=readN-4, e.g. 76 for an 80-byte frame).
 		if isDarwinUtunPI4(buff[0], buff[1], buff[2], buff[3]) {
-			if n >= 8 && isIPv4OrIPv6FirstByte(buff[4]) {
-				return n - 4, err
-			}
+			// Never use isIPv4OrIPv6FirstByte(buff[4]) && return n-4: 0x45 in padding or junk can
+			// false-match; padding-only at buff[4] must not strip 4 bytes (gives ip_len=n-4, nibble 0).
 			if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
 				return ipLen, err
 			}
-			// Do not fall through to blind n-4 — that reproduces the bug above.
+			// PI + IP immediately at buff[4] (no leading padding): use header length, not n-4 (kernel may pad past IP).
+			if tl, ok := validatedIPv4PacketLen(buff, n, 4); ok {
+				return tl, err
+			}
+			if tl, ok := validatedIPv6PacketLen(buff, n, 4); ok {
+				return tl, err
+			}
 		}
 		// 2) Raw IP at buff[0] (no PI): align payload to buff[4] for the device layer.
 		if isIPv4OrIPv6FirstByte(buff[0]) {
@@ -346,9 +351,14 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 			}
 			return n, err
 		}
-		// 3) Unknown 4-byte prefix but a normal IP header at buff[4] (common with non-canonical PI).
-		if n >= 8 && isIPv4OrIPv6FirstByte(buff[4]) {
-			return n - 4, err
+		// 3) Unknown 4-byte prefix but IP at buff[4]: strip PI using declared IP length only.
+		if n >= 8 {
+			if tl, ok := validatedIPv4PacketLen(buff, n, 4); ok {
+				return tl, err
+			}
+			if tl, ok := validatedIPv6PacketLen(buff, n, 4); ok {
+				return tl, err
+			}
 		}
 		// 4) PI not recognized at buff[0:4]; scan for a validated IP header (padding / odd offsets).
 		if ipLen, ok := scanAndAlignIPToBuff4(buff, n); ok {
