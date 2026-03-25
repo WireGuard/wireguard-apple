@@ -52,9 +52,17 @@ $(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
 	@mkdir -vp "$(DESTDIR)"
 	$(LIPO) -create -output "$@" $^
 
+# Fails if the legacy tun log string is still embedded (wrong/stale libwg-go.a).
+verify-no-legacy-tun-log: $(DESTDIR)/libwg-go.a
+	@if strings "$(DESTDIR)/libwg-go.a" | grep -F "Received packet with unknown IP version" >/dev/null; then \
+		echo "ERROR: libwg-go.a still contains the legacy tun log string — rebuild WireGuardKitGo from this tree."; \
+		exit 1; \
+	fi
+	@echo "OK: libwg-go.a does not contain the legacy tun log string."
+
 clean:
 	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
 
 install: build
 
-.PHONY: clean build version-header install
+.PHONY: clean build version-header install verify-no-legacy-tun-log

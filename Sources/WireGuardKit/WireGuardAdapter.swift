@@ -3,6 +3,7 @@
 
 import Foundation
 import NetworkExtension
+import os
 
 #if SWIFT_PACKAGE
 import WireGuardKitGo
@@ -508,6 +509,19 @@ public class WireGuardAdapter {
 public enum WireGuardLogLevel: Int32 {
     case verbose = 0
     case error = 1
+}
+
+public extension WireGuardLogLevel {
+    /// Maps Go “verbose” (level 0) to `OSLogType.info` so messages show in default Console / Xcode
+    /// output. Using `.debug` hides most tunnel diagnostics unless Debug logs are enabled.
+    var osLogLevel: OSLogType {
+        switch self {
+        case .verbose:
+            return .info
+        case .error:
+            return .error
+        }
+    }
 }
 
 private extension Network.NWPath.Status {

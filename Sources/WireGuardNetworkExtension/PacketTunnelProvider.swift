@@ -109,14 +109,3 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 }
-
-extension WireGuardLogLevel {
-    var osLogLevel: OSLogType {
-        switch self {
-        case .verbose:
-            return .debug
-        case .error:
-            return .error
-        }
-    }
-}
