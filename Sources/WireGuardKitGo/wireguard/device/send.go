@@ -263,6 +263,13 @@ func (device *Device) RoutineReadFromTUN() {
 					device.log.Infof("tun: ingress DarwinFixMisframedIngress ok read_size=%d new_size=%d wg_offset=%d", size, ns, offset)
 					size = ns
 					elem.packet = elem.buffer[offset : offset+size]
+				} else if ns, fixed := tun.DarwinReframePacketContent(elem.buffer[:], offset, size); fixed {
+					// PI + 16-byte padding + IPv4: packet slice often starts at padding (nibble 0) with IPv4 at pkt[16].
+					// PI-path fix can fail if Read/stale bridge did not preserve buffer[offset-4:] consistently.
+					darwinFixOK = true
+					device.log.Infof("tun: ingress DarwinReframePacketContent ok read_size=%d new_size=%d wg_offset=%d", size, ns, offset)
+					size = ns
+					elem.packet = elem.buffer[offset : offset+size]
 				} else {
 					device.log.Infof(
 						"tun: ingress DarwinFixMisframedIngress could not reframe (read_size=%d wg_offset=%d first_byte=0x%02x)",

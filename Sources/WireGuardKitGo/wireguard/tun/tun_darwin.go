@@ -385,11 +385,66 @@ func DarwinFixMisframedIngress(buffer []byte, offset int, size int) (newSize int
 		return 0, false
 	}
 	buff := buffer[offset-4:]
-	n := size + 4
-	if n > len(buff) {
-		n = len(buff)
+	maxN := len(buff)
+	// Try several logical lengths: +4 (classic PI miscount), +20 (4-byte PI + 16-byte padding before IPv4),
+	// then full slice. iOS per-app utun often delivers 00000002 + 16 zero bytes + IPv4; the device slice
+	// may start on padding so size alone under-reports bytes needed for PI-path framing.
+	attempts := []int{
+		size + 4,
+		size + 16,
+		size + 20,
+		size + 32,
+		maxN,
 	}
-	return processDarwinUtunBuff(buff, n, offset, n)
+	seen := make(map[int]struct{})
+	for _, n := range attempts {
+		if n < 4 {
+			continue
+		}
+		if n > maxN {
+			n = maxN
+		}
+		if _, dup := seen[n]; dup {
+			continue
+		}
+		seen[n] = struct{}{}
+		if out, ok := processDarwinUtunBuff(buff, n, offset, n); ok {
+			return out, true
+		}
+	}
+	return 0, false
+}
+
+// DarwinReframePacketContent searches buffer[offset:offset+size] for the first validated IPv4 or IPv6
+// datagram (e.g. leading padding then 0x45). Use when elem.packet starts on utun padding but the PI
+// bytes are not present in buffer[offset-4:] (or PI-path framing failed). Copies the IP packet to
+// buffer[offset:] so elem.packet[0] is the IP version nibble.
+func DarwinReframePacketContent(buffer []byte, offset int, size int) (newSize int, ok bool) {
+	if offset < 0 || size < 1 || offset+size > len(buffer) {
+		return 0, false
+	}
+	pkt := buffer[offset : offset+size]
+	end := maxUtunPrefixScan
+	if len(pkt) < end {
+		end = len(pkt)
+	}
+	for i := 0; i < end; i++ {
+		if totalLen, ok := validatedIPv4PacketLen(pkt, len(pkt), i); ok {
+			s := pkt[i : i+totalLen]
+			tmp := make([]byte, totalLen)
+			copy(tmp, s)
+			copy(buffer[offset:], tmp)
+			return totalLen, true
+		}
+		if totalLen, ok := validatedIPv6PacketLen(pkt, len(pkt), i); ok {
+			s := pkt[i : i+totalLen]
+			tmp := make([]byte, totalLen)
+			copy(tmp, s)
+			copy(buffer[offset:], tmp)
+			return totalLen, true
+		}
+	}
+	return 0, false
 }
 
 func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {

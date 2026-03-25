@@ -6,3 +6,8 @@ package tun
 func DarwinFixMisframedIngress(buffer []byte, offset int, size int) (newSize int, ok bool) {
 	return 0, false
 }
+
+// DarwinReframePacketContent is a no-op on non-Darwin platforms.
+func DarwinReframePacketContent(buffer []byte, offset int, size int) (newSize int, ok bool) {
+	return 0, false
+}

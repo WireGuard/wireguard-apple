@@ -119,7 +119,7 @@ func wgTurnOn(settings *C.char, tunFd int32) int32 {
 
 	dev.Up()
 	logger.Verbosef("Device started")
-	logger.Infof("WireGuardKitGo: tun-read-v8 utun ingress logging (rebuild libwg-go if stale or logs mismatch)")
+	logger.Infof("WireGuardKitGo: tun-read-v9 utun ingress logging (rebuild libwg-go if stale or logs mismatch)")
 
 	var i int32
 	for i = 0; i < math.MaxInt32; i++ {
@@ -207,7 +207,7 @@ func wgDisableSomeRoamingForBrokenMobileSemantics(tunnelHandle int32) {
 //export wgKitGoBuildMarker
 func wgKitGoBuildMarker() *C.char {
 	// Must match WireGuardAdapter.kitGoBuildMarkerToken; proves linked -lwg-go is from this fork.
-	return C.CString("tun-read-v8")
+	return C.CString("tun-read-v9")
 }
 
 //export wgVersion
