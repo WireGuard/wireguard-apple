@@ -252,9 +252,14 @@ func (tun *NativeTun) Read(buff []byte, offset int) (int, error) {
 		// deliver raw IP starting at buff[0]. Mis-detecting the PI length makes buff[4] look
 		// like a bogus "IP version" and triggers "Received packet with unknown IP version".
 
-		// 1) Known 4-byte PI; IP follows at buff[4].
+		// 1) Known 4-byte PI (e.g. 00 00 00 02 = AF_INET BE). IP normally follows at buff[4].
+		// On some iOS paths the kernel still inserts padding after the PI; buff[4] is then not
+		// an IP version byte — do not strip only 4 bytes (that produced ip_version_nibble=0).
 		if isDarwinUtunPI4(buff[0], buff[1], buff[2], buff[3]) {
-			return n - 4, err
+			if n >= 8 && isIPv4OrIPv6FirstByte(buff[4]) {
+				return n - 4, err
+			}
+			// padded / extended framing — fall through
 		}
 		// 2) Raw IP at buff[0] (no PI): align payload to buff[4] for the device layer.
 		if isIPv4OrIPv6FirstByte(buff[0]) {

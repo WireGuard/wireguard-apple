@@ -100,7 +100,7 @@ public class WireGuardAdapter {
 
     /// Must match `wgKitGoBuildMarker()` in libwg-go.a. If your app still logs "Received packet with unknown IP version",
     /// `kitGoBuildMarker` will not equal this — you are linking a stale `libwg-go.a` (rebuild `Sources/WireGuardKitGo`).
-    public static let kitGoBuildMarkerToken = "tun-read-v3"
+    public static let kitGoBuildMarkerToken = "tun-read-v4"
 
     /// String from the linked Go bridge; compare to `kitGoBuildMarkerToken`.
     public class var kitGoBuildMarker: String {
