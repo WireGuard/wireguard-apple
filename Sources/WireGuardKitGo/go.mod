@@ -7,6 +7,8 @@ require (
 	golang.zx2c4.com/wireguard v0.0.0-20230209153558-1e2c3e5a3c14
 )
 
+replace golang.zx2c4.com/wireguard => ./wireguard
+
 require (
 	golang.org/x/crypto v0.6.0 // indirect
 	golang.org/x/net v0.6.0 // indirect

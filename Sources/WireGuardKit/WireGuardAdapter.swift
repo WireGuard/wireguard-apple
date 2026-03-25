@@ -189,7 +189,9 @@ public class WireGuardAdapter {
 
             do {
                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
-                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+                let networkSettings = settingsGenerator.generateNetworkSettings()
+                try self.setNetworkSettings(networkSettings)
+                self.logNetworkSettingsSummary(networkSettings)
 
                 let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
                 self.logEndpointResolutionResults(resolutionResults)
@@ -199,6 +201,7 @@ public class WireGuardAdapter {
                     settingsGenerator
                 )
                 self.networkMonitor = networkMonitor
+                self.logHandler(.verbose, "WireGuard backend: \(Self.backendVersion) interface: \(self.interfaceName ?? "unknown")")
                 completionHandler(nil)
             } catch let error as WireGuardAdapterError {
                 networkMonitor.cancel()
@@ -255,7 +258,9 @@ public class WireGuardAdapter {
 
             do {
                 let settingsGenerator = try self.makeSettingsGenerator(with: tunnelConfiguration)
-                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+                let networkSettings = settingsGenerator.generateNetworkSettings()
+                try self.setNetworkSettings(networkSettings)
+                self.logNetworkSettingsSummary(networkSettings)
 
                 switch self.state {
                 case .started(let handle, _):
@@ -301,6 +306,35 @@ public class WireGuardAdapter {
 
             unretainedSelf.logHandler(tunnelLogLevel, swiftString)
         }
+    }
+
+    /// Logs a concise summary of what was passed to `setTunnelNetworkSettings` (verbose only).
+    private func logNetworkSettingsSummary(_ settings: NEPacketTunnelNetworkSettings) {
+        var parts: [String] = []
+        parts.append("remote=\(settings.tunnelRemoteAddress)")
+        if let mtu = settings.mtu {
+            parts.append("mtu=\(mtu.intValue)")
+        } else {
+            parts.append("mtu=auto")
+        }
+        if let v4 = settings.ipv4Settings {
+            parts.append("ipv4_addrs=\(v4.addresses.count) ipv4_included_routes=\(v4.includedRoutes.count)")
+        } else {
+            parts.append("ipv4=nil")
+        }
+        if let v6 = settings.ipv6Settings {
+            parts.append("ipv6_addrs=\(v6.addresses.count) ipv6_included_routes=\(v6.includedRoutes.count)")
+        } else {
+            parts.append("ipv6=nil")
+        }
+        if let dns = settings.dnsSettings {
+            let domains = dns.matchDomains ?? []
+            let allDomains = domains.contains(where: { $0.isEmpty })
+            parts.append("dns_servers=\(dns.servers.count) matchDomains=\(domains.count)\(allDomains ? "(all)" : "")")
+        } else {
+            parts.append("dns=nil")
+        }
+        self.logHandler(.verbose, "Network extension settings: \(parts.joined(separator: ", "))")
     }
 
     /// Set network tunnel configuration.
@@ -443,7 +477,9 @@ public class WireGuardAdapter {
             self.logHandler(.verbose, "Connectivity online, resuming backend.")
 
             do {
-                try self.setNetworkSettings(settingsGenerator.generateNetworkSettings())
+                let networkSettings = settingsGenerator.generateNetworkSettings()
+                try self.setNetworkSettings(networkSettings)
+                self.logNetworkSettingsSummary(networkSettings)
 
                 let (wgConfig, resolutionResults) = settingsGenerator.uapiConfiguration()
                 self.logEndpointResolutionResults(resolutionResults)
