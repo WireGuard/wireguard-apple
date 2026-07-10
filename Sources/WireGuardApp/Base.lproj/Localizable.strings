@@ -64,6 +64,7 @@
 "macToggleStatusButtonActivate" = "Activate";
 "macToggleStatusButtonActivating" = "Activating…";
 "macToggleStatusButtonDeactivate" = "Deactivate";
+"macToggleStatusButtonDeactivateAll" = "Deactivate All";
 "macToggleStatusButtonDeactivating" = "Deactivating…";
 "macToggleStatusButtonReasserting" = "Reactivating…";
 "macToggleStatusButtonRestarting" = "Restarting…";
@@ -369,6 +370,7 @@
 // Mac status display
 
 "macStatus (%@)" = "Status: %@";
+"macStatusMultipleTunnels (%d)" = "%d tunnels";
 
 // Mac editing config
 
@@ -419,6 +421,7 @@
 "macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
 "macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
 "macConfirmAndQuitInfoWithActiveTunnel (%@)" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.\n\nNote that if you quit WireGuard entirely the currently active tunnel ('%@') will still remain active until you deactivate it from this application or through the Network panel in System Preferences.";
+"macConfirmAndQuitInfoWithMultipleActiveTunnels (%@)" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.\n\nNote that if you quit WireGuard entirely the currently active tunnels ('%@') will still remain active until you deactivate them from this application or through the Network panel in System Preferences.";
 "macConfirmAndQuitAlertQuitWireGuard" = "Quit WireGuard";
 "macConfirmAndQuitAlertCloseWindow" = "Close Tunnels Manager";
 
@@ -448,6 +451,8 @@
 "macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Please disable on-demand for tunnel ‘%@’, deactivate it, and then continue updating in App Store.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Please deactivate tunnel ‘%@’ and then continue updating in App Store.";
+"macAppStoreUpdatingAlertInfoWithOnDemandMultiple (%@)" = "Please disable on-demand for tunnels ‘%@’, deactivate all active tunnels, and then continue updating in App Store.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemandMultiple (%@)" = "Please deactivate tunnels ‘%@’ and then continue updating in App Store.";
 
 // Donation
 

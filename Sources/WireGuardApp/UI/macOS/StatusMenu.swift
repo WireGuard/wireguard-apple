@@ -23,9 +23,9 @@ class StatusMenu: NSMenu {
     private var numberOfTunnelMenuItems = 0
     private var tunnelsPresentationStyle = StatusMenuTunnelsPresentationStyle.inline
 
-    var currentTunnel: TunnelContainer? {
+    var tunnelsInOperation: [TunnelContainer] = [] {
         didSet {
-            updateStatusMenuItems(with: currentTunnel)
+            updateStatusMenuItems()
         }
     }
     weak var windowDelegate: StatusMenuWindowDelegate?
@@ -73,15 +73,27 @@ class StatusMenu: NSMenu {
         self.deactivateMenuItem = deactivateMenuItem
     }
 
-    func updateStatusMenuItems(with tunnel: TunnelContainer?) {
+    func updateStatusMenuItems() {
         guard let statusMenuItem = statusMenuItem, let networksMenuItem = networksMenuItem, let deactivateMenuItem = deactivateMenuItem else { return }
-        guard let tunnel = tunnel else {
+        guard !tunnelsInOperation.isEmpty else {
             statusMenuItem.title = tr(format: "macStatus (%@)", tr("tunnelStatusInactive"))
             networksMenuItem.title = ""
             networksMenuItem.isHidden = true
+            deactivateMenuItem.title = tr("macToggleStatusButtonDeactivate")
             deactivateMenuItem.isHidden = true
             return
         }
+
+        guard tunnelsInOperation.count == 1 else {
+            statusMenuItem.title = tr(format: "macStatus (%@)", tr(format: "macStatusMultipleTunnels (%d)", tunnelsInOperation.count))
+            networksMenuItem.title = ""
+            networksMenuItem.isHidden = true
+            deactivateMenuItem.title = tr("macToggleStatusButtonDeactivateAll")
+            deactivateMenuItem.isHidden = !tunnelsInOperation.contains { $0.status == .active }
+            return
+        }
+
+        let tunnel = tunnelsInOperation[0]
         var statusText: String
 
         switch tunnel.status {
@@ -115,6 +127,7 @@ class StatusMenu: NSMenu {
             }
             networksMenuItem.isHidden = false
         }
+        deactivateMenuItem.title = tr("macToggleStatusButtonDeactivate")
         deactivateMenuItem.isHidden = tunnel.status != .active
     }
 
@@ -137,8 +150,8 @@ class StatusMenu: NSMenu {
     }
 
     @objc func deactivateClicked() {
-        if let currentTunnel = currentTunnel {
-            tunnelsManager.startDeactivation(of: currentTunnel)
+        for tunnel in tunnelsInOperation {
+            tunnelsManager.startDeactivation(of: tunnel)
         }
     }
 
