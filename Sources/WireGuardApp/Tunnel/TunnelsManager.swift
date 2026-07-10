@@ -473,6 +473,11 @@ class TunnelsManager {
     func startDeactivation(of tunnel: TunnelContainer) {
         tunnel.isAttemptingActivation = false
         guard tunnel.status != .inactive && tunnel.status != .deactivating else { return }
+        if tunnel.status == .restarting {
+            // The tunnel was going to be restarted on disconnection, but the
+            // user asked for deactivation, so drop the restart intent.
+            tunnel.status = TunnelStatus(from: tunnel.tunnelProvider.connection.status)
+        }
         #if targetEnvironment(simulator)
         tunnel.status = .inactive
         #else
