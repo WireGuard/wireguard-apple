@@ -24,7 +24,9 @@ class TunnelsManager {
     weak var tunnelsListDelegate: TunnelsManagerListDelegate?
     weak var activationDelegate: TunnelsManagerActivationDelegate?
     private var statusObservationToken: NotificationToken?
+    #if os(iOS)
     private var waiteeObservationToken: NSKeyValueObservation?
+    #endif
     private var configurationsObservationToken: NotificationToken?
 
     init(tunnelProviders: [NETunnelProviderManager]) {
@@ -428,6 +430,16 @@ class TunnelsManager {
         return tunnels.first { $0.status != .inactive }
     }
 
+    func tunnelsInOperation() -> [TunnelContainer] {
+        #if os(macOS)
+        // On multi-user systems the tunnels list retains other users'
+        // tunnels; those are not this user's to display or deactivate.
+        return tunnels.filter { $0.status != .inactive && $0.isTunnelAvailableToUser }
+        #else
+        return tunnels.filter { $0.status != .inactive }
+        #endif
+    }
+
     func startActivation(of tunnel: TunnelContainer) {
         guard tunnels.contains(tunnel) else { return } // Ensure it's not deleted
         guard tunnel.status == .inactive else {
@@ -435,6 +447,12 @@ class TunnelsManager {
             return
         }
 
+        #if os(iOS)
+        // In iOS, the OS allows only one VPN configuration to be active at a
+        // time, so bring down the tunnel in operation and queue this tunnel
+        // for activation once the former is fully deactivated. In macOS,
+        // multiple tunnels can be active simultaneously, so we activate the
+        // tunnel right away.
         if let alreadyWaitingTunnel = tunnels.first(where: { $0.status == .waiting }) {
             alreadyWaitingTunnel.status = .inactive
         }
@@ -458,6 +476,7 @@ class TunnelsManager {
             }
             return
         }
+        #endif
 
         #if targetEnvironment(simulator)
         tunnel.status = .active
@@ -489,6 +508,7 @@ class TunnelsManager {
         tunnels.forEach { $0.refreshStatus() }
     }
 
+    #if os(iOS)
     private func activateWaitingTunnelOnDeactivation(of tunnel: TunnelContainer) {
         waiteeObservationToken = tunnel.observe(\.status) { [weak self] tunnel, _ in
             guard let self = self else { return }
@@ -500,6 +520,7 @@ class TunnelsManager {
             }
         }
     }
+    #endif
 
     private func startObservingTunnelStatuses() {
         statusObservationToken = NotificationCenter.default.observe(name: .NEVPNStatusDidChange, object: nil, queue: OperationQueue.main) { [weak self] statusChangeNotification in
