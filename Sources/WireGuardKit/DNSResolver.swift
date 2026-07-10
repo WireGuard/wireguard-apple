@@ -42,6 +42,28 @@ extension DNSResolver {
             return endpoint
         }
 
+        // Try IPv6 first, but only if local IPv6 is configured
+        var hintsV6 = addrinfo()
+        hintsV6.ai_flags = AI_ADDRCONFIG
+        hintsV6.ai_family = AF_INET6
+        hintsV6.ai_socktype = SOCK_DGRAM
+        hintsV6.ai_protocol = IPPROTO_UDP
+
+        var resultPointerV6: UnsafeMutablePointer<addrinfo>?
+        defer {
+            resultPointerV6.flatMap { freeaddrinfo($0) }
+        }
+
+        let errorCodeV6 = getaddrinfo(name, "\(endpoint.port)", &hintsV6, &resultPointerV6)
+        if errorCodeV6 == 0, let resultPointerV6 = resultPointerV6 {
+            for addrInfo in AddrInfoIterator(resultPointerV6) {
+                if let ipv6Address = IPv6Address(addrInfo: addrInfo) {
+                    return Endpoint(host: .ipv6(ipv6Address), port: endpoint.port)
+                }
+            }
+        }
+        // Fallback: original resolution logic
+
         var hints = addrinfo()
         hints.ai_flags = AI_ALL // We set this to ALL so that we get v4 addresses even on DNS64 networks
         hints.ai_family = AF_UNSPEC
