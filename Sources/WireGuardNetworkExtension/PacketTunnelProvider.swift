@@ -7,6 +7,38 @@ import os
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
+    #if os(macOS)
+    // Number of tunnels starting or started in this process, used to ensure
+    // the exit(0) hack in stopTunnel() doesn't tear down other tunnels in
+    // case the OS runs multiple simultaneous tunnels in a single extension
+    // process. Tunnels are counted for the entire duration of the start
+    // attempt, so that another tunnel stopping meanwhile doesn't consider
+    // itself the last one in the process.
+    private static var startedTunnelCount = 0
+    private static let startedTunnelCountLock = NSLock()
+    private var hasStartedTunnel = false
+
+    private func registerStartedTunnel() {
+        PacketTunnelProvider.startedTunnelCountLock.lock()
+        PacketTunnelProvider.startedTunnelCount += 1
+        hasStartedTunnel = true
+        PacketTunnelProvider.startedTunnelCountLock.unlock()
+    }
+
+    // Returns true if this was the last starting or started tunnel in the
+    // process, i.e. the process is free to exit.
+    @discardableResult
+    private func unregisterStartedTunnel() -> Bool {
+        PacketTunnelProvider.startedTunnelCountLock.lock()
+        defer { PacketTunnelProvider.startedTunnelCountLock.unlock() }
+        if hasStartedTunnel {
+            hasStartedTunnel = false
+            PacketTunnelProvider.startedTunnelCount -= 1
+        }
+        return PacketTunnelProvider.startedTunnelCount == 0
+    }
+    #endif
+
     private lazy var adapter: WireGuardAdapter = {
         return WireGuardAdapter(with: self) { logLevel, message in
             wg_log(logLevel.osLogLevel, message: message)
@@ -21,9 +53,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         wg_log(.info, message: "Starting tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
 
+        #if os(macOS)
+        registerStartedTunnel()
+        #endif
+
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
               let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
             errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            #if os(macOS)
+            unregisterStartedTunnel()
+            #endif
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
         }
@@ -38,6 +77,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 completionHandler(nil)
                 return
             }
+
+            #if os(macOS)
+            self.unregisterStartedTunnel()
+            #endif
 
             switch adapterError {
             case .cannotLocateTunnelFileDescriptor:
@@ -84,7 +127,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             // HACK: This is a filthy hack to work around Apple bug 32073323 (dup'd by us as 47526107).
             // Remove it when they finally fix this upstream and the fix has been rolled out to
             // sufficient quantities of users.
-            exit(0)
+            // Since multiple tunnels may be active simultaneously, only exit
+            // once the last starting or started tunnel in this process is
+            // being stopped.
+            if self.unregisterStartedTunnel() {
+                exit(0)
+            }
             #endif
         }
     }
