@@ -119,7 +119,7 @@ class TunnelsManager {
         }
     }
 
-    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, completionHandler: @escaping (Result<TunnelContainer, TunnelsManagerError>) -> Void) {
+    func add(tunnelConfiguration: TunnelConfiguration, onDemandOption: ActivateOnDemandOption = .off, isSplitDNSEnabled: Bool = false, completionHandler: @escaping (Result<TunnelContainer, TunnelsManagerError>) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
         if tunnelName.isEmpty {
             completionHandler(.failure(TunnelsManagerError.tunnelNameEmpty))
@@ -133,6 +133,7 @@ class TunnelsManager {
 
         let tunnelProviderManager = NETunnelProviderManager()
         tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
+        (tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol)?.isSplitDNSEnabled = isSplitDNSEnabled
         tunnelProviderManager.isEnabled = true
 
         onDemandOption.apply(on: tunnelProviderManager)
@@ -210,6 +211,7 @@ class TunnelsManager {
 
     func modify(tunnel: TunnelContainer, tunnelConfiguration: TunnelConfiguration,
                 onDemandOption: ActivateOnDemandOption,
+                isSplitDNSEnabled: Bool? = nil,
                 shouldEnsureOnDemandEnabled: Bool = false,
                 completionHandler: @escaping (TunnelsManagerError?) -> Void) {
         let tunnelName = tunnelConfiguration.name ?? ""
@@ -224,7 +226,8 @@ class TunnelsManager {
         if isIntroducingOnDemandRules && tunnel.status != .inactive && tunnel.status != .deactivating {
             tunnel.onDeactivated = { [weak self] in
                 self?.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration,
-                             onDemandOption: onDemandOption, shouldEnsureOnDemandEnabled: true,
+                             onDemandOption: onDemandOption, isSplitDNSEnabled: isSplitDNSEnabled,
+                             shouldEnsureOnDemandEnabled: true,
                              completionHandler: completionHandler)
             }
             self.startDeactivation(of: tunnel)
@@ -246,6 +249,12 @@ class TunnelsManager {
         var isTunnelConfigurationChanged = false
         if tunnelProviderManager.tunnelConfiguration != tunnelConfiguration {
             tunnelProviderManager.setTunnelConfiguration(tunnelConfiguration)
+            isTunnelConfigurationChanged = true
+        }
+        if let isSplitDNSEnabled = isSplitDNSEnabled,
+           let proto = tunnelProviderManager.protocolConfiguration as? NETunnelProviderProtocol,
+           proto.isSplitDNSEnabled != isSplitDNSEnabled {
+            proto.isSplitDNSEnabled = isSplitDNSEnabled
             isTunnelConfigurationChanged = true
         }
         tunnelProviderManager.isEnabled = true
@@ -635,6 +644,10 @@ class TunnelContainer: NSObject {
 
     var onDemandOption: ActivateOnDemandOption {
         return ActivateOnDemandOption(from: tunnelProvider)
+    }
+
+    var isSplitDNSEnabled: Bool {
+        return (tunnelProvider.protocolConfiguration as? NETunnelProviderProtocol)?.isSplitDNSEnabled ?? false
     }
 
     #if os(macOS)

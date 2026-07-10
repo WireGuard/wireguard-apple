@@ -13,12 +13,14 @@ class TunnelEditTableViewController: UITableViewController {
         case interface
         case peer(_ peer: TunnelViewModel.PeerData)
         case addPeer
+        case splitDNS
         case onDemand
 
         static func == (lhs: Section, rhs: Section) -> Bool {
             switch (lhs, rhs) {
             case (.interface, .interface),
                  (.addPeer, .addPeer),
+                 (.splitDNS, .splitDNS),
                  (.onDemand, .onDemand):
                 return true
             case let (.peer(peerA), .peer(peerB)):
@@ -53,6 +55,7 @@ class TunnelEditTableViewController: UITableViewController {
     let tunnel: TunnelContainer?
     let tunnelViewModel: TunnelViewModel
     var onDemandViewModel: ActivateOnDemandViewModel
+    private var isSplitDNSEnabled: Bool
     private var sections = [Section]()
 
     // Use this initializer to edit an existing tunnel.
@@ -61,6 +64,7 @@ class TunnelEditTableViewController: UITableViewController {
         self.tunnel = tunnel
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: tunnel.tunnelConfiguration)
         onDemandViewModel = ActivateOnDemandViewModel(tunnel: tunnel)
+        isSplitDNSEnabled = tunnel.isSplitDNSEnabled
         super.init(style: .grouped)
         loadSections()
     }
@@ -71,6 +75,7 @@ class TunnelEditTableViewController: UITableViewController {
         tunnel = nil
         tunnelViewModel = TunnelViewModel(tunnelConfiguration: nil)
         onDemandViewModel = ActivateOnDemandViewModel()
+        isSplitDNSEnabled = false
         super.init(style: .grouped)
         loadSections()
     }
@@ -100,6 +105,7 @@ class TunnelEditTableViewController: UITableViewController {
         interfaceFieldsBySection.forEach { _ in sections.append(.interface) }
         tunnelViewModel.peersData.forEach { sections.append(.peer($0)) }
         sections.append(.addPeer)
+        sections.append(.splitDNS)
         sections.append(.onDemand)
     }
 
@@ -113,10 +119,14 @@ class TunnelEditTableViewController: UITableViewController {
             ErrorPresenter.showErrorAlert(title: alertTitle, message: errorMessage, from: self)
             tableView.reloadData() // Highlight erroring fields
         case .saved(let tunnelConfiguration):
+            if isSplitDNSEnabled && (tunnelConfiguration.interface.dns.isEmpty || tunnelConfiguration.interface.dnsSearch.filter({ !$0.isEmpty }).isEmpty) {
+                ErrorPresenter.showErrorAlert(title: tr("alertSplitDNSRequiresSearchDomainsTitle"), message: tr("alertSplitDNSRequiresSearchDomainsMessage"), from: self)
+                return
+            }
             let onDemandOption = onDemandViewModel.toOnDemandOption()
             if let tunnel = tunnel {
                 // We're modifying an existing tunnel
-                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] error in
+                tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption, isSplitDNSEnabled: isSplitDNSEnabled) { [weak self] error in
                     if let error = error {
                         ErrorPresenter.showErrorAlert(error: error, from: self)
                     } else {
@@ -126,7 +136,7 @@ class TunnelEditTableViewController: UITableViewController {
                 }
             } else {
                 // We're adding a new tunnel
-                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
+                tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption, isSplitDNSEnabled: isSplitDNSEnabled) { [weak self] result in
                     switch result {
                     case .failure(let error):
                         ErrorPresenter.showErrorAlert(error: error, from: self)
@@ -161,6 +171,8 @@ extension TunnelEditTableViewController {
             return peerFieldsToShow.count
         case .addPeer:
             return 1
+        case .splitDNS:
+            return 1
         case .onDemand:
             if onDemandViewModel.isWiFiInterfaceEnabled {
                 return 3
@@ -178,8 +190,19 @@ extension TunnelEditTableViewController {
             return tr("tunnelSectionTitlePeer")
         case .addPeer:
             return nil
+        case .splitDNS:
+            return tr("tunnelSectionTitleSplitDNS")
         case .onDemand:
             return tr("tunnelSectionTitleOnDemand")
+        }
+    }
+
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        switch sections[section] {
+        case .splitDNS:
+            return tr("tunnelEditSplitDNSTooltip")
+        default:
+            return nil
         }
     }
 
@@ -191,6 +214,8 @@ extension TunnelEditTableViewController {
             return peerCell(for: tableView, at: indexPath, with: peerData)
         case .addPeer:
             return addPeerCell(for: tableView, at: indexPath)
+        case .splitDNS:
+            return splitDNSCell(for: tableView, at: indexPath)
         case .onDemand:
             return onDemandCell(for: tableView, at: indexPath)
         }
@@ -419,6 +444,16 @@ extension TunnelEditTableViewController {
                     }
                 }
             }, completion: nil)
+        }
+        return cell
+    }
+
+    private func splitDNSCell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
+        let cell: SwitchCell = tableView.dequeueReusableCell(for: indexPath)
+        cell.message = tr("tunnelEditSplitDNS")
+        cell.isOn = isSplitDNSEnabled
+        cell.onSwitchToggled = { [weak self] isOn in
+            self?.isSplitDNSEnabled = isOn
         }
         return cell
     }

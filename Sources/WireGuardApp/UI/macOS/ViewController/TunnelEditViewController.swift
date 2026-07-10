@@ -60,6 +60,15 @@ class TunnelEditViewController: NSViewController {
         return checkbox
     }()
 
+    let splitDNSCheckbox: NSButton = {
+        let checkbox = NSButton()
+        checkbox.title = tr("tunnelEditSplitDNS")
+        checkbox.toolTip = tr("tunnelEditSplitDNSTooltip")
+        checkbox.setButtonType(.switch)
+        checkbox.state = .off
+        return checkbox
+    }()
+
     let discardButton: NSButton = {
         let button = NSButton()
         button.title = tr("macEditDiscard")
@@ -106,6 +115,7 @@ class TunnelEditViewController: NSViewController {
             // Editing an existing tunnel
             let tunnelConfiguration = tunnel.tunnelConfiguration!
             nameRow.value = tunnel.name
+            splitDNSCheckbox.state = tunnel.isSplitDNSEnabled ? .on : .off
             textView.string = tunnelConfiguration.asWgQuickConfig()
             publicKeyRow.value = tunnelConfiguration.interface.privateKey.publicKey.base64Key
             textView.privateKeyString = tunnelConfiguration.interface.privateKey.base64Key
@@ -163,6 +173,7 @@ class TunnelEditViewController: NSViewController {
 
         let buttonRowStackView = NSStackView()
         buttonRowStackView.setViews([discardButton, saveButton], in: .trailing)
+        buttonRowStackView.addView(splitDNSCheckbox, in: .leading)
         buttonRowStackView.addView(excludePrivateIPsCheckbox, in: .leading)
         buttonRowStackView.orientation = .horizontal
         buttonRowStackView.spacing = internalSpacing
@@ -229,11 +240,17 @@ class TunnelEditViewController: NSViewController {
             }
         }
 
+        let isSplitDNSEnabled = splitDNSCheckbox.state == .on
+        if isSplitDNSEnabled && (tunnelConfiguration.interface.dns.isEmpty || tunnelConfiguration.interface.dnsSearch.filter({ !$0.isEmpty }).isEmpty) {
+            ErrorPresenter.showErrorAlert(title: tr("alertSplitDNSRequiresSearchDomainsTitle"), message: tr("alertSplitDNSRequiresSearchDomainsMessage"), from: self)
+            return
+        }
+
         setUserInteractionEnabled(false)
 
         if let tunnel = tunnel {
             // We're modifying an existing tunnel
-            tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] error in
+            tunnelsManager.modify(tunnel: tunnel, tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption, isSplitDNSEnabled: isSplitDNSEnabled) { [weak self] error in
                 guard let self = self else { return }
                 self.setUserInteractionEnabled(true)
                 if let error = error {
@@ -245,7 +262,7 @@ class TunnelEditViewController: NSViewController {
             }
         } else {
             // We're creating a new tunnel
-            self.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption) { [weak self] result in
+            self.tunnelsManager.add(tunnelConfiguration: tunnelConfiguration, onDemandOption: onDemandOption, isSplitDNSEnabled: isSplitDNSEnabled) { [weak self] result in
                 guard let self = self else { return }
                 self.setUserInteractionEnabled(true)
                 switch result {

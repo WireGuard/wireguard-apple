@@ -15,10 +15,12 @@ typealias EndpointResolutionResult = Result<(Endpoint, Endpoint), DNSResolutionE
 class PacketTunnelSettingsGenerator {
     let tunnelConfiguration: TunnelConfiguration
     let resolvedEndpoints: [Endpoint?]
+    let isSplitDNSEnabled: Bool
 
-    init(tunnelConfiguration: TunnelConfiguration, resolvedEndpoints: [Endpoint?]) {
+    init(tunnelConfiguration: TunnelConfiguration, resolvedEndpoints: [Endpoint?], isSplitDNSEnabled: Bool = false) {
         self.tunnelConfiguration = tunnelConfiguration
         self.resolvedEndpoints = resolvedEndpoints
+        self.isSplitDNSEnabled = isSplitDNSEnabled
     }
 
     func endpointUapiConfiguration() -> (String, [EndpointResolutionResult?]) {
@@ -88,7 +90,13 @@ class PacketTunnelSettingsGenerator {
             let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
             dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
             if !tunnelConfiguration.interface.dns.isEmpty {
-                dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+                let splitDNSMatchDomains = isSplitDNSEnabled ? tunnelConfiguration.interface.dnsSearch.filter { !$0.isEmpty } : []
+                if !splitDNSMatchDomains.isEmpty {
+                    // Use the tunnel's DNS only for the tunnel's search domains
+                    dnsSettings.matchDomains = splitDNSMatchDomains
+                } else {
+                    dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+                }
             }
             networkSettings.dnsSettings = dnsSettings
         }

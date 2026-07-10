@@ -97,6 +97,12 @@
 "tunnelPeerLastHandshakeTime" = "Latest handshake";
 "tunnelPeerExcludePrivateIPs" = "Exclude private IPs";
 
+"tunnelSectionTitleSplitDNS" = "DNS";
+"tunnelEditSplitDNS" = "Split DNS";
+"tunnelEditSplitDNSTooltip" = "Use the tunnel's DNS servers only for the tunnel's DNS search domains, instead of for all queries on the system.";
+"alertSplitDNSRequiresSearchDomainsTitle" = "Split DNS requires DNS servers and search domains";
+"alertSplitDNSRequiresSearchDomainsMessage" = "To use split DNS, list both the DNS servers and the domains to route through them in the tunnel's DNS entry, e.g.: 'DNS = 10.0.0.53, corp.example.com'";
+
 "tunnelSectionTitleOnDemand" = "On-Demand Activation";
 
 "tunnelOnDemandCellular" = "Cellular";

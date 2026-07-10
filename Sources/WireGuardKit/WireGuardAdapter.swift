@@ -56,6 +56,10 @@ public class WireGuardAdapter {
     /// Adapter state.
     private var state: State = .stopped
 
+    /// Whether the tunnel's DNS servers should be used only for the tunnel's
+    /// DNS search domains rather than for all queries on the system.
+    private var isSplitDNSEnabled = false
+
     /// Tunnel device file descriptors claimed by the adapters in this process.
     /// When multiple tunnels run in a single extension process, each adapter
     /// must attach to its own utun device rather than to the first one found.
@@ -265,13 +269,17 @@ public class WireGuardAdapter {
     /// Start the tunnel tunnel.
     /// - Parameters:
     ///   - tunnelConfiguration: tunnel configuration.
+    ///   - isSplitDNSEnabled: use the tunnel's DNS servers only for the
+    ///     tunnel's DNS search domains rather than for all queries.
     ///   - completionHandler: completion handler.
-    public func start(tunnelConfiguration: TunnelConfiguration, completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
+    public func start(tunnelConfiguration: TunnelConfiguration, isSplitDNSEnabled: Bool = false, completionHandler: @escaping (WireGuardAdapterError?) -> Void) {
         workQueue.async {
             guard case .stopped = self.state else {
                 completionHandler(.invalidState)
                 return
             }
+
+            self.isSplitDNSEnabled = isSplitDNSEnabled
 
             let networkMonitor = NWPathMonitor()
             networkMonitor.pathUpdateHandler = { [weak self] path in
@@ -486,7 +494,8 @@ public class WireGuardAdapter {
     private func makeSettingsGenerator(with tunnelConfiguration: TunnelConfiguration) throws -> PacketTunnelSettingsGenerator {
         return PacketTunnelSettingsGenerator(
             tunnelConfiguration: tunnelConfiguration,
-            resolvedEndpoints: try self.resolvePeers(for: tunnelConfiguration)
+            resolvedEndpoints: try self.resolvePeers(for: tunnelConfiguration),
+            isSplitDNSEnabled: isSplitDNSEnabled
         )
     }
 

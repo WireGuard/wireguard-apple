@@ -12,6 +12,21 @@ enum PacketTunnelProviderError: String, Error {
 }
 
 extension NETunnelProviderProtocol {
+    private static let splitDNSKey = "SplitDNS"
+
+    /// When enabled, the tunnel's DNS servers are used only for the tunnel's
+    /// DNS search domains rather than for all queries on the system.
+    var isSplitDNSEnabled: Bool {
+        get {
+            return providerConfiguration?[Self.splitDNSKey] as? Bool ?? false
+        }
+        set {
+            var configuration = providerConfiguration ?? [:]
+            configuration[Self.splitDNSKey] = newValue
+            providerConfiguration = configuration
+        }
+    }
+
     convenience init?(tunnelConfiguration: TunnelConfiguration, previouslyFrom old: NEVPNProtocol? = nil) {
         self.init()
 
@@ -25,6 +40,9 @@ extension NETunnelProviderProtocol {
         #if os(macOS)
         providerConfiguration = ["UID": getuid()]
         #endif
+        if let old = old as? NETunnelProviderProtocol, old.isSplitDNSEnabled {
+            isSplitDNSEnabled = true
+        }
 
         let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
         if endpoints.count == 1 {
@@ -64,6 +82,7 @@ extension NETunnelProviderProtocol {
          * around so that .mobileconfig files are easier.
          */
         if let oldConfig = providerConfiguration?["WgQuickConfig"] as? String {
+            let wasSplitDNSEnabled = isSplitDNSEnabled
             #if os(macOS)
             providerConfiguration = ["UID": getuid()]
             #elseif os(iOS)
@@ -71,6 +90,9 @@ extension NETunnelProviderProtocol {
             #else
             #error("Unimplemented")
             #endif
+            if wasSplitDNSEnabled {
+                isSplitDNSEnabled = true
+            }
             guard passwordReference == nil else { return true }
             wg_log(.info, message: "Migrating tunnel configuration '\(name)'")
             passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
@@ -78,7 +100,11 @@ extension NETunnelProviderProtocol {
         }
         #if os(macOS)
         if passwordReference != nil && providerConfiguration?["UID"] == nil && verifyConfigurationReference() {
+            let wasSplitDNSEnabled = isSplitDNSEnabled
             providerConfiguration = ["UID": getuid()]
+            if wasSplitDNSEnabled {
+                isSplitDNSEnabled = true
+            }
             return true
         }
         #elseif os(iOS)
