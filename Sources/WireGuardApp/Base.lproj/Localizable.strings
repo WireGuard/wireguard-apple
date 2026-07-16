@@ -385,6 +385,7 @@
 
 "macAlertNameIsEmpty" = "Name is required";
 "macAlertDuplicateName (%@)" = "Another tunnel already exists with the name ‘%@’.";
+"macAlertCannotReadConfigTitle" = "Unable to read configuration";
 
 "macAlertInvalidLine (%@)" = "Invalid line: ‘%@’.";
 
