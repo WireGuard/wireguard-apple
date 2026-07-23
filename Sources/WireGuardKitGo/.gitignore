@@ -1,3 +1,5 @@
 .cache/
 .tmp/
+.build/
 out/
+wireguard-go-version.h

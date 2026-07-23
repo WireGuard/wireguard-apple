@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -23,18 +23,12 @@ let package = Package(
             dependencies: [],
             publicHeadersPath: "."
         ),
-        .target(
+        // Precompiled Go bridge. Regenerate with `make -C Sources/WireGuardKitGo`
+        // (requires a Go toolchain) and commit the resulting xcframework;
+        // consumers of this package do not need Go installed to build.
+        .binaryTarget(
             name: "WireGuardKitGo",
-            dependencies: [],
-            exclude: [
-                "goruntime-boottime-over-monotonic.diff",
-                "go.mod",
-                "go.sum",
-                "api-apple.go",
-                "Makefile"
-            ],
-            publicHeadersPath: ".",
-            linkerSettings: [.linkedLibrary("wg-go")]
+            path: "Sources/WireGuardKitGo/WireGuardKitGo.xcframework"
         )
     ]
 )

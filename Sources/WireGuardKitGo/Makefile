@@ -1,29 +1,37 @@
 # SPDX-License-Identifier: MIT
 #
-# Copyright (C) 2018-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+# Copyright (C) 2018-2023 WireGuard LLC. All Rights Reserved.
+#
+# This Makefile builds the Go bridge once, as a precompiled binary
+# `WireGuardKitGo.xcframework` that is committed into the repository. Consumers
+# of the Swift package (and the Xcode project) link that xcframework directly
+# and therefore do NOT need a Go toolchain to build. Run `make` here only when
+# the Go sources or dependencies change, then commit the regenerated
+# xcframework.
 
-# These are generally passed to us by xcode, but we set working defaults for standalone compilation too.
-ARCHS ?= x86_64 arm64
-PLATFORM_NAME ?= macosx
-SDKROOT ?= $(shell xcrun --sdk $(PLATFORM_NAME) --show-sdk-path)
-CONFIGURATION_BUILD_DIR ?= $(CURDIR)/out
-CONFIGURATION_TEMP_DIR ?= $(CURDIR)/.tmp
+# Deployment targets — keep in sync with Package.swift and the Xcode project.
+IPHONEOS_DEPLOYMENT_TARGET ?= 15.0
+MACOSX_DEPLOYMENT_TARGET ?= 12.0
 
 export PATH := $(PATH):/usr/local/bin:/opt/homebrew/bin
 export CC ?= clang
 LIPO ?= lipo
-DESTDIR ?= $(CONFIGURATION_BUILD_DIR)
-BUILDDIR ?= $(CONFIGURATION_TEMP_DIR)/wireguard-go-bridge
+XCODEBUILD ?= xcodebuild
 
-CFLAGS_PREFIX := $(if $(DEPLOYMENT_TARGET_CLANG_FLAG_NAME),-$(DEPLOYMENT_TARGET_CLANG_FLAG_NAME)=$($(DEPLOYMENT_TARGET_CLANG_ENV_NAME)),) -isysroot $(SDKROOT) -arch
-GOARCH_arm64 := arm64
-GOARCH_x86_64 := amd64
-GOOS_macosx := darwin
-GOOS_iphoneos := ios
+DESTDIR ?= $(CURDIR)
+BUILDDIR ?= $(CURDIR)/.build
+XCFRAMEWORK := $(DESTDIR)/WireGuardKitGo.xcframework
 
-build: $(DESTDIR)/libwg-go.a
+SDKROOT_macosx := $(shell xcrun --sdk macosx --show-sdk-path)
+SDKROOT_iphoneos := $(shell xcrun --sdk iphoneos --show-sdk-path)
+SDKROOT_iphonesimulator := $(shell xcrun --sdk iphonesimulator --show-sdk-path)
+
+xcframework: $(XCFRAMEWORK)
 version-header: $(DESTDIR)/wireguard-go-version.h
 
+# Patched copy of GOROOT: makes timers account for time spent while the machine
+# was asleep (mach_continuous_time instead of mach_absolute_time), which is
+# common on mobile devices.
 REAL_GOROOT := $(shell go env GOROOT 2>/dev/null)
 export GOROOT := $(BUILDDIR)/goroot
 $(GOROOT)/.prepared:
@@ -33,28 +41,57 @@ $(GOROOT)/.prepared:
 	cat goruntime-*.diff | patch -p1 -f -N -r- -d "$(GOROOT)"
 	touch "$@"
 
-define libwg-go-a
-$(BUILDDIR)/libwg-go-$(1).a: export CGO_ENABLED := 1
-$(BUILDDIR)/libwg-go-$(1).a: export CGO_CFLAGS := $(CFLAGS_PREFIX) $(ARCH)
-$(BUILDDIR)/libwg-go-$(1).a: export CGO_LDFLAGS := $(CFLAGS_PREFIX) $(ARCH)
-$(BUILDDIR)/libwg-go-$(1).a: export GOOS := $(GOOS_$(PLATFORM_NAME))
-$(BUILDDIR)/libwg-go-$(1).a: export GOARCH := $(GOARCH_$(1))
-$(BUILDDIR)/libwg-go-$(1).a: $(GOROOT)/.prepared go.mod
-	go build -ldflags=-w -trimpath -v -o "$(BUILDDIR)/libwg-go-$(1).a" -buildmode c-archive
-	rm -f "$(BUILDDIR)/libwg-go-$(1).h"
+# build-arch: $(1)=output-stem $(2)=GOOS $(3)=GOARCH $(4)=SDKROOT $(5)=clang-target-triple
+define build-arch
+$(BUILDDIR)/$(1).a: export CGO_ENABLED := 1
+$(BUILDDIR)/$(1).a: export GOOS := $(2)
+$(BUILDDIR)/$(1).a: export GOARCH := $(3)
+$(BUILDDIR)/$(1).a: export CGO_CFLAGS := -isysroot $(4) -target $(5)
+$(BUILDDIR)/$(1).a: export CGO_LDFLAGS := -isysroot $(4) -target $(5)
+$(BUILDDIR)/$(1).a: $(GOROOT)/.prepared go.mod
+	@mkdir -p "$(BUILDDIR)"
+	go build -ldflags=-w -trimpath -o "$$@" -buildmode c-archive
+	@rm -f "$(BUILDDIR)/$(1).h"
 endef
-$(foreach ARCH,$(ARCHS),$(eval $(call libwg-go-a,$(ARCH))))
 
-$(DESTDIR)/wireguard-go-version.h: go.mod $(GOROOT)/.prepared
-	 sed -E -n 's/.*golang\.zx2c4\.com\/wireguard +v[0-9.]+-[0-9]+-([0-9a-f]{8})[0-9a-f]{4}.*/#define WIREGUARD_GO_VERSION "\1"/p' "$<" > "$@"
+$(eval $(call build-arch,macos-arm64,darwin,arm64,$(SDKROOT_macosx),arm64-apple-macos$(MACOSX_DEPLOYMENT_TARGET)))
+$(eval $(call build-arch,macos-amd64,darwin,amd64,$(SDKROOT_macosx),x86_64-apple-macos$(MACOSX_DEPLOYMENT_TARGET)))
+$(eval $(call build-arch,ios-arm64,ios,arm64,$(SDKROOT_iphoneos),arm64-apple-ios$(IPHONEOS_DEPLOYMENT_TARGET)))
+$(eval $(call build-arch,iossim-arm64,ios,arm64,$(SDKROOT_iphonesimulator),arm64-apple-ios$(IPHONEOS_DEPLOYMENT_TARGET)-simulator))
+$(eval $(call build-arch,iossim-amd64,ios,amd64,$(SDKROOT_iphonesimulator),x86_64-apple-ios$(IPHONEOS_DEPLOYMENT_TARGET)-simulator))
 
-$(DESTDIR)/libwg-go.a: $(foreach ARCH,$(ARCHS),$(BUILDDIR)/libwg-go-$(ARCH).a)
-	@mkdir -vp "$(DESTDIR)"
+# Per-platform fat static libraries.
+$(BUILDDIR)/macos/libwg-go.a: $(BUILDDIR)/macos-arm64.a $(BUILDDIR)/macos-amd64.a
+	@mkdir -p "$(dir $@)"
+	$(LIPO) -create -output "$@" $^
+$(BUILDDIR)/ios/libwg-go.a: $(BUILDDIR)/ios-arm64.a
+	@mkdir -p "$(dir $@)"
+	$(LIPO) -create -output "$@" $^
+$(BUILDDIR)/iossimulator/libwg-go.a: $(BUILDDIR)/iossim-arm64.a $(BUILDDIR)/iossim-amd64.a
+	@mkdir -p "$(dir $@)"
 	$(LIPO) -create -output "$@" $^
 
+# Headers (+ module map) bundled into every xcframework slice, so the library
+# is importable as the `WireGuardKitGo` Clang module from Swift.
+$(BUILDDIR)/include/module.modulemap: wireguard.h
+	@mkdir -p "$(BUILDDIR)/include"
+	cp wireguard.h "$(BUILDDIR)/include/wireguard.h"
+	printf 'module WireGuardKitGo {\n    header "wireguard.h"\n    export *\n}\n' > "$@"
+
+$(XCFRAMEWORK): $(BUILDDIR)/macos/libwg-go.a $(BUILDDIR)/ios/libwg-go.a $(BUILDDIR)/iossimulator/libwg-go.a $(BUILDDIR)/include/module.modulemap
+	rm -rf "$(XCFRAMEWORK)"
+	$(XCODEBUILD) -create-xcframework \
+		-library "$(BUILDDIR)/macos/libwg-go.a" -headers "$(BUILDDIR)/include" \
+		-library "$(BUILDDIR)/ios/libwg-go.a" -headers "$(BUILDDIR)/include" \
+		-library "$(BUILDDIR)/iossimulator/libwg-go.a" -headers "$(BUILDDIR)/include" \
+		-output "$(XCFRAMEWORK)"
+
+# Extracts the wireguard-go commit from go.mod. Pure text processing — no Go
+# toolchain required — so the Xcode app build can run it without Go installed.
+$(DESTDIR)/wireguard-go-version.h: go.mod
+	sed -E -n 's|.*golang\.zx2c4\.com/wireguard +v[0-9.]+-[0-9]+-([0-9a-f]{8})[0-9a-f]{4}.*|#define WIREGUARD_GO_VERSION "\1"|p' "$<" > "$@"
+
 clean:
-	rm -rf "$(BUILDDIR)" "$(DESTDIR)/libwg-go.a" "$(DESTDIR)/wireguard-go-version.h"
+	rm -rf "$(BUILDDIR)" "$(XCFRAMEWORK)" "$(DESTDIR)/wireguard-go-version.h"
 
-install: build
-
-.PHONY: clean build version-header install
+.PHONY: xcframework version-header clean

@@ -18,11 +18,16 @@ $ cp Sources/WireGuardApp/Config/Developer.xcconfig.template Sources/WireGuardAp
 $ vim Sources/WireGuardApp/Config/Developer.xcconfig
 ```
 
-- Install swiftlint and go 1.19:
+- Install swiftlint:
 
 ```
-$ brew install swiftlint go
+$ brew install swiftlint
 ```
+
+> The Go bridge ships as a precompiled `WireGuardKitGo.xcframework` committed to
+> the repository, so building the app no longer requires a Go toolchain. You
+> only need Go (1.17+) to regenerate the bridge after changing its sources:
+> `make -C Sources/WireGuardKitGo`.
 
 - Open project in Xcode:
 
