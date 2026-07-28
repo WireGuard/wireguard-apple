@@ -60,6 +60,15 @@ public class WireGuardAdapter {
     /// DNS search domains rather than for all queries on the system.
     private var isSplitDNSEnabled = false
 
+    #if os(macOS)
+    /// Pending endpoint reset after a network change.
+    private var endpointResetWorkItem: DispatchWorkItem?
+
+    /// Delay before resetting endpoints after a network change, so that a
+    /// burst of path updates results in a single reset.
+    private static let endpointResetDelay: DispatchTimeInterval = .seconds(2)
+    #endif
+
     /// Tunnel device file descriptors claimed by the adapters in this process.
     /// When multiple tunnels run in a single extension process, each adapter
     /// must attach to its own utun device rather than to the first one found.
@@ -328,6 +337,11 @@ public class WireGuardAdapter {
             self.networkMonitor?.cancel()
             self.networkMonitor = nil
 
+            #if os(macOS)
+            self.endpointResetWorkItem?.cancel()
+            self.endpointResetWorkItem = nil
+            #endif
+
             self.releaseTunnelFileDescriptor()
             self.state = .stopped
 
@@ -518,12 +532,51 @@ public class WireGuardAdapter {
 
     /// Helper method used by network path monitor.
     /// - Parameter path: new network path
+    #if os(macOS)
+    /// Schedule resetting the peer endpoints to their configured addresses,
+    /// re-resolving the ones configured with a hostname.
+    ///
+    /// Unlike iOS, macOS leaves the endpoints alone across a network change.
+    /// A peer keeps whatever endpoint it has, which is a problem in two ways:
+    /// a hostname that resolves elsewhere on the new network is never picked
+    /// up, and a peer that roamed to an address reachable only on the previous
+    /// network - a server reached at its internal address, say - keeps being
+    /// sent to that address, so the tunnel never handshakes again.
+    ///
+    /// The work is delayed and coalesced, since a single network change
+    /// produces a burst of path updates and resolution blocks the queue.
+    private func scheduleEndpointReset() {
+        endpointResetWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            guard case .started(let handle, let settingsGenerator) = self.state else { return }
+
+            let (wgConfig, resolutionResults) = settingsGenerator.endpointUapiConfigurationAfterNetworkChange()
+            self.logEndpointResolutionResults(resolutionResults)
+
+            guard !wgConfig.isEmpty else { return }
+
+            self.logHandler(.verbose, "Resetting peer endpoints after network change")
+            wgSetConfig(handle, wgConfig)
+            wgBumpSockets(handle)
+        }
+
+        endpointResetWorkItem = workItem
+        workQueue.asyncAfter(deadline: .now() + Self.endpointResetDelay, execute: workItem)
+    }
+    #endif
+
     private func didReceivePathUpdate(path: Network.NWPath) {
         self.logHandler(.verbose, "Network change detected with \(path.status) route and interface order \(path.availableInterfaces)")
 
         #if os(macOS)
         if case .started(let handle, _) = self.state {
             wgBumpSockets(handle)
+
+            if path.status.isSatisfiable {
+                self.scheduleEndpointReset()
+            }
         }
         #elseif os(iOS)
         switch self.state {
