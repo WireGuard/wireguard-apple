@@ -349,7 +349,7 @@ private enum StatusMenuTunnelsPresentationStyle {
     case submenu
 
     func preferredPresentationStyle(numberOfTunnels: Int) -> StatusMenuTunnelsPresentationStyle {
-        let maxInlineTunnels = 10
+        let maxInlineTunnels = 30
 
         if case .inline = self, numberOfTunnels > maxInlineTunnels {
             return .submenu
