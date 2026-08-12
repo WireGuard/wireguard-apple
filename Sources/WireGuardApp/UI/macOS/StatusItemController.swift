@@ -4,7 +4,7 @@
 import Cocoa
 
 class StatusItemController {
-    var currentTunnel: TunnelContainer? {
+    var tunnelsInOperation: [TunnelContainer] = [] {
         didSet {
             updateStatusItemImage()
         }
@@ -27,20 +27,16 @@ class StatusItemController {
     }
 
     func updateStatusItemImage() {
-        guard let currentTunnel = currentTunnel else {
+        guard !tunnelsInOperation.isEmpty else {
             stopActivatingAnimation()
             statusItem.button?.image = statusBarImageWhenInactive
             return
         }
-        switch currentTunnel.status {
-        case .inactive:
-            stopActivatingAnimation()
-            statusItem.button?.image = statusBarImageWhenInactive
-        case .active:
+        if tunnelsInOperation.contains(where: { $0.status != .active }) {
+            startActivatingAnimation()
+        } else {
             stopActivatingAnimation()
             statusItem.button?.image = statusBarImageWhenActive
-        case .activating, .waiting, .reasserting, .restarting, .deactivating:
-            startActivatingAnimation()
         }
     }
 

@@ -65,11 +65,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    private var activeTunnels: [TunnelContainer] {
+        return tunnelsTracker?.tunnelsInOperation.filter { $0.status == .active || $0.status == .activating } ?? []
+    }
+
     @objc func confirmAndQuit() {
         let alert = NSAlert()
         alert.messageText = tr("macConfirmAndQuitAlertMessage")
-        if let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating {
-            alert.informativeText = tr(format: "macConfirmAndQuitInfoWithActiveTunnel (%@)", currentTunnel.name)
+        let activeTunnels = self.activeTunnels
+        if activeTunnels.count == 1 {
+            alert.informativeText = tr(format: "macConfirmAndQuitInfoWithActiveTunnel (%@)", activeTunnels[0].name)
+        } else if activeTunnels.count > 1 {
+            alert.informativeText = tr(format: "macConfirmAndQuitInfoWithMultipleActiveTunnels (%@)", activeTunnels.map { $0.name }.joined(separator: ", "))
         } else {
             alert.informativeText = tr("macConfirmAndQuitAlertInfo")
         }
@@ -99,7 +106,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
         registerLoginItem(shouldLaunchAtLogin: false)
-        guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
+        guard !activeTunnels.isEmpty else {
             NSApp.terminate(nil)
             return
         }
@@ -119,7 +126,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        guard let currentTunnel = tunnelsTracker?.currentTunnel, currentTunnel.status == .active || currentTunnel.status == .activating else {
+        let activeTunnels = self.activeTunnels
+        guard !activeTunnels.isEmpty else {
             return .terminateNow
         }
         guard let appleEvent = NSAppleEventManager.shared().currentAppleEvent else {
@@ -130,10 +138,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         let alert = NSAlert()
         alert.messageText = tr("macAppStoreUpdatingAlertMessage")
-        if currentTunnel.isActivateOnDemandEnabled {
-            alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithOnDemand (%@)", currentTunnel.name)
+        let onDemandTunnels = activeTunnels.filter { $0.isActivateOnDemandEnabled }
+        if activeTunnels.count == 1 {
+            if onDemandTunnels.isEmpty {
+                alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)", activeTunnels[0].name)
+            } else {
+                alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithOnDemand (%@)", activeTunnels[0].name)
+            }
         } else {
-            alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)", currentTunnel.name)
+            if onDemandTunnels.isEmpty {
+                alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithoutOnDemandMultiple (%@)", activeTunnels.map { $0.name }.joined(separator: ", "))
+            } else {
+                alert.informativeText = tr(format: "macAppStoreUpdatingAlertInfoWithOnDemandMultiple (%@)", onDemandTunnels.map { $0.name }.joined(separator: ", "))
+            }
         }
         NSApp.activate(ignoringOtherApps: true)
         if let manageWindow = manageTunnelsWindowObject {

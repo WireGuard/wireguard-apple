@@ -208,6 +208,13 @@ class TunnelDetailTableViewController: NSViewController {
     @objc func handleEditTunnelAction() {
         PrivateDataConfirmation.confirmAccess(to: tr("macViewPrivateData")) { [weak self] in
             guard let self = self else { return }
+            guard self.tunnel.tunnelConfiguration != nil else {
+                // The configuration could not be read (e.g. the keychain entry
+                // is inaccessible). Opening the editor would crash, so report
+                // the failure instead.
+                ErrorPresenter.showErrorAlert(title: tr("macAlertCannotReadConfigTitle"), message: tr("alertTunnelActivationSavedConfigFailureMessage"), from: self)
+                return
+            }
             let tunnelEditVC = TunnelEditViewController(tunnelsManager: self.tunnelsManager, tunnel: self.tunnel)
             tunnelEditVC.delegate = self
             self.presentAsSheet(tunnelEditVC)

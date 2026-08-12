@@ -64,6 +64,7 @@
 "macToggleStatusButtonActivate" = "Activate";
 "macToggleStatusButtonActivating" = "Activating…";
 "macToggleStatusButtonDeactivate" = "Deactivate";
+"macToggleStatusButtonDeactivateAll" = "Deactivate All";
 "macToggleStatusButtonDeactivating" = "Deactivating…";
 "macToggleStatusButtonReasserting" = "Reactivating…";
 "macToggleStatusButtonRestarting" = "Restarting…";
@@ -95,6 +96,12 @@
 "tunnelPeerTxBytes" = "Data sent";
 "tunnelPeerLastHandshakeTime" = "Latest handshake";
 "tunnelPeerExcludePrivateIPs" = "Exclude private IPs";
+
+"tunnelSectionTitleSplitDNS" = "DNS";
+"tunnelEditSplitDNS" = "Split DNS";
+"tunnelEditSplitDNSTooltip" = "Use the tunnel's DNS servers only for the tunnel's DNS search domains, instead of for all queries on the system.";
+"alertSplitDNSRequiresSearchDomainsTitle" = "Split DNS requires DNS servers and search domains";
+"alertSplitDNSRequiresSearchDomainsMessage" = "To use split DNS, list both the DNS servers and the domains to route through them in the tunnel's DNS entry, e.g.: 'DNS = 10.0.0.53, corp.example.com'";
 
 "tunnelSectionTitleOnDemand" = "On-Demand Activation";
 
@@ -369,6 +376,7 @@
 // Mac status display
 
 "macStatus (%@)" = "Status: %@";
+"macStatusMultipleTunnels (%d)" = "%d tunnels";
 
 // Mac editing config
 
@@ -377,6 +385,7 @@
 
 "macAlertNameIsEmpty" = "Name is required";
 "macAlertDuplicateName (%@)" = "Another tunnel already exists with the name ‘%@’.";
+"macAlertCannotReadConfigTitle" = "Unable to read configuration";
 
 "macAlertInvalidLine (%@)" = "Invalid line: ‘%@’.";
 
@@ -419,6 +428,7 @@
 "macConfirmAndQuitAlertMessage" = "Do you want to close the tunnels manager or quit WireGuard entirely?";
 "macConfirmAndQuitAlertInfo" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.";
 "macConfirmAndQuitInfoWithActiveTunnel (%@)" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.\n\nNote that if you quit WireGuard entirely the currently active tunnel ('%@') will still remain active until you deactivate it from this application or through the Network panel in System Preferences.";
+"macConfirmAndQuitInfoWithMultipleActiveTunnels (%@)" = "If you close the tunnels manager, WireGuard will continue to be available from the menu bar icon.\n\nNote that if you quit WireGuard entirely the currently active tunnels ('%@') will still remain active until you deactivate them from this application or through the Network panel in System Preferences.";
 "macConfirmAndQuitAlertQuitWireGuard" = "Quit WireGuard";
 "macConfirmAndQuitAlertCloseWindow" = "Close Tunnels Manager";
 
@@ -448,6 +458,8 @@
 "macAppStoreUpdatingAlertMessage" = "App Store would like to update WireGuard";
 "macAppStoreUpdatingAlertInfoWithOnDemand (%@)" = "Please disable on-demand for tunnel ‘%@’, deactivate it, and then continue updating in App Store.";
 "macAppStoreUpdatingAlertInfoWithoutOnDemand (%@)" = "Please deactivate tunnel ‘%@’ and then continue updating in App Store.";
+"macAppStoreUpdatingAlertInfoWithOnDemandMultiple (%@)" = "Please disable on-demand for tunnels ‘%@’, deactivate all active tunnels, and then continue updating in App Store.";
+"macAppStoreUpdatingAlertInfoWithoutOnDemandMultiple (%@)" = "Please deactivate tunnels ‘%@’ and then continue updating in App Store.";
 
 // Donation
 

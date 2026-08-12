@@ -14,11 +14,13 @@ typealias EndpointResolutionResult = Result<(Endpoint, Endpoint), DNSResolutionE
 
 class PacketTunnelSettingsGenerator {
     let tunnelConfiguration: TunnelConfiguration
-    let resolvedEndpoints: [Endpoint?]
+    private(set) var resolvedEndpoints: [Endpoint?]
+    let isSplitDNSEnabled: Bool
 
-    init(tunnelConfiguration: TunnelConfiguration, resolvedEndpoints: [Endpoint?]) {
+    init(tunnelConfiguration: TunnelConfiguration, resolvedEndpoints: [Endpoint?], isSplitDNSEnabled: Bool = false) {
         self.tunnelConfiguration = tunnelConfiguration
         self.resolvedEndpoints = resolvedEndpoints
+        self.isSplitDNSEnabled = isSplitDNSEnabled
     }
 
     func endpointUapiConfiguration() -> (String, [EndpointResolutionResult?]) {
@@ -88,7 +90,13 @@ class PacketTunnelSettingsGenerator {
             let dnsSettings = NEDNSSettings(servers: dnsServerStrings)
             dnsSettings.searchDomains = tunnelConfiguration.interface.dnsSearch
             if !tunnelConfiguration.interface.dns.isEmpty {
-                dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+                let splitDNSMatchDomains = isSplitDNSEnabled ? tunnelConfiguration.interface.dnsSearch.filter { !$0.isEmpty } : []
+                if !splitDNSMatchDomains.isEmpty {
+                    // Use the tunnel's DNS only for the tunnel's search domains
+                    dnsSettings.matchDomains = splitDNSMatchDomains
+                } else {
+                    dnsSettings.matchDomains = [""] // All DNS queries must first go through the tunnel's DNS
+                }
             }
             networkSettings.dnsSettings = dnsSettings
         }
@@ -171,6 +179,51 @@ class PacketTunnelSettingsGenerator {
             }
         }
         return (ipv4IncludedRoutes, ipv6IncludedRoutes)
+    }
+
+    /// Return a UAPI configuration setting the endpoint of every peer,
+    /// re-resolving the peers that were configured with a hostname.
+    ///
+    /// The endpoints are set unconditionally, which is what makes this useful
+    /// after a network change: besides picking up a hostname that now resolves
+    /// elsewhere, it resets peers whose endpoint the backend has roamed to an
+    /// address that was only reachable on the previous network.
+    ///
+    /// The initial resolution replaces a configured hostname with the address
+    /// it resolved to, so the hostname is only available from the tunnel
+    /// configuration itself.
+    func endpointUapiConfigurationAfterNetworkChange() -> (String, [EndpointResolutionResult?]) {
+        let configuredEndpoints = tunnelConfiguration.peers.map { $0.endpoint }
+        // Resolution is skipped altogether when every endpoint is an address.
+        let results = DNSResolver.resolveSync(endpoints: configuredEndpoints)
+        assert(results.count == tunnelConfiguration.peers.count)
+        assert(resolvedEndpoints.count == tunnelConfiguration.peers.count)
+
+        var wgSettings = ""
+        var resolutionResults = [EndpointResolutionResult?]()
+
+        for (index, peer) in tunnelConfiguration.peers.enumerated() {
+            if let configuredEndpoint = configuredEndpoints[index], !configuredEndpoint.hasHostAsIPAddress() {
+                switch results[index] {
+                case .success(let resolvedEndpoint)?:
+                    resolutionResults.append(.success((configuredEndpoint, resolvedEndpoint)))
+                    resolvedEndpoints[index] = resolvedEndpoint
+                case .failure(let error)?:
+                    // Keep the address the hostname last resolved to.
+                    resolutionResults.append(.failure(error))
+                case nil:
+                    resolutionResults.append(nil)
+                }
+            } else {
+                resolutionResults.append(nil)
+            }
+
+            guard let endpoint = resolvedEndpoints[index] else { continue }
+            wgSettings.append("public_key=\(peer.publicKey.hexKey)\n")
+            wgSettings.append("endpoint=\(endpoint.stringRepresentation)\n")
+        }
+
+        return (wgSettings, resolutionResults)
     }
 
     private class func reresolveEndpoint(endpoint: Endpoint) -> EndpointResolutionResult {
