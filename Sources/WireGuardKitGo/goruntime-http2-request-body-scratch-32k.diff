@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: NickVs2015 <nv@amnezia.org>
+Date: Tue, 11 Nov 2026 15:00:00 +0300
+Subject: [PATCH] net/http: cap the HTTP/2 request body scratch buffer at 32 KiB
+
+The HTTP/2 client sizes the per-stream scratch buffer for a streaming
+request body as min(peer SETTINGS_MAX_FRAME_SIZE, 512 KiB) and holds it
+for the life of the stream. XHTTP stream-one and stream-up uploads are
+endless bodies without Content-Length, so every proxied connection pins
+512 KiB against an XHTTP server, which drives the iOS network extension
+into its 50 MB jetsam limit. 32 KiB matches io.Copy and the cap proposed
+in golang/go#79831.
+
+---
+diff --git a/src/net/http/internal/http2/transport.go b/src/net/http/internal/http2/transport.go
+--- a/src/net/http/internal/http2/transport.go
++++ b/src/net/http/internal/http2/transport.go
+@@ -1603,9 +1603,9 @@
+ // outgoing request bodies to read/write to/from.
+ //
+ // It returns max(1, min(peer's advertised max frame size,
+-// Request.ContentLength+1, 512KB)).
++// Request.ContentLength+1, 32KB)).
+ func (cs *clientStream) frameScratchBufferLen(maxFrameSize int) int {
+-	const max = 512 << 10
++	const max = 32 << 10
+ 	n := min(int64(maxFrameSize), max)
+ 	if cl := cs.reqBodyContentLength; cl != -1 && cl+1 < n {
+ 		// Add an extra byte past the declared content-length to
+@@ -1617,7 +1617,7 @@
+ 	if n < 1 {
+ 		return 1
+ 	}
+-	return int(n) // doesn't truncate; max is 512K
++	return int(n) // doesn't truncate; max is 32K
+ }
+ 
+ // Seven bufPools manage different frame sizes. This helps to avoid scenarios where long-running
